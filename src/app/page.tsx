@@ -71,7 +71,7 @@ export default function Home() {
     setSubmitStatus('');
 
     try {
-      const response = await fetch('https://script.google.com/a/macros/eku.id/s/AKfycbyO4IxRCAqvSldoi_hGjHpinUc3LZ7tnBWljKRBWMgy48HJTdP7VryPsDvm6Jn31kKp/exec', {
+      await fetch('https://script.google.com/a/macros/eku.id/s/AKfycbyO4IxRCAqvSldoi_hGjHpinUc3LZ7tnBWljKRBWMgy48HJTdP7VryPsDvm6Jn31kKp/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export default function Home() {
       // Assume success if no error is thrown
       setSubmitStatus('success');
       setEmail('');
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
