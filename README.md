@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wukong - Ticketing Management System
+
+Wukong is an advanced ticketing management system for seamless event organization and ticket sales. Streamline your events with our powerful platform.
+
+## Features
+- Modern Coming Soon landing page
+- Animated Three.js background
+- Responsive header with logo
+- Countdown timer to launch
+- Email notification form (integrated with Google Sheets)
+- Font: Bebas Neue (headline), Onest (descriptive)
+
+## Folder Structure
+```
+black-void/
+├── public/
+│   └── ... (static assets)
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── globals.css
+│   ├── assets/
+│   │   └── logo/
+│   │       └── logo.svg
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   └── ThreeBackground.tsx
+│   └── lib/
+│       └── utils.ts
+├── package.json
+├── README.md
+└── ... (config & other files)
+```
+
+## Tech Stack
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- Three.js
+- Google Apps Script (for email storage)
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Liku-id/black-void.git
+cd black-void
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run locally
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Deploy to Vercel
+- Push to GitHub
+- Import project on [vercel.com](https://vercel.com)
+- Follow the deploy instructions
 
-## Learn More
+## Email Notification Integration
+- Email addresses submitted via the form are sent to a Google Apps Script endpoint and stored in a Google Sheet.
+- Update the endpoint in `src/app/page.tsx` if you want to use your own Google Apps Script.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+MIT
