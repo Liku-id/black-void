@@ -71,7 +71,7 @@ export default function Home() {
     setSubmitStatus('');
 
     try {
-      await fetch('https://script.google.com/a/macros/eku.id/s/AKfycbyO4IxRCAqvSldoi_hGjHpinUc3LZ7tnBWljKRBWMgy48HJTdP7VryPsDvm6Jn31kKp/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbyJoCeE0nvhs03xBvfmzJWM8a7O--37LC46vmdghR_38A1bHTjUYKY5AJneAn9npdkV/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
