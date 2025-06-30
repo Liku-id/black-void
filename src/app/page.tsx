@@ -85,7 +85,7 @@ export default function Home() {
       } else {
         setSubmitStatus('error');
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -146,7 +146,7 @@ export default function Home() {
             
             {/* Status messages */}
             {submitStatus === 'success' && (
-              <p className="text-green-400 mt-4 font-onest">Thank you! We'll notify you when we launch.</p>
+              <p className="text-green-400 mt-4 font-onest">Thank you! We&apos;ll notify you when we launch.</p>
             )}
             {submitStatus === 'error' && (
               <p className="text-red-400 mt-4 font-onest">Something went wrong. Please try again.</p>

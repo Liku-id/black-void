@@ -46,8 +46,8 @@ export default function ThreeBackground() {
     camera.position.set(0, 0, 1000);
     camera.lookAt(0, 0, 0);
 
-    // Gradient background plane - much larger for all screen sizes
-    let planeGeo = new THREE.PlaneGeometry(8000, 4000);
+    // Gradient background plane (versi awal, statis besar)
+    const planeGeo = new THREE.PlaneGeometry(4000, 2000);
     const uniforms = {
       uTime: { value: 0 }
     };
@@ -63,14 +63,13 @@ export default function ThreeBackground() {
 
     // Parameters for particles
     const SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 30;
-    let particles: THREE.Points;
     let count = 0;
 
     // Geometry & Material for particles
     const numParticles = AMOUNTX * AMOUNTY;
     const positions = new Float32Array(numParticles * 3);
     const colors = new Float32Array(numParticles * 3);
-    let i = 0, j = 0;
+    let i = 0;
     const yOffset = 0;
     for (let ix = 0; ix < AMOUNTX; ix++) {
       for (let iy = 0; iy < AMOUNTY; iy++) {
@@ -96,26 +95,26 @@ export default function ThreeBackground() {
       transparent: true,
       opacity: 0.4
     });
-    particles = new THREE.Points(geometry, material);
-    particles.rotation.x = -Math.PI / 1.2;
-    scene.add(particles);
+    const particlesInstance = new THREE.Points(geometry, material);
+    particlesInstance.rotation.x = -Math.PI / 1.2;
+    scene.add(particlesInstance);
 
     // Responsive
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      // Keep camera position consistent for 2D effect
-      camera.position.set(0, 0, 1000);
+      camera.position.set(0, 300, 1000);
       camera.lookAt(0, 0, 0);
+      // Tidak perlu update plane
     };
     window.addEventListener("resize", handleResize);
 
     // Animation loop
     function animate() {
       requestAnimationFrame(animate);
-      let positions = geometry.attributes.position as THREE.BufferAttribute;
-      let colorsAttr = geometry.attributes.color as THREE.BufferAttribute;
+      const positions = geometry.attributes.position as THREE.BufferAttribute;
+      const colorsAttr = geometry.attributes.color as THREE.BufferAttribute;
       let i = 0;
       for (let ix = 0; ix < AMOUNTX; ix++) {
         for (let iy = 0; iy < AMOUNTY; iy++) {
@@ -131,7 +130,7 @@ export default function ThreeBackground() {
       }
       positions.needsUpdate = true;
       colorsAttr.needsUpdate = true;
-      particles.rotation.y = Math.sin(count * 0.02) * 0.2;
+      particlesInstance.rotation.y = Math.sin(count * 0.02) * 0.2;
       count += 0.1;
       // Animasi gradient background
       uniforms.uTime.value += 0.01;
@@ -143,8 +142,9 @@ export default function ThreeBackground() {
     return () => {
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
-      if (mountRef.current) {
-        mountRef.current.innerHTML = "";
+      const currentMount = mountRef.current;
+      if (currentMount) {
+        currentMount.innerHTML = "";
       }
     };
   }, []);
@@ -154,13 +154,10 @@ export default function ThreeBackground() {
       ref={mountRef}
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        inset: 0,
         zIndex: -1,
-        width: "100%",
-        height: "100%",
+        width: "100vw",
+        height: "100vh",
         overflow: "hidden",
         pointerEvents: "none",
       }}
