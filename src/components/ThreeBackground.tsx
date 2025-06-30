@@ -46,8 +46,8 @@ export default function ThreeBackground() {
     camera.position.set(0, 0, 1000);
     camera.lookAt(0, 0, 0);
 
-    // Gradient background plane (versi awal, statis besar)
-    let planeGeo = new THREE.PlaneGeometry(4000, 2000);
+    // Gradient background plane - much larger for all screen sizes
+    let planeGeo = new THREE.PlaneGeometry(8000, 4000);
     const uniforms = {
       uTime: { value: 0 }
     };
@@ -105,9 +105,9 @@ export default function ThreeBackground() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.position.set(0, 300, 1000);
+      // Keep camera position consistent for 2D effect
+      camera.position.set(0, 0, 1000);
       camera.lookAt(0, 0, 0);
-      // Tidak perlu update plane
     };
     window.addEventListener("resize", handleResize);
 
@@ -154,10 +154,13 @@ export default function ThreeBackground() {
       ref={mountRef}
       style={{
         position: "fixed",
-        inset: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         zIndex: -1,
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         overflow: "hidden",
         pointerEvents: "none",
       }}
