@@ -25,7 +25,12 @@ describe('Container', () => {
   it('has default container classes', () => {
     render(<Container>Content</Container>);
     const container = screen.getByText('Content');
-    expect(container).toHaveClass('mx-auto', 'w-full', 'max-w-[1140px]', 'px-4');
+    expect(container).toHaveClass(
+      'mx-auto',
+      'w-full',
+      'max-w-[1140px]',
+      'px-4'
+    );
   });
 
   it('combines custom className with default classes', () => {

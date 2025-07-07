@@ -79,7 +79,15 @@ describe('Header', () => {
   it('has correct header positioning classes', () => {
     render(<Header />);
     const header = screen.getByRole('banner');
-    expect(header).toHaveClass('fixed', 'top-6', 'right-0', 'left-0', 'z-50', 'flex', 'justify-center');
+    expect(header).toHaveClass(
+      'fixed',
+      'top-6',
+      'right-0',
+      'left-0',
+      'z-50',
+      'flex',
+      'justify-center'
+    );
   });
 
   it('has correct container structure', () => {
@@ -114,30 +122,37 @@ describe('Header', () => {
 
   it('submit button is enabled when search input has value', () => {
     render(<Header />);
-    const searchInput = screen.getByPlaceholderText('Looking for an exciting event?');
+    const searchInput = screen.getByPlaceholderText(
+      'Looking for an exciting event?'
+    );
     const submitButton = screen.getByRole('button', { name: /submit/i });
-    
+
     fireEvent.change(searchInput, { target: { value: 'test event' } });
     expect(submitButton).not.toBeDisabled();
   });
 
   it('calls submit handler when button is clicked with search value', () => {
     render(<Header />);
-    const searchInput = screen.getByPlaceholderText('Looking for an exciting event?');
+    const searchInput = screen.getByPlaceholderText(
+      'Looking for an exciting event?'
+    );
     const submitButton = screen.getByRole('button', { name: /submit/i });
-    
+
     fireEvent.change(searchInput, { target: { value: 'test event' } });
     fireEvent.click(submitButton);
-    
+
     expect(consoleSpy).toHaveBeenCalledWith('submit search:', 'test event');
   });
 
   it('does not call submit handler when button is clicked with empty search', () => {
     render(<Header />);
     const submitButton = screen.getByRole('button', { name: /submit/i });
-    
+
     fireEvent.click(submitButton);
-    
-    expect(consoleSpy).not.toHaveBeenCalledWith('submit search:', expect.any(String));
+
+    expect(consoleSpy).not.toHaveBeenCalledWith(
+      'submit search:',
+      expect.any(String)
+    );
   });
 });

@@ -11,7 +11,13 @@ jest.mock('next/image', () => {
 });
 
 // Test wrapper for form context
-const TestFormWrapper = ({ children, defaultValues = {} }: { children: React.ReactNode; defaultValues?: any }) => {
+const TestFormWrapper = ({
+  children,
+  defaultValues = {},
+}: {
+  children: React.ReactNode;
+  defaultValues?: any;
+}) => {
   const methods = useForm({ defaultValues });
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
@@ -26,10 +32,10 @@ describe('TextField', () => {
     it('handles value and onChange', () => {
       const mockOnChange = jest.fn();
       render(<TextField value="test" onChange={mockOnChange} />);
-      
+
       const input = screen.getByDisplayValue('test');
       fireEvent.change(input, { target: { value: 'new value' } });
-      
+
       expect(mockOnChange).toHaveBeenCalledWith('new value');
     });
 
@@ -45,21 +51,25 @@ describe('TextField', () => {
 
     it('calls onStartIconClick when start icon is clicked', () => {
       const mockClick = jest.fn();
-      render(<TextField startIcon="/icons/user.svg" onStartIconClick={mockClick} />);
-      
+      render(
+        <TextField startIcon="/icons/user.svg" onStartIconClick={mockClick} />
+      );
+
       const startIcon = screen.getByAltText('Start icon');
       fireEvent.click(startIcon);
-      
+
       expect(mockClick).toHaveBeenCalled();
     });
 
     it('calls onEndIconClick when end icon is clicked', () => {
       const mockClick = jest.fn();
-      render(<TextField endIcon="/icons/search.svg" onEndIconClick={mockClick} />);
-      
+      render(
+        <TextField endIcon="/icons/search.svg" onEndIconClick={mockClick} />
+      );
+
       const endIcon = screen.getByAltText('End icon');
       fireEvent.click(endIcon);
-      
+
       expect(mockClick).toHaveBeenCalled();
     });
 
@@ -77,7 +87,7 @@ describe('TextField', () => {
           <TextField name="email" placeholder="Email" />
         </TestFormWrapper>
       );
-      
+
       expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
     });
 
@@ -92,23 +102,23 @@ describe('TextField', () => {
       };
 
       render(<TestComponent />);
-      
+
       const input = screen.getByPlaceholderText('Email');
       fireEvent.change(input, { target: { value: 'test@example.com' } });
-      
+
       expect(input).toHaveValue('test@example.com');
     });
 
     it('shows error styling when field has error', () => {
       const TestComponent = () => {
-        const methods = useForm({ 
+        const methods = useForm({
           defaultValues: { email: '' },
-          mode: 'onChange'
+          mode: 'onChange',
         });
-        
+
         // Trigger validation error
         methods.setError('email', { type: 'required', message: 'Required' });
-        
+
         return (
           <FormProvider {...methods}>
             <TextField name="email" placeholder="Email" />
@@ -117,7 +127,7 @@ describe('TextField', () => {
       };
 
       render(<TestComponent />);
-      
+
       const input = screen.getByPlaceholderText('Email');
       expect(input).toHaveClass('border-red-500');
     });
@@ -130,9 +140,11 @@ describe('TextField', () => {
     });
 
     it('has proper alt text for icons', () => {
-      render(<TextField startIcon="/icons/user.svg" endIcon="/icons/search.svg" />);
+      render(
+        <TextField startIcon="/icons/user.svg" endIcon="/icons/search.svg" />
+      );
       expect(screen.getByAltText('Start icon')).toBeInTheDocument();
       expect(screen.getByAltText('End icon')).toBeInTheDocument();
     });
   });
-}); 
+});

@@ -326,7 +326,9 @@ describe('ComingSoon Page', () => {
 
   it('prevents form submission with empty email via form submit', async () => {
     render(<ComingSoon />);
-    const form = screen.getByPlaceholderText('Enter your email').closest('form');
+    const form = screen
+      .getByPlaceholderText('Enter your email')
+      .closest('form');
     const submitButton = screen.getByRole('button', {
       name: 'Notify Me',
     });

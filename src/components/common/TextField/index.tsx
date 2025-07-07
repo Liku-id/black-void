@@ -10,10 +10,10 @@ interface TextFieldProps {
   name?: string;
   type?: string;
   value?: string;
-  placeholder?: string; 
-  className?: string;   
-  startIcon?: string;   
-  endIcon?: string;     
+  placeholder?: string;
+  className?: string;
+  startIcon?: string;
+  endIcon?: string;
   onStartIconClick?: () => void;
   onEndIconClick?: () => void;
   onChange?: (value: string) => void;
@@ -21,7 +21,7 @@ interface TextFieldProps {
 
 export const TextField: React.FC<TextFieldProps> = ({
   name,
-  type = "text",
+  type = 'text',
   value,
   placeholder,
   className = '',
@@ -32,13 +32,17 @@ export const TextField: React.FC<TextFieldProps> = ({
   onChange,
   ...props
 }) => {
-  const containerClass = cn("flex items-center h-10 border border-black bg-white px-3", className);
-  const inputClass = "flex-1 border-0 bg-transparent text-black placeholder:text-black h-full p-0 outline-none focus:outline-none focus:ring-0";
+  const containerClass = cn(
+    'flex items-center h-10 border border-black bg-white px-3',
+    className
+  );
+  const inputClass =
+    'flex-1 border-0 bg-transparent text-black placeholder:text-black h-full p-0 outline-none focus:outline-none focus:ring-0';
 
   // Form field mode with React Hook Form
   if (name) {
     const { control } = useFormContext();
-    
+
     return (
       <Controller
         name={name}
@@ -46,8 +50,15 @@ export const TextField: React.FC<TextFieldProps> = ({
         render={({ field, fieldState }) => (
           <Box className={containerClass}>
             {startIcon && (
-              <Box className="flex items-center mr-2 cursor-pointer" onClick={onStartIconClick}>
-                <Image src={startIcon} alt="Start icon" width={20} height={20} />
+              <Box
+                className="mr-2 flex cursor-pointer items-center"
+                onClick={onStartIconClick}>
+                <Image
+                  src={startIcon}
+                  alt="Start icon"
+                  width={20}
+                  height={20}
+                />
               </Box>
             )}
             <input
@@ -55,11 +66,13 @@ export const TextField: React.FC<TextFieldProps> = ({
               type={type}
               data-slot="input"
               placeholder={placeholder}
-              className={cn(inputClass, fieldState.error && "border-red-500")}
+              className={cn(inputClass, fieldState.error && 'border-red-500')}
               {...props}
             />
             {endIcon && (
-              <Box className="flex items-center ml-2 cursor-pointer" onClick={onEndIconClick}>
+              <Box
+                className="ml-2 flex cursor-pointer items-center"
+                onClick={onEndIconClick}>
                 <Image src={endIcon} alt="End icon" width={20} height={20} />
               </Box>
             )}
@@ -73,7 +86,9 @@ export const TextField: React.FC<TextFieldProps> = ({
   return (
     <Box className={containerClass}>
       {startIcon && (
-        <Box className="flex items-center mr-2 cursor-pointer" onClick={onStartIconClick}>
+        <Box
+          className="mr-2 flex cursor-pointer items-center"
+          onClick={onStartIconClick}>
           <Image src={startIcon} alt="Start icon" width={20} height={20} />
         </Box>
       )}
@@ -82,15 +97,17 @@ export const TextField: React.FC<TextFieldProps> = ({
         data-slot="input"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         className={inputClass}
         {...props}
       />
       {endIcon && (
-        <Box className="flex items-center ml-2 cursor-pointer" onClick={onEndIconClick}>
+        <Box
+          className="ml-2 flex cursor-pointer items-center"
+          onClick={onEndIconClick}>
           <Image src={endIcon} alt="End icon" width={20} height={20} />
         </Box>
       )}
     </Box>
   );
-}; 
+};

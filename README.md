@@ -5,10 +5,12 @@ Modern React/Next.js project with Tailwind CSS and shadcn/ui components.
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 20+
 - npm
 
 ### Install & Run
+
 ```bash
 # Clone & install (use --legacy-peer-deps for React 19)
 git clone <repository-url>
@@ -20,6 +22,7 @@ npm run dev
 ```
 
 ## Scripts
+
 - `npm run dev` - Development server
 - `npm run build` - Build for production
 - `npm test` - Run tests
@@ -27,6 +30,7 @@ npm run dev
 - `npm run lint` - Run ESLint
 
 ## Testing
+
 ```bash
 npm test                    # Run tests
 npm test -- --coverage     # With coverage
@@ -37,21 +41,25 @@ npm test -- --coverage     # With coverage
 ## Troubleshooting
 
 **Install fails?** Use `--legacy-peer-deps`:
+
 ```bash
 npm install --legacy-peer-deps
 ```
 
 **Node.js too old?** Upgrade to v20+:
+
 ```bash
 nvm install 20 && nvm use 20
 ```
 
 **Tests fail?** Install react-hook-form:
+
 ```bash
 npm install react-hook-form --legacy-peer-deps
 ```
 
 ## Tech Stack
+
 - React 19 + Next.js 15
 - Tailwind CSS + shadcn/ui
 - Three.js for 3D graphics
@@ -59,6 +67,7 @@ npm install react-hook-form --legacy-peer-deps
 - TypeScript
 
 ## Project Structure
+
 ```
 src/
 ├── app/                 # Next.js pages
@@ -72,6 +81,7 @@ src/
 ```
 
 ## Notes
+
 - React 19 may have compatibility issues with some libraries
 - Always use `--legacy-peer-deps` when installing new packages
 - Use `npm run format` for consistent code formatting

@@ -2,13 +2,13 @@ import React from 'react';
 
 /**
  * Box Component
- * 
+ *
  * @example
  * // Basic usage
  * <Box className="p-4 bg-blue-100">
  *   <p>Content inside box</p>
  * </Box>
- * 
+ *
  * @example
  * // With click handler
  * <Box onClick={() => console.log('Box clicked')}>

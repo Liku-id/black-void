@@ -32,6 +32,7 @@ src/
 ## Writing Tests
 
 ### Component Test Example
+
 ```tsx
 import { render, screen } from '@testing-library/react';
 import { Button } from './index';
@@ -39,7 +40,9 @@ import { Button } from './index';
 describe('Button', () => {
   it('renders children', () => {
     render(<Button>Click Me</Button>);
-    expect(screen.getByRole('button', { name: 'Click Me' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Click Me' })
+    ).toBeInTheDocument();
   });
 
   it('handles click events', () => {
@@ -57,6 +60,7 @@ describe('Button', () => {
 ```
 
 ### Testing with React Hook Form
+
 ```tsx
 import { renderHook } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
@@ -70,6 +74,7 @@ test('form validation', () => {
 ## Mocking
 
 ### Next.js Components
+
 ```tsx
 jest.mock('next/image', () => ({
   __esModule: true,
@@ -82,6 +87,7 @@ jest.mock('next/image', () => ({
 Current coverage: **92.3%** statements, **94.57%** lines
 
 ### Coverage Targets
+
 - Statements: 70%
 - Branches: 70%
 - Functions: 70%
@@ -90,14 +96,17 @@ Current coverage: **92.3%** statements, **94.57%** lines
 ## Troubleshooting
 
 **Tests fail with React Hook Form?**
+
 ```bash
 npm install react-hook-form --legacy-peer-deps
 ```
 
 **Three.js tests fail?**
+
 - Ensure Three.js is properly mocked
 - Check if WebGLRenderer and other classes are mocked
 
 **Import errors?**
+
 - Check if component exports are correct
 - Verify import paths match file structure

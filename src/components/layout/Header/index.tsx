@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { Box, TextField } from '@/components';
+import { Box, TextField, Button, Typography } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import searchIcon from '@/assets/icons/search.svg';
 import { useState } from 'react';
@@ -23,14 +23,36 @@ export default function Header() {
           className="h-8 w-auto"
           priority
         />
-        <TextField 
+        <TextField
           placeholder="Looking for an exciting event?"
-          className="w-[424px] ml-6"
+          className="ml-6 w-[424px]"
           value={searchValue}
           onChange={setSearchValue}
-          endIcon={searchIcon} 
+          endIcon={searchIcon}
           onEndIconClick={handleSearch}
         />
+        <Box className="ml-auto flex items-center">
+        
+          <Typography
+            type="body"
+            size={16}
+            color="text-black"
+            className="ml-6 cursor-pointer"
+          >
+            Contact Us
+          </Typography>
+
+          <Typography
+            type="body"
+            size={16}
+            color="text-black"
+            className="ml-6 cursor-pointer"
+          >
+            Become Creator ?
+          </Typography>
+
+          <Button className='ml-6'>Log In</Button>
+        </Box>
       </Box>
     </header>
   );

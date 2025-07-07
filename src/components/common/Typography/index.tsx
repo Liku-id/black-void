@@ -5,11 +5,11 @@ import type { TypographyProps } from './Typography.types';
  * @example
  * // Basic text
  * <Typography>Hello world</Typography>
- * 
+ *
  * @example
  * // Heading
  * <Typography as="h1" type="heading" size={64}>Title</Typography>
- * 
+ *
  * @example
  * // Custom styling
  * <Typography className="text-blue-500">Blue text</Typography>

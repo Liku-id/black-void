@@ -15,7 +15,7 @@ describe('Button', () => {
   it('applies default styling classes', () => {
     render(<Button>Test</Button>);
     const button = screen.getByRole('button');
-    
+
     expect(button).toHaveClass(
       'inline-flex',
       'items-center',
@@ -36,24 +36,24 @@ describe('Button', () => {
   it('handles click events', () => {
     const handleClick = jest.fn();
     render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     const button = screen.getByRole('button');
     fireEvent.click(button);
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
   it('is disabled when disabled prop is true', () => {
     render(<Button disabled>Disabled Button</Button>);
     const button = screen.getByRole('button');
-    
+
     expect(button).toBeDisabled();
   });
 
   it('applies custom className', () => {
     render(<Button className="custom-class">Test</Button>);
     const button = screen.getByRole('button');
-    
+
     expect(button).toHaveClass('custom-class');
   });
 
@@ -83,7 +83,7 @@ describe('Button', () => {
         Test
       </Button>
     );
-    
+
     const button = screen.getByTestId('custom-button');
     expect(button).toHaveAttribute('aria-label', 'Custom button');
   });
@@ -91,14 +91,14 @@ describe('Button', () => {
   it('has correct data-slot attribute', () => {
     render(<Button>Test</Button>);
     const button = screen.getByRole('button');
-    
+
     expect(button).toHaveAttribute('data-slot', 'button');
   });
 
   it('maintains accessibility features', () => {
     render(<Button aria-describedby="description">Accessible Button</Button>);
     const button = screen.getByRole('button');
-    
+
     expect(button).toHaveAttribute('aria-describedby', 'description');
   });
-}); 
+});
