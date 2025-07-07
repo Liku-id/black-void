@@ -1,71 +1,77 @@
-# Wukong - Ticketing Management System
+# Black Void
 
-Wukong is an advanced ticketing management system for seamless event organization and ticket sales. Streamline your events with our powerful platform.
+Modern React/Next.js project with Tailwind CSS and shadcn/ui components.
 
-## Features
-- Modern Coming Soon landing page
-- Animated Three.js background
-- Responsive header with logo
-- Countdown timer to launch
-- Email notification form (integrated with Google Sheets)
-- Font: Bebas Neue (headline), Onest (descriptive)
+## Quick Start
 
-## Folder Structure
-```
-black-void/
-├── public/
-│   └── ... (static assets)
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── globals.css
-│   ├── assets/
-│   │   └── logo/
-│   │       └── logo.svg
-│   ├── components/
-│   │   ├── Header.tsx
-│   │   └── ThreeBackground.tsx
-│   └── lib/
-│       └── utils.ts
-├── package.json
-├── README.md
-└── ... (config & other files)
-```
+### Prerequisites
+- Node.js 20+
+- npm
 
-## Tech Stack
-- Next.js (App Router)
-- React
-- Tailwind CSS
-- Three.js
-- Google Apps Script (for email storage)
-
-## Getting Started
-
-### 1. Clone the repository
+### Install & Run
 ```bash
-git clone https://github.com/Liku-id/black-void.git
+# Clone & install (use --legacy-peer-deps for React 19)
+git clone <repository-url>
 cd black-void
-```
+npm install --legacy-peer-deps
 
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Run locally
-```bash
+# Start dev server
 npm run dev
 ```
 
-### 4. Deploy to Vercel
-- Push to GitHub
-- Import project on [vercel.com](https://vercel.com)
-- Follow the deploy instructions
+## Scripts
+- `npm run dev` - Development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `npm run format` - Format code
+- `npm run lint` - Run ESLint
 
-## Email Notification Integration
-- Email addresses submitted via the form are sent to a Google Apps Script endpoint and stored in a Google Sheet.
-- Update the endpoint in `src/app/page.tsx` if you want to use your own Google Apps Script.
+## Testing
+```bash
+npm test                    # Run tests
+npm test -- --coverage     # With coverage
+```
 
-## License
-MIT
+**Coverage:** 92.3% statements, 94.57% lines
+
+## Troubleshooting
+
+**Install fails?** Use `--legacy-peer-deps`:
+```bash
+npm install --legacy-peer-deps
+```
+
+**Node.js too old?** Upgrade to v20+:
+```bash
+nvm install 20 && nvm use 20
+```
+
+**Tests fail?** Install react-hook-form:
+```bash
+npm install react-hook-form --legacy-peer-deps
+```
+
+## Tech Stack
+- React 19 + Next.js 15
+- Tailwind CSS + shadcn/ui
+- Three.js for 3D graphics
+- Jest + Testing Library
+- TypeScript
+
+## Project Structure
+```
+src/
+├── app/                 # Next.js pages
+├── components/          # React components
+│   ├── common/         # Reusable components
+│   ├── layout/         # Layout components
+│   ├── ui/             # shadcn/ui components
+│   └── visuals/        # Three.js components
+├── lib/                # Utilities
+└── assets/             # Static files
+```
+
+## Notes
+- React 19 may have compatibility issues with some libraries
+- Always use `--legacy-peer-deps` when installing new packages
+- Use `npm run format` for consistent code formatting
