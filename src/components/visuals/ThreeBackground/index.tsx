@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+'use client';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 const vertexShader = `
   varying vec2 vUv;
@@ -29,7 +29,9 @@ export default function ThreeBackground() {
     if (!mountRef.current) return;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     mountRef.current.appendChild(renderer.domElement);
 
@@ -49,20 +51,22 @@ export default function ThreeBackground() {
     // Gradient background plane (versi awal, statis besar)
     const planeGeo = new THREE.PlaneGeometry(4000, 2000);
     const uniforms = {
-      uTime: { value: 0 }
+      uTime: { value: 0 },
     };
     const planeMat = new THREE.ShaderMaterial({
       uniforms,
       vertexShader,
       fragmentShader,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const plane = new THREE.Mesh(planeGeo, planeMat);
     plane.position.set(0, 0, 0);
     scene.add(plane);
 
     // Parameters for particles
-    const SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 30;
+    const SEPARATION = 100,
+      AMOUNTX = 50,
+      AMOUNTY = 30;
     let count = 0;
 
     // Geometry & Material for particles
@@ -73,11 +77,12 @@ export default function ThreeBackground() {
     const yOffset = 0;
     for (let ix = 0; ix < AMOUNTX; ix++) {
       for (let iy = 0; iy < AMOUNTY; iy++) {
-        positions[i] = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2);
+        positions[i] = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2;
         positions[i + 1] = yOffset;
-        positions[i + 2] = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2);
+        positions[i + 2] = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
         // Black to white gradient looping
-        const gradient = ((ix / AMOUNTX + iy / AMOUNTY) / 2 + count * 0.02) % 1.0;
+        const gradient =
+          ((ix / AMOUNTX + iy / AMOUNTY) / 2 + count * 0.02) % 1.0;
         const grayValue = gradient;
         colors[i] = grayValue;
         colors[i + 1] = grayValue;
@@ -88,12 +93,12 @@ export default function ThreeBackground() {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    const material = new THREE.PointsMaterial({ 
-      size: 16, 
-      vertexColors: true, 
+    const material = new THREE.PointsMaterial({
+      size: 16,
+      vertexColors: true,
       color: 0xffffff,
       transparent: true,
-      opacity: 0.4
+      opacity: 0.4,
     });
     const particlesInstance = new THREE.Points(geometry, material);
     particlesInstance.rotation.x = -Math.PI / 1.2;
@@ -108,7 +113,7 @@ export default function ThreeBackground() {
       camera.lookAt(0, 0, 0);
       // Tidak perlu update plane
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     // Animation loop
     function animate() {
@@ -118,9 +123,14 @@ export default function ThreeBackground() {
       let i = 0;
       for (let ix = 0; ix < AMOUNTX; ix++) {
         for (let iy = 0; iy < AMOUNTY; iy++) {
-          positions.setY(i / 3, (Math.sin((ix + count) * 0.3) * 50) + (Math.sin((iy + count) * 0.5) * 50));
+          positions.setY(
+            i / 3,
+            Math.sin((ix + count) * 0.3) * 50 +
+              Math.sin((iy + count) * 0.5) * 50
+          );
           // Animasi warna: black to white gradient looping
-          const gradient = ((ix / AMOUNTX + iy / AMOUNTY) / 2 + count * 0.02) % 1.0;
+          const gradient =
+            ((ix / AMOUNTX + iy / AMOUNTY) / 2 + count * 0.02) % 1.0;
           const grayValue = gradient;
           colorsAttr.setX(i / 3, grayValue);
           colorsAttr.setY(i / 3, grayValue);
@@ -140,11 +150,10 @@ export default function ThreeBackground() {
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      const currentMount = mountRef.current;
-      if (currentMount) {
-        currentMount.innerHTML = "";
+      if (mountRef.current) {
+        mountRef.current.innerHTML = '';
       }
     };
   }, []);
@@ -152,14 +161,15 @@ export default function ThreeBackground() {
   return (
     <div
       ref={mountRef}
+      data-testid="three-background"
       style={{
-        position: "fixed",
+        position: 'fixed',
         inset: 0,
         zIndex: -1,
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        pointerEvents: "none",
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        pointerEvents: 'none',
       }}
     />
   );
