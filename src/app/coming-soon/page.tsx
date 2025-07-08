@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import ThreeBackground from '@/components/visuals/ThreeBackground';
-import Header from '@/components/layout/Header';
+import ThreeBackground from '@/components/visuals/three-background';
+import Header from '@/components/layout/header';
 import './coming-soon.css';
 
 function CountdownTimer() {
