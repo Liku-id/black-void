@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Bebas_Neue, Onest } from 'next/font/google';
-import './globals.css';
+import '../styles/globals.css';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',

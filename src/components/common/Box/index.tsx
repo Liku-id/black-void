@@ -16,7 +16,7 @@ import React from 'react';
  * </Box>
  */
 interface BoxProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   onClick?: () => void;
 }
