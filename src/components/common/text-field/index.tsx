@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Box } from '@/components/common/Box';
+import { Box } from '@/components';
 import { cn } from '@/lib/utils';
 import { useFormContext, Controller } from 'react-hook-form';
 

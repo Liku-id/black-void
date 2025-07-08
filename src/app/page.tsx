@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from '@/components/common/Typography';
+import { Typography } from '@/components/common/typography';
 import { Header } from '@/components';
 
 export default function Home() {

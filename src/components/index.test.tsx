@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import Header from './layout/Header';
-import ThreeBackground from './visuals/ThreeBackground';
-import { Typography } from './common/Typography';
+import Header from './layout/header';
+import ThreeBackground from './visuals/three-background';
+import { Typography } from '../components';
 import * as Components from './index';
 
 // Mock Next.js Image component
