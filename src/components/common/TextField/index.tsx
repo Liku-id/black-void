@@ -44,7 +44,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     className
   );
   const inputClass =
-    'flex-1 border-0 bg-transparent text-black placeholder:text-black h-full p-0 outline-none focus:outline-none focus:ring-0';
+    'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 outline-none focus:outline-none focus:ring-0';
 
   // Form field mode with React Hook Form
   if (name) {
@@ -58,18 +58,15 @@ export const TextField: React.FC<TextFieldProps> = ({
         render={({ field, fieldState }) => (
           <Box className={className}>
             <Box
-              className={`flex items-center h-10 bg-white px-3 transition-all duration-200 outline-none
-                ${
-                  isFocused
-                    ? `border shadow-[4px_4px_0px_0px_#FFFF] translate-x-[-2px] translate-y-[-2px] ${fieldState.error ? 'border-[#F93A37]' : 'border-black'}`
-                    : `border ${fieldState.error ? 'border-[#F93A37]' : 'border-black'}`
-                }`}
-            >
+              className={`flex h-10 items-center bg-white px-3 transition-all duration-200 outline-none ${
+                isFocused
+                  ? `translate-x-[-2px] translate-y-[-2px] border shadow-[4px_4px_0px_0px_#FFFF] ${fieldState.error ? 'border-danger' : 'border-black'}`
+                  : `border ${fieldState.error ? 'border-danger' : 'border-black'}`
+              }`}>
               {startIcon && (
                 <Box
                   className="mr-2 flex cursor-pointer items-center"
-                  onClick={onStartIconClick}
-                >
+                  onClick={onStartIconClick}>
                   <Image
                     src={startIcon}
                     alt="Start icon"
@@ -85,10 +82,7 @@ export const TextField: React.FC<TextFieldProps> = ({
                 type={type}
                 data-slot="input"
                 placeholder={placeholder}
-                className={cn(
-                  inputClass,
-                  fieldState.error && 'border-[#F93A37]'
-                )}
+                className={cn(inputClass, fieldState.error && 'border-danger')}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 {...props}
@@ -96,15 +90,14 @@ export const TextField: React.FC<TextFieldProps> = ({
               {endIcon && (
                 <Box
                   className="ml-2 flex cursor-pointer items-center"
-                  onClick={onEndIconClick}
-                >
+                  onClick={onEndIconClick}>
                   <Image src={endIcon} alt="End icon" width={20} height={20} />
                 </Box>
               )}
             </Box>
 
             {fieldState.error && (
-              <Typography size={12} className="text-[#F93A37] mt-1">
+              <Typography size={12} className="text-danger mt-1">
                 {fieldState.error.message}
               </Typography>
             )}
@@ -120,8 +113,7 @@ export const TextField: React.FC<TextFieldProps> = ({
       {startIcon && (
         <Box
           className="mr-2 flex cursor-pointer items-center"
-          onClick={onStartIconClick}
-        >
+          onClick={onStartIconClick}>
           <Image src={startIcon} alt="Start icon" width={20} height={20} />
         </Box>
       )}
@@ -130,15 +122,14 @@ export const TextField: React.FC<TextFieldProps> = ({
         data-slot="input"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         className={inputClass}
         {...props}
       />
       {endIcon && (
         <Box
           className="ml-2 flex cursor-pointer items-center"
-          onClick={onEndIconClick}
-        >
+          onClick={onEndIconClick}>
           <Image src={endIcon} alt="End icon" width={20} height={20} />
         </Box>
       )}

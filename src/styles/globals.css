@@ -9,6 +9,7 @@
   --color-red: #ff4c4c;
   --color-green: #38d200;
   --color-muted: #585c71;
+  --color-danger: #f93a37;
 
   /* ===== FONT FAMILIES ===== */
   --font-bebas: var(--font-bebas);

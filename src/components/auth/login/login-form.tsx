@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Button } from '@/components/common/Button';
 import { TextField } from '@/components/common/TextField';
-import { email, password } from '@/lib/utils/form-validation';
+import { email } from '@/lib/utils/form-validation';
 import { FormProvider, useForm } from 'react-hook-form';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { Typography } from '@/components/common/Typography';
+import Loading from '@/components/layout/loading';
 
 interface FormDataLogin {
   email: string;
@@ -37,40 +40,51 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error(error);
+      setError(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="flex flex-col items-center"
-      >
-        <TextField
-          id="input_email"
-          name="email"
-          type="email"
-          placeholder="Email Address"
-          className="w-[270px] mb-7"
-          rules={{ required: true, validate: email }}
-        />
+    <>
+      {/* Loading */}
+      {loading && <Loading />}
 
-        <TextField
-          id="input_password"
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          placeholder="Password"
-          className="w-[270px] mb-10"
-          rules={{ required: true }}
-          endIcon={showPassword ? eyeOpened : eyeClosed}
-          onEndIconClick={() => setShowPassword(!showPassword)}
-        />
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="flex flex-col items-center">
+          <TextField
+            id="input_email"
+            name="email"
+            type="email"
+            placeholder="Email Address"
+            className="mb-7 w-[270px]"
+            rules={{ required: 'Email is required', validate: email }}
+          />
 
-        <Button>Log In</Button>
-      </form>
-    </FormProvider>
+          <TextField
+            id="input_password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password"
+            className="mb-10 w-[270px]"
+            rules={{ required: 'Password is required' }}
+            endIcon={showPassword ? eyeOpened : eyeClosed}
+            onEndIconClick={() => setShowPassword(!showPassword)}
+          />
+
+          <Button>Log In</Button>
+
+          {error && (
+            <Typography size={12} className="text-danger mt-2">
+              {error}
+            </Typography>
+          )}
+        </form>
+      </FormProvider>
+    </>
   );
 };
 

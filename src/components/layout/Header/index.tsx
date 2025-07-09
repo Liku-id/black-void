@@ -32,13 +32,11 @@ export default function Header() {
           onEndIconClick={handleSearch}
         />
         <Box className="ml-auto flex items-center">
-        
           <Typography
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Contact Us
           </Typography>
 
@@ -46,12 +44,11 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Become Creator ?
           </Typography>
 
-          <Button className='ml-6'>Log In</Button>
+          <Button className="ml-6">Log In</Button>
         </Box>
       </Box>
     </header>

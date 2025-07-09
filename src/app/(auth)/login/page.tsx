@@ -5,10 +5,10 @@ const LoginForm = dynamic(() => import('@/components/auth/login/login-form'));
 
 export default function LoginPage() {
   return (
-    <Box className="max-w-xs text-white mt-32 mx-auto xl:ml-37 xl:mr-0">
-      <Box className="text-center mb-20">
+    <Box className="mx-auto mt-32 max-w-xs text-white xl:mr-0 xl:ml-47">
+      <Box className="mb-20 text-center">
         <Typography className="mb-4">Welcome to Wukong,</Typography>
-        <Typography size={41} type="heading" className="uppercase font-normal">
+        <Typography size={41} type="heading" className="font-normal uppercase">
           Log in to your account
         </Typography>
       </Box>
@@ -17,9 +17,9 @@ export default function LoginPage() {
       <LoginForm />
 
       {/* Links */}
-      <Box className="flex flex-col items-center mt-16 md:justify-between md:flex-row">
+      <Box className="mt-16 flex flex-col items-center md:flex-row md:justify-between">
         <Typography size={12}>
-          <a href="/forgot-password" className="underline hover:text-green">
+          <a href="/forgot-password" className="hover:text-green underline">
             Forgot Your Password?
           </a>
         </Typography>
@@ -27,7 +27,7 @@ export default function LoginPage() {
         <Box className="mt-7 md:mt-0">
           <Typography size={12}>
             Need an account?{' '}
-            <a href="/register" className="underline hover:text-green">
+            <a href="/register" className="hover:text-green underline">
               Sign up
             </a>
           </Typography>

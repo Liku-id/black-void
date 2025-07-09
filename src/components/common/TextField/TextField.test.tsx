@@ -129,7 +129,9 @@ describe('TextField', () => {
       render(<TestComponent />);
 
       const input = screen.getByPlaceholderText('Email');
-      expect(input).toHaveClass('border-red-500');
+      expect(input).toHaveClass(
+        'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 outline-none focus:outline-none focus:ring-0 border-danger'
+      );
     });
   });
 

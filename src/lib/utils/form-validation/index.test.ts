@@ -17,20 +17,20 @@ describe('email validator', () => {
 describe('password validator', () => {
   it('returns error message for invalid passwords', () => {
     expect(password('password')).toBe(
-      'Password should contain at least one digit or one special character and one uppercase letter'
+      'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
     );
-    expect(password('PASSWORD1')).toBeUndefined();
+    expect(password('PAWORD1')).toBeUndefined();
     expect(password('passW1')).toBe(
-      'Password should contain at least one digit or one special character and one uppercase letter'
+      'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
     );
     expect(password('')).toBe(
-      'Password should contain at least one digit or one special character and one uppercase letter'
+      'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
     );
   });
 
   it('returns undefined for valid passwords', () => {
-    expect(password('Secure123')).toBeUndefined();
-    expect(password('A1b2c3d4!')).toBeUndefined();
-    expect(password('Password@2024')).toBeUndefined();
+    expect(password('Secure#123')).toBeUndefined();
+    expect(password('A1b2c3dJ4!')).toBeUndefined();
+    expect(password('Password@20')).toBeUndefined();
   });
 });
