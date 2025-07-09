@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { TypographyProps } from './Typography.types';
+import type { TypographyProps } from './typography.types';
 
 /**
  * @example
