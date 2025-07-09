@@ -19,7 +19,11 @@ export default function LoginPage() {
       {/* Links */}
       <Box className="mt-16 flex flex-col items-center md:flex-row md:justify-between">
         <Typography size={12}>
-          <a href="/forgot-password" className="hover:text-green underline">
+          <a
+            id="forgot_password_link"
+            href="/forgot-password"
+            className="hover:text-green underline"
+          >
             Forgot Your Password?
           </a>
         </Typography>
@@ -27,7 +31,11 @@ export default function LoginPage() {
         <Box className="mt-7 md:mt-0">
           <Typography size={12}>
             Need an account?{' '}
-            <a href="/register" className="hover:text-green underline">
+            <a
+              id="sign_up_link"
+              href="/register"
+              className="hover:text-green underline"
+            >
               Sign up
             </a>
           </Typography>

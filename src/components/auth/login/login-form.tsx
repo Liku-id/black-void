@@ -54,9 +54,10 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
-            id="input_email"
+            id="email_field"
             name="email"
             type="email"
             placeholder="Email Address"
@@ -65,7 +66,7 @@ const LoginForm = () => {
           />
 
           <TextField
-            id="input_password"
+            id="password_field"
             name="password"
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
@@ -75,7 +76,7 @@ const LoginForm = () => {
             onEndIconClick={() => setShowPassword(!showPassword)}
           />
 
-          <Button>Log In</Button>
+          <Button id="login_button">Log In</Button>
 
           {error && (
             <Typography size={12} className="text-danger mt-2">
