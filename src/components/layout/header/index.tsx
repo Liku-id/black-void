@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { Box, TextField, Button, Typography } from '@/components';
+import { Box, TextField, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import searchIcon from '@/assets/icons/search.svg';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center">
-      <Box className="flex h-20 w-[1140px] items-center border border-black bg-white px-[40px] py-6 shadow-[4px_4px_0px_0px_#FFF]">
+      <Container className="flex h-20 items-center border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF] mx-4 xl:mx-0">
         <Image
           src={logo}
           alt="Logo"
@@ -32,13 +32,11 @@ export default function Header() {
           onEndIconClick={handleSearch}
         />
         <Box className="ml-auto flex items-center">
-        
           <Typography
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Contact Us
           </Typography>
 
@@ -46,14 +44,13 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Become Creator ?
           </Typography>
 
-          <Button className='ml-6'>Log In</Button>
+          <Button className="ml-6">Log In</Button>
         </Box>
-      </Box>
+      </Container>
     </header>
   );
 }

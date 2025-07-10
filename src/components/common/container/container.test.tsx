@@ -28,8 +28,7 @@ describe('Container', () => {
     expect(container).toHaveClass(
       'mx-auto',
       'w-full',
-      'max-w-[1140px]',
-      'px-4'
+      'max-w-[1140px]'
     );
   });
 

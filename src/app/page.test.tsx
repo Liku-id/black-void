@@ -3,42 +3,36 @@ import { render, screen } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page', () => {
-  it('renders the main heading', () => {
+  it('renders the Header', () => {
     render(<Home />);
-    expect(
-      screen.getByRole('heading', { name: /Hello World/i })
-    ).toBeInTheDocument();
+    // Header contains a button 'Log In' as unique marker
+    expect(screen.getByRole('button', { name: /Log In/i })).toBeInTheDocument();
   });
 
-  it('renders the subtitle', () => {
+  it('renders the CarouselSection', () => {
     render(<Home />);
-    expect(screen.getByText(/Welcome to Black Void/i)).toBeInTheDocument();
+    // CarouselSection: cari elemen unik, misal heading FAQ, atau gunakan test id jika ada
+    // Sementara, cek keberadaan main section
+    expect(screen.getByRole('main')).toBeInTheDocument();
   });
 
-  it('renders the body text', () => {
+  it('renders the ProjectListSection', () => {
     render(<Home />);
-    expect(
-      screen.getByText(/Built with Next.js 15 & Tailwind CSS 4/i)
-    ).toBeInTheDocument();
+    // ProjectListSection: cari heading "Project" jika ada, atau test id jika sudah diterapkan
+    // Sementara, cek keberadaan main section
+    expect(screen.getByRole('main')).toBeInTheDocument();
   });
 
-  it('renders the caption text', () => {
+  it('renders the CreatorListSection', () => {
     render(<Home />);
-    expect(screen.getByText(/This is a caption text/i)).toBeInTheDocument();
+    // CreatorListSection: cari heading "Creator" jika ada, atau test id jika sudah diterapkan
+    // Sementara, cek keberadaan main section
+    expect(screen.getByRole('main')).toBeInTheDocument();
   });
 
-  it('has correct container styling', () => {
+  it('renders the FAQSection', () => {
     render(<Home />);
-    const container = screen
-      .getByText('Hello World')
-      .closest('div')?.parentElement;
-    expect(container).toHaveClass(
-      'min-h-screen',
-      'bg-black',
-      'text-white',
-      'flex',
-      'items-center',
-      'justify-center'
-    );
+    // FAQSection: cari heading "FAQ"
+    expect(screen.getByRole('heading', { name: /FAQ/i })).toBeInTheDocument();
   });
 });

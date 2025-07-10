@@ -33,18 +33,7 @@ jest.mock('next/image', () => ({
 // Mock the logo import
 jest.mock('@/assets/logo/logo.svg', () => 'mocked-logo.svg');
 
-// Mock console.log to spy on it
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-
 describe('Header', () => {
-  beforeEach(() => {
-    consoleSpy.mockClear();
-  });
-
-  afterAll(() => {
-    consoleSpy.mockRestore();
-  });
-
   it('renders without crashing', () => {
     render(<Header />);
     expect(screen.getByRole('banner')).toBeInTheDocument();
@@ -92,67 +81,47 @@ describe('Header', () => {
 
   it('has correct container structure', () => {
     render(<Header />);
-    const header = screen.getByRole('banner');
-    const container = header.querySelector('.w-\\[1140px\\]');
+    // Cari container utama dengan kombinasi class Tailwind
+    const container = document.querySelector('.flex.h-20.items-center.border.border-black.bg-white.px-6.py-6');
     expect(container).toBeInTheDocument();
     expect(container).toHaveClass(
       'flex',
       'h-20',
-      'w-[1140px]',
       'items-center',
       'border',
       'border-black',
       'bg-white',
-      'px-[40px]',
+      'px-6',
       'py-6'
     );
   });
 
-  it('renders submit button', () => {
+  it('renders the search input', () => {
     render(<Header />);
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-    expect(submitButton).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Looking for an exciting event?')).toBeInTheDocument();
   });
 
-  it('submit button is disabled when search input is empty', () => {
+  it('renders the Log In button', () => {
     render(<Header />);
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-    expect(submitButton).toBeDisabled();
+    expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
   });
 
-  it('submit button is enabled when search input has value', () => {
+  it('renders Contact Us and Become Creator links', () => {
     render(<Header />);
-    const searchInput = screen.getByPlaceholderText(
-      'Looking for an exciting event?'
-    );
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-
-    fireEvent.change(searchInput, { target: { value: 'test event' } });
-    expect(submitButton).not.toBeDisabled();
+    expect(screen.getByText(/Contact Us/i)).toBeInTheDocument();
+    expect(screen.getByText(/Become Creator/i)).toBeInTheDocument();
   });
 
-  it('calls submit handler when button is clicked with search value', () => {
+  it('calls search handler when search icon is clicked', () => {
+    // Spy on console.log
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Header />);
-    const searchInput = screen.getByPlaceholderText(
-      'Looking for an exciting event?'
-    );
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-
-    fireEvent.change(searchInput, { target: { value: 'test event' } });
-    fireEvent.click(submitButton);
-
-    expect(consoleSpy).toHaveBeenCalledWith('submit search:', 'test event');
-  });
-
-  it('does not call submit handler when button is clicked with empty search', () => {
-    render(<Header />);
-    const submitButton = screen.getByRole('button', { name: /submit/i });
-
-    fireEvent.click(submitButton);
-
-    expect(consoleSpy).not.toHaveBeenCalledWith(
-      'submit search:',
-      expect.any(String)
-    );
+    const input = screen.getByPlaceholderText('Looking for an exciting event?');
+    fireEvent.change(input, { target: { value: 'test event' } });
+    // Cari end icon (search icon) dengan alt text 'End icon'
+    const searchIcon = screen.getByAltText('End icon');
+    fireEvent.click(searchIcon);
+    expect(consoleSpy).toHaveBeenCalledWith('search:', 'test event');
+    consoleSpy.mockRestore();
   });
 });

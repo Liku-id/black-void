@@ -33,7 +33,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   ...props
 }) => {
   const containerClass = cn(
-    'flex items-center h-10 border border-black bg-white px-3',
+    'flex items-center h-10 border border-black bg-white px-3 gap-2',
     className
   );
   const inputClass =
@@ -50,16 +50,9 @@ export const TextField: React.FC<TextFieldProps> = ({
         render={({ field, fieldState }) => (
           <Box className={containerClass}>
             {startIcon && (
-              <Box
-                className="mr-2 flex cursor-pointer items-center"
-                onClick={onStartIconClick}>
-                <Image
-                  src={startIcon}
-                  alt="Start icon"
-                  width={20}
-                  height={20}
-                />
-              </Box>
+              <span className="flex items-center">
+                <Image src={startIcon} alt="Start icon" width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
+              </span>
             )}
             <input
               {...field}
@@ -73,7 +66,7 @@ export const TextField: React.FC<TextFieldProps> = ({
               <Box
                 className="ml-2 flex cursor-pointer items-center"
                 onClick={onEndIconClick}>
-                <Image src={endIcon} alt="End icon" width={20} height={20} />
+                <Image src={endIcon} alt="End icon" width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
               </Box>
             )}
           </Box>
@@ -86,11 +79,9 @@ export const TextField: React.FC<TextFieldProps> = ({
   return (
     <Box className={containerClass}>
       {startIcon && (
-        <Box
-          className="mr-2 flex cursor-pointer items-center"
-          onClick={onStartIconClick}>
-          <Image src={startIcon} alt="Start icon" width={20} height={20} />
-        </Box>
+        <span className="flex items-center" onClick={onStartIconClick}>
+          <Image src={startIcon} alt="Start icon" width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
+        </span>
       )}
       <input
         type={type}
@@ -105,7 +96,7 @@ export const TextField: React.FC<TextFieldProps> = ({
         <Box
           className="ml-2 flex cursor-pointer items-center"
           onClick={onEndIconClick}>
-          <Image src={endIcon} alt="End icon" width={20} height={20} />
+          <Image src={endIcon} alt="End icon" width={24} height={24} className="w-5 h-5 md:w-6 md:h-6" />
         </Box>
       )}
     </Box>
