@@ -29,7 +29,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 15000);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);
