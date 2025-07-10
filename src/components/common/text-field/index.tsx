@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Box } from '@/components';
 import { cn } from '@/lib/utils';
 import { useFormContext, Controller, RegisterOptions } from 'react-hook-form';
-import { Typography } from '../Typography';
+import { Typography } from '../typography';
 
 interface TextFieldProps {
   id?: string;

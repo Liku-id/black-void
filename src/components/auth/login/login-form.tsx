@@ -3,14 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { Button } from '@/components/common/Button';
-import { TextField } from '@/components/common/TextField';
-import { email } from '@/lib/utils/form-validation';
 import { FormProvider, useForm } from 'react-hook-form';
+import { email } from '@/lib/utils/form-validation';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
-import { getErrorMessage } from '@/lib/api/error-handler';
-import { Typography } from '@/components/common/Typography';
 import Loading from '@/components/layout/loading';
 
 interface FormDataLogin {

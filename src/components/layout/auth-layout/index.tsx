@@ -1,6 +1,12 @@
-import { ReactNode } from 'react';
+'use client';
+
+import { ReactNode, useEffect, useState } from 'react';
 import Image from 'next/image';
-import backgroundImage from '@/assets/image/auth-background.svg';
+import background1 from '@/assets/image/auth-background-1.webp';
+import background2 from '@/assets/image/auth-background-2.webp';
+import background3 from '@/assets/image/auth-background-3.webp';
+import background4 from '@/assets/image/auth-background-4.webp';
+import background5 from '@/assets/image/auth-background-5.webp';
 import logo from '@/assets/logo/white-logo.svg';
 import { Box } from '@/components';
 import StripeText from '@/components/layout/stripe-text';
@@ -9,25 +15,54 @@ type AuthLayoutProps = {
   children?: ReactNode;
 };
 
+const backgrounds = [
+  background1,
+  background2,
+  background3,
+  background4,
+  background5,
+];
+
 const AuthLayout = ({ children }: AuthLayoutProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Box className="flex h-screen w-screen items-center justify-center overflow-hidden">
       <Box className="relative flex h-full w-full max-w-[1440px] 2xl:h-[810px]">
-        {/* Left Side - Background*/}
-        <Box className="relative hidden w-1/2 lg:block">
-          <Image
-            src={backgroundImage}
-            alt="Wukong - Event Ticketing Platform Login and Registration Background"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
+        {/* Left Side - Background */}
+        <Box className="relative hidden w-1/2 lg:block overflow-hidden">
+          {/* Backgrounds stacked on top of each other */}
+          {backgrounds.map((bg, index) => (
+            <Image
+              key={index}
+              src={bg}
+              alt={`Background ${index + 1}`}
+              fill
+              style={{
+                objectFit: 'cover',
+                opacity: index === currentIndex ? 1 : 0,
+                zIndex: index === currentIndex ? 1 : 0,
+              }}
+              className="absolute inset-0"
+              priority={index === 0}
+            />
+          ))}
+
+          {/* Centered Logo */}
           <Image
             src={logo}
             alt="Logo"
             width={320}
             height={110}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform z-10"
             priority
           />
         </Box>
