@@ -64,3 +64,8 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   unobserve: jest.fn(),
   disconnect: jest.fn(),
 }));
+
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: props => <img {...props} />,
+}));
