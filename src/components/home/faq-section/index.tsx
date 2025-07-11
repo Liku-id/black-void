@@ -1,3 +1,4 @@
+'use client'
 import { Container, Typography, Box } from '@/components';
 import Accordion from '@/components/common/accordion';
 import { useState } from 'react';

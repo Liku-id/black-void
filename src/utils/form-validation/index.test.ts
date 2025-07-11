@@ -19,7 +19,10 @@ describe('password validator', () => {
     expect(password('password')).toBe(
       'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
     );
-    expect(password('PAWORD1')).toBeUndefined();
+    // 'PAWORD1' tidak valid karena tidak ada karakter spesial
+    expect(password('PAWORD1')).toBe(
+      'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
+    );
     expect(password('passW1')).toBe(
       'Password min 8 characters long and include at least one uppercase letter, one number, and one special character.'
     );

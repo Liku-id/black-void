@@ -1,3 +1,4 @@
+"use client";
 import { Container, Box, Carousel, Slider } from '@/components';
 import { useResponsive } from '@/lib/use-responsive';
 import Image from "next/image";

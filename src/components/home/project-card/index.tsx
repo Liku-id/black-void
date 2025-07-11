@@ -1,3 +1,4 @@
+"use client";
 import Image from 'next/image';
 import { Box, Typography, Button } from '@/components';
 import locationIcon from '@/assets/icons/location.svg';

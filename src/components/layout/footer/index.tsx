@@ -2,13 +2,13 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Container, Box, Typography } from '@/components';
-import logo from '@/assets/logo/logo-white.svg';
+import logo from '@/assets/logo/white-logo.svg';
 
 const Footer = () => {
   return (
     <footer className="bg-black pb-[24px] w-full">
       <Container className="pt-14 lg:pt-[96px] px-4">
-        <Box className="max-w-[1440px] mx-auto bg-dark-gray py-14 px-4 lg:p-[56px] grid grid-cols-1 lg:[grid-template-columns:1.75fr_0.75fr_1.25fr_1.5fr] gap-8 lg:gap-[108px]">
+        <Box className="max-w-[1440px] mx-auto bg-dark-gray py-14 px-4 lg:p-[56px] grid grid-cols-1 lg:[grid-template-columns:2fr_0.75fr_1fr_1.5fr] gap-8 lg:gap-[108px]">
           {/* Part 1: Logo and Text */}
           <Box>
             <Box className="mb-4">
@@ -61,7 +61,8 @@ const Footer = () => {
           <Box>
             <Typography
               type="heading"
-              className="text-white text-[24px] leading-normal mb-4"
+              color="text-white"
+              className="text-[24px] leading-normal mb-4"
             >
               FOLLOW US ON
             </Typography>
@@ -73,13 +74,13 @@ const Footer = () => {
             <Box>
               <Box className="flex items-center gap-4 mb-2">
                 <Box className="w-[24px] h-[24px] bg-white">{null}</Box>
-                <Typography type="body" className="text-[14px]">
+                <Typography type="body" color="text-white" className="text-[14px]">
                   +62 813-8811-9390
                 </Typography>
               </Box>
               <Box className="flex items-center gap-4">
                 <Box className="w-[24px] h-[24px] bg-white">{null}</Box>
-                <Typography type="body" className="text-[14px]">
+                <Typography type="body" color="text-white" className="text-[14px]">
                   support@wukong.co.id
                 </Typography>
               </Box>

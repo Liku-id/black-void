@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from 'react';
 
 // Multi-breakpoint responsive hook (SSR-friendly)
