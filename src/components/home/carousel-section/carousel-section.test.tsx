@@ -50,7 +50,11 @@ describe('CarouselSection', () => {
     // Should render Carousel (not Slider)
     // Carousel renders images as background or via props, so check for class
     const carousel = screen.getByText((content, element) => {
-      return !!element && element.className.includes('w-[900px]') && element.className.includes('h-[500px]');
+      return (
+        !!element &&
+        element.className.includes('w-[900px]') &&
+        element.className.includes('h-[500px]')
+      );
     });
     expect(carousel).toBeInTheDocument();
   });
@@ -61,7 +65,11 @@ describe('CarouselSection', () => {
     render(<CarouselSection />);
     // md: width 550, height 350
     const el = screen.getByText((content, element) => {
-      return !!element && element.className.includes('w-[550px]') && element.className.includes('h-[350px]');
+      return (
+        !!element &&
+        element.className.includes('w-[550px]') &&
+        element.className.includes('h-[350px]')
+      );
     });
     expect(el).toBeInTheDocument();
   });
@@ -72,19 +80,32 @@ describe('CarouselSection', () => {
     render(<CarouselSection />);
     // lg: width 800, height 450
     const el = screen.getByText((content, element) => {
-      return !!element && element.className.includes('w-[800px]') && element.className.includes('h-[450px]');
+      return (
+        !!element &&
+        element.className.includes('w-[800px]') &&
+        element.className.includes('h-[450px]')
+      );
     });
     expect(el).toBeInTheDocument();
   });
 
   it('renders correct class for sm viewport', () => {
     const { useResponsive } = require('@/lib/use-responsive');
-    useResponsive.mockReturnValue({ sm: true, md: false, lg: false, xl: false });
+    useResponsive.mockReturnValue({
+      sm: true,
+      md: false,
+      lg: false,
+      xl: false,
+    });
     render(<CarouselSection />);
     // sm: width 450, height 300
     const el = screen.getByText((content, element) => {
-      return !!element && element.className.includes('w-[450px]') && element.className.includes('h-[300px]');
+      return (
+        !!element &&
+        element.className.includes('w-[450px]') &&
+        element.className.includes('h-[300px]')
+      );
     });
     expect(el).toBeInTheDocument();
   });
-}); 
+});

@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 
 // Mock Accordion agar mudah dicek
 jest.mock('@/components/common/accordion', () => (props: any) => (
-  <div data-testid="accordion" data-open={props.open} onClick={props.onClick}>{props.question}</div>
+  <div data-testid="accordion" data-open={props.open} onClick={props.onClick}>
+    {props.question}
+  </div>
 ));
 
 describe('FAQSection', () => {
@@ -17,14 +19,18 @@ describe('FAQSection', () => {
     expect(accordions).toHaveLength(10);
     // Pertanyaan pertama benar
     expect(accordions[0]).toHaveTextContent('1. How do I buy a ticket??');
-    expect(accordions[9]).toHaveTextContent('10. How do I contact customer support?');
+    expect(accordions[9]).toHaveTextContent(
+      '10. How do I contact customer support?'
+    );
   });
 
   it('can expand and collapse Accordion', () => {
     render(<FAQSection />);
     const accordions = screen.getAllByTestId('accordion');
     // Awal semua tertutup
-    accordions.forEach(acc => expect(acc).toHaveAttribute('data-open', 'false'));
+    accordions.forEach(acc =>
+      expect(acc).toHaveAttribute('data-open', 'false')
+    );
     // Klik Accordion pertama
     fireEvent.click(accordions[0]);
     // Accordion pertama terbuka
@@ -56,4 +62,4 @@ describe('FAQSection', () => {
     expect(accordions[0]).toHaveAttribute('data-open', 'false');
     expect(accordions[5]).toHaveAttribute('data-open', 'true');
   });
-}); 
+});

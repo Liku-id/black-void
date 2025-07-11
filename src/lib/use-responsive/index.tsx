@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useEffect, useState } from 'react';
 
 // Multi-breakpoint responsive hook (SSR-friendly)
@@ -15,12 +15,24 @@ export const defaultBreakpoints = {
 
 export function useResponsive(
   breakpoints: Record<string, number> = defaultBreakpoints,
-  initialViewport: BreakpointMap = { sm: false, md: false, lg: false, xl: false, '2xl': false }
+  initialViewport: BreakpointMap = {
+    sm: false,
+    md: false,
+    lg: false,
+    xl: false,
+    '2xl': false,
+  }
 ) {
   const calculateViewport = () => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return initialViewport;
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    )
+      return initialViewport;
     return Object.keys(breakpoints).reduce((acc, key) => {
-      acc[key] = window.matchMedia(`(min-width: ${breakpoints[key]}px)`).matches;
+      acc[key] = window.matchMedia(
+        `(min-width: ${breakpoints[key]}px)`
+      ).matches;
       return acc;
     }, {} as BreakpointMap);
   };
@@ -37,4 +49,4 @@ export function useResponsive(
   }, [breakpoints]);
 
   return viewport;
-} 
+}

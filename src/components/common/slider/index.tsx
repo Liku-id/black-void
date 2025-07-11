@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, ReactNode, useRef } from 'react';
 import { Box } from '@/components';
@@ -24,27 +24,35 @@ interface SliderProps {
   pagination?: boolean;
 }
 
-export function clampIndex(startIndex: number, dragOffset: number, totalItemWidth: number, childrenLength: number) {
+export function clampIndex(
+  startIndex: number,
+  dragOffset: number,
+  totalItemWidth: number,
+  childrenLength: number
+) {
   const threshold = totalItemWidth / 4;
-  const snapIndex = Math.abs(dragOffset) > threshold ? Math.round(dragOffset / totalItemWidth) : 0;
+  const snapIndex =
+    Math.abs(dragOffset) > threshold
+      ? Math.round(dragOffset / totalItemWidth)
+      : 0;
   let newIndex = startIndex + snapIndex;
   if (newIndex < 0) newIndex = 0;
   if (newIndex > childrenLength - 1) newIndex = childrenLength - 1;
   return newIndex;
 }
 
-export function Slider({ 
-  children, 
-  autoScroll = true, 
-  scrollInterval = 3000, 
+export function Slider({
+  children,
+  autoScroll = true,
+  scrollInterval = 3000,
   gap = 6,
   itemWidth = 100,
-  className = "",
+  className = '',
   draggable = true,
-  pagination = false
+  pagination = false,
 }: SliderProps) {
   const childrenArray = Array.isArray(children) ? children : [children];
-  const totalItemWidth = itemWidth + (gap * 4);
+  const totalItemWidth = itemWidth + gap * 4;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -54,7 +62,9 @@ export function Slider({
   const [hasDragged, setHasDragged] = useState(false);
 
   const isDraggingRef = useRef(isDragging);
-  useEffect(() => { isDraggingRef.current = isDragging; }, [isDragging]);
+  useEffect(() => {
+    isDraggingRef.current = isDragging;
+  }, [isDragging]);
 
   useEffect(() => {
     if (!isDragging) return;
@@ -72,7 +82,9 @@ export function Slider({
   useEffect(() => {
     if (!autoScroll) return;
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1 >= childrenArray.length ? 0 : prev + 1));
+      setCurrentIndex(prev =>
+        prev + 1 >= childrenArray.length ? 0 : prev + 1
+      );
     }, scrollInterval);
     return () => clearInterval(interval);
   }, [autoScroll, scrollInterval, childrenArray.length]);
@@ -99,7 +111,12 @@ export function Slider({
       setDragOffset(0);
       return;
     }
-    const newIndex = clampIndex(startIndex, dragOffset, totalItemWidth, childrenArray.length);
+    const newIndex = clampIndex(
+      startIndex,
+      dragOffset,
+      totalItemWidth,
+      childrenArray.length
+    );
     setCurrentIndex(newIndex);
     setDragOffset(0);
     setHasDragged(false);
@@ -112,25 +129,30 @@ export function Slider({
   };
 
   return (
-    <Box className={className + " flex flex-col items-center"}>
-      <Box 
-        className={`relative overflow-hidden w-full` + (draggable ? ` cursor-grab${isDragging ? ' cursor-grabbing' : ''}` : '')}
-        {...(draggable ? {
-          onMouseDown: (e: any) => handleStart(e.pageX),
-          onMouseUp: handleEnd,
-          onMouseMove: (e: any) => handleMove(e.pageX),
-          onTouchStart: (e: any) => handleStart(e.touches[0].pageX),
-          onTouchMove: (e: any) => handleMove(e.touches[0].pageX),
-          onTouchEnd: handleEnd
-        } : {})}
-      >
-        <Box 
+    <Box className={className + ' flex flex-col items-center'}>
+      <Box
+        className={
+          `relative w-full overflow-hidden` +
+          (draggable
+            ? ` cursor-grab${isDragging ? ' cursor-grabbing' : ''}`
+            : '')
+        }
+        {...(draggable
+          ? {
+              onMouseDown: (e: any) => handleStart(e.pageX),
+              onMouseUp: handleEnd,
+              onMouseMove: (e: any) => handleMove(e.pageX),
+              onTouchStart: (e: any) => handleStart(e.touches[0].pageX),
+              onTouchMove: (e: any) => handleMove(e.touches[0].pageX),
+              onTouchEnd: handleEnd,
+            }
+          : {})}>
+        <Box
           className={`flex transition-transform duration-300 ease-out`}
-          style={{ 
+          style={{
             transform: `translateX(-${currentIndex * totalItemWidth + dragOffset}px)`,
-            gap: `${gap * 4}px`
-          }}
-        >
+            gap: `${gap * 4}px`,
+          }}>
           {childrenArray.map((child, index) => (
             <Box key={index} className="flex-shrink-0 select-none">
               {child}
@@ -140,13 +162,13 @@ export function Slider({
       </Box>
       {/* Pagination Bar Bawah */}
       {pagination && (
-        <Box className="w-full flex flex-row justify-center gap-2 mt-4">
+        <Box className="mt-4 flex w-full flex-row justify-center gap-2">
           {childrenArray.map((_, index) => (
             <button
               key={index}
               onClick={() => handlePaginationClick(index)}
-              className={`h-1 transition-colors cursor-pointer ${
-                index === currentIndex ? "w-[44px] bg-white" : "w-2 bg-gray"
+              className={`h-1 cursor-pointer transition-colors ${
+                index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -155,4 +177,4 @@ export function Slider({
       )}
     </Box>
   );
-} 
+}

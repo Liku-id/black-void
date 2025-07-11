@@ -3,7 +3,11 @@ import CreatorListSection from './';
 import '@testing-library/jest-dom';
 
 // Mock CreatorCard agar mudah dicek
-jest.mock('../creator-card', () => (props: any) => <div data-testid="creator-card" {...props}>{props.name}</div>);
+jest.mock('../creator-card', () => (props: any) => (
+  <div data-testid="creator-card" {...props}>
+    {props.name}
+  </div>
+));
 
 describe('CreatorListSection', () => {
   it('renders section title and all CreatorCard components', () => {
@@ -18,4 +22,4 @@ describe('CreatorListSection', () => {
     expect(cards[1]).toHaveTextContent('Creator 2');
     expect(cards[2]).toHaveTextContent('Creator 3');
   });
-}); 
+});

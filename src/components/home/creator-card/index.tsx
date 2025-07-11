@@ -7,13 +7,13 @@ interface CreatorCardProps {
 
 export default function CreatorCard({ logo, name }: CreatorCardProps) {
   return (
-    <Box className="flex-shrink-0 w-40 h-40 bg-white rounded-full flex items-center justify-center cursor-pointer">
+    <Box className="flex h-40 w-40 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white">
       <img
         src={logo}
         alt={name}
-        className="w-32 h-32 rounded-full object-contain bg-white"
+        className="h-32 w-32 rounded-full bg-white object-contain"
         draggable={false}
       />
     </Box>
   );
-} 
+}

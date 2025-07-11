@@ -10,7 +10,13 @@ interface AccordionProps {
   onClick?: () => void;
 }
 
-export default function Accordion({ question, answer, className, open = false, onClick }: AccordionProps) {
+export default function Accordion({
+  question,
+  answer,
+  className,
+  open = false,
+  onClick,
+}: AccordionProps) {
   return (
     <Box className={className + ' relative z-10'}>
       {/* Offset Layer */}
@@ -26,8 +32,9 @@ export default function Accordion({ question, answer, className, open = false, o
           'transition-all',
           'duration-300',
           open ? 'top-1 left-1 opacity-100' : 'top-0 left-0 opacity-0',
-        ].join(' ')}
-      >{null}</Box>
+        ].join(' ')}>
+        {null}
+      </Box>
       <Box
         className={[
           'relative',
@@ -40,8 +47,7 @@ export default function Accordion({ question, answer, className, open = false, o
           'duration-300',
           'overflow-hidden',
         ].join(' ')}
-        onClick={onClick}
-      >
+        onClick={onClick}>
         <Box className="flex items-center justify-between">
           <Typography type="body" size={16} color="text-black">
             {question}
@@ -51,7 +57,7 @@ export default function Accordion({ question, answer, className, open = false, o
             alt="Toggle FAQ"
             width={24}
             height={24}
-            className={`w-6 h-6 ml-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+            className={`ml-4 h-6 w-6 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
           />
         </Box>
         <Box
@@ -60,9 +66,8 @@ export default function Accordion({ question, answer, className, open = false, o
             'duration-300',
             'ease-in-out',
             'overflow-hidden',
-            open ? 'max-h-40 opacity-100 mt-3 ml-3' : 'max-h-0 opacity-0',
-          ].join(' ')}
-        >
+            open ? 'mt-3 ml-3 max-h-40 opacity-100' : 'max-h-0 opacity-0',
+          ].join(' ')}>
           <Typography color="text-muted" size={14}>
             {answer}
           </Typography>
@@ -70,4 +75,4 @@ export default function Accordion({ question, answer, className, open = false, o
       </Box>
     </Box>
   );
-} 
+}

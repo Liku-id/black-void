@@ -29,36 +29,40 @@ interface BoxProps {
   onTouchEnd?: (e: React.TouchEvent) => void;
 }
 
-export const Box = forwardRef<HTMLDivElement, BoxProps>(({
-  children,
-  className = '',
-  onClick,
-  style,
-  onMouseDown,
-  onMouseMove,
-  onMouseUp,
-  onMouseLeave,
-  onTouchStart,
-  onTouchMove,
-  onTouchEnd,
-}, ref) => {
-  return (
-    <div 
-      ref={ref} 
-      className={className} 
-      onClick={onClick} 
-      style={style}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseLeave}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      {children}
-    </div>
-  );
-});
+export const Box = forwardRef<HTMLDivElement, BoxProps>(
+  (
+    {
+      children,
+      className = '',
+      onClick,
+      style,
+      onMouseDown,
+      onMouseMove,
+      onMouseUp,
+      onMouseLeave,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+    },
+    ref
+  ) => {
+    return (
+      <div
+        ref={ref}
+        className={className}
+        onClick={onClick}
+        style={style}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}>
+        {children}
+      </div>
+    );
+  }
+);
 
 Box.displayName = 'Box';

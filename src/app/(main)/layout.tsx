@@ -7,10 +7,10 @@ export default function AuthSegmentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="pt-36 xl:pt-40 px-0">
-      <Header/>
+    <main className="px-0 pt-36 xl:pt-40">
+      <Header />
       {children}
-      <Footer/>
+      <Footer />
     </main>
   );
 }

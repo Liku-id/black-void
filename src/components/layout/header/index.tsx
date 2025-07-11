@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center">
-      <Container className="flex h-20 items-center border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF] mx-4 xl:mx-0">
+      <Container className="mx-4 flex h-20 items-center border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF] xl:mx-0">
         <Image
           src={logo}
           alt="Logo"
@@ -50,7 +50,9 @@ export default function Header() {
             Become Creator ?
           </Typography>
 
-          <Button className="ml-6" onClick={() => router.push('/login')}>Log In</Button>
+          <Button className="ml-6" onClick={() => router.push('/login')}>
+            Log In
+          </Button>
         </Box>
       </Container>
     </header>

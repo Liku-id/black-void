@@ -82,7 +82,9 @@ describe('Header', () => {
   it('has correct container structure', () => {
     render(<Header />);
     // Cari container utama dengan kombinasi class Tailwind
-    const container = document.querySelector('.flex.h-20.items-center.border.border-black.bg-white.px-6.py-6');
+    const container = document.querySelector(
+      '.flex.h-20.items-center.border.border-black.bg-white.px-6.py-6'
+    );
     expect(container).toBeInTheDocument();
     expect(container).toHaveClass(
       'flex',
@@ -98,7 +100,9 @@ describe('Header', () => {
 
   it('renders the search input', () => {
     render(<Header />);
-    expect(screen.getByPlaceholderText('Looking for an exciting event?')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('Looking for an exciting event?')
+    ).toBeInTheDocument();
   });
 
   it('renders the Log In button', () => {

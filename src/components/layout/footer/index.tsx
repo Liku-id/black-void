@@ -6,9 +6,9 @@ import logo from '@/assets/logo/white-logo.svg';
 
 const Footer = () => {
   return (
-    <footer className="bg-black pb-[24px] w-full">
-      <Container className="pt-14 lg:pt-[96px] px-4">
-        <Box className="max-w-[1440px] mx-auto bg-dark-gray py-14 px-4 lg:p-[56px] grid grid-cols-1 lg:[grid-template-columns:2fr_0.75fr_1fr_1.5fr] gap-8 lg:gap-[108px]">
+    <footer className="w-full bg-black pb-[24px]">
+      <Container className="px-4 pt-14 lg:pt-[96px]">
+        <Box className="bg-dark-gray mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-14 lg:[grid-template-columns:2fr_0.75fr_1fr_1.5fr] lg:gap-[108px] lg:p-[56px]">
           {/* Part 1: Logo and Text */}
           <Box>
             <Box className="mb-4">
@@ -16,45 +16,74 @@ const Footer = () => {
             </Box>
             <Typography
               type="body"
-              className="text-white font-onest text-[18px] font-semibold leading-normal mb-10"
-            >
+              className="font-onest mb-10 text-[18px] leading-normal font-semibold text-white">
               PT Aku Rela Kamu Bahagia
             </Typography>
             <Typography
               type="body"
-              className="text-white font-onest text-[14px] leading-normal"
-            >
-              Jl. Ciniru III No.2, RT.2/RW.3, Rw. Barat,Kec. Kby. Baru, Jakarta Selatan 12180,Indonesia
+              className="font-onest text-[14px] leading-normal text-white">
+              Jl. Ciniru III No.2, RT.2/RW.3, Rw. Barat,Kec. Kby. Baru, Jakarta
+              Selatan 12180,Indonesia
             </Typography>
           </Box>
           {/* Part 2: Event Type */}
           <Box>
             <Typography
               type="heading"
-              className="text-white text-[24px] leading-normal mb-4"
-            >
+              className="mb-4 text-[24px] leading-normal text-white">
               EVENT TYPE
             </Typography>
             <Box className="flex flex-col gap-2">
-              <Link href="#project-list" className="text-white font-onest text-[14px]">Music</Link>
-              <Link href="#project-list" className="text-white font-onest text-[14px]">Sports</Link>
-              <Link href="#project-list" className="text-white font-onest text-[14px]">Exhibition</Link>
-              <Link href="#project-list" className="text-white font-onest text-[14px]">Festival</Link>
+              <Link
+                href="#project-list"
+                className="font-onest text-[14px] text-white">
+                Music
+              </Link>
+              <Link
+                href="#project-list"
+                className="font-onest text-[14px] text-white">
+                Sports
+              </Link>
+              <Link
+                href="#project-list"
+                className="font-onest text-[14px] text-white">
+                Exhibition
+              </Link>
+              <Link
+                href="#project-list"
+                className="font-onest text-[14px] text-white">
+                Festival
+              </Link>
             </Box>
           </Box>
           {/* Part 3 */}
           <Box>
             <Typography
               type="heading"
-              className="text-white text-[24px] leading-normal mb-4"
-            >
+              className="mb-4 text-[24px] leading-normal text-white">
               ABOUT WUKONG
             </Typography>
             <Box className="flex flex-col gap-2">
-              <Link href="/about-us" className="text-white font-onest text-[14px]">About Us</Link>
-              <Link href="/terms-and-conditions" className="text-white font-onest text-[14px]">Terms & Conditions</Link>
-              <Link href="/privacy-policy" className="text-white font-onest text-[14px]">Privacy Policy</Link>
-              <Link href="/cookie-policy" className="text-white font-onest text-[14px]">Cookie Policy</Link>
+              <Link
+                href="/about-us"
+                className="font-onest text-[14px] text-white">
+                About Us
+              </Link>
+              <Link
+                href="/terms-and-conditions"
+                className="font-onest text-[14px] text-white">
+                Terms & Conditions
+              </Link>
+              <Link
+                href="/privacy-policy"
+                className="font-onest text-[14px] text-white">
+                Privacy Policy
+              </Link>
+              <Link
+                href="/cookie-policy"
+                className="font-onest text-[14px] text-white">
+                Cookie Policy
+              </Link>
             </Box>
           </Box>
           {/* Part 4 */}
@@ -62,25 +91,28 @@ const Footer = () => {
             <Typography
               type="heading"
               color="text-white"
-              className="text-[24px] leading-normal mb-4"
-            >
+              className="mb-4 text-[24px] leading-normal">
               FOLLOW US ON
             </Typography>
 
-            <Box className="flex flex-col gap-2 mb-10">
-              {null}
-            </Box>
+            <Box className="mb-10 flex flex-col gap-2">{null}</Box>
 
             <Box>
-              <Box className="flex items-center gap-4 mb-2">
-                <Box className="w-[24px] h-[24px] bg-white">{null}</Box>
-                <Typography type="body" color="text-white" className="text-[14px]">
+              <Box className="mb-2 flex items-center gap-4">
+                <Box className="h-[24px] w-[24px] bg-white">{null}</Box>
+                <Typography
+                  type="body"
+                  color="text-white"
+                  className="text-[14px]">
                   +62 813-8811-9390
                 </Typography>
               </Box>
               <Box className="flex items-center gap-4">
-                <Box className="w-[24px] h-[24px] bg-white">{null}</Box>
-                <Typography type="body" color="text-white" className="text-[14px]">
+                <Box className="h-[24px] w-[24px] bg-white">{null}</Box>
+                <Typography
+                  type="body"
+                  color="text-white"
+                  className="text-[14px]">
                   support@wukong.co.id
                 </Typography>
               </Box>
@@ -88,16 +120,13 @@ const Footer = () => {
           </Box>
         </Box>
       </Container>
-      
+
       <Typography
         type="body"
-        className="text-white text-center text-[16px] font-normal mt-6 px-0"
-      >
-        Version 1.0.0 | Hak Cipta 2025 - {" "}
-        <br className="block lg:hidden" />
+        className="mt-6 px-0 text-center text-[16px] font-normal text-white">
+        Version 1.0.0 | Hak Cipta 2025 - <br className="block lg:hidden" />
         PT Aku Rela Kamu Bahagia
       </Typography>
-      
     </footer>
   );
 };

@@ -17,7 +17,9 @@ describe('ProjectCard', () => {
     expect(screen.getByText(defaultProps.location)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.date)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.price)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /buy ticket/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /buy ticket/i })
+    ).toBeInTheDocument();
   });
 
   it('renders location and calendar icons', () => {
@@ -30,7 +32,9 @@ describe('ProjectCard', () => {
     const { container } = render(<ProjectCard {...defaultProps} />);
     expect(container.firstChild).toHaveClass('w-[270px]');
     expect(container.firstChild).toHaveClass('bg-white');
-    expect(container.firstChild).toHaveClass('hover:shadow-[6px_6px_0px_0px_#FFF]');
+    expect(container.firstChild).toHaveClass(
+      'hover:shadow-[6px_6px_0px_0px_#FFF]'
+    );
   });
 
   it('handles image onError and onLoad', () => {
@@ -39,11 +43,17 @@ describe('ProjectCard', () => {
     const img = screen.getByAltText(defaultProps.title) as HTMLImageElement;
     // Simulate onLoad
     fireEvent.load(img);
-    expect(logSpy).toHaveBeenCalledWith('Image loaded successfully:', defaultProps.image);
+    expect(logSpy).toHaveBeenCalledWith(
+      'Image loaded successfully:',
+      defaultProps.image
+    );
     // Simulate onError
     fireEvent.error(img);
-    expect(logSpy).toHaveBeenCalledWith('Image failed to load:', defaultProps.image);
+    expect(logSpy).toHaveBeenCalledWith(
+      'Image failed to load:',
+      defaultProps.image
+    );
     expect(img.src).toContain('dummyimage.com');
     logSpy.mockRestore();
   });
-}); 
+});

@@ -41,4 +41,4 @@ describe('Footer', () => {
     expect(screen.getByText(/\+62 813-8811-9390/i)).toBeInTheDocument();
     expect(screen.getByText(/support@wukong.co.id/i)).toBeInTheDocument();
   });
-}); 
+});

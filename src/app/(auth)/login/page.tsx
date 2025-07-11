@@ -22,8 +22,7 @@ export default function LoginPage() {
           <a
             id="forgot_password_link"
             href="/forgot-password"
-            className="hover:text-green underline"
-          >
+            className="hover:text-green underline">
             Forgot Your Password?
           </a>
         </Typography>
@@ -34,8 +33,7 @@ export default function LoginPage() {
             <a
               id="sign_up_link"
               href="/register"
-              className="hover:text-green underline"
-            >
+              className="hover:text-green underline">
               Sign up
             </a>
           </Typography>

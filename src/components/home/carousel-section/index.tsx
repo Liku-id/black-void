@@ -1,7 +1,7 @@
-"use client";
+'use client';
 import { Container, Box, Carousel, Slider } from '@/components';
 import { useResponsive } from '@/lib/use-responsive';
-import Image from "next/image";
+import Image from 'next/image';
 
 const images = [
   'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1',
@@ -24,18 +24,26 @@ export default function CarouselSection() {
   const sliderConfig = getSliderConfig();
 
   const widthClass =
-    sliderConfig.width === 900 ? 'w-[900px]' :
-    sliderConfig.width === 800 ? 'w-[800px]' :
-    sliderConfig.width === 550 ? 'w-[550px]' :
-    sliderConfig.width === 450 ? 'w-[450px]' :
-    'w-[350px]';
+    sliderConfig.width === 900
+      ? 'w-[900px]'
+      : sliderConfig.width === 800
+        ? 'w-[800px]'
+        : sliderConfig.width === 550
+          ? 'w-[550px]'
+          : sliderConfig.width === 450
+            ? 'w-[450px]'
+            : 'w-[350px]';
 
   const heightClass =
-    sliderConfig.height === 500 ? 'h-[500px]' :
-    sliderConfig.height === 450 ? 'h-[450px]' :
-    sliderConfig.height === 350 ? 'h-[350px]' :
-    sliderConfig.height === 300 ? 'h-[300px]' :
-    'h-[200px]';
+    sliderConfig.height === 500
+      ? 'h-[500px]'
+      : sliderConfig.height === 450
+        ? 'h-[450px]'
+        : sliderConfig.height === 350
+          ? 'h-[350px]'
+          : sliderConfig.height === 300
+            ? 'h-[300px]'
+            : 'h-[200px]';
 
   return (
     <section>
@@ -46,8 +54,7 @@ export default function CarouselSection() {
               autoScroll={false}
               className={`${widthClass} ${heightClass}`}
               itemWidth={sliderConfig.width}
-              pagination
-            >
+              pagination>
               {images.map((src, i) => (
                 <Image
                   key={i}
@@ -70,4 +77,4 @@ export default function CarouselSection() {
       </Container>
     </section>
   );
-} 
+}

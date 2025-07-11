@@ -32,17 +32,20 @@ describe('useResponsive', () => {
       delete window.matchMedia;
     }
     if (originalWindow) {
-      Object.defineProperty(global, 'window', { value: originalWindow, writable: true });
+      Object.defineProperty(global, 'window', {
+        value: originalWindow,
+        writable: true,
+      });
     }
   });
 
   it('returns correct viewport object for breakpoints (lg: 1024px)', () => {
     window.matchMedia = createMatchMedia(1024) as any;
     const { result } = renderHook(() => useResponsive());
-    expect(result.current.sm).toBe(true);   // 640 <= 1024
-    expect(result.current.md).toBe(true);   // 768 <= 1024
-    expect(result.current.lg).toBe(true);   // 1024 <= 1024
-    expect(result.current.xl).toBe(false);  // 1280 > 1024
+    expect(result.current.sm).toBe(true); // 640 <= 1024
+    expect(result.current.md).toBe(true); // 768 <= 1024
+    expect(result.current.lg).toBe(true); // 1024 <= 1024
+    expect(result.current.xl).toBe(false); // 1280 > 1024
     expect(result.current['2xl']).toBe(false); // 1536 > 1024
   });
 
@@ -85,9 +88,16 @@ describe('useResponsive - additional coverage', () => {
   });
 
   it('supports custom breakpoints', () => {
-    window.matchMedia = jest.fn().mockImplementation((query) => {
+    window.matchMedia = jest.fn().mockImplementation(query => {
       // Custom: only 500px matches
-      return { matches: /500/.test(query), media: query, onchange: null, addEventListener: jest.fn(), removeEventListener: jest.fn(), dispatchEvent: jest.fn() };
+      return {
+        matches: /500/.test(query),
+        media: query,
+        onchange: null,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      };
     });
     const customBreakpoints = { mobile: 500, desktop: 1000 };
     const { result } = renderHook(() => useResponsive(customBreakpoints));
@@ -106,4 +116,4 @@ describe('useResponsive - additional coverage', () => {
     add.mockRestore();
     remove.mockRestore();
   });
-}); 
+});
