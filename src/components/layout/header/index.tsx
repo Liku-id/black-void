@@ -3,12 +3,11 @@ import Image from 'next/image';
 import { Box, TextField, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import searchIcon from '@/assets/icons/search.svg';
+import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState('');
-  const router = useRouter();
 
   const handleSearch = () => {
     console.log('search:', searchValue);
@@ -16,7 +15,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center">
-      <Container className="mx-4 flex h-20 items-center border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF] xl:mx-0">
+      <Container className="flex h-20 items-center border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF] mx-4 xl:mx-0">
         <Image
           src={logo}
           alt="Logo"
@@ -50,9 +49,9 @@ export default function Header() {
             Become Creator ?
           </Typography>
 
-          <Button className="ml-6" onClick={() => router.push('/login')}>
-            Log In
-          </Button>
+          <Link href="/login" className="ml-6">
+            <Button>Log In</Button>
+          </Link>
         </Box>
       </Container>
     </header>

@@ -96,7 +96,7 @@ export default function FAQSection() {
       </Container>
       <StripeText
         direction="horizontal"
-        scrollDirection="right-to-left"
+        scrollDirection="left-to-right"
         texts={text}
         className="hidden h-[64px] lg:flex"
       />

@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { Container, Box, Carousel, Slider } from '@/components';
 import { useResponsive } from '@/lib/use-responsive';
 import Image from 'next/image';
@@ -10,6 +11,10 @@ const images = [
 ];
 
 export default function CarouselSection() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // Panggil semua hook di top-level!
   const viewport = useResponsive();
   const isMobile = !viewport.sm;
 
@@ -44,6 +49,19 @@ export default function CarouselSection() {
           : sliderConfig.height === 300
             ? 'h-[300px]'
             : 'h-[200px]';
+
+  if (!mounted) {
+    // Skeleton responsif, tanpa border radius, tidak menyebabkan layout shift
+    return (
+      <section>
+        <Container>
+          <Box className="flex justify-center">
+            <Box className="bg-gray-200 animate-pulse w-[350px] h-[200px] sm:w-[450px] sm:h-[300px] md:w-[550px] md:h-[350px] lg:w-[800px] lg:h-[450px] xl:w-[900px] xl:h-[500px]" />
+          </Box>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section>
