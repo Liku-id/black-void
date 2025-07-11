@@ -24,6 +24,8 @@ const sizeClassMap: Record<number, string> = {
   24: 'text-[24px]',
   26: 'text-[26px]',
   32: 'text-[32px]',
+  40: 'text-[40px]',
+  41: 'text-[41px]',
   64: 'text-[64px]',
 };
 
