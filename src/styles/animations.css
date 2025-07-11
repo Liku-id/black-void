@@ -3,13 +3,13 @@
     transform: translateY(0%);
   }
   100% {
-    transform: translateY(calc(-100% - 2rem));
+    transform: translateY(-100%);
   }
 }
 
 @keyframes scroll-vertical-down {
   0% {
-    transform: translateY(calc(-100% - 2rem));
+    transform: translateY(-100%);
   }
   100% {
     transform: translateY(0%);
@@ -48,4 +48,35 @@
 
 .animate-scroll-horizontal-right {
   animation: scroll-horizontal-right 21s linear infinite;
+}
+
+.hover-text {
+  transition:
+    0.35s font-weight,
+    0.35s color;
+}
+
+.hover-text:hover {
+  font-weight: 900;
+  color: rgb(142, 245, 180);
+}
+
+/* To the right */
+.hover-text:hover + .hover-text {
+  font-weight: 500;
+  color: rgb(189, 246, 202);
+}
+
+.hover-text:hover + .hover-text + .hover-text {
+  font-weight: 300;
+}
+
+/* To the left */
+.hover-text:has(+ .hover-text:hover) {
+  font-weight: 500;
+  color: rgb(182, 252, 193);
+}
+
+.hover-text:has(+ .hover-text + .hover-text:hover) {
+  font-weight: 300;
 }
