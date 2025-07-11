@@ -28,7 +28,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % backgrounds.length);
+      setCurrentIndex(prev => (prev + 1) % backgrounds.length);
     }, 500);
 
     return () => clearInterval(interval);
@@ -38,7 +38,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
     <Box className="flex h-screen w-screen items-center justify-center overflow-hidden">
       <Box className="relative flex h-full w-full max-w-[1440px] 2xl:h-[810px]">
         {/* Left Side - Background */}
-        <Box className="relative hidden w-1/2 lg:block overflow-hidden">
+        <Box className="relative hidden w-1/2 overflow-hidden lg:block">
           {/* Backgrounds stacked on top of each other */}
           {backgrounds.map((bg, index) => (
             <Image
@@ -62,7 +62,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
             alt="Logo"
             width={320}
             height={110}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform z-10"
+            className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform"
             priority
           />
         </Box>

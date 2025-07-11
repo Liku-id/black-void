@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email } from '@/lib/utils/form-validation';
+import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
@@ -52,8 +52,7 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           <TextField
             id="email_field"
             name="email"

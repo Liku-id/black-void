@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@/components';
+import Link from 'next/link';
 
 const LoginForm = dynamic(() => import('@/components/auth/login/login-form'));
 
@@ -19,25 +20,23 @@ export default function LoginPage() {
       {/* Links */}
       <Box className="mt-16 flex flex-col items-center md:flex-row md:justify-between">
         <Typography size={12}>
-          <a
+          <Link
             id="forgot_password_link"
             href="/forgot-password"
-            className="hover:text-green underline"
-          >
+            className="hover:text-green underline">
             Forgot Your Password?
-          </a>
+          </Link>
         </Typography>
 
         <Box className="mt-7 md:mt-0">
           <Typography size={12}>
             Need an account?{' '}
-            <a
+            <Link
               id="sign_up_link"
               href="/register"
-              className="hover:text-green underline"
-            >
+              className="hover:text-green underline">
               Sign up
-            </a>
+            </Link>
           </Typography>
         </Box>
       </Box>

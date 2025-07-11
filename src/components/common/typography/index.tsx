@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import type { TypographyProps } from './typography.types';
 
 /**
@@ -20,7 +20,10 @@ const sizeClassMap: Record<number, string> = {
   12: 'text-[12px]',
   14: 'text-[14px]',
   16: 'text-[16px]',
+  22: 'text-[22px]',
   24: 'text-[24px]',
+  26: 'text-[26px]',
+  32: 'text-[32px]',
   40: 'text-[40px]',
   41: 'text-[41px]',
   64: 'text-[64px]',

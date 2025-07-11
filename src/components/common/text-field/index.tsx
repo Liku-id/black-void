@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Box } from '@/components';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useFormContext, Controller, RegisterOptions } from 'react-hook-form';
 import { Typography } from '../typography';
 
@@ -111,11 +111,15 @@ export const TextField: React.FC<TextFieldProps> = ({
   return (
     <Box className={containerClass}>
       {startIcon && (
-        <Box
-          className="mr-2 flex cursor-pointer items-center"
-          onClick={onStartIconClick}>
-          <Image src={startIcon} alt="Start icon" width={20} height={20} />
-        </Box>
+        <span className="flex items-center" onClick={onStartIconClick}>
+          <Image
+            src={startIcon}
+            alt="Start icon"
+            width={24}
+            height={24}
+            className="h-5 w-5 md:h-6 md:w-6"
+          />
+        </span>
       )}
       <input
         type={type}
@@ -130,7 +134,13 @@ export const TextField: React.FC<TextFieldProps> = ({
         <Box
           className="ml-2 flex cursor-pointer items-center"
           onClick={onEndIconClick}>
-          <Image src={endIcon} alt="End icon" width={20} height={20} />
+          <Image
+            src={endIcon}
+            alt="End icon"
+            width={24}
+            height={24}
+            className="h-5 w-5 md:h-6 md:w-6"
+          />
         </Box>
       )}
     </Box>

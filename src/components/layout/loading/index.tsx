@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Box } from '@/components';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import loadingIcon from '@/assets/icons/loading.svg';
 
 export default function Loading({ className }: { className?: string }) {
