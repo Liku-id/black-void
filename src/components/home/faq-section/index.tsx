@@ -1,5 +1,6 @@
 'use client'
 import { Container, Typography, Box } from '@/components';
+import StripeText from '@/components/layout/stripe-text';
 import Accordion from '@/components/common/accordion';
 import { useState } from 'react';
 
@@ -20,9 +21,11 @@ export default function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const leftFaqs = faqs.slice(0, 5);
   const rightFaqs = faqs.slice(5, 10);
+  const text = ["Let's collaborate", "Let's create", "Let’s connect", "Let’s Play", "Let’s fun", "Let’s learn"];
 
   return (
     <section className="bg-white">
+      <StripeText direction="horizontal" scrollDirection='right-to-left' texts={text} className="hidden h-[64px] lg:flex" />
       <Container className='px-4 py-12 md:py-24'>
         <Typography as="h2" type="heading" size={32} color="text-black" className="font-bebas mb-8">
           FAQ
@@ -60,6 +63,7 @@ export default function FAQSection() {
           </Box>
         </Box>
       </Container>
+      <StripeText direction="horizontal" scrollDirection='right-to-left' texts={text} className="hidden h-[64px] lg:flex" />
     </section>
   );
 } 

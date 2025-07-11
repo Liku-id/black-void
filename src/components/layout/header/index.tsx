@@ -4,9 +4,11 @@ import { Box, TextField, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import searchIcon from '@/assets/icons/search.svg';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
 
   const handleSearch = () => {
     console.log('search:', searchValue);
@@ -48,7 +50,7 @@ export default function Header() {
             Become Creator ?
           </Typography>
 
-          <Button className="ml-6">Log In</Button>
+          <Button className="ml-6" onClick={() => router.push('/login')}>Log In</Button>
         </Box>
       </Container>
     </header>
