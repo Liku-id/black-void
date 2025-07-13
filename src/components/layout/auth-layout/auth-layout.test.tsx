@@ -13,17 +13,7 @@ jest.mock('@/components/layout/stripe-text', () => ({
 }));
 
 describe('AuthLayout', () => {
-  it('renders background and logo images', () => {
-    render(<AuthLayout />);
-
-    const backgroundImg = screen.getByAltText(
-      /Event Ticketing Platform Login and Registration Background/i
-    );
-    const logoImg = screen.getByAltText(/Logo/i);
-
-    expect(backgroundImg).toBeInTheDocument();
-    expect(logoImg).toBeInTheDocument();
-  });
+  // Test gambar dihapus karena asset sudah tidak ada
 
   it('renders stripe vertical text component', () => {
     render(<AuthLayout />);

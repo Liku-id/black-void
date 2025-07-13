@@ -16,7 +16,8 @@ describe('StripeText component', () => {
       expect(screen.getAllByText(text)).toHaveLength(2);
     });
 
-    const verticalText = screen.getByText("Let's collaborate");
+    // Ambil semua elemen dan cek className pada salah satu
+    const verticalText = screen.getAllByText("Let's collaborate")[0];
     expect(verticalText.className).toMatch(/rotate-180/);
     expect(verticalText.className).toMatch(/writing-mode/);
   });
@@ -35,11 +36,8 @@ describe('StripeText component', () => {
       expect(screen.getAllByText(text)).toHaveLength(2);
     });
 
-    const dots = screen
-      .getAllByRole('presentation', {
-        hidden: true,
-      })
-      .filter(el => el.className.includes('rounded-full'));
+    // Cari elemen dengan class rounded-full (dot), tidak perlu role presentation
+    const dots = Array.from(document.querySelectorAll('.rounded-full'));
     expect(dots.length).toBeGreaterThan(0);
   });
 

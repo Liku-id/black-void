@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
+    domains: ['dummyimage.com'],
     // Modern formats for better compression (only affects raster images: PNG, JPG, etc.)
     // SVG files remain unchanged and are already optimized
     formats: ['image/webp', 'image/avif'],

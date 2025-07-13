@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box, Typography } from '@/components';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 interface StripeTextProps {
   direction?: 'vertical' | 'horizontal';
