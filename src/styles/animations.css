@@ -58,7 +58,7 @@
 
 .hover-text:hover {
   font-weight: 900;
-  color: rgb(142, 245, 180);
+  color: var(--color-green);
 }
 
 /* To the right */

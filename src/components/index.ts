@@ -6,6 +6,8 @@ export { Container } from './common/container';
 export { TextField } from './common/text-field';
 export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
+export { Checkbox } from './common/checkbox';
+export { PasswordCheck } from './common/password-check';
 
 // Layout components
 export { default as Header } from './layout/header';

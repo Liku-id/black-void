@@ -6,7 +6,7 @@ import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    const { data } = await axios.post('/v1/login', formData);
+    const { data } = await axios.post('/v1/auth/login', formData);
 
     const response = NextResponse.json({
       message: 'Login success',
