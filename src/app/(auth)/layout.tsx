@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import AuthLayout from '@/components/layout/auth-layout';
+import AuthHeader from '@/components/layout/auth-header';
 
 export const metadata: Metadata = {
   title: 'Login | Wukong - Buy Concert Tickets, Events, and Entertainment',
@@ -16,6 +17,7 @@ export default function AuthSegmentLayout({
 }) {
   return (
     <main>
+      <AuthHeader />
       <AuthLayout>{children}</AuthLayout>
     </main>
   );

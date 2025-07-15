@@ -44,9 +44,9 @@ export default function FAQSection() {
     <section className="bg-white">
       <StripeText
         direction="horizontal"
-        scrollDirection="right-to-left"
+        scrollDirection="left-to-right"
         texts={text}
-        className="hidden h-[64px] lg:flex"
+        className="h-[64px]"
       />
       <Container className="px-4 py-12 md:py-24">
         <Typography
@@ -98,7 +98,7 @@ export default function FAQSection() {
         direction="horizontal"
         scrollDirection="left-to-right"
         texts={text}
-        className="hidden h-[64px] lg:flex"
+        className="flex h-[64px]"
       />
     </section>
   );

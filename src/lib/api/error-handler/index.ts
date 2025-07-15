@@ -36,7 +36,10 @@ export function handleErrorAPI(error: ErrorLike) {
 
   const traceId = error?.response?.data?.traceId || error?.traceId || '';
 
-  return NextResponse.json({ message, traceId }, { status: statusCode });
+  return NextResponse.json(
+    { message, traceId, success: false },
+    { status: statusCode }
+  );
 }
 
 // Error hit client side

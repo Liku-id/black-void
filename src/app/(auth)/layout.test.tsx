@@ -8,6 +8,16 @@ jest.mock('@/components/layout/auth-layout', () => ({
   ),
 }));
 
+jest.mock('@/components/layout/auth-header', () => ({
+  __esModule: true,
+  default: () => (
+    <header data-testid="auth-header">
+      <img alt="Logo" />
+      <button aria-label="Close" />
+    </header>
+  ),
+}));
+
 describe('AuthSegmentLayout', () => {
   it('renders children inside AuthLayout', () => {
     render(
@@ -18,6 +28,17 @@ describe('AuthSegmentLayout', () => {
 
     expect(screen.getByTestId('auth-layout')).toBeInTheDocument();
     expect(screen.getByText('Test Child')).toBeInTheDocument();
+  });
+
+  it('renders AuthHeader with logo and close button', () => {
+    render(
+      <AuthSegmentLayout>
+        <div>Test Child</div>
+      </AuthSegmentLayout>
+    );
+    expect(screen.getByTestId('auth-header')).toBeInTheDocument();
+    expect(screen.getByAltText(/logo/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 
   it('contains correct metadata information', () => {

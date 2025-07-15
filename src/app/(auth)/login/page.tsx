@@ -2,12 +2,12 @@ import dynamic from 'next/dynamic';
 import { Box, Typography } from '@/components';
 import Link from 'next/link';
 
-const LoginForm = dynamic(() => import('@/components/auth/login/login-form'));
+const LoginForm = dynamic(() => import('@/components/auth/login/form'));
 
 export default function LoginPage() {
   return (
-    <Box className="mx-auto mt-32 max-w-xs text-white xl:mr-0 xl:ml-47">
-      <Box className="mb-20 text-center">
+    <Box className="mx-auto mt-24 mb-10 max-w-sm text-white md:mt-32">
+      <Box className="mb-8 text-center md:mb-20">
         <Typography className="mb-4">Welcome to Wukong,</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">
           Log in to your account

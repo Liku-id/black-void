@@ -6,6 +6,7 @@ export { Container } from './common/container';
 export { TextField } from './common/text-field';
 export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
+export { Modal } from './common/modal';
 
 // Layout components
 export { default as Header } from './layout/header';
