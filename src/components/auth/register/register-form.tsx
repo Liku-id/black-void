@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email } from '@/utils/form-validation';
+import { email, validatePassword } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import {
   Box,
@@ -79,12 +79,12 @@ const StepperForm = () => {
     try {
       const payload = {
         ...formData,
-        phoneNumber: `${countryCode}${formData.phoneNumber}`,
+        phoneNumber: `${countryCode}${formData.phoneNumber.trim()}`,
       };
 
       const response = await axios.post('/api/auth/register', payload);
       if (response.status === 200) {
-        router.push('/register/verify-otp');
+        router.replace('/register/verify-otp');
       }
     } catch (error) {
       console.error(error);
@@ -191,6 +191,8 @@ const StepperForm = () => {
                 rules={{
                   required: 'Password is required',
                   minLength: { value: 8, message: 'Minimum 8 characters' },
+                  maxLength: { value: 12, message: 'Maximum 12 characters' },
+                  validate: validatePassword,
                 }}
                 endIcon={showPassword ? eyeOpened : eyeClosed}
                 onEndIconClick={() => setShowPassword(!showPassword)}
@@ -265,7 +267,11 @@ const StepperForm = () => {
                 </Typography>
               </Box>
 
-              <Button id="submit_button" type="submit" disabled={!agree}>
+              <Button
+                id="submit_button"
+                type="submit"
+                disabled={!agree || loading}
+              >
                 Submit
               </Button>
             </>
