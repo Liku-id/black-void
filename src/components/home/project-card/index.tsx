@@ -82,7 +82,11 @@ export default function ProjectCard({
             className="font-bebas leading-none">
             {price}
           </Typography>
-          <Button className="bg-green px-2 py-1 text-white">Buy Ticket</Button>
+          <Button
+            id={`${title.toLowerCase()}_buy_ticket_button`}
+            className="bg-green px-2 py-1 text-white">
+            Buy Ticket
+          </Button>
         </Box>
       </Box>
     </Box>

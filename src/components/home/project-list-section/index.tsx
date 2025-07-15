@@ -39,15 +39,15 @@ const dummyProjects = [
 
 export default function ProjectListSection() {
   return (
-    <section id="project-list" className="my-8 md:my-24">
+    <section id="project-list" className="my-8 lg:my-24">
       <Container className="px-4">
-        <Box className="mb-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-[20px]">
+        <Box className="mb-8 flex flex-col items-start gap-4 lg:flex-row lg:items-center lg:gap-[20px]">
           <Typography
             as="h2"
             type="heading"
             size={22}
             color="text-white"
-            className="font-bebas mr-0 sm:mr-2">
+            className="font-bebas mr-0 lg:mr-2">
             Filter Event:
           </Typography>
           <TextField placeholder="1" startIcon={locationIcon} />
@@ -55,7 +55,7 @@ export default function ProjectListSection() {
           <TextField placeholder="3" className="w-[231px]" />
         </Box>
 
-        <Box className="grid grid-cols-1 gap-[20px] sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <Box className="grid grid-cols-1 gap-[20px] sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4">
           {dummyProjects.map((project, idx) => (
             <ProjectCard key={idx} {...project} />
           ))}

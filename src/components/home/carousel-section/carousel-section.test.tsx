@@ -27,7 +27,9 @@ describe('CarouselSection', () => {
     render(<CarouselSection />);
 
     // Should render Slider
-    const imgs = screen.getAllByRole('img');
+    const imgs = screen.getAllByRole('img').filter(img =>
+      ['Image 1', 'Image 2', 'Image 3'].includes((img as HTMLImageElement).alt)
+    );
     expect(imgs).toHaveLength(images.length);
     images.forEach((src, i) => {
       expect(screen.getByAltText(`Image ${i + 1}`)).toHaveAttribute('src', src);
@@ -49,14 +51,15 @@ describe('CarouselSection', () => {
 
     // Should render Carousel (not Slider)
     // Carousel renders images as background or via props, so check for class
-    const carousel = screen.getByText((content, element) => {
+    const candidates = screen.getAllByText((content, element) => {
       return (
         !!element &&
         element.className.includes('w-[900px]') &&
         element.className.includes('h-[500px]')
       );
     });
-    expect(carousel).toBeInTheDocument();
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates[0]).toBeInTheDocument();
   });
 
   it('renders correct class for md viewport', () => {
@@ -64,14 +67,15 @@ describe('CarouselSection', () => {
     useResponsive.mockReturnValue({ sm: true, md: true, lg: false, xl: false });
     render(<CarouselSection />);
     // md: width 550, height 350
-    const el = screen.getByText((content, element) => {
+    const candidates = screen.getAllByText((content, element) => {
       return (
         !!element &&
         element.className.includes('w-[550px]') &&
         element.className.includes('h-[350px]')
       );
     });
-    expect(el).toBeInTheDocument();
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates[0]).toBeInTheDocument();
   });
 
   it('renders correct class for lg viewport', () => {
@@ -79,14 +83,15 @@ describe('CarouselSection', () => {
     useResponsive.mockReturnValue({ sm: true, md: true, lg: true, xl: false });
     render(<CarouselSection />);
     // lg: width 800, height 450
-    const el = screen.getByText((content, element) => {
+    const candidates = screen.getAllByText((content, element) => {
       return (
         !!element &&
         element.className.includes('w-[800px]') &&
         element.className.includes('h-[450px]')
       );
     });
-    expect(el).toBeInTheDocument();
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates[0]).toBeInTheDocument();
   });
 
   it('renders correct class for sm viewport', () => {

@@ -1,43 +1,55 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { Button, TextField, Typography } from '@/components';
-import eyeClosed from '@/assets/icons/eye-closed.svg';
-import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
+import SentModal from './sent-modal';
 
-interface FormDataLogin {
+interface ForgotPasswordData {
   email: string;
-  password: string;
 }
 
-const LoginForm = () => {
-  const router = useRouter();
+const ForgotPasswordForm = () => {
 
   // Initialize state
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [sentEmail, setSentEmail] = useState('');
 
-  const methods = useForm<FormDataLogin>({});
+  const methods = useForm<ForgotPasswordData>({ mode: 'onChange' });
 
-  const onSubmit = async (formData: FormDataLogin) => {
+  const onSubmit = async (formData: ForgotPasswordData) => {
     setError('');
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/login', formData);
+      const response = await axios.post('/api/auth/forgot-password', formData);
 
       if (response.status === 200) {
-        router.push('/');
+        setSentEmail(formData.email);
+        setModalOpen(true);
+        // router.push('/'); // Don't redirect, show modal instead
       }
     } catch (error) {
       console.error(error);
+      setError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!sentEmail) return;
+    setLoading(true);
+    setError('');
+    try {
+      await axios.post('/api/auth/forgot-password', { email: sentEmail });
+    } catch (error) {
       setError(getErrorMessage(error));
     } finally {
       setLoading(false);
@@ -58,22 +70,11 @@ const LoginForm = () => {
             name="email"
             type="email"
             placeholder="Email Address"
-            className="mb-7 w-[270px]"
+            className="mb-10 w-[270px]"
             rules={{ required: 'Email is required', validate: email }}
           />
 
-          <TextField
-            id="password_field"
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            className="mb-10 w-[270px]"
-            rules={{ required: 'Password is required' }}
-            endIcon={showPassword ? eyeOpened : eyeClosed}
-            onEndIconClick={() => setShowPassword(!showPassword)}
-          />
-
-          <Button id="login_button">Log In</Button>
+          <Button id="send_link_button" type="submit">Send Link</Button>
 
           {error && (
             <Typography size={12} className="text-danger mt-2">
@@ -82,8 +83,15 @@ const LoginForm = () => {
           )}
         </form>
       </FormProvider>
+
+      <SentModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        sentEmail={sentEmail}
+        onResend={handleResend}
+      />
     </>
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;
