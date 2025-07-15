@@ -97,9 +97,9 @@ describe('Component Integration Tests', () => {
     const header = screen.getByRole('banner');
     expect(header).toBeInTheDocument();
 
-    const logo = screen.getByAltText('Logo');
-    expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src', 'mocked-logo.svg');
+    const logoImages = screen.getAllByAltText('Logo');
+    expect(logoImages[0]).toBeInTheDocument();
+    expect(logoImages[0]).toHaveAttribute('src', 'mocked-logo.svg');
   });
 
   it('renders ThreeBackground with correct styling', () => {
@@ -148,7 +148,8 @@ describe('Component Integration Tests', () => {
 
     // Header should be present
     expect(screen.getByRole('banner')).toBeInTheDocument();
-    expect(screen.getByAltText('Logo')).toBeInTheDocument();
+    const logoImages = screen.getAllByAltText('Logo');
+    expect(logoImages[0]).toBeInTheDocument();
 
     // Typography should be present
     const title = screen.getByRole('heading', { level: 1 });

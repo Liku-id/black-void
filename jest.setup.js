@@ -69,3 +69,19 @@ jest.mock('next/image', () => ({
   __esModule: true,
   default: props => <img {...props} />,
 }));
+
+if (typeof global.Request === 'undefined') {
+  global.Request = class {};
+}
+if (typeof global.NextResponse === 'undefined') {
+  global.NextResponse = {
+    json: jest.fn(data => data),
+  };
+}
+if (typeof global.Response === 'undefined') {
+  global.Response = class {
+    static json() {
+      return {};
+    }
+  };
+}

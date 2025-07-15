@@ -6,6 +6,7 @@ export { Container } from './common/container';
 export { TextField } from './common/text-field';
 export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
+export { Modal } from './common/modal';
 export { Checkbox } from './common/checkbox';
 export { PasswordCheck } from './common/password-check';
 

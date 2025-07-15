@@ -32,6 +32,7 @@ describe('handleErrorAPI', () => {
       {
         message: 'Unauthorized',
         traceId: 'trace-123',
+        success: false,
       },
       { status: 401 }
     );
@@ -51,6 +52,7 @@ describe('handleErrorAPI', () => {
       {
         message: 'Server down',
         traceId: '',
+        success: false,
       },
       { status: 503 }
     );
@@ -63,6 +65,7 @@ describe('handleErrorAPI', () => {
       {
         message: 'An unexpected error occurred.',
         traceId: '',
+        success: false,
       },
       { status: 500 }
     );

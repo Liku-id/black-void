@@ -58,7 +58,7 @@ const LoginForm = () => {
             name="email"
             type="email"
             placeholder="Email Address"
-            className="mb-7 w-[270px]"
+            className="mb-4 w-[270px] md:mb-7"
             rules={{ required: 'Email is required', validate: email }}
           />
 

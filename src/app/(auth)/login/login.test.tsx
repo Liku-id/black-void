@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import LoginPage from './page';
 
-jest.mock('@/components/auth/login/login-form', () => () => (
+jest.mock('@/components/auth/login/form', () => () => (
   <div data-testid="login-form">Mocked LoginForm</div>
 ));
 
