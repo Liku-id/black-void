@@ -14,7 +14,6 @@ interface ForgotPasswordData {
 }
 
 const ForgotPasswordForm = () => {
-
   // Initialize state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -74,7 +73,9 @@ const ForgotPasswordForm = () => {
             rules={{ required: 'Email is required', validate: email }}
           />
 
-          <Button id="send_link_button" type="submit">Send Link</Button>
+          <Button id="send_link_button" type="submit">
+            Send Link
+          </Button>
 
           {error && (
             <Typography size={12} className="text-danger mt-2">

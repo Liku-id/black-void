@@ -27,9 +27,13 @@ describe('CarouselSection', () => {
     render(<CarouselSection />);
 
     // Should render Slider
-    const imgs = screen.getAllByRole('img').filter(img =>
-      ['Image 1', 'Image 2', 'Image 3'].includes((img as HTMLImageElement).alt)
-    );
+    const imgs = screen
+      .getAllByRole('img')
+      .filter(img =>
+        ['Image 1', 'Image 2', 'Image 3'].includes(
+          (img as HTMLImageElement).alt
+        )
+      );
     expect(imgs).toHaveLength(images.length);
     images.forEach((src, i) => {
       expect(screen.getByAltText(`Image ${i + 1}`)).toHaveAttribute('src', src);

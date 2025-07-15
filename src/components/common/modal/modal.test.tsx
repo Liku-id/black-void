@@ -21,7 +21,11 @@ describe('Modal', () => {
 
   it('renders title, children, and footer when open', () => {
     render(
-      <Modal open={true} onClose={jest.fn()} title="Test Title" footer={<div>Footer</div>}>
+      <Modal
+        open={true}
+        onClose={jest.fn()}
+        title="Test Title"
+        footer={<div>Footer</div>}>
         <div>Modal Content</div>
       </Modal>
     );
@@ -41,4 +45,4 @@ describe('Modal', () => {
     fireEvent.click(closeBtn!);
     expect(onClose).toHaveBeenCalled();
   });
-}); 
+});

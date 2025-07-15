@@ -81,7 +81,7 @@ const ResetPasswordForm = () => {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (!token || !email) {
       router.replace('/forgot-password');
     }
@@ -96,8 +96,7 @@ const ResetPasswordForm = () => {
         <form
           data-testid="reset-password-form"
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           <TextField
             id="password_field"
             name="password"
@@ -122,22 +121,29 @@ const ResetPasswordForm = () => {
                   value === passwordValue || 'Password does not match',
               }}
               endIcon={showConfirmPassword ? EyeOpened : EyeClosed}
-              onEndIconClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              onEndIconClick={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
             />
             {/* Error/success icon absolute at the right of the input */}
             {confirmPasswordValue.length > 0 && (
-              <span className="absolute right-[-32px] top-3 flex items-center">
+              <span className="absolute top-3 right-[-32px] flex items-center">
                 {showErrorIcon && (
                   <Image src={ErrorIcon} alt="Error" width={22} height={22} />
                 )}
                 {showSuccessIcon && (
-                  <Image src={SuccessIcon} alt="Success" width={22} height={22} />
+                  <Image
+                    src={SuccessIcon}
+                    alt="Success"
+                    width={22}
+                    height={22}
+                  />
                 )}
               </span>
             )}
           </Box>
 
-          <Box className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3 mb-10">
+          <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
             <Checkbox checked={passwordChecks.length} disabled>
               <Typography type="body" size={14}>
                 8-12 Character
@@ -163,8 +169,7 @@ const ResetPasswordForm = () => {
           <Button
             id="reset_password_button"
             type="submit"
-            disabled={!allValid || loading}
-          >
+            disabled={!allValid || loading}>
             Reset Password
           </Button>
 
@@ -176,10 +181,7 @@ const ResetPasswordForm = () => {
         </form>
       </FormProvider>
 
-      <SuccessModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      <SuccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 };

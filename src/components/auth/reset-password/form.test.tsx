@@ -19,7 +19,10 @@ const pushMock = jest.fn();
 const replaceMock = jest.fn();
 
 beforeEach(() => {
-  (useRouter as jest.Mock).mockReturnValue({ push: pushMock, replace: replaceMock });
+  (useRouter as jest.Mock).mockReturnValue({
+    push: pushMock,
+    replace: replaceMock,
+  });
   (useSearchParams as jest.Mock).mockReturnValue({
     get: (key: string) => {
       if (key === 'token') return 'token123';
@@ -39,8 +42,12 @@ describe('ResetPasswordForm', () => {
 
   it('shows error if confirm password does not match', async () => {
     render(<ResetPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'Password1!' } });
-    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'Password2!' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: 'Password1!' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), {
+      target: { value: 'Password2!' },
+    });
     fireEvent.blur(screen.getByPlaceholderText('Confirm Password'));
     await waitFor(() => {
       expect(screen.getByText(/password does not match/i)).toBeInTheDocument();
@@ -68,8 +75,12 @@ describe('ResetPasswordForm', () => {
     render(<ResetPasswordForm />);
     const button = screen.getByRole('button', { name: /reset password/i });
     expect(button).toBeDisabled();
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'Password1!' } });
-    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'Password1!' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: 'Password1!' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), {
+      target: { value: 'Password1!' },
+    });
     expect(button).not.toBeDisabled();
   });
 
@@ -142,8 +153,12 @@ describe('ResetPasswordForm', () => {
 
   it('shows loading overlay when submitting form', async () => {
     const { baseElement } = render(<ResetPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'Password1!' } });
-    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'Password1!' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: 'Password1!' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), {
+      target: { value: 'Password1!' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /reset password/i }));
   });
 
@@ -155,13 +170,19 @@ describe('ResetPasswordForm', () => {
     });
 
     render(<ResetPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'Password1!' } });
-    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), { target: { value: 'Password1!' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: 'Password1!' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm Password'), {
+      target: { value: 'Password1!' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
-    expect(await screen.findByText((content) => content.includes('Test error'))).toBeInTheDocument();
+    expect(
+      await screen.findByText(content => content.includes('Test error'))
+    ).toBeInTheDocument();
 
     // Bersihkan mock fetch
     (global.fetch as jest.Mock).mockRestore?.();
   });
-}); 
+});

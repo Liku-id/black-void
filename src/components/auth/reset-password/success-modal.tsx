@@ -21,11 +21,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose }) => {
           Your password has been succesfully reset.
         </Typography>
       }
-      footer={
-        <Button onClick={handleLogin}>Login</Button>
-      }
+      footer={<Button onClick={handleLogin}>Login</Button>}
     />
   );
 };
 
-export default SuccessModal; 
+export default SuccessModal;

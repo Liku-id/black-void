@@ -136,10 +136,15 @@ describe('ForgotPasswordForm', () => {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
-    const resendBtn = await screen.findByRole('button', { name: /resend link/i });
+    const resendBtn = await screen.findByRole('button', {
+      name: /resend link/i,
+    });
     fireEvent.click(resendBtn);
     expect(mockedAxios.post).toHaveBeenCalledTimes(2);
-    expect(mockedAxios.post).toHaveBeenLastCalledWith('/api/auth/forgot-password', { email: 'test@example.com' });
+    expect(mockedAxios.post).toHaveBeenLastCalledWith(
+      '/api/auth/forgot-password',
+      { email: 'test@example.com' }
+    );
   });
 
   it('does not call axios if resend is clicked with empty sentEmail', async () => {
@@ -153,8 +158,12 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('shows custom error message from API', async () => {
-    (errorHandler.getErrorMessage as jest.Mock).mockReturnValueOnce('Custom error');
-    mockedAxios.post.mockRejectedValue({ response: { data: { message: 'Custom error' } } });
+    (errorHandler.getErrorMessage as jest.Mock).mockReturnValueOnce(
+      'Custom error'
+    );
+    mockedAxios.post.mockRejectedValue({
+      response: { data: { message: 'Custom error' } },
+    });
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
@@ -171,7 +180,9 @@ describe('ForgotPasswordForm', () => {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
-    const resendBtn = await screen.findByRole('button', { name: /resend link/i });
+    const resendBtn = await screen.findByRole('button', {
+      name: /resend link/i,
+    });
     fireEvent.click(resendBtn);
     expect(await screen.findByAltText('Loading...')).toBeInTheDocument();
   });

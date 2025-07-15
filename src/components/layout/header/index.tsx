@@ -1,8 +1,8 @@
 'use client';
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from 'next/navigation';
 import { Box, TextField, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
@@ -21,7 +21,7 @@ export default function Header() {
   };
 
   useEffect(() => {
-    if (searchParams.get("openMenu") === "1") {
+    if (searchParams.get('openMenu') === '1') {
       setOpenMenu(true);
     }
   }, [searchParams]);
@@ -95,7 +95,7 @@ export default function Header() {
       </Container>
       {/* Mobile Fullscreen Menu Popup */}
       <Box
-        className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} h-full min-h-screen flex flex-col`}
+        className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} flex h-full min-h-screen flex-col`}
         style={{ willChange: 'transform' }}>
         <Box className="flex items-start justify-between">
           <Image
@@ -110,7 +110,7 @@ export default function Header() {
             <Image src={closeIcon} alt="Close" width={24} height={24} />
           </Box>
         </Box>
-        <Box className="mt-[44px] flex flex-col flex-1">
+        <Box className="mt-[44px] flex flex-1 flex-col">
           <Link href="#" className="mb-6">
             <Typography type="body" size={16} color="text-white">
               Contact Us
@@ -122,7 +122,7 @@ export default function Header() {
             </Typography>
           </Link>
           <Box className="flex-1" />
-          <Link href="/login" className="flex justify-center mb-40">
+          <Link href="/login" className="mb-40 flex justify-center">
             <Button className="px-[18px] py-[8px]">Log In</Button>
           </Link>
         </Box>

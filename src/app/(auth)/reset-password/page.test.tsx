@@ -11,4 +11,4 @@ describe('ResetPasswordPage', () => {
     const form = await screen.findByTestId('reset-password-form');
     expect(form).toBeInTheDocument();
   });
-}); 
+});

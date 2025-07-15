@@ -6,7 +6,7 @@ const LoginForm = dynamic(() => import('@/components/auth/login/form'));
 
 export default function LoginPage() {
   return (
-    <Box className="mx-auto mt-24 md:mt-32 max-w-sm text-white mb-10">
+    <Box className="mx-auto mt-24 mb-10 max-w-sm text-white md:mt-32">
       <Box className="mb-8 text-center md:mb-20">
         <Typography className="mb-4">Welcome to Wukong,</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">

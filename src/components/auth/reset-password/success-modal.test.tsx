@@ -13,13 +13,17 @@ describe('SuccessModal', () => {
   it('renders modal with title and content when open', () => {
     render(<SuccessModal open={true} onClose={jest.fn()} />);
     expect(screen.getByText(/reset password complete/i)).toBeInTheDocument();
-    expect(screen.getByText(/your password has been succesfully reset/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/your password has been succesfully reset/i)
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
   it('does not render when open is false', () => {
     render(<SuccessModal open={false} onClose={jest.fn()} />);
-    expect(screen.queryByText(/reset password complete/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/reset password complete/i)
+    ).not.toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', () => {
@@ -36,4 +40,4 @@ describe('SuccessModal', () => {
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
     expect(mockPush).toHaveBeenCalledWith('/login');
   });
-}); 
+});

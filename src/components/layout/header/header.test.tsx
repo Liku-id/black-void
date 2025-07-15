@@ -93,16 +93,17 @@ describe('Header', () => {
   it('has correct container structure', () => {
     render(<Header />);
     // Cari semua div dan temukan yang punya semua class utama
-    const containers = Array.from(document.querySelectorAll('div')).filter(el =>
-      el.className &&
-      el.className.includes('flex') &&
-      el.className.includes('h-20') &&
-      el.className.includes('items-center') &&
-      el.className.includes('border') &&
-      el.className.includes('border-black') &&
-      el.className.includes('bg-white') &&
-      el.className.includes('px-6') &&
-      el.className.includes('py-6')
+    const containers = Array.from(document.querySelectorAll('div')).filter(
+      el =>
+        el.className &&
+        el.className.includes('flex') &&
+        el.className.includes('h-20') &&
+        el.className.includes('items-center') &&
+        el.className.includes('border') &&
+        el.className.includes('border-black') &&
+        el.className.includes('bg-white') &&
+        el.className.includes('px-6') &&
+        el.className.includes('py-6')
     );
     expect(containers.length).toBeGreaterThan(0);
     const container = containers[0];
@@ -160,11 +161,17 @@ describe('Header', () => {
     // Menu popup muncul (logo putih, close icon, link)
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
-    const popupLogo = logos.find(img => (img as HTMLImageElement).width === 100 && (img as HTMLImageElement).height === 24);
+    const popupLogo = logos.find(
+      img =>
+        (img as HTMLImageElement).width === 100 &&
+        (img as HTMLImageElement).height === 24
+    );
     expect(popupLogo).toBeInTheDocument();
     expect(screen.getAllByText(/Contact Us/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Become Creator/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole('button', { name: /log in/i }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole('button', { name: /log in/i }).length
+    ).toBeGreaterThan(0);
   });
 
   it('closes mobile menu when close icon is clicked', () => {
@@ -175,7 +182,11 @@ describe('Header', () => {
     fireEvent.click(closeIcon.parentElement!);
     // Menu popup hilang (logo putih tidak ada)
     const logos = screen.getAllByAltText('Logo');
-    const popupLogo = logos.find(img => (img as HTMLImageElement).width === 100 && (img as HTMLImageElement).height === 24);
+    const popupLogo = logos.find(
+      img =>
+        (img as HTMLImageElement).width === 100 &&
+        (img as HTMLImageElement).height === 24
+    );
     expect(popupLogo).toBeInTheDocument(); // Logo tetap ada di desktop/mobile, popup hilang
   });
 
@@ -186,7 +197,11 @@ describe('Header', () => {
     render(<Header />);
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
-    const popupLogo = logos.find(img => (img as HTMLImageElement).width === 100 && (img as HTMLImageElement).height === 24);
+    const popupLogo = logos.find(
+      img =>
+        (img as HTMLImageElement).width === 100 &&
+        (img as HTMLImageElement).height === 24
+    );
     expect(popupLogo).toBeInTheDocument();
   });
 
