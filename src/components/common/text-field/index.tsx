@@ -50,6 +50,7 @@ export const TextField: React.FC<TextFieldProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const { control } = useFormContext();
+  const isControlledByForm = Boolean(name && control);
 
   const containerClass = cn(
     `flex items-center h-10 border border-black bg-white px-3 transition-all duration-200 outline-none ${isFocused ? 'border-black shadow-[4px_4px_0px_0px_#FFFF] translate-x-[-2px] translate-y-[-2px]' : ''}`,
@@ -84,10 +85,10 @@ export const TextField: React.FC<TextFieldProps> = ({
       </div>
     ) : null;
 
-  if (name) {
+  if (isControlledByForm) {
     return (
       <Controller
-        name={name}
+        name={name || ''}
         control={control}
         rules={rules}
         render={({ field, fieldState }) => (
