@@ -6,7 +6,7 @@ import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    const { data } = await axios.post('/v1/login', formData);
+    const { data } = await axios.post('/v1/auth/login', formData);
 
     const response = NextResponse.json({
       message: 'Login success',
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Set Cookies
     response.headers.set(
       'Set-Cookie',
-      serialize('access_token', data.data.access_token, {
+      serialize('access_token', data.body.access_token, {
         // ...cookieOptions,
         httpOnly: true,
         secure: true,
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     response.headers.append(
       'Set-Cookie',
-      serialize('refresh_token', data.data.refresh_token, {
+      serialize('refresh_token', data.body.refresh_token, {
         // ...cookieOptions,
         httpOnly: true,
         secure: true,
