@@ -8,7 +8,6 @@ export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
 export { Modal } from './common/modal';
 export { Checkbox } from './common/checkbox';
-export { PasswordCheck } from './common/password-check';
 
 // Layout components
 export { default as Header } from './layout/header';

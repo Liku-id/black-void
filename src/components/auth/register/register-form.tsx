@@ -5,31 +5,18 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email, validatePassword } from '@/utils/form-validation';
+import { email, usePasswordValidation } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  PasswordCheck,
-  Checkbox,
-} from '@/components';
+import { useAtom } from 'jotai';
+import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
+import { Box, Button, TextField, Typography, Checkbox } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
-import roundCheck from '@/assets/icons/rounded-check.svg';
 import errorIcon from '@/assets/icons/error.svg';
+import SuccessIcon from '@/assets/icons/success.svg';
 
-interface FormDataRegister {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const StepperForm = () => {
+const RegisterForm = () => {
   const router = useRouter();
 
   // Initialize state
@@ -40,14 +27,9 @@ const StepperForm = () => {
   const [step, setStep] = useState(1);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState({
-    length: false,
-    number: false,
-    special: false,
-    capital: false,
-  });
+  const [, setPaylod] = useAtom(registerFormAtom);
 
-  const methods = useForm<FormDataRegister>({
+  const methods = useForm<RegisterFormData>({
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
@@ -56,23 +38,12 @@ const StepperForm = () => {
 
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
-
   const isPasswordMatch = password === confirmPassword;
+  const passwordChecks = usePasswordValidation(password);
+  const allValid =
+    Object.values(passwordChecks).every(Boolean) && isPasswordMatch && agree;
 
-  const validatePasswordStrength = (password: string) => {
-    console.log(password, '<<  onPasswordChange?: (value: string) => void;');
-
-    setPasswordStrength({
-      length: password.length >= 8 && password.length <= 12,
-      number: /\d/.test(password),
-      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-      capital: /[A-Z]/.test(password),
-    });
-  };
-
-  console.log(passwordStrength, '<<<passwordStrength');
-
-  const onSubmit = async (formData: FormDataRegister) => {
+  const onSubmit = async (formData: RegisterFormData) => {
     setError('');
     setLoading(true);
 
@@ -82,7 +53,13 @@ const StepperForm = () => {
         phoneNumber: `${countryCode}${formData.phoneNumber.trim()}`,
       };
 
-      const response = await axios.post('/api/auth/register', payload);
+      // Set payload to global state
+      setPaylod(payload);
+
+      const response = await axios.post('/api/auth/request-otp', {
+        phoneNumber: payload.phoneNumber,
+      });
+
       if (response.status === 200) {
         router.replace('/register/verify-otp');
       }
@@ -160,7 +137,6 @@ const StepperForm = () => {
                     message: 'Minimum 8 digits',
                   },
                 }}
-                isPhoneNumber
                 selectedCountryCode={countryCode}
                 onCountryCodeChange={(val) => setCountryCode(val)}
                 countryCodes={[
@@ -188,15 +164,9 @@ const StepperForm = () => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 className="mb-8 w-[270px]"
-                rules={{
-                  required: 'Password is required',
-                  minLength: { value: 8, message: 'Minimum 8 characters' },
-                  maxLength: { value: 12, message: 'Maximum 12 characters' },
-                  validate: validatePassword,
-                }}
+                rules={{ required: 'Password is required' }}
                 endIcon={showPassword ? eyeOpened : eyeClosed}
                 onEndIconClick={() => setShowPassword(!showPassword)}
-                onPasswordChange={(value) => validatePasswordStrength(value)}
               />
 
               <Box className="flex items-center gap-4 relative mb-8">
@@ -221,7 +191,7 @@ const StepperForm = () => {
                 {password && confirmPassword && (
                   <Box className="absolute right-[-32px] top-[9px]">
                     <Image
-                      src={isPasswordMatch ? roundCheck : errorIcon}
+                      src={isPasswordMatch ? SuccessIcon : errorIcon}
                       alt="match indicator"
                       width={24}
                       height={24}
@@ -231,46 +201,54 @@ const StepperForm = () => {
               </Box>
 
               {/* Password Strength */}
-              <Box className="grid grid-cols-2 gap-x-20 gap-3 w-[335px] text-xs text-white mb-5">
-                <PasswordCheck
-                  label="8-12 Character"
-                  checked={passwordStrength.length}
-                />
-                <PasswordCheck
-                  label="Number"
-                  checked={passwordStrength.number}
-                />
-                <PasswordCheck
-                  label="Special Character"
-                  checked={passwordStrength.special}
-                />
-                <PasswordCheck
-                  label="Capital Letters"
-                  checked={passwordStrength.capital}
-                />
+              <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2 px-3">
+                <Checkbox checked={passwordChecks.length} disabled>
+                  <Typography type="body" size={14}>
+                    8-12 Character
+                  </Typography>
+                </Checkbox>
+                <Checkbox checked={passwordChecks.number} disabled>
+                  <Typography type="body" size={14}>
+                    Number
+                  </Typography>
+                </Checkbox>
+                <Checkbox checked={passwordChecks.special} disabled>
+                  <Typography type="body" size={14}>
+                    Special Character
+                  </Typography>
+                </Checkbox>
+                <Checkbox checked={passwordChecks.capital} disabled>
+                  <Typography type="body" size={14}>
+                    Capital Letters
+                  </Typography>
+                </Checkbox>
               </Box>
 
               {/* Checkbox Terms */}
-              <Box className="flex w-[335px] mb-6 gap-2">
-                <Checkbox checked={agree} onChange={() => setAgree(!agree)} />
-
-                <Typography size={12} className="text-white">
-                  I agree to the{' '}
-                  <span className="underline cursor-pointer">
-                    terms and conditions
-                  </span>{' '}
-                  and{' '}
-                  <span className="underline cursor-pointer">
-                    privacy policy
-                  </span>{' '}
-                  applicable at Wukong
-                </Typography>
+              <Box className="flex w-[335px] mb-6">
+                <Checkbox
+                  checked={agree}
+                  onChange={() => setAgree(!agree)}
+                  variant="style2"
+                >
+                  <Typography size={12} className="text-white">
+                    I agree to the{' '}
+                    <span className="underline cursor-pointer">
+                      terms and conditions
+                    </span>{' '}
+                    and{' '}
+                    <span className="underline cursor-pointer">
+                      privacy policy
+                    </span>{' '}
+                    applicable at Wukong
+                  </Typography>
+                </Checkbox>
               </Box>
 
               <Button
                 id="submit_button"
                 type="submit"
-                disabled={!agree || loading}
+                disabled={!allValid || loading}
               >
                 Submit
               </Button>
@@ -288,4 +266,4 @@ const StepperForm = () => {
   );
 };
 
-export default StepperForm;
+export default RegisterForm;

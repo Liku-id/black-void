@@ -6,10 +6,14 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
 
-    await axios.post('/v1/auth/opt/request', formData);
+    console.log(formData, '<<masuk');
+
+    const { data } = await axios.post('/v1/auth/otp/request', formData);
+
+    console.log(data, '<<data');
 
     return NextResponse.json({
-      message: 'OTP sent success',
+      message: 'OTP sent successfully',
       success: true,
     });
   } catch (e) {

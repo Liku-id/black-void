@@ -6,7 +6,9 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
 
-    await axios.post('/v1/auth/opt/verification', formData);
+    const { data } = await axios.post('/v1/auth/otp/verification', formData);
+
+    console.log(data, '<<<fasdhla');
 
     return NextResponse.json({
       message: 'OTP verify success',

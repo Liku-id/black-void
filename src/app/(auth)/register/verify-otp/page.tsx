@@ -8,16 +8,13 @@ const VerifyOtpForm = dynamic(
 export default function VerifyOtpPage() {
   return (
     <Box className="mx-auto mt-32 max-w-[370px] text-white xl:mr-0 xl:ml-30 relative">
-      <Box className="mb-8 text-center">
+      <Box className="text-center">
         <Typography size={41} type="heading" className="font-normal uppercase">
           {'phone number verification'.split('').map((child, idx) => (
             <span className="hover-text" key={idx}>
               {child}
             </span>
           ))}
-        </Typography>
-        <Typography className="my-4">
-          We already sent you one time password to this number +62 81234567890
         </Typography>
       </Box>
 

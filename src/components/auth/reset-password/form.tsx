@@ -3,11 +3,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button, TextField, Typography, Box } from '@/components';
+import { Button, TextField, Typography, Box,Checkbox } from '@/components';
 import Loading from '@/components/layout/loading';
 import EyeClosed from '@/assets/icons/eye-closed.svg';
 import EyeOpened from '@/assets/icons/eye-open.svg';
-import Checkbox from '@/components/common/checkbox';
 import ErrorIcon from '@/assets/icons/error.svg';
 import SuccessIcon from '@/assets/icons/success.svg';
 import Image from 'next/image';

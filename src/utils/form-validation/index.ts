@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 export const email = (value: string) =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
     ? 'Invalid email format'
@@ -17,4 +19,16 @@ export const validatePassword = (value: string) => {
     return 'Password must contain at least 1 special character';
   }
   return true;
+};
+
+export const usePasswordValidation = (password: string = '') => {
+  return useMemo(
+    () => ({
+      length: password.length >= 8 && password.length <= 12,
+      number: /[0-9]/.test(password),
+      special: /[^A-Za-z0-9]/.test(password),
+      capital: /[A-Z]/.test(password),
+    }),
+    [password]
+  );
 };
