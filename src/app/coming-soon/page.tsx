@@ -1,7 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ThreeBackground from '@/components/visuals/three-background';
-import Header from '@/components/layout/header';
+// Hapus import Header
+import Image from 'next/image';
+import logo from '@/assets/logo/white-logo.svg';
 import './coming-soon.css';
 
 function CountdownTimer() {
@@ -120,8 +122,18 @@ export default function ComingSoon() {
 
   return (
     <>
+      {/* Custom header dengan logo kiri atas dan background transparan */}
+      <div className="fixed top-0 left-0 z-20 flex h-16 w-full items-center px-8 py-10">
+        <Image
+          src={logo}
+          alt="Logo"
+          height={32}
+          width={120}
+          className="h-8 w-auto"
+          priority
+        />
+      </div>
       <ThreeBackground />
-      <Header />
       <div className="flex min-h-screen flex-col">
         {/* Main content - top section */}
         <div className="relative flex min-h-screen items-center justify-center p-8">
