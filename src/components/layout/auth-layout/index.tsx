@@ -2,11 +2,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import Image from 'next/image';
-import background1 from '@/assets/images/auth-background-1.jpg';
-import background2 from '@/assets/images/auth-background-2.jpg';
-import background3 from '@/assets/images/auth-background-3.jpg';
-import background4 from '@/assets/images/auth-background-4.jpg';
-import background5 from '@/assets/images/auth-background-5.jpg';
 import logo from '@/assets/logo/white-logo.svg';
 import { Box } from '@/components';
 import StripeText from '@/components/layout/stripe-text';
@@ -16,11 +11,11 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  background1,
-  background2,
-  background3,
-  background4,
-  background5,
+  '/images/auth-background-1.jpg',
+  '/images/auth-background-2.jpg',
+  '/images/auth-background-3.jpg',
+  '/images/auth-background-4.jpg',
+  '/images/auth-background-5.jpg',
 ];
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
