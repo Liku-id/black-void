@@ -11,11 +11,11 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  '/images/auth-layout-1.jpg',
-  '/images/auth-layout-2.jpg',
-  '/images/auth-layout-3.jpg',
-  '/images/auth-layout-4.jpg',
-  '/images/auth-layout-5.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-1.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-2.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-3.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-4.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-5.jpg',
 ];
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
@@ -41,7 +41,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               src={bg}
               alt={`Background ${index + 1}`}
               fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              sizes="100vw"
               style={{
                 objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,
