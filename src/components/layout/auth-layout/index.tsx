@@ -2,11 +2,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import Image from 'next/image';
-import background1 from '@/assets/image/auth-background-1.webp';
-import background2 from '@/assets/image/auth-background-2.webp';
-import background3 from '@/assets/image/auth-background-3.webp';
-import background4 from '@/assets/image/auth-background-4.webp';
-import background5 from '@/assets/image/auth-background-5.webp';
 import logo from '@/assets/logo/white-logo.svg';
 import { Box } from '@/components';
 import StripeText from '@/components/layout/stripe-text';
@@ -16,11 +11,11 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  background1,
-  background2,
-  background3,
-  background4,
-  background5,
+  "/image/auth-background-1.webp",
+  "/image/auth-background-2.webp",
+  "/image/auth-background-3.webp",
+  "/image/auth-background-4.webp",
+  "/image/auth-background-5.webp",
 ];
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
@@ -29,7 +24,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % backgrounds.length);
-    }, 500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
