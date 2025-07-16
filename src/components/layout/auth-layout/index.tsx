@@ -11,11 +11,11 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  '/images/auth-background-1.jpg',
-  '/images/auth-background-2.jpg',
-  '/images/auth-background-3.jpg',
-  '/images/auth-background-4.jpg',
-  '/images/auth-background-5.jpg',
+  '/images/auth-layout-1.jpg',
+  '/images/auth-layout-2.jpg',
+  '/images/auth-layout-3.jpg',
+  '/images/auth-layout-4.jpg',
+  '/images/auth-layout-5.jpg',
 ];
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
@@ -41,6 +41,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               src={bg}
               alt={`Background ${index + 1}`}
               fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
               style={{
                 objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,
