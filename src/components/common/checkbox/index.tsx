@@ -32,6 +32,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     type: 'checkbox',
     checked,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
       if (typeof onChange === 'function') {
         // Handle both signature types
         if (onChange.length === 0) {

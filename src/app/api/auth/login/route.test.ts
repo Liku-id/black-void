@@ -1,103 +1,115 @@
 import { POST } from './route';
-import { serialize } from 'cookie';
 import { NextRequest } from 'next/server';
-
-jest.mock('@/lib/api/axios-server', () => ({
-  __esModule: true,
-  default: {
-    post: jest.fn(),
-  },
-}));
-
-jest.mock('@/lib/api/error-handler', () => ({
-  handleErrorAPI: jest.fn(),
-}));
-
 import axios from '@/lib/api/axios-server';
 import { handleErrorAPI } from '@/lib/api/error-handler';
+import { serialize } from 'cookie';
 
-const mockSet = jest.fn();
-const mockAppend = jest.fn();
-
-jest.mock('next/server', () => ({
-  NextResponse: {
-    json: jest.fn(() => ({
-      headers: {
-        set: mockSet,
-        append: mockAppend,
-      },
-    })),
-  },
-  NextRequest: class {},
+jest.mock('@/lib/api/axios-server');
+jest.mock('@/lib/api/error-handler', () => ({
+  handleErrorAPI: jest.fn(() => ({
+    status: 500,
+    body: { error: 'error' },
+  })),
 }));
 
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockedHandleError = handleErrorAPI as jest.Mock;
+jest.mock('next/server', () => {
+  const actualNext = jest.requireActual('next/server');
+  return {
+    ...actualNext,
+    NextResponse: {
+      json: jest.fn((body: any, init?: any) => {
+        const headers = new Map();
+        return {
+          status: init?.status || 200,
+          body,
+          headers: {
+            set: headers.set.bind(headers),
+            append: headers.set.bind(headers),
+            get: headers.get.bind(headers),
+          },
+        };
+      }),
+    },
+  };
+});
 
-describe('POST /api/login', () => {
-  const mockRequestJson = jest.fn();
+const mockAxios = axios as jest.Mocked<typeof axios>;
+
+describe('POST /api/auth/login', () => {
+  const mockRequestBody = { email: 'test@example.com', password: 'password' };
+  const mockUser = { id: 1, name: 'John Doe' };
+  const mockAccessToken = 'mockAccessToken';
+  const mockRefreshToken = 'mockRefreshToken';
+
   const mockRequest = {
-    json: mockRequestJson,
+    json: jest.fn().mockResolvedValue(mockRequestBody),
   } as unknown as NextRequest;
 
-  const accessToken = 'access123';
-  const refreshToken = 'refresh456';
-  const mockFormData = { email: 'test@mail.com', password: 'secret' };
-
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return success response and set cookies', async () => {
-    mockRequestJson.mockResolvedValueOnce(mockFormData);
-    mockedAxios.post.mockResolvedValueOnce({
+  it('returns 200 with user data and sets access_token and refresh_token cookies', async () => {
+    mockAxios.post.mockResolvedValueOnce({
       data: {
-        data: {
-          access_token: accessToken,
-          refresh_token: refreshToken,
+        body: {
+          user: mockUser,
+          accessToken: mockAccessToken,
+          refreshToken: mockRefreshToken,
         },
       },
     });
 
-    const result = await POST(mockRequest);
+    const response = await POST(mockRequest);
 
-    expect(mockRequestJson).toHaveBeenCalled();
-    expect(mockedAxios.post).toHaveBeenCalledWith('/v1/login', mockFormData);
+    expect(mockAxios.post).toHaveBeenCalledWith(
+      '/v1/auth/login',
+      mockRequestBody
+    );
 
-    expect(mockSet).toHaveBeenCalledWith(
-      'Set-Cookie',
-      serialize('access_token', accessToken, {
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      message: 'Login success',
+      success: true,
+      data: mockUser,
+    });
+
+    const expectedAccessTokenCookie = serialize(
+      'access_token',
+      mockAccessToken,
+      {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
         path: '/',
         maxAge: 60 * 60 * 24,
-      })
+      }
     );
 
-    expect(mockAppend).toHaveBeenCalledWith(
-      'Set-Cookie',
-      serialize('refresh_token', refreshToken, {
+    const expectedRefreshTokenCookie = serialize(
+      'refresh_token',
+      mockRefreshToken,
+      {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
         path: '/',
         maxAge: 60 * 60 * 24 * 7,
-      })
+      }
+    );
+
+    expect((response.headers as any).get('Set-Cookie')).toBe(
+      expectedRefreshTokenCookie
     );
   });
 
-  it('should handle error via handleErrorAPI', async () => {
-    const mockError = new Error('fail');
-    mockRequestJson.mockResolvedValueOnce(mockFormData);
-    mockedAxios.post.mockRejectedValueOnce(mockError);
+  it('handles error correctly when axios fails', async () => {
+    mockAxios.post.mockRejectedValueOnce(new Error('Request failed'));
 
-    const mockErrorResponse = { status: 500 };
-    mockedHandleError.mockReturnValueOnce(mockErrorResponse);
+    const response = await POST(mockRequest);
 
-    const result = await POST(mockRequest);
-
-    expect(mockedHandleError).toHaveBeenCalledWith(mockError);
-    expect(result).toBe(mockErrorResponse);
+    expect(handleErrorAPI).toHaveBeenCalled();
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'error' });
   });
 });

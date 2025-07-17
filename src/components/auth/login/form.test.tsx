@@ -15,8 +15,8 @@ jest.mock('next/navigation', () => ({
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockPush = jest.fn();
-(useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+const mockReplace = jest.fn();
+(useRouter as jest.Mock).mockReturnValue({ replace: mockReplace });
 
 describe('LoginForm', () => {
   beforeEach(() => {
@@ -62,7 +62,7 @@ describe('LoginForm', () => {
         password: 'secret123',
       });
 
-      expect(mockPush).toHaveBeenCalledWith('/');
+      expect(mockReplace).toHaveBeenCalledWith('/');
     });
   });
 

@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
 import { Modal, Button, Typography, Box } from '@/components';
 
 interface LogOutModalProps {
   open: boolean;
   onClose: () => void;
   onLogout: () => Promise<void>;
+  loading: boolean;
 }
 
 const LogOutModal: React.FC<LogOutModalProps> = ({
   open,
   onClose,
   onLogout,
+  loading,
 }) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleLogout = async () => {
-    setLoading(true);
-    await onLogout();
-    setLoading(false);
-  };
-
   return (
     <Modal
       open={open}
@@ -43,7 +36,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
           <Button
             id="continue_button"
             variant="outline-white"
-            onClick={handleLogout}
+            onClick={onLogout}
             disabled={loading}
             aria-disabled={loading}
           >

@@ -11,7 +11,11 @@ import Loading from '@/components/layout/loading';
 import debounce from '@/utils/debounce';
 import SuccessModal from './success-modal';
 
-const VerifyOtpForm = () => {
+interface VerifyOtpFormProps {
+  initialSeconds?: number;
+}
+
+const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
   const router = useRouter();
 
   // Initialize state
@@ -19,7 +23,7 @@ const VerifyOtpForm = () => {
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [resendLoad, setResendLoad] = useState(false);
-  const [seconds, setSeconds] = useState(60);
+  const [seconds, setSeconds] = useState(initialSeconds);
   const [error, setError] = useState('');
   const [isResentSuccess, setIsResentSuccess] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

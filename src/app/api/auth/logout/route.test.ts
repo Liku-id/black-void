@@ -1,96 +1,100 @@
 import { POST } from './route';
-import { NextRequest, NextResponse } from 'next/server';
-import axiosInstance from 'services/axios-server';
+import { NextRequest } from 'next/server';
+import axios from '@/lib/api/axios-server';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 import { serialize } from 'cookie';
-import { handleServerError } from 'services/error-handler';
 
-jest.mock('services/axios-server');
-jest.mock('services/error-handler');
-
-const mockedAxios = axiosInstance as jest.Mocked<typeof axiosInstance>;
-const mockedHandleServerError = handleServerError as jest.Mock;
-
-const mockHeaders = {
-  append: jest.fn(),
-};
-
-jest.mock('next/server', () => ({
-  NextResponse: {
-    json: jest.fn(() => ({
-      headers: {
-        append: mockHeaders.append,
-      },
-    })),
-  },
-  NextRequest: class {},
+jest.mock('@/lib/api/axios-server');
+jest.mock('@/lib/api/error-handler', () => ({
+  handleErrorAPI: jest.fn(() => ({
+    status: 500,
+    body: { error: 'error' },
+  })),
 }));
 
-describe('POST /logout', () => {
+jest.mock('next/server', () => {
+  const actualNext = jest.requireActual('next/server');
+  return {
+    ...actualNext,
+    NextResponse: {
+      json: jest.fn((body: any, init?: any) => {
+        const headers = new Map();
+        return {
+          status: init?.status || 200,
+          body,
+          headers: {
+            append: headers.set.bind(headers),
+            get: headers.get.bind(headers),
+          },
+        };
+      }),
+    },
+  };
+});
+
+const mockAxios = axios as jest.Mocked<typeof axios>;
+
+describe('POST /api/logout', () => {
+  const mockRequestBody = { device_id: 'mock-device' };
+
   const mockRequest = {
+    json: jest.fn().mockResolvedValue(mockRequestBody),
     headers: {
-      get: jest.fn().mockReturnValue('Bearer test-token'),
+      get: jest.fn().mockImplementation((key: string) => {
+        if (key.toLowerCase() === 'authorization') {
+          return 'Bearer mock-token';
+        }
+        return null;
+      }),
     },
   } as unknown as NextRequest;
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should logout and clear access and refresh tokens', async () => {
-    mockedAxios.post.mockResolvedValueOnce({});
+  it('calls axios, clears cookies, and returns 200', async () => {
+    mockAxios.post.mockResolvedValueOnce({});
 
-    const result = await POST(mockRequest);
+    const response = await POST(mockRequest);
 
-    expect(mockRequest.headers.get).toHaveBeenCalledWith('authorization');
-    expect(mockedAxios.post).toHaveBeenCalledWith(
-      '/api/auth/v1/user/logout',
-      null,
-      {
-        headers: {
-          Authorization: 'Bearer test-token',
-        },
-      }
+    expect(mockAxios.post).toHaveBeenCalledWith(
+      '/v1/auth/logout',
+      mockRequestBody,
+      { headers: { Authorization: 'Bearer mock-token' } }
     );
 
-    expect(mockHeaders.append).toHaveBeenCalledWith(
-      'Set-Cookie',
-      serialize('access_token', '', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 0,
-      })
-    );
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: 'Logout successful' });
 
-    expect(mockHeaders.append).toHaveBeenCalledWith(
-      'Set-Cookie',
-      serialize('refresh_token', '', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 0,
-      })
-    );
-
-    expect(NextResponse.json).toHaveBeenCalledWith({
-      message: 'Logout successful',
+    const expectedAccessTokenClear = serialize('access_token', '', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 0,
     });
 
-    expect(result.headers).toBeDefined();
+    const expectedRefreshTokenClear = serialize('refresh_token', '', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 0,
+    });
+
+    expect((response.headers as any).get('Set-Cookie')).toBe(
+      expectedRefreshTokenClear
+    );
   });
 
-  it('should handle error using handleServerError', async () => {
-    const error = new Error('logout failed');
-    mockedAxios.post.mockRejectedValueOnce(error);
+  it('handles error correctly when axios fails', async () => {
+    mockAxios.post.mockRejectedValueOnce(new Error('Logout failed'));
 
-    const mockErrorResponse = { status: 500 };
-    mockedHandleServerError.mockReturnValueOnce(mockErrorResponse);
+    const response = await POST(mockRequest);
 
-    const result = await POST(mockRequest);
-
-    expect(mockedHandleServerError).toHaveBeenCalledWith(error);
-    expect(result).toBe(mockErrorResponse);
+    expect(handleErrorAPI).toHaveBeenCalled();
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'error' });
   });
 });

@@ -205,6 +205,7 @@ export default function Header() {
         open={openLogoutModal}
         onClose={() => setOpenLogoutModal(false)}
         onLogout={onLogout}
+        loading={loading}
       />
     </header>
   );

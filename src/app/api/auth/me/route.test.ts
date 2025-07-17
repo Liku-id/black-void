@@ -1,44 +1,47 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GET } from './route';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-const mockJson = jest.fn();
+jest.mock('next/server', () => {
+  const actualNext = jest.requireActual('next/server');
+  return {
+    ...actualNext,
+    NextResponse: {
+      json: jest.fn((body: any, init?: any) => ({
+        status: init?.status || 200,
+        body,
+      })),
+    },
+  };
+});
 
-jest.mock('next/server', () => ({
-  NextResponse: {
-    json: (...args: any[]) => mockJson(...args),
-  },
-  NextRequest: class {},
-}));
+describe('GET /api/check-login', () => {
+  const createMockRequest = (cookies: Record<string, string>) =>
+    ({
+      cookies: {
+        get: (key: string) =>
+          cookies[key] ? { name: key, value: cookies[key] } : undefined,
+      },
+    }) as unknown as NextRequest;
 
-describe('GET /logged-in', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return loggedIn: false if access_token is not present', async () => {
-    const mockRequest = {
-      cookies: {
-        get: jest.fn().mockReturnValue(undefined),
-      },
-    } as unknown as NextRequest;
+  it('returns loggedIn: true when access_token exists', async () => {
+    const request = createMockRequest({ access_token: 'mock-token' });
+    const response = await GET(request);
 
-    await GET(mockRequest);
-
-    expect(mockRequest.cookies.get).toHaveBeenCalledWith('access_token');
-    expect(mockJson).toHaveBeenCalledWith({ loggedIn: false });
+    expect(NextResponse.json).toHaveBeenCalledWith({ loggedIn: true });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ loggedIn: true });
   });
 
-  it('should return loggedIn: true if access_token exists', async () => {
-    const mockRequest = {
-      cookies: {
-        get: jest.fn().mockReturnValue({ value: 'token123' }),
-      },
-    } as unknown as NextRequest;
+  it('returns loggedIn: false when access_token does not exist', async () => {
+    const request = createMockRequest({});
+    const response = await GET(request);
 
-    await GET(mockRequest);
-
-    expect(mockRequest.cookies.get).toHaveBeenCalledWith('access_token');
-    expect(mockJson).toHaveBeenCalledWith({ loggedIn: true });
+    expect(NextResponse.json).toHaveBeenCalledWith({ loggedIn: false });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ loggedIn: false });
   });
 });

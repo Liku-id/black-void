@@ -8,6 +8,7 @@ import loadingIcon from '@/assets/icons/loading.svg';
 export default function Loading({ className }: { className?: string }) {
   return (
     <Box
+      data-testid="loading"
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center bg-black/50',
         className

@@ -50,7 +50,7 @@ const RegisterForm = () => {
     try {
       const payload = {
         ...formData,
-        phoneNumber: `${countryCode}${formData.phoneNumber.trim()}`,
+        phoneNumber: `${countryCode}${(formData.phoneNumber || '').trim()}`,
       };
 
       // Set payload to global state
@@ -248,6 +248,7 @@ const RegisterForm = () => {
 
               <Button
                 id="register_button"
+                data-testid="register_button"
                 type="submit"
                 disabled={!allValid || loading}
               >

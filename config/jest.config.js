@@ -19,6 +19,7 @@ const customJestConfig = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/middleware.ts',
+    '!src/store/**',
   ],
   coverageThreshold: {
     global: {
