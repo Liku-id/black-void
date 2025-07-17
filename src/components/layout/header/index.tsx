@@ -89,8 +89,7 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Contact Us
           </Typography>
 
@@ -98,13 +97,12 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer"
-          >
+            className="ml-6 cursor-pointer">
             Become Creator ?
           </Typography>
 
           {isLoggedIn === null && (
-            <Box className="ml-6 animate-pulse rounded-md bg-gray-200 h-8 w-18" />
+            <Box className="ml-6 h-8 w-18 animate-pulse rounded-md bg-gray-200" />
           )}
 
           {isLoggedIn === false && (
@@ -135,15 +133,13 @@ export default function Header() {
           <Box
             onClick={handleSearch}
             aria-label="Search"
-            className="h-auto w-auto cursor-pointer bg-white p-0"
-          >
+            className="h-auto w-auto cursor-pointer bg-white p-0">
             <Image src={searchIcon} alt="Search" width={24} height={24} />
           </Box>
           <Box
             onClick={() => setOpenMenu(true)}
             aria-label="Menu"
-            className="cursor-pointer"
-          >
+            className="cursor-pointer">
             <Image src={burgerIcon} alt="Menu" width={28} height={28} />
           </Box>
         </Box>
@@ -151,8 +147,7 @@ export default function Header() {
       {/* Mobile Fullscreen Menu Popup */}
       <Box
         className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} flex h-full min-h-screen flex-col`}
-        style={{ willChange: 'transform' }}
-      >
+        style={{ willChange: 'transform' }}>
         <Box className="flex items-start justify-between">
           <Image
             src={whiteLogo}
@@ -168,7 +163,7 @@ export default function Header() {
         </Box>
 
         {isLoggedIn === null && (
-          <Box className="md:ml-6 animate-pulse rounded-md bg-gray-200 h-8 w-full mt-11" />
+          <Box className="mt-11 h-8 w-full animate-pulse rounded-md bg-gray-200 md:ml-6" />
         )}
 
         {isLoggedIn === true && (

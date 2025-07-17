@@ -47,18 +47,17 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       <Box
         id="profile_toggle"
         className="flex cursor-pointer items-center justify-between"
-        onClick={() => setOpen(!open)}
-      >
+        onClick={() => setOpen(!open)}>
         <Box className="flex items-center gap-4">
           <Image src={profile} alt="profile" width={32} height={32} />
-          <Typography className="lg:hidden text-white">Profile</Typography>
+          <Typography className="text-white lg:hidden">Profile</Typography>
         </Box>
 
         <Box className="hidden lg:block">
           <Image src={dropDown} alt="profile-dropdown" width={32} height={32} />
         </Box>
 
-        <Box className="lg:hidden rotate-180">
+        <Box className="rotate-180 lg:hidden">
           <Image
             src={whiteArrow}
             alt="profile-dropdown"
@@ -70,12 +69,11 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
       {/* Animated Menu */}
       <Box
-        className={`absolute right-0 mt-4 lg:mt-9 w-75 origin-top-right border bg-white px-4 py-5 shadow-[4px_4px_0px_0px_#FFF] transition-all duration-300 ${
+        className={`absolute right-0 mt-4 w-75 origin-top-right border bg-white px-4 py-5 shadow-[4px_4px_0px_0px_#FFF] transition-all duration-300 lg:mt-9 ${
           open
             ? 'pointer-events-auto scale-100 opacity-100'
             : 'pointer-events-none scale-95 opacity-0'
-        }`}
-      >
+        }`}>
         <Box className="mb-4 flex items-center gap-4">
           <Image src={profile} alt="profile" width={32} height={32} />
           <Box>
@@ -93,17 +91,15 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         <hr className="my-4 border-gray-300" />
 
         <Box
-          className="group flex cursor-pointer items-center text-danger transition-all duration-300 hover:text-red-500 gap-2 hover:gap-3"
+          className="group text-danger flex cursor-pointer items-center gap-2 transition-all duration-300 hover:gap-3 hover:text-red-500"
           onClick={() => {
             setOpenModal(true);
             setOpen(false);
-          }}
-        >
+          }}>
           <Image src={logout} alt="logout" width={24} height={24} />
           <Typography
             id="logout_button"
-            className="transition-all duration-300 group-hover:text-red-500 group-hover:font-medium"
-          >
+            className="transition-all duration-300 group-hover:font-medium group-hover:text-red-500">
             Log Out
           </Typography>
         </Box>
