@@ -57,6 +57,7 @@ export const TextField: React.FC<TextFieldProps> = ({
     name === 'phoneNumber' && countryCodes.length > 0 ? (
       <div className="relative mr-2 h-full bg-[#DADADA]">
         <select
+          id="phone_number_code_select"
           className="appearance-none pl-6 pr-2 h-full bg-transparent text-black outline-none"
           value={selectedCountryCode}
           onChange={(e) => onCountryCodeChange?.(e.target.value)}

@@ -114,8 +114,8 @@ const VerifyOtpForm = () => {
     }
   };
 
-  // Submit user form
-  const submitRegister = async () => {
+  // Submit user registration
+  const submitRegister = useCallback(async () => {
     try {
       const response = await axios.post('/api/auth/register', payload);
 
@@ -124,12 +124,10 @@ const VerifyOtpForm = () => {
       }
     } catch (error) {
       setError(getErrorMessage(error));
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [payload]);
 
-  // Submit OTP
+  // Submit OTP verification
   const onSubmit = useCallback(
     async (code: string) => {
       if (loading || isSuccess) return;
@@ -140,12 +138,12 @@ const VerifyOtpForm = () => {
       try {
         const response = await axios.post('/api/auth/verify-otp', {
           phoneNumber: payload.phoneNumber,
-          otp: code,
+          code,
         });
 
         if (response.status === 200) {
           setIsSuccess(true);
-          submitRegister();
+          await submitRegister();
         }
       } catch (error) {
         setError(getErrorMessage(error));
@@ -154,9 +152,11 @@ const VerifyOtpForm = () => {
         if (inputRefs.current[0]) {
           inputRefs.current[0]?.focus();
         }
+      } finally {
+        setLoading(false);
       }
     },
-    [payload.phoneNumber, router, loading, isSuccess]
+    [payload.phoneNumber, loading, isSuccess, submitRegister]
   );
 
   // Debounced submit function
@@ -221,6 +221,7 @@ const VerifyOtpForm = () => {
       <Box className="flex gap-4 mt-8 mb-2">
         {otp.map((value, index) => (
           <input
+            id={`otp_code_${index + 1}_field`}
             key={index}
             ref={(el) => {
               inputRefs.current[index] = el;
@@ -230,7 +231,7 @@ const VerifyOtpForm = () => {
             maxLength={1}
             autoComplete="one-time-code"
             aria-label={`OTP digit ${index + 1}`}
-            disabled={loading}
+            disabled={loading || isSuccess}
             className={`w-8 h-10 bg-white text-black text-center text-[16px] font-bold outline-none transition-all focus:translate-x-[-2px] focus:translate-y-[-2px] focus:border focus:shadow-[4px_4px_0px_0px_#FFFF] ${error ? 'border-danger' : ''}`}
             value={value}
             onChange={(e) => handleChange(index, e.target.value)}
@@ -261,6 +262,7 @@ const VerifyOtpForm = () => {
               'Sending OTP...'
             ) : (
               <span
+                id="resend_otp_link"
                 onClick={reSendOtp}
                 className="underline cursor-pointer"
                 role="button"

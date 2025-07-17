@@ -7,7 +7,11 @@ interface SuccessModalProps {
   onLogin: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose, onLogin }) => (
+const SuccessModal: React.FC<SuccessModalProps> = ({
+  open,
+  onClose,
+  onLogin,
+}) => (
   <Modal
     open={open}
     onClose={onClose}
@@ -19,7 +23,11 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose, onLogin }) =
         </Typography>
       </>
     }
-    footer={<Button onClick={onLogin}>Login</Button>}
+    footer={
+      <Button id="register_button" onClick={onLogin}>
+        Login
+      </Button>
+    }
   />
 );
 

@@ -84,6 +84,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   return (
     <label className="inline-flex cursor-pointer gap-2">
       <input
+        id={id}
         {...commonProps}
         className={cn(
           `

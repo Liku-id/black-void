@@ -6,6 +6,8 @@ import axios from 'axios';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
+import { useAtom } from 'jotai';
+import { userDataAtom } from '@/store';
 import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
@@ -23,6 +25,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [, setUserData] = useAtom(userDataAtom);
 
   const methods = useForm<FormDataLogin>({});
 
@@ -34,7 +37,8 @@ const LoginForm = () => {
       const response = await axios.post('/api/auth/login', formData);
 
       if (response.status === 200) {
-        router.push('/');
+        router.replace('/');
+        setUserData(response.data?.data);
       }
     } catch (error) {
       console.error(error);
@@ -52,7 +56,8 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
             id="email_field"
             name="email"

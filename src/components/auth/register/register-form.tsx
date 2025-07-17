@@ -99,7 +99,7 @@ const RegisterForm = () => {
           {step === 1 && (
             <>
               <TextField
-                id="full_name_field"
+                id="fullname_field"
                 name="fullName"
                 placeholder="Full Name"
                 className="mb-8 w-[270px]"
@@ -227,6 +227,7 @@ const RegisterForm = () => {
               {/* Checkbox Terms */}
               <Box className="flex w-[335px] mb-6">
                 <Checkbox
+                  id="register_checkbox"
                   checked={agree}
                   onChange={() => setAgree(!agree)}
                   variant="style2"
@@ -246,7 +247,7 @@ const RegisterForm = () => {
               </Box>
 
               <Button
-                id="submit_button"
+                id="register_button"
                 type="submit"
                 disabled={!allValid || loading}
               >

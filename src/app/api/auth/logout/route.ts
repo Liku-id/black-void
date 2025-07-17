@@ -1,41 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import axios from '@/lib/api/axios-server';
 import { serialize } from 'cookie';
+import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
 export async function POST(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
     const formData = await request.json();
-    const { data } = await axios.post('/v1/auth/login', formData);
 
-    const response = NextResponse.json({
-      message: 'Login success',
-      success: true,
-      data: data.body?.user,
+    await axios.post('/v1/auth/logout', formData, {
+      headers: {
+        Authorization: authHeader,
+      },
     });
 
-    // Set Cookies
-    response.headers.set(
+    const response = NextResponse.json({ message: 'Logout successful' });
+
+    response.headers.append(
       'Set-Cookie',
-      serialize('access_token', data.body.accessToken, {
-        // ...cookieOptions,
+      serialize('access_token', '', {
         httpOnly: true,
         secure: true,
         sameSite: 'strict' as const,
         path: '/',
-        maxAge: 60 * 60 * 24,
+        maxAge: 0,
       })
     );
 
     response.headers.append(
       'Set-Cookie',
-      serialize('refresh_token', data.body.refreshToken, {
-        // ...cookieOptions,
+      serialize('refresh_token', '', {
         httpOnly: true,
         secure: true,
         sameSite: 'strict' as const,
         path: '/',
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 0,
       })
     );
 

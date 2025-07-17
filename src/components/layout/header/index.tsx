@@ -2,7 +2,11 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { useAtom } from 'jotai';
+import { fetchAuthAtom, userDataAtom } from '@/store';
+import { getErrorMessage } from '@/lib/api/error-handler';
 import { Box, TextField, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
@@ -10,14 +14,43 @@ import searchIcon from '@/assets/icons/search.svg';
 import { useState } from 'react';
 import burgerIcon from '@/assets/icons/burger.svg';
 import closeIcon from '@/assets/icons/close.svg';
+import ProfileMenu from './profile-menu';
+import LogOutModal from './logout-modal';
 
 export default function Header() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Initialize state
   const [searchValue, setSearchValue] = useState('');
   const [openMenu, setOpenMenu] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [openLogoutModal, setOpenLogoutModal] = useState(false);
+  const [_, setError] = useState('');
+  const [isLoggedIn, checkAuth] = useAtom(fetchAuthAtom);
+  const [userData] = useAtom(userDataAtom);
 
   const handleSearch = () => {
     console.log('search:', searchValue);
+  };
+
+  // Logout
+  const onLogout = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const response = await axios.post('/api/auth/logout', {
+        userId: userData.id,
+      });
+      if (response.status === 200) {
+        router.replace('/');
+      }
+    } catch (error) {
+      console.error(error);
+      setError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -25,6 +58,11 @@ export default function Header() {
       setOpenMenu(true);
     }
   }, [searchParams]);
+
+  // Check auth
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center px-4">
@@ -51,7 +89,8 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer">
+            className="ml-6 cursor-pointer"
+          >
             Contact Us
           </Typography>
 
@@ -59,13 +98,27 @@ export default function Header() {
             type="body"
             size={16}
             color="text-black"
-            className="ml-6 cursor-pointer">
+            className="ml-6 cursor-pointer"
+          >
             Become Creator ?
           </Typography>
 
-          <Link id="login_button" href="/login" className="ml-6">
-            <Button>Log In</Button>
-          </Link>
+          {isLoggedIn === null && (
+            <Box className="ml-6 animate-pulse rounded-md bg-gray-200 h-8 w-18" />
+          )}
+
+          {isLoggedIn === false && (
+            <Link id="login_button" href="/login" className="ml-6">
+              <Button>Log In</Button>
+            </Link>
+          )}
+
+          {isLoggedIn === true && (
+            <ProfileMenu
+              userData={userData}
+              setOpenModal={setOpenLogoutModal}
+            />
+          )}
         </Box>
       </Container>
       {/* Mobile Header */}
@@ -82,13 +135,15 @@ export default function Header() {
           <Box
             onClick={handleSearch}
             aria-label="Search"
-            className="h-auto w-auto cursor-pointer bg-white p-0">
+            className="h-auto w-auto cursor-pointer bg-white p-0"
+          >
             <Image src={searchIcon} alt="Search" width={24} height={24} />
           </Box>
           <Box
             onClick={() => setOpenMenu(true)}
             aria-label="Menu"
-            className="cursor-pointer">
+            className="cursor-pointer"
+          >
             <Image src={burgerIcon} alt="Menu" width={28} height={28} />
           </Box>
         </Box>
@@ -96,7 +151,8 @@ export default function Header() {
       {/* Mobile Fullscreen Menu Popup */}
       <Box
         className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} flex h-full min-h-screen flex-col`}
-        style={{ willChange: 'transform' }}>
+        style={{ willChange: 'transform' }}
+      >
         <Box className="flex items-start justify-between">
           <Image
             src={whiteLogo}
@@ -110,6 +166,19 @@ export default function Header() {
             <Image src={closeIcon} alt="Close" width={24} height={24} />
           </Box>
         </Box>
+
+        {isLoggedIn === null && (
+          <Box className="md:ml-6 animate-pulse rounded-md bg-gray-200 h-8 w-full mt-11" />
+        )}
+
+        {isLoggedIn === true && (
+          <ProfileMenu
+            className="mt-11"
+            userData={userData}
+            setOpenModal={setOpenLogoutModal}
+          />
+        )}
+
         <Box className="mt-[44px] flex flex-1 flex-col">
           <Link href="#" className="mb-6">
             <Typography type="body" size={16} color="text-white">
@@ -122,11 +191,21 @@ export default function Header() {
             </Typography>
           </Link>
           <Box className="flex-1" />
-          <Link href="/login" className="mb-40 flex justify-center">
-            <Button className="px-[18px] py-[8px]">Log In</Button>
-          </Link>
+
+          {isLoggedIn === false && (
+            <Link href="/login" className="mb-40 flex justify-center">
+              <Button className="px-[18px] py-[8px]">Log In</Button>
+            </Link>
+          )}
         </Box>
       </Box>
+
+      {/* Logout Modal */}
+      <LogOutModal
+        open={openLogoutModal}
+        onClose={() => setOpenLogoutModal(false)}
+        onLogout={onLogout}
+      />
     </header>
   );
 }
