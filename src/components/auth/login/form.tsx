@@ -56,8 +56,7 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           <TextField
             id="email_field"
             name="email"

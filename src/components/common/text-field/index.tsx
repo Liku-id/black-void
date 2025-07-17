@@ -58,17 +58,16 @@ export const TextField: React.FC<TextFieldProps> = ({
       <div className="relative mr-2 h-full bg-[#DADADA]">
         <select
           id="phone_number_code_select"
-          className="appearance-none pl-6 pr-2 h-full bg-transparent text-black outline-none"
+          className="h-full appearance-none bg-transparent pr-2 pl-6 text-black outline-none"
           value={selectedCountryCode}
-          onChange={(e) => onCountryCodeChange?.(e.target.value)}
-        >
-          {countryCodes.map((item) => (
+          onChange={e => onCountryCodeChange?.(e.target.value)}>
+          {countryCodes.map(item => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
         </select>
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 pointer-events-none">
+        <span className="pointer-events-none absolute top-1/2 left-0 -translate-y-1/2">
           <Image
             src={accordionArrow}
             alt="dropdown code"
@@ -96,14 +95,12 @@ export const TextField: React.FC<TextFieldProps> = ({
                 isFocused
                   ? `translate-x-[-2px] translate-y-[-2px] border shadow-[4px_4px_0px_0px_#FFFF] ${fieldState.error ? 'border-danger' : 'border-black'}`
                   : `border ${fieldState.error ? 'border-danger' : 'border-black'}`
-              }`}
-            >
+              }`}>
               {renderCountrySelect()}
               {startIcon && (
                 <Box
                   className="mr-2 flex cursor-pointer items-center"
-                  onClick={onStartIconClick}
-                >
+                  onClick={onStartIconClick}>
                   <Image
                     src={startIcon}
                     alt="Start icon"
@@ -127,8 +124,7 @@ export const TextField: React.FC<TextFieldProps> = ({
               {endIcon && (
                 <Box
                   className="ml-2 flex cursor-pointer items-center"
-                  onClick={onEndIconClick}
-                >
+                  onClick={onEndIconClick}>
                   <Image src={endIcon} alt="End icon" width={20} height={20} />
                 </Box>
               )}
@@ -164,15 +160,14 @@ export const TextField: React.FC<TextFieldProps> = ({
         data-slot="input"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         className={inputClass}
         {...props}
       />
       {endIcon && (
         <Box
           className="ml-2 flex cursor-pointer items-center"
-          onClick={onEndIconClick}
-        >
+          onClick={onEndIconClick}>
           <Image
             src={endIcon}
             alt="End icon"

@@ -84,9 +84,8 @@ const RegisterForm = () => {
 
       {step === 2 && (
         <span
-          className="absolute left-0 top-0 flex cursor-pointer"
-          onClick={() => setStep(1)}
-        >
+          className="absolute top-0 left-0 flex cursor-pointer"
+          onClick={() => setStep(1)}>
           <Typography>Back</Typography>
         </span>
       )}
@@ -94,8 +93,7 @@ const RegisterForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           {step === 1 && (
             <>
               <TextField
@@ -138,7 +136,7 @@ const RegisterForm = () => {
                   },
                 }}
                 selectedCountryCode={countryCode}
-                onCountryCodeChange={(val) => setCountryCode(val)}
+                onCountryCodeChange={val => setCountryCode(val)}
                 countryCodes={[
                   { label: '+62', value: '+62' },
                   { label: '+1', value: '+1' },
@@ -149,8 +147,7 @@ const RegisterForm = () => {
               <Button
                 id="continue_button"
                 type="button"
-                onClick={handleContinue}
-              >
+                onClick={handleContinue}>
                 Continue
               </Button>
             </>
@@ -169,7 +166,7 @@ const RegisterForm = () => {
                 onEndIconClick={() => setShowPassword(!showPassword)}
               />
 
-              <Box className="flex items-center gap-4 relative mb-8">
+              <Box className="relative mb-8 flex items-center gap-4">
                 <TextField
                   id="repeat_password_field"
                   name="confirmPassword"
@@ -178,7 +175,7 @@ const RegisterForm = () => {
                   className="w-[270px]"
                   rules={{
                     required: 'Repeat Password is required',
-                    validate: (value) =>
+                    validate: value =>
                       value === getValues('password') ||
                       'Password does not match',
                   }}
@@ -189,7 +186,7 @@ const RegisterForm = () => {
                 />
 
                 {password && confirmPassword && (
-                  <Box className="absolute right-[-32px] top-[9px]">
+                  <Box className="absolute top-[9px] right-[-32px]">
                     <Image
                       src={isPasswordMatch ? SuccessIcon : errorIcon}
                       alt="match indicator"
@@ -201,7 +198,7 @@ const RegisterForm = () => {
               </Box>
 
               {/* Password Strength */}
-              <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2 px-3">
+              <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 px-3 md:grid-cols-2">
                 <Checkbox checked={passwordChecks.length} disabled>
                   <Typography type="body" size={14}>
                     8-12 Character
@@ -225,20 +222,19 @@ const RegisterForm = () => {
               </Box>
 
               {/* Checkbox Terms */}
-              <Box className="flex w-[335px] mb-6">
+              <Box className="mb-6 flex w-[335px]">
                 <Checkbox
                   id="register_checkbox"
                   checked={agree}
                   onChange={() => setAgree(!agree)}
-                  variant="style2"
-                >
+                  variant="style2">
                   <Typography size={12} className="text-white">
                     I agree to the{' '}
-                    <span className="underline cursor-pointer">
+                    <span className="cursor-pointer underline">
                       terms and conditions
                     </span>{' '}
                     and{' '}
-                    <span className="underline cursor-pointer">
+                    <span className="cursor-pointer underline">
                       privacy policy
                     </span>{' '}
                     applicable at Wukong
@@ -250,8 +246,7 @@ const RegisterForm = () => {
                 id="register_button"
                 data-testid="register_button"
                 type="submit"
-                disabled={!allValid || loading}
-              >
+                disabled={!allValid || loading}>
                 Submit
               </Button>
             </>

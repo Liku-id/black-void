@@ -8,7 +8,7 @@ const RegisterForm = dynamic(
 
 export default function RegisterPage() {
   return (
-    <Box className="mx-auto mt-32 max-w-[360px] text-white xl:mr-0 xl:ml-47 relative">
+    <Box className="relative mx-auto mt-32 max-w-[360px] text-white xl:mr-0 xl:ml-47">
       <Box className="mb-8 text-center">
         <Typography className="mb-4">Get Started</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">
@@ -29,8 +29,7 @@ export default function RegisterPage() {
           <Link
             id="forgot_password_link"
             href="/forgot-password"
-            className="hover:text-green underline"
-          >
+            className="hover:text-green underline">
             Forgot Your Password?
           </Link>
         </Typography>
@@ -41,8 +40,7 @@ export default function RegisterPage() {
             <Link
               id="log_in_link"
               href="/login"
-              className="hover:text-green underline"
-            >
+              className="hover:text-green underline">
               Log In
             </Link>
           </Typography>

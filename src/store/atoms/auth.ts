@@ -22,7 +22,7 @@ export const registerFormAtom = atom<RegisterFormData>({
 export const authAtom = atom<boolean | null>(null);
 
 export const fetchAuthAtom = atom(
-  (get) => get(authAtom),
+  get => get(authAtom),
   async (_get, set) => {
     try {
       const response = await axios.get('/api/auth/me');

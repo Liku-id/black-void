@@ -61,8 +61,7 @@ export const Box = forwardRef<HTMLDivElement, BoxProps>(
         onMouseLeave={onMouseLeave}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
+        onTouchEnd={onTouchEnd}>
         {children}
       </div>
     );

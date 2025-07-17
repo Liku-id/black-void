@@ -61,7 +61,7 @@ beforeEach(() => {
     mockRouter
   );
   // Mock useAtom for fetchAuthAtom and userDataAtom
-  (jotai.useAtom as jest.Mock).mockImplementation((atom) => {
+  (jotai.useAtom as jest.Mock).mockImplementation(atom => {
     if (atom && atom.toString && atom.toString().includes('fetchAuthAtom')) {
       return [false, jest.fn()];
     }
@@ -122,7 +122,7 @@ describe('Header', () => {
     render(<Header />);
     // Cari semua div dan temukan yang punya semua class utama
     const containers = Array.from(document.querySelectorAll('div')).filter(
-      (el) =>
+      el =>
         el.className &&
         el.className.includes('flex') &&
         el.className.includes('h-20') &&
@@ -143,7 +143,7 @@ describe('Header', () => {
       'bg-white',
       'px-6',
       'py-6',
-    ].forEach((cls) => {
+    ].forEach(cls => {
       expect(container).toHaveClass(cls);
     });
   });
@@ -192,7 +192,7 @@ describe('Header', () => {
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      (img) =>
+      img =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );
@@ -213,7 +213,7 @@ describe('Header', () => {
     // Menu popup hilang (logo putih tidak ada)
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      (img) =>
+      img =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );
@@ -228,7 +228,7 @@ describe('Header', () => {
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      (img) =>
+      img =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );

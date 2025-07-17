@@ -29,8 +29,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
             id="cancel_button"
             onClick={onClose}
             disabled={loading}
-            aria-disabled={loading}
-          >
+            aria-disabled={loading}>
             No, Back to Home
           </Button>
           <Button
@@ -38,8 +37,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
             variant="outline-white"
             onClick={onLogout}
             disabled={loading}
-            aria-disabled={loading}
-          >
+            aria-disabled={loading}>
             {loading ? 'Logging out...' : 'Yes, Continue'}
           </Button>
         </Box>

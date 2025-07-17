@@ -7,7 +7,7 @@ const VerifyOtpForm = dynamic(
 
 export default function VerifyOtpPage() {
   return (
-    <Box className="mx-auto mt-32 max-w-[370px] text-white xl:mr-0 xl:ml-30 relative">
+    <Box className="relative mx-auto mt-32 max-w-[370px] text-white xl:mr-0 xl:ml-30">
       <Box className="text-center">
         <Typography size={41} type="heading" className="font-normal uppercase">
           {'phone number verification'.split('').map((child, idx) => (

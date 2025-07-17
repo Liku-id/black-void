@@ -50,12 +50,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     return (
       <label
         className={`inline-flex cursor-pointer items-center gap-2 ${className}`}
-        htmlFor={id}
-      >
+        htmlFor={id}>
         <span
           className="relative flex items-center"
-          style={{ marginRight: 12 }}
-        >
+          style={{ marginRight: 12 }}>
           <input
             {...commonProps}
             id={id}
@@ -69,8 +67,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
                 width="13"
                 height="11"
                 viewBox="0 0 13 11"
-                fill="none"
-              >
+                fill="none">
                 <path d="M1 5L5 9L12 1" stroke="white" strokeWidth="2" />
               </svg>
             </span>
@@ -88,19 +85,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         id={id}
         {...commonProps}
         className={cn(
-          `
-          appearance-none 
-          h-4 w-4 
-          border border-white 
-          bg-black 
-          cursor-pointer 
-          flex items-center justify-center
-          before:content-['✓'] 
-          before:text-md
-          before:text-white 
-          before:opacity-0 
-          checked:before:opacity-100
-        `,
+          `before:text-md flex h-4 w-4 cursor-pointer appearance-none items-center justify-center border border-white bg-black before:text-white before:opacity-0 before:content-['✓'] checked:before:opacity-100`,
           className
         )}
       />
