@@ -4,11 +4,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center disabled:opacity-50 cursor-pointer',
+  'inline-flex items-center justify-center disabled:opacity-50 cursor-pointer transition-all duration-300',
   {
     variants: {
       variant: {
         default: 'bg-green text-white font-onest text-base font-bold',
+        'outline-white':
+          'border border-white text-white font-onest text-base font-bold bg-transparent hover:bg-white hover:text-black',
       },
       size: {
         default: 'h-9 px-4 py-2',

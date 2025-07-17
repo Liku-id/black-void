@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './index';
 import { useSearchParams } from 'next/navigation';
+import * as jotai from 'jotai';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
@@ -36,11 +37,38 @@ jest.mock('@/assets/logo/logo.svg', () => 'mocked-logo.svg');
 
 jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(),
+  useRouter: jest.fn(),
 }));
+
+jest.mock('jotai', () => {
+  const actual = jest.requireActual('jotai');
+  return {
+    ...actual,
+    useAtom: jest.fn(),
+  };
+});
 
 beforeEach(() => {
   (useSearchParams as jest.Mock).mockReturnValue({
     get: (key: string) => null,
+  });
+  const mockRouter = {
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  };
+  (require('next/navigation').useRouter as jest.Mock).mockReturnValue(
+    mockRouter
+  );
+  // Mock useAtom for fetchAuthAtom and userDataAtom
+  (jotai.useAtom as jest.Mock).mockImplementation((atom) => {
+    if (atom && atom.toString && atom.toString().includes('fetchAuthAtom')) {
+      return [false, jest.fn()];
+    }
+    if (atom && atom.toString && atom.toString().includes('userDataAtom')) {
+      return [{}, jest.fn()];
+    }
+    return [undefined, jest.fn()];
   });
 });
 
@@ -94,7 +122,7 @@ describe('Header', () => {
     render(<Header />);
     // Cari semua div dan temukan yang punya semua class utama
     const containers = Array.from(document.querySelectorAll('div')).filter(
-      el =>
+      (el) =>
         el.className &&
         el.className.includes('flex') &&
         el.className.includes('h-20') &&
@@ -115,7 +143,7 @@ describe('Header', () => {
       'bg-white',
       'px-6',
       'py-6',
-    ].forEach(cls => {
+    ].forEach((cls) => {
       expect(container).toHaveClass(cls);
     });
   });
@@ -129,8 +157,10 @@ describe('Header', () => {
 
   it('renders the Log In button', () => {
     render(<Header />);
-    const loginButtons = screen.getAllByRole('button', { name: /log in/i });
-    expect(loginButtons[0]).toBeInTheDocument();
+    const loginButton = screen.getByText(/Log In/i);
+    const loginLink = loginButton.closest('a');
+    expect(loginLink).toBeInTheDocument();
+    expect(loginLink).toHaveAttribute('href', '/login');
   });
 
   it('renders Contact Us and Become Creator links', () => {
@@ -162,7 +192,7 @@ describe('Header', () => {
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      img =>
+      (img) =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );
@@ -170,7 +200,7 @@ describe('Header', () => {
     expect(screen.getAllByText(/Contact Us/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Become Creator/i).length).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole('button', { name: /log in/i }).length
+      screen.getAllByRole('link', { name: /log in/i }).length
     ).toBeGreaterThan(0);
   });
 
@@ -183,7 +213,7 @@ describe('Header', () => {
     // Menu popup hilang (logo putih tidak ada)
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      img =>
+      (img) =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );
@@ -198,7 +228,7 @@ describe('Header', () => {
     expect(screen.getByAltText('Close')).toBeInTheDocument();
     const logos = screen.getAllByAltText('Logo');
     const popupLogo = logos.find(
-      img =>
+      (img) =>
         (img as HTMLImageElement).width === 100 &&
         (img as HTMLImageElement).height === 24
     );

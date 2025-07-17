@@ -10,7 +10,11 @@ export default function LoginPage() {
       <Box className="mb-8 text-center md:mb-20">
         <Typography className="mb-4">Welcome to Wukong,</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">
-          Log in to your account
+          {'Log in to your account'.split('').map((child, idx) => (
+            <span className="hover-text" key={idx}>
+              {child}
+            </span>
+          ))}
         </Typography>
       </Box>
 

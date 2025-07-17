@@ -52,7 +52,7 @@ describe('ForgotPasswordForm', () => {
       fireEvent.click(screen.getByRole('button', { name: /send link/i }));
     });
     try {
-      await screen.findByText(/invalid email address/i);
+      await screen.findByText(/Invalid email format/i);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(document.body.innerHTML);

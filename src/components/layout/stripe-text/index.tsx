@@ -51,7 +51,7 @@ export default function StripeText({
       <Box
         className={cn(
           'flex',
-          isVertical ? 'flex-col gap-8' : 'gap-8 overflow-hidden'
+          isVertical ? 'flex-col' : 'gap-8 overflow-hidden'
         )}>
         {[1, 2].map((_, idx) => (
           <Box

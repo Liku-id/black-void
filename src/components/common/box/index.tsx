@@ -17,6 +17,7 @@ import React, { forwardRef } from 'react';
  */
 interface BoxProps {
   children?: React.ReactNode;
+  id?: string;
   className?: string;
   onClick?: () => void;
   style?: React.CSSProperties;
@@ -33,6 +34,7 @@ export const Box = forwardRef<HTMLDivElement, BoxProps>(
   (
     {
       children,
+      id,
       className = '',
       onClick,
       style,
@@ -48,6 +50,7 @@ export const Box = forwardRef<HTMLDivElement, BoxProps>(
   ) => {
     return (
       <div
+        id={id}
         ref={ref}
         className={className}
         onClick={onClick}
@@ -58,7 +61,8 @@ export const Box = forwardRef<HTMLDivElement, BoxProps>(
         onMouseLeave={onMouseLeave}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}>
+        onTouchEnd={onTouchEnd}
+      >
         {children}
       </div>
     );

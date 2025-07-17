@@ -11,12 +11,13 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       message: 'Login success',
       success: true,
+      data: data.body?.user,
     });
 
     // Set Cookies
     response.headers.set(
       'Set-Cookie',
-      serialize('access_token', data.body.access_token, {
+      serialize('access_token', data.body.accessToken, {
         // ...cookieOptions,
         httpOnly: true,
         secure: true,
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     response.headers.append(
       'Set-Cookie',
-      serialize('refresh_token', data.body.refresh_token, {
+      serialize('refresh_token', data.body.refreshToken, {
         // ...cookieOptions,
         httpOnly: true,
         secure: true,

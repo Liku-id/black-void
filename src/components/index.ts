@@ -7,6 +7,7 @@ export { TextField } from './common/text-field';
 export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
 export { Modal } from './common/modal';
+export { Checkbox } from './common/checkbox';
 
 // Layout components
 export { default as Header } from './layout/header';
