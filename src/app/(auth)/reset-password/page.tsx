@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@/components';
 
@@ -16,7 +17,9 @@ export default function ResetPasswordPage() {
       </Box>
 
       {/* Form */}
-      <ResetPasswordForm />
+      <Suspense>
+        <ResetPasswordForm />
+      </Suspense>
     </Box>
   );
 }

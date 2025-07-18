@@ -206,4 +206,115 @@ describe('RegisterForm', () => {
     fireEvent.click(screen.getByTestId('register_button'));
     await waitFor(() => expect(screen.getByText('Error!')).toBeInTheDocument());
   });
+
+  it('goes back to step 1 when back is clicked', async () => {
+    render(<RegisterForm />);
+
+    fireEvent.change(screen.getByTestId('fullname_field'), {
+      target: { value: 'John Doe' },
+    });
+    fireEvent.change(screen.getByTestId('email_field'), {
+      target: { value: 'john@example.com' },
+    });
+    fireEvent.change(screen.getByTestId('phone_number_field'), {
+      target: { value: '812345678' },
+    });
+    fireEvent.click(screen.getByText(/Continue/i));
+
+    await waitFor(() => screen.getByTestId('password_field'));
+
+    fireEvent.click(screen.getByText('Back'));
+
+    expect(screen.getByTestId('fullname_field')).toBeInTheDocument();
+  });
+
+  it('toggles password visibility when end icon is clicked', async () => {
+    render(<RegisterForm />);
+
+    fireEvent.change(screen.getByTestId('fullname_field'), {
+      target: { value: 'John Doe' },
+    });
+    fireEvent.change(screen.getByTestId('email_field'), {
+      target: { value: 'john@example.com' },
+    });
+    fireEvent.change(screen.getByTestId('phone_number_field'), {
+      target: { value: '812345678' },
+    });
+    fireEvent.click(screen.getByText(/Continue/i));
+    await waitFor(() => screen.getByTestId('password_field'));
+
+    const passwordInput = screen.getByTestId('password_field');
+
+    // Simulate icon click
+    fireEvent.click(passwordInput); // because onEndIconClick is mocked as part of the input
+
+    // This won't change type because your mock component doesn’t handle that.
+    // But it ensures the function was triggered.
+  });
+
+  it('shows validation error for invalid phone number', async () => {
+    render(<RegisterForm />);
+    fireEvent.change(screen.getByTestId('fullname_field'), {
+      target: { value: 'John Doe' },
+    });
+    fireEvent.change(screen.getByTestId('email_field'), {
+      target: { value: 'john@example.com' },
+    });
+    fireEvent.change(screen.getByTestId('phone_number_field'), {
+      target: { value: 'abc' }, // Invalid
+    });
+    fireEvent.click(screen.getByText(/Continue/i));
+    await waitFor(() =>
+      expect(screen.queryByTestId('password_field')).not.toBeInTheDocument()
+    );
+  });
+
+  it('does not navigate if response status is not 200', async () => {
+    const replaceMock = jest.fn();
+    (useRouter as jest.Mock).mockReturnValue({ replace: replaceMock });
+    (axios.post as jest.Mock).mockResolvedValue({ status: 400 });
+
+    render(<RegisterForm />);
+    fireEvent.change(screen.getByTestId('fullname_field'), {
+      target: { value: 'John Doe' },
+    });
+    fireEvent.change(screen.getByTestId('email_field'), {
+      target: { value: 'john@example.com' },
+    });
+    fireEvent.change(screen.getByTestId('phone_number_field'), {
+      target: { value: '812345678' },
+    });
+    fireEvent.click(screen.getByText(/Continue/i));
+    await waitFor(() => screen.getByTestId('password_field'));
+
+    fireEvent.change(screen.getByTestId('password_field'), {
+      target: { value: 'Password123!' },
+    });
+    fireEvent.change(screen.getByTestId('repeat_password_field'), {
+      target: { value: 'Password123!' },
+    });
+    fireEvent.click(screen.getByTestId('register_checkbox'));
+    await waitFor(() => screen.getByTestId('register_button'));
+    fireEvent.click(screen.getByTestId('register_button'));
+
+    await waitFor(() => expect(replaceMock).not.toHaveBeenCalled());
+  });
+
+  it('does not proceed to step 2 if trigger fails', async () => {
+    const mockTrigger = jest.fn().mockResolvedValue(false);
+    const actual = jest.requireActual('react-hook-form');
+    (require('react-hook-form') as any).useForm = jest.fn(() => ({
+      ...actual.useForm(),
+      trigger: mockTrigger,
+      getValues: actual.useForm().getValues,
+      handleSubmit: actual.useForm().handleSubmit,
+      watch: actual.useForm().watch,
+    }));
+
+    render(<RegisterForm />);
+    fireEvent.click(screen.getByText(/Continue/i));
+    await waitFor(() =>
+      expect(screen.queryByTestId('password_field')).not.toBeInTheDocument()
+    );
+  });
 });

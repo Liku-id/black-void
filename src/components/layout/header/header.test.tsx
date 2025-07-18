@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './index';
 import { useSearchParams } from 'next/navigation';
 import * as jotai from 'jotai';
+import { fetchAuthAtom, userDataAtom } from '@/store';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
@@ -60,12 +61,12 @@ beforeEach(() => {
   (require('next/navigation').useRouter as jest.Mock).mockReturnValue(
     mockRouter
   );
-  // Mock useAtom for fetchAuthAtom and userDataAtom
+  // Explicitly mock for fetchAuthAtom and userDataAtom
   (jotai.useAtom as jest.Mock).mockImplementation(atom => {
-    if (atom && atom.toString && atom.toString().includes('fetchAuthAtom')) {
+    if (atom === fetchAuthAtom) {
       return [false, jest.fn()];
     }
-    if (atom && atom.toString && atom.toString().includes('userDataAtom')) {
+    if (atom === userDataAtom) {
       return [{}, jest.fn()];
     }
     return [undefined, jest.fn()];
@@ -157,10 +158,13 @@ describe('Header', () => {
 
   it('renders the Log In button', () => {
     render(<Header />);
-    const loginButton = screen.getByText(/Log In/i);
-    const loginLink = loginButton.closest('a');
-    expect(loginLink).toBeInTheDocument();
-    expect(loginLink).toHaveAttribute('href', '/login');
+    const loginButtons = screen.getAllByText(/Log In/i);
+    const loginLinks = loginButtons.map(btn => btn.closest('a'));
+    expect(loginLinks.length).toBeGreaterThan(0);
+    loginLinks.forEach(link => {
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute('href', '/login');
+    });
   });
 
   it('renders Contact Us and Become Creator links', () => {
