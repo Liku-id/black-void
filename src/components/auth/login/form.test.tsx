@@ -86,4 +86,54 @@ describe('LoginForm', () => {
       expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
     });
   });
+
+  it('toggles password visibility when end icon is clicked', async () => {
+    render(<LoginForm />);
+    const passwordInput = screen.getByPlaceholderText(/password/i);
+
+    // Default type is password
+    expect(passwordInput).toHaveAttribute('type', 'password');
+
+    // Klik icon (gunakan testid untuk akurat)
+    const endIcon = screen.getByTestId('endAdornment');
+    fireEvent.click(endIcon);
+
+    // Type berubah jadi text
+    expect(passwordInput).toHaveAttribute('type', 'text');
+  });
+
+  it('shows loading component when submitting form', async () => {
+    mockedAxios.post.mockImplementation(() => new Promise(() => {}));
+
+    render(<LoginForm />);
+    fireEvent.input(screen.getByPlaceholderText(/email address/i), {
+      target: { value: 'test@mail.com' },
+    });
+    fireEvent.input(screen.getByPlaceholderText(/password/i), {
+      target: { value: 'secret123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+
+    expect(await screen.findByTestId('loading')).toBeInTheDocument();
+  });
+
+  it('does not redirect if response status is not 200', async () => {
+    mockedAxios.post.mockResolvedValueOnce({ status: 400 });
+
+    render(<LoginForm />);
+    fireEvent.input(screen.getByPlaceholderText(/email address/i), {
+      target: { value: 'wrong@mail.com' },
+    });
+    fireEvent.input(screen.getByPlaceholderText(/password/i), {
+      target: { value: 'notgood' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalled();
+      expect(mockReplace).not.toHaveBeenCalled();
+    });
+  });
 });

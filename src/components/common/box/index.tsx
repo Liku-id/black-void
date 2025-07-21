@@ -31,37 +31,9 @@ interface BoxProps {
 }
 
 export const Box = forwardRef<HTMLDivElement, BoxProps>(
-  (
-    {
-      children,
-      id,
-      className = '',
-      onClick,
-      style,
-      onMouseDown,
-      onMouseMove,
-      onMouseUp,
-      onMouseLeave,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-    },
-    ref
-  ) => {
+  ({ children, ...rest }, ref) => {
     return (
-      <div
-        id={id}
-        ref={ref}
-        className={className}
-        onClick={onClick}
-        style={style}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseLeave}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}>
+      <div ref={ref} {...rest}>
         {children}
       </div>
     );

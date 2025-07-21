@@ -123,6 +123,7 @@ export const TextField: React.FC<TextFieldProps> = ({
               />
               {endIcon && (
                 <Box
+                  data-testid="endAdornment"
                   className="ml-2 flex cursor-pointer items-center"
                   onClick={onEndIconClick}>
                   <Image src={endIcon} alt="End icon" width={20} height={20} />

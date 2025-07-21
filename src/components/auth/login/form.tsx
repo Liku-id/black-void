@@ -77,7 +77,9 @@ const LoginForm = () => {
             onEndIconClick={() => setShowPassword(!showPassword)}
           />
 
-          <Button id="login_button">Log In</Button>
+          <Button id="login_button" type="submit">
+            Log In
+          </Button>
 
           {error && (
             <Typography size={12} className="text-danger mt-2">
