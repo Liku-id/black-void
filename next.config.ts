@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: ['dummyimage.com'],
+    domains: [
+      'dummyimage.com',
+      'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
+    ],
     // Modern formats for better compression (only affects raster images: PNG, JPG, etc.)
     // SVG files remain unchanged and are already optimized
     formats: ['image/webp', 'image/avif'],

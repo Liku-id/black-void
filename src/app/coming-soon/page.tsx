@@ -1,7 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ThreeBackground from '@/components/visuals/three-background';
-// import Header from '@/components/layout/header';
+// Hapus import Header
+import Image from 'next/image';
+import logo from '@/assets/logo/white-logo.svg';
 import './coming-soon.css';
 
 function CountdownTimer() {
@@ -120,8 +122,18 @@ export default function ComingSoon() {
 
   return (
     <>
+      {/* Custom header dengan logo kiri atas dan background transparan */}
+      <div className="fixed top-0 left-0 z-20 flex h-16 w-full items-center px-8 py-10">
+        <Image
+          src={logo}
+          alt="Logo"
+          height={32}
+          width={120}
+          className="h-8 w-auto"
+          priority
+        />
+      </div>
       <ThreeBackground />
-      {/* <Header /> */}
       <div className="flex min-h-screen flex-col">
         {/* Main content - top section */}
         <div className="relative flex min-h-screen items-center justify-center p-8">
@@ -143,7 +155,8 @@ export default function ComingSoon() {
                 className="h-6 w-6"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 0 24 24">
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -163,19 +176,21 @@ export default function ComingSoon() {
             </p>
             <form
               onSubmit={handleSubmit}
-              className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row">
+              className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row"
+            >
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 className="font-onest min-w-0 flex-1 border border-white/20 bg-white/10 px-6 py-3 text-white placeholder-white/60 transition-colors focus:border-white/40 focus:outline-none"
                 required
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="font-onest bg-white px-8 py-3 font-semibold whitespace-nowrap text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50">
+                className="font-onest bg-white px-8 py-3 font-semibold whitespace-nowrap text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
                 {isSubmitting ? 'Sending...' : 'Notify Me'}
               </button>
             </form>

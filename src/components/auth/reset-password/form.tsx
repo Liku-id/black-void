@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextField, Typography, Box, Checkbox } from '@/components';
@@ -87,7 +87,7 @@ const ResetPasswordForm = () => {
   }, [token, email, router]);
 
   return (
-    <>
+    <Suspense>
       {/* Loading overlay */}
       {loading && <Loading />}
 
@@ -181,7 +181,7 @@ const ResetPasswordForm = () => {
       </FormProvider>
 
       <SuccessModal open={modalOpen} onClose={() => setModalOpen(false)} />
-    </>
+    </Suspense>
   );
 };
 

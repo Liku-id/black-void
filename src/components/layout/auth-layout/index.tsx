@@ -2,11 +2,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import Image from 'next/image';
-import background1 from '@/assets/image/auth-background-1.webp';
-import background2 from '@/assets/image/auth-background-2.webp';
-import background3 from '@/assets/image/auth-background-3.webp';
-import background4 from '@/assets/image/auth-background-4.webp';
-import background5 from '@/assets/image/auth-background-5.webp';
 import logo from '@/assets/logo/white-logo.svg';
 import { Box } from '@/components';
 import StripeText from '@/components/layout/stripe-text';
@@ -16,11 +11,11 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  background1,
-  background2,
-  background3,
-  background4,
-  background5,
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-1.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-2.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-3.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-4.jpg',
+  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-5.jpg',
 ];
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
@@ -29,7 +24,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % backgrounds.length);
-    }, 500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -46,6 +41,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               src={bg}
               alt={`Background ${index + 1}`}
               fill
+              sizes="100vw"
               style={{
                 objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,
