@@ -226,8 +226,7 @@ const RegisterForm = () => {
                 <Checkbox
                   id="register_checkbox"
                   checked={agree}
-                  onChange={() => setAgree(!agree)}
-                  variant="style2">
+                  onChange={() => setAgree(!agree)}>
                   <Typography size={12} className="text-white">
                     I agree to the{' '}
                     <span className="cursor-pointer underline">

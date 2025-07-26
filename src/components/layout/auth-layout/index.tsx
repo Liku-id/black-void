@@ -11,7 +11,7 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-1.jpg',
+  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/auth-background-1.jpg`,
   'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-2.jpg',
   'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-3.jpg',
   'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-4.jpg',
@@ -41,7 +41,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               src={bg}
               alt={`Background ${index + 1}`}
               fill
-              sizes="100vw"
+              sizes="(min-width: 1024px) 50vw, 100vw"
               style={{
                 objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,

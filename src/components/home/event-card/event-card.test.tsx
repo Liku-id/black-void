@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import ProjectCard from './index';
+import EventCard from './index';
 
 const defaultProps = {
   image: 'https://example.com/image.jpg',
@@ -9,9 +9,9 @@ const defaultProps = {
   price: 'Rp 100.000',
 };
 
-describe('ProjectCard', () => {
+describe('EventCard', () => {
   it('renders all props correctly', () => {
-    render(<ProjectCard {...defaultProps} />);
+    render(<EventCard {...defaultProps} />);
     expect(screen.getByAltText(defaultProps.title)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.title)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.location)).toBeInTheDocument();
@@ -23,13 +23,13 @@ describe('ProjectCard', () => {
   });
 
   it('renders location and calendar icons', () => {
-    render(<ProjectCard {...defaultProps} />);
+    render(<EventCard {...defaultProps} />);
     expect(screen.getByAltText('location')).toBeInTheDocument();
     expect(screen.getByAltText('calendar')).toBeInTheDocument();
   });
 
   it('applies main container class', () => {
-    const { container } = render(<ProjectCard {...defaultProps} />);
+    const { container } = render(<EventCard {...defaultProps} />);
     expect(container.firstChild).toHaveClass('w-[270px]');
     expect(container.firstChild).toHaveClass('bg-white');
     expect(container.firstChild).toHaveClass(
@@ -39,7 +39,7 @@ describe('ProjectCard', () => {
 
   it('handles image onError and onLoad', () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<ProjectCard {...defaultProps} />);
+    render(<EventCard {...defaultProps} />);
     const img = screen.getByAltText(defaultProps.title) as HTMLImageElement;
     // Simulate onLoad
     fireEvent.load(img);
