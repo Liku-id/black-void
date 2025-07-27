@@ -14,7 +14,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onClose }) => {
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleLogin}
       title="RESET PASSWORD COMPLETE"
       children={
         <Typography size={14} className="mb-6 block" color="text-white">

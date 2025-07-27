@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Bebas_Neue, Onest } from 'next/font/google';
 import '../styles/globals.css';
 import '../styles/animations.css';
+import SWRProvider from '@/lib/api/swr-provider';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -59,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased ${bebasNeue.variable} ${onest.variable}`}>
-        {children}
+        <SWRProvider>{children}</SWRProvider>
       </body>
     </html>
   );

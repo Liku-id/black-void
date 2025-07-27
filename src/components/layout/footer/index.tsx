@@ -3,12 +3,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Container, Box, Typography } from '@/components';
 import logo from '@/assets/logo/white-logo.svg';
+import emailIcon from '@/assets/icons/email.svg';
+import smsIcon from '@/assets/icons/sms.svg';
 
 const Footer = () => {
   return (
     <footer className="w-full bg-black pb-[24px]">
-      <Container className="px-4 pt-14 lg:pt-[96px]">
-        <Box className="bg-dark-gray mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-14 lg:[grid-template-columns:2fr_0.75fr_1fr_1.5fr] lg:gap-[108px] lg:p-[56px]">
+      <Container className="pt-14 lg:pt-[96px]">
+        <Box className="bg-dark-gray mx-auto grid max-w-[1140px] grid-cols-1 gap-8 px-4 py-14 lg:[grid-template-columns:2fr_0.75fr_1fr_1.5fr] lg:gap-[108px] lg:p-[56px]">
           {/* Part 1: Logo and Text */}
           <Box>
             <Box className="mb-4">
@@ -36,22 +38,22 @@ const Footer = () => {
             <Box className="flex flex-col gap-2">
               <Link
                 href="#project-list"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Music
               </Link>
               <Link
                 href="#project-list"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Sports
               </Link>
               <Link
                 href="#project-list"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Exhibition
               </Link>
               <Link
                 href="#project-list"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-greenfont-onest text-[14px] text-white">
                 Festival
               </Link>
             </Box>
@@ -66,22 +68,22 @@ const Footer = () => {
             <Box className="flex flex-col gap-2">
               <Link
                 href="/about-us"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 About Us
               </Link>
               <Link
                 href="/terms-and-conditions"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Terms & Conditions
               </Link>
               <Link
                 href="/privacy-policy"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Privacy Policy
               </Link>
               <Link
                 href="/cookie-policy"
-                className="font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white">
                 Cookie Policy
               </Link>
             </Box>
@@ -99,22 +101,32 @@ const Footer = () => {
 
             <Box>
               <Box className="mb-2 flex items-center gap-4">
-                <Box className="h-[24px] w-[24px] bg-white">{null}</Box>
-                <Typography
-                  type="body"
-                  color="text-white"
-                  className="text-[14px]">
-                  +62 813-8811-9390
-                </Typography>
+                <Image src={smsIcon} alt="sms" width={24} height={24} />
+                <Link
+                  href="https://wa.me/6281388119390"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <Typography
+                    type="body"
+                    color="text-white"
+                    className="cursor-pointer text-[14px] transition">
+                    +62 813-8811-9390
+                  </Typography>
+                </Link>
               </Box>
               <Box className="flex items-center gap-4">
-                <Box className="h-[24px] w-[24px] bg-white">{null}</Box>
-                <Typography
-                  type="body"
-                  color="text-white"
-                  className="text-[14px]">
-                  support@wukong.co.id
-                </Typography>
+                <Image src={emailIcon} alt="email" width={24} height={24} />
+                <Link
+                  href="mailto:support@wukong.co.id"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <Typography
+                    type="body"
+                    color="text-white"
+                    className="cursor-pointer text-[14px] transition">
+                    support@wukong.co.id
+                  </Typography>
+                </Link>
               </Box>
             </Box>
           </Box>

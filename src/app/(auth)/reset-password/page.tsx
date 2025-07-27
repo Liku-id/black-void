@@ -16,8 +16,7 @@ export default function ResetPasswordPage() {
             <Typography
               size={41}
               type="heading"
-              className="font-normal uppercase"
-            >
+              className="font-normal uppercase">
               Change your password
             </Typography>
           </Box>

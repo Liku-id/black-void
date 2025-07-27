@@ -155,8 +155,7 @@ export default function ComingSoon() {
                 className="h-6 w-6"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -176,21 +175,19 @@ export default function ComingSoon() {
             </p>
             <form
               onSubmit={handleSubmit}
-              className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row"
-            >
+              className="mx-auto flex max-w-md flex-col items-center justify-center gap-3 sm:flex-row">
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="font-onest min-w-0 flex-1 border border-white/20 bg-white/10 px-6 py-3 text-white placeholder-white/60 transition-colors focus:border-white/40 focus:outline-none"
                 required
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="font-onest bg-white px-8 py-3 font-semibold whitespace-nowrap text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-              >
+                className="font-onest bg-white px-8 py-3 font-semibold whitespace-nowrap text-black transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50">
                 {isSubmitting ? 'Sending...' : 'Notify Me'}
               </button>
             </form>

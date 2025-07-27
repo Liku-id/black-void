@@ -32,7 +32,6 @@ const ForgotPasswordForm = () => {
       if (response.status === 200) {
         setSentEmail(formData.email);
         setModalOpen(true);
-        // router.push('/'); // Don't redirect, show modal instead
       }
     } catch (error) {
       console.error(error);

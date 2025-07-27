@@ -11,6 +11,7 @@ interface CarouselProps {
   height?: number;
   className?: string;
   animate?: boolean;
+  arrowPosition?: 'inside' | 'outside';
 }
 
 type Direction = 'next' | 'prev';
@@ -19,6 +20,7 @@ export function Carousel({
   images,
   className = '',
   animate = true,
+  arrowPosition = 'outside',
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -101,7 +103,11 @@ export function Carousel({
         {/* Left Arrow */}
         <Button
           onClick={prevSlide}
-          className="absolute top-1/2 left-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0"
+          className={
+            arrowPosition === 'inside'
+              ? 'absolute top-1/2 left-4 z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
+              : 'absolute top-1/2 left-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
+          }
           disabled={animate && isAnimating}>
           <Image src={carouselArrow} alt="Previous" width={46} height={46} />
         </Button>
@@ -109,7 +115,11 @@ export function Carousel({
         {/* Right Arrow */}
         <Button
           onClick={nextSlide}
-          className="absolute top-1/2 right-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0"
+          className={
+            arrowPosition === 'inside'
+              ? 'absolute top-1/2 right-4 z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
+              : 'absolute top-1/2 right-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
+          }
           disabled={animate && isAnimating}>
           <Image
             src={carouselArrow}

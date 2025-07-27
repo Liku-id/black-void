@@ -8,6 +8,8 @@ export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
 export { Modal } from './common/modal';
 export { Checkbox } from './common/checkbox';
+export { Select } from './common/select';
+export { Radio } from './common/radio';
 
 // Layout components
 export { default as Header } from './layout/header';

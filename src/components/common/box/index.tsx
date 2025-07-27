@@ -28,6 +28,7 @@ interface BoxProps {
   onTouchStart?: (e: React.TouchEvent) => void;
   onTouchMove?: (e: React.TouchEvent) => void;
   onTouchEnd?: (e: React.TouchEvent) => void;
+  tabIndex?: number;
 }
 
 export const Box = forwardRef<HTMLDivElement, BoxProps>(
