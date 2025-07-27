@@ -80,3 +80,35 @@
 .hover-text:has(+ .hover-text + .hover-text:hover) {
   font-weight: 300;
 }
+
+@keyframes scan-line {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(320px);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animate-scan-shadow {
+  position: relative;
+  animation: scan-line 3s linear infinite;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 197, 94, 0.3) 20%,
+    #22c55e 50%,
+    rgba(34, 197, 94, 0.3) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px rgba(34, 197, 94, 0.8),
+    0 0 20px rgba(34, 197, 94, 0.6),
+    0 0 30px rgba(34, 197, 94, 0.4),
+    0 0 40px rgba(34, 197, 94, 0.2);
+}
+
+
