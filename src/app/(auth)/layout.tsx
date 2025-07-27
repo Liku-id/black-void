@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import AuthLayout from '@/components/layout/auth-layout';
-import AuthHeader from '@/components/layout/auth-header';
+import AuthHeader from '@/components/layout/header/mobile';
 
 export const metadata: Metadata = {
   title: 'Login | Wukong - Buy Concert Tickets, Events, and Entertainment',

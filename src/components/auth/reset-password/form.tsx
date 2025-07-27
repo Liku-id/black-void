@@ -11,6 +11,7 @@ import ErrorIcon from '@/assets/icons/error.svg';
 import SuccessIcon from '@/assets/icons/success.svg';
 import Image from 'next/image';
 import SuccessModal from './success-modal';
+import axios from 'axios';
 
 interface ResetPasswordData {
   password: string;
@@ -59,19 +60,13 @@ const ResetPasswordForm = () => {
     setError('');
     setLoading(true);
     try {
-      // Implementasi API call
-      const res = await fetch('/api/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          token,
-          email,
-        }),
+      const res = await axios.post('/api/auth/reset-password', {
+        ...formData,
+        token,
+        email,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Unknown error');
-      // Jika sukses, tampilkan modal
+      const data = res.data;
+      if (res.status !== 200) throw new Error(data.message || 'Unknown error');
       setModalOpen(true);
     } catch (error: any) {
       setError(error.message);

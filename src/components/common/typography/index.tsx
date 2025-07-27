@@ -17,15 +17,20 @@ import type { TypographyProps } from './typography.types';
 
 // Define allowed font sizes in px
 const sizeClassMap: Record<number, string> = {
+  10: 'text-[10px]',
   12: 'text-[12px]',
   14: 'text-[14px]',
   16: 'text-[16px]',
+  18: 'text-[18px]',
+  20: 'text-[20px]',
   22: 'text-[22px]',
   24: 'text-[24px]',
   26: 'text-[26px]',
+  30: 'text-[30px]',
   32: 'text-[32px]',
   40: 'text-[40px]',
   41: 'text-[41px]',
+  44: 'text-[44px]',
   64: 'text-[64px]',
 };
 

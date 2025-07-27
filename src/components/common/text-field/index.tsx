@@ -24,6 +24,7 @@ interface TextFieldProps {
   rules?: RegisterOptions;
   countryCodes?: { label: string; value: string }[];
   selectedCountryCode?: string;
+  disabled?: boolean;
 }
 
 export const TextField: React.FC<TextFieldProps> = ({
@@ -42,20 +43,27 @@ export const TextField: React.FC<TextFieldProps> = ({
   rules,
   countryCodes = [],
   selectedCountryCode = '',
+  disabled,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const containerClass = cn(
-    `flex items-center h-10 border border-black bg-white px-3 transition-all duration-200 outline-none ${isFocused ? 'border-black shadow-[4px_4px_0px_0px_#FFFF] translate-x-[-2px] translate-y-[-2px]' : ''}`,
+    `flex items-center h-10 border border-black px-3 transition-all duration-200 outline-none`,
+    isFocused
+      ? 'border-black shadow-[4px_4px_0px_0px_#FFFF] translate-x-[-2px] translate-y-[-2px]'
+      : '',
     className
   );
-  const inputClass =
-    'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 outline-none focus:outline-none focus:ring-0';
+  const inputClass = (disabled?: boolean) =>
+    cn(
+      'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 focus:outline-none',
+      disabled && 'text-gray-400 cursor-not-allowed'
+    );
 
   const renderCountrySelect = () =>
-    name === 'phoneNumber' && countryCodes.length > 0 ? (
-      <div className="relative mr-2 h-full bg-[#DADADA]">
+    name?.includes('phoneNumber') && countryCodes.length > 0 ? (
+      <Box className="relative mr-2 h-full bg-[#DADADA]">
         <select
           id="phone_number_code_select"
           className="h-full appearance-none bg-transparent pr-2 pl-6 text-black outline-none"
@@ -76,7 +84,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             className="h-6 w-6 transition-transform duration-200"
           />
         </span>
-      </div>
+      </Box>
     ) : null;
 
   // Form field mode with React Hook Form
@@ -91,7 +99,9 @@ export const TextField: React.FC<TextFieldProps> = ({
         render={({ field, fieldState }) => (
           <Box className={className}>
             <Box
-              className={`flex h-11 items-center bg-white transition-all duration-200 outline-none ${name === 'phoneNumber' ? 'pr-3' : 'px-2'} ${
+              className={`flex h-11 items-center ${name?.includes('phoneNumber') ? 'pr-3' : 'px-2'} ${
+                disabled ? 'cursor-not-allowed bg-gray-100' : 'bg-white'
+              } ${
                 isFocused
                   ? `translate-x-[-2px] translate-y-[-2px] border shadow-[4px_4px_0px_0px_#FFFF] ${fieldState.error ? 'border-danger' : 'border-black'}`
                   : `border ${fieldState.error ? 'border-danger' : 'border-black'}`
@@ -116,10 +126,14 @@ export const TextField: React.FC<TextFieldProps> = ({
                 type={type}
                 data-slot="input"
                 placeholder={placeholder}
-                className={cn(inputClass, fieldState.error && 'border-danger')}
+                className={cn(
+                  inputClass(disabled),
+                  fieldState.error && 'border-danger'
+                )}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 {...props}
+                disabled={disabled}
               />
               {endIcon && (
                 <Box
@@ -162,8 +176,9 @@ export const TextField: React.FC<TextFieldProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={e => onChange?.(e.target.value)}
-        className={inputClass}
+        className={inputClass(disabled)}
         {...props}
+        disabled={disabled}
       />
       {endIcon && (
         <Box

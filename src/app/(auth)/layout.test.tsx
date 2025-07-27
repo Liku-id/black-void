@@ -8,7 +8,7 @@ jest.mock('@/components/layout/auth-layout', () => ({
   ),
 }));
 
-jest.mock('@/components/layout/auth-header', () => ({
+jest.mock('@/components/layout/header/mobile', () => ({
   __esModule: true,
   default: () => (
     <header data-testid="auth-header">

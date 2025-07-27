@@ -1,20 +1,19 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/utils/utils';
+import checkedSvg from '@/assets/icons/checked.svg';
+import Image from 'next/image';
 
-interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface CheckboxProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   checked: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void | (() => void);
   id?: string;
   className?: string;
   disabled?: boolean;
   children?: React.ReactNode;
-  /**
-   * @default 'style1'
-   * @description 'style1' for custom SVG checkmark with label, 'style2' for simple checkmark using CSS pseudo-element
-   */
-  variant?: 'style1' | 'style2';
+  variant?: 'black' | 'white';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -24,72 +23,40 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   className = '',
   disabled = false,
   children,
-  variant = 'style1',
+  variant = 'black',
+  size = 'md',
   ...rest
 }) => {
-  // Common props for both variants
-  const commonProps = {
-    type: 'checkbox',
-    checked,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (disabled) return;
-      if (typeof onChange === 'function') {
-        // Handle both signature types
-        if (onChange.length === 0) {
-          (onChange as () => void)();
-        } else {
-          onChange(e);
-        }
-      }
-    },
-    disabled,
-    ...rest,
-  };
+  const baseClass =
+    variant === 'white' ? 'border-black bg-white' : 'border-white bg-black';
 
-  if (variant === 'style1') {
-    return (
-      <label
-        className={`inline-flex cursor-pointer items-center gap-2 ${className}`}
-        htmlFor={id}>
-        <span
-          className="relative flex items-center"
-          style={{ marginRight: 12 }}>
-          <input
-            {...commonProps}
-            id={id}
-            className="peer h-6 w-6 appearance-none rounded-none border border-white bg-black transition-colors checked:border-green-500 checked:bg-green-500 focus:outline-none"
-          />
-          {/* Custom checkmark, center, only show if checked */}
-          {checked && (
-            <span className="pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="13"
-                height="11"
-                viewBox="0 0 13 11"
-                fill="none">
-                <path d="M1 5L5 9L12 1" stroke="white" strokeWidth="2" />
-              </svg>
-            </span>
-          )}
-        </span>
-        {children}
-      </label>
-    );
-  }
+  const sizeClass =
+    size === 'sm' ? 'h-4 w-4' : size === 'lg' ? 'h-8 w-8' : 'h-6 w-6';
 
-  // Variant style2
   return (
-    <label className="inline-flex cursor-pointer gap-2">
-      <input
-        id={id}
-        {...commonProps}
-        className={cn(
-          `before:text-md flex h-4 w-4 cursor-pointer appearance-none items-center justify-center border border-white bg-black before:text-white before:opacity-0 before:content-['✓'] checked:before:opacity-100`,
-          className
+    <label
+      className={`inline-flex items-center gap-3 ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${className}`}
+      htmlFor={id}>
+      <span className="relative flex items-center">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+          id={id}
+          disabled={disabled}
+          className={`peer ${sizeClass} appearance-none rounded-none border ${baseClass} transition-colors checked:border-green-500 checked:bg-green-500 focus:outline-none ${disabled ? 'pointer-events-none' : ''}`}
+          {...rest}
+        />
+        {/* Custom checkmark, center, only show if checked */}
+        {checked && (
+          <span className="pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+            <Image src={checkedSvg} alt="checked" width={15} height={15} />
+          </span>
         )}
-      />
+      </span>
       {children}
     </label>
   );
 };
+
+export default Checkbox;
