@@ -44,7 +44,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           onChange={onChange}
           id={id}
           disabled={disabled}
-          className={`peer ${sizeClass} appearance-none rounded-none border ${baseClass} transition-colors checked:border-green-500 checked:bg-green-500 focus:outline-none ${disabled ? 'pointer-events-none' : ''}`}
+          className={`peer ${sizeClass} appearance-none rounded-none border ${baseClass} transition-colors checked:border-green-500 checked:bg-green-500 focus:outline-none ${disabled ? 'pointer-events-none' : 'cursor-pointer'}`}
           {...rest}
         />
         {/* Custom checkmark, center, only show if checked */}

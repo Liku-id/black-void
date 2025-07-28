@@ -20,21 +20,17 @@ export default function Event() {
     slug ? `/api/events/${slug}` : null
   );
 
-  // Initialize tickets as empty, then fill when data loaded
+  // Initialize state
   const [tickets, setTickets] = useState<any[]>([]);
   const selectedTickets = tickets.filter((t: any) => t.count > 0);
-  const [showFull, setShowFull] = useState(false);
-  const maxChar = 335;
-  const termAndConditions = data?.termAndConditions || '';
-  const isLong = termAndConditions.length > maxChar;
 
   // Sticky observer logic using custom hook
   const stickyRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const { isSticky, absoluteTop } = useStickyObserver(
+  const { isSticky, absoluteTop, isReady } = useStickyObserver(
     stickyRef as React.RefObject<HTMLDivElement>,
     sentinelRef as React.RefObject<HTMLDivElement>,
-    215
+    data ? 215 : 0
   );
 
   // Ticket count change handler
@@ -120,8 +116,8 @@ export default function Event() {
               : 'absolute right-8 w-[455px] xl:right-37.5 xl:w-[455px]') +
             ' hidden lg:block'
           }
-          // Only apply absolute top when not sticky
-          style={!isSticky ? { top: absoluteTop } : {}}>
+          // Only apply absolute top when not sticky and ready
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
           <SummarySection eventData={data} tickets={selectedTickets} />
         </Box>
 

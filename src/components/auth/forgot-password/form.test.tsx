@@ -54,8 +54,6 @@ describe('ForgotPasswordForm', () => {
     try {
       await screen.findByText(/Invalid email format/i);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(document.body.innerHTML);
       throw e;
     }
   });

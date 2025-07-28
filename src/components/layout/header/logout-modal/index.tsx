@@ -27,6 +27,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
         <Box className="flex gap-4">
           <Button
             id="cancel_button"
+            className="text-[12px] md:text-[14px]"
             onClick={onClose}
             disabled={loading}
             aria-disabled={loading}>
@@ -34,6 +35,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
           </Button>
           <Button
             id="continue_button"
+            className="text-[12px] md:text-[14px]"
             variant="outline-white"
             onClick={onLogout}
             disabled={loading}

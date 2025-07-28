@@ -26,6 +26,7 @@ interface FormDataContact {
 interface FormDataVisitor {
   visitors: {
     fullName: string;
+    // TODO: PHASE 2
     // phoneNumber: string;
     // email: string;
     // countryCode: string;
@@ -74,7 +75,7 @@ const OrderPage = () => {
 
   // Autofill logic in parent
   const contactMethods = useForm<FormDataContact>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       fullName: isLoggedIn ? userData.fullName : order.full_name || '',
       phoneNumber: isLoggedIn
@@ -100,9 +101,11 @@ const OrderPage = () => {
   };
 
   const visitorMethods = useForm<FormDataVisitor>({
+    mode: 'onSubmit',
     defaultValues: {
       visitors: mockOrder.tickets.map(() => ({
         fullName: '',
+        // TODO: PHASE 2
         // phoneNumber: '',
         // email: '',
         // countryCode: '+62',
@@ -133,10 +136,6 @@ const OrderPage = () => {
   //   }
   // }, [router, params.slug]);
 
-  React.useEffect(() => {
-    contactMethods.trigger();
-  }, []);
-
   if (isLoading) {
     return <div className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
   }
@@ -146,7 +145,7 @@ const OrderPage = () => {
   }
 
   return (
-    <main>
+    <>
       <Container className="relative mx-auto flex max-w-[1140px]">
         <Box className="flex-1">
           <Container className="flex gap-16 px-4">
@@ -203,7 +202,7 @@ const OrderPage = () => {
         </Box>
       </Container>
       <Box ref={sentinelRef} className="-mt-[80px]" />
-    </main>
+    </>
   );
 };
 

@@ -13,13 +13,15 @@ export default function CreatorCard({
 }: CreatorCardProps) {
   if (skeleton) {
     return (
-      <Box className={`flex h-40 w-40 flex-shrink-0 animate-pulse items-center justify-center rounded-full bg-white mx-2`}>
+      <Box
+        className={`mx-2 flex h-40 w-40 flex-shrink-0 animate-pulse items-center justify-center rounded-full bg-white`}>
         <Box className="h-32 w-32 rounded-full bg-gray-300" />
       </Box>
     );
   }
   return (
-    <Box className={`flex h-40 w-40 flex-shrink-0 items-center justify-center rounded-full bg-white mx-2`}>
+    <Box
+      className={`mx-2 flex h-40 w-40 flex-shrink-0 items-center justify-center rounded-full bg-white`}>
       <img
         src={logo}
         alt={name}

@@ -10,6 +10,7 @@ export { Modal } from './common/modal';
 export { Checkbox } from './common/checkbox';
 export { Select } from './common/select';
 export { Radio } from './common/radio';
+export { QRCode } from './common/qr-code';
 
 // Layout components
 export { default as Header } from './layout/header';
