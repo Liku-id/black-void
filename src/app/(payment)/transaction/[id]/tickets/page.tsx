@@ -1,4 +1,4 @@
-import MyTicket from '@/components/my-ticket';
+import Ticket from '@/components/ticket';
 import { Box } from '@/components';
 
 export default function TicketPage() {
@@ -29,5 +29,5 @@ export default function TicketPage() {
     );
   }
 
-  return <MyTicket data={data} />;
+  return <Ticket data={data} />;
 }
