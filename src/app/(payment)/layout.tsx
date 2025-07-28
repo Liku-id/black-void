@@ -1,17 +1,17 @@
 import OrderHeader from '@/components/layout/header/order';
 import { Suspense } from 'react';
 
-export default function AuthSegmentLayout({
+export default function PaymentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <main>
+    <main className="px-0 pt-35 lg:pt-40">
       <Suspense>
         <OrderHeader />
-        {children}
       </Suspense>
+      {children}
     </main>
   );
 }

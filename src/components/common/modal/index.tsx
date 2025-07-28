@@ -13,6 +13,7 @@ interface ModalProps {
   title?: React.ReactNode;
   footer?: React.ReactNode;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export const Modal = ({
@@ -21,6 +22,7 @@ export const Modal = ({
   title,
   footer,
   children,
+  className,
 }: ModalProps) => {
   const [mounted, setMounted] = useState(false);
 
@@ -36,7 +38,11 @@ export const Modal = ({
         className="absolute inset-0"
         style={{ background: 'rgba(0,0,0,0.5)' }}
       />
-      <Box className="relative mx-4 flex w-full max-w-none flex-col items-stretch justify-center border border-white bg-black shadow-[4px_4px_0px_0px_#FFF] md:w-[431px]">
+      <Box
+        className={
+          'relative mx-4 flex w-full max-w-none flex-col items-stretch justify-center border border-white bg-black shadow-[4px_4px_0px_0px_#FFF] md:w-[431px]' +
+          (className ? ` ${className}` : '')
+        }>
         <Box className="flex items-center justify-between p-4 pb-4 md:p-8 md:pb-6">
           {title && (
             <Typography as="h2" type="heading" size={32} className="text-white">

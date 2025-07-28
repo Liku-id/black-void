@@ -61,9 +61,9 @@ const ResetPasswordForm = () => {
     setLoading(true);
     try {
       const res = await axios.post('/api/auth/reset-password', {
-        ...formData,
-        token,
         email,
+        token,
+        password: formData.password,
       });
       const data = res.data;
       if (res.status !== 200) throw new Error(data.message || 'Unknown error');

@@ -18,9 +18,17 @@ export function formatTime(date: string | Date): string {
     .replace(':', '.');
 }
 
+export function formatCountdownTime(seconds: number): string {
+  const minutes = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, '0');
+  const secs = (seconds % 60).toString().padStart(2, '0');
+  return `${minutes}:${secs}`;
+}
+
 export function formatDate(
   date: string | Date,
-  variant: 'day' | 'date' | 'full' = 'full'
+  variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
 ): string {
   let d: Date;
 
@@ -50,6 +58,26 @@ export function formatDate(
     const month = d.toLocaleString('en-EN', { month: 'long' });
     const year = d.getFullYear();
     return `${day} ${month} ${year}`;
+  }
+  if (variant === 'datetime') {
+    // May 21, 2025, 05:00PM GMT+8
+    const month = d.toLocaleString('en-EN', { month: 'short' });
+    const day = d.getDate();
+    const year = d.getFullYear();
+    const time = d.toLocaleTimeString('en-EN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const timezone =
+      d
+        .toLocaleTimeString('en-EN', {
+          timeZoneName: 'short',
+        })
+        .split(' ')
+        .pop() || 'GMT+8';
+
+    return `${month} ${day}, ${year}, ${time} ${timezone}`;
   }
   // default 'full'
   return d.toLocaleDateString('en-EN', {

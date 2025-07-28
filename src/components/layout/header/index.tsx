@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -7,11 +7,10 @@ import axios from 'axios';
 import { useAtom } from 'jotai';
 import { fetchAuthAtom, userDataAtom } from '@/store';
 import { getErrorMessage } from '@/lib/api/error-handler';
-import { Box, TextField, Button, Typography, Container } from '@/components';
+import { Box, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
 // import searchIcon from '@/assets/icons/search.svg';
-import { useState } from 'react';
 import burgerIcon from '@/assets/icons/burger.svg';
 import closeIcon from '@/assets/icons/close.svg';
 import ProfileMenu from './profile-menu';
@@ -28,6 +27,7 @@ export default function Header() {
   const [_, setError] = useState('');
   const [isLoggedIn, checkAuth] = useAtom(fetchAuthAtom);
   const [userData] = useAtom(userDataAtom);
+  console.log(userData);
   // const [searchValue, setSearchValue] = useState('');
 
   // const handleSearch = () => {
@@ -43,6 +43,8 @@ export default function Header() {
         userId: userData.id,
       });
       if (response.status === 200) {
+        setOpenMenu(false);
+        setOpenLogoutModal(false);
         router.replace('/');
       }
     } catch (error) {

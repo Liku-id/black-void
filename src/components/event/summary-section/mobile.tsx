@@ -15,8 +15,8 @@ interface SummarySectionProps {
   eventData?: any;
   tickets: TicketSummary[];
   isContactValid?: boolean;
-  isVisitorValid: boolean;
-  visitorMethods: UseFormReturn<FormDataVisitor>;
+  isVisitorValid?: boolean;
+  visitorMethods?: UseFormReturn<FormDataVisitor>;
 }
 
 const SummarySectionMobile: React.FC<SummarySectionProps> = ({
@@ -55,7 +55,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
   const handleContinue = () => {
     if (isOrderPage) {
       setShowPaymentMethod(false);
-      const visitorData = visitorMethods.getValues();
+      const visitorData = visitorMethods?.getValues();
       console.log(visitorData);
       console.log(selectedPayment);
     } else {
@@ -98,6 +98,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
               {formatRupiah(grandTotal)}
             </Typography>
             <Button
+              id="open_order_detail_link"
               type="button"
               onClick={handleSeeDetails}
               className="flex h-auto items-center bg-white p-0 text-[12px] font-light text-black underline">
@@ -137,6 +138,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
 
           {isOrderPage && (
             <Box
+              id="payment_method_field"
               className="mb-4 flex items-center justify-between border border-solid border-black p-2"
               onClick={() => setShowPaymentMethod(true)}>
               <Typography
@@ -172,6 +174,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
           />
 
           <PaymentMethodAccordion
+            id="va_payment_dropdown"
             title="Virtual Account"
             methods={eventData?.paymentMethods || []}
             filterKey="VIRTUAL ACCOUNT"
@@ -180,6 +183,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
           />
 
           <PaymentMethodAccordion
+            id="qris_payment_dropdown"
             title="QRIS"
             methods={eventData?.paymentMethods || []}
             filterKey="QRIS"
