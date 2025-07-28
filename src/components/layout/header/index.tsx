@@ -27,12 +27,9 @@ export default function Header() {
   const [_, setError] = useState('');
   const [isLoggedIn, checkAuth] = useAtom(fetchAuthAtom);
   const [userData] = useAtom(userDataAtom);
-  console.log(userData);
   // const [searchValue, setSearchValue] = useState('');
 
-  // const handleSearch = () => {
-  //   console.log('search:', searchValue);
-  // };
+  // const handleSearch = () => {};
 
   // Logout
   const onLogout = async () => {

@@ -56,8 +56,6 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
     if (isOrderPage) {
       setShowPaymentMethod(false);
       const visitorData = visitorMethods?.getValues();
-      console.log(visitorData);
-      console.log(selectedPayment);
     } else {
       router.push(`/event/${slug}/order`);
     }

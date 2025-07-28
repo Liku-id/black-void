@@ -61,7 +61,6 @@ export default function EventCard({
           width={270}
           height={152}
           className="h-[152px] w-full object-cover"
-          onLoad={() => console.log('Image loaded successfully:', image)}
         />
       ) : (
         <Box className="flex h-[152px] w-full items-center justify-center bg-gray-200 text-xs text-gray-500">

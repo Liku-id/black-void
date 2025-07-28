@@ -58,13 +58,7 @@ export default function PaymentConfirmation({
     }
   };
 
-  const handleConfirmPayment = () => {
-    // TODO: Implement payment confirmation logic
-    console.log(
-      'Confirming payment for transaction:',
-      transaction.transactionNumber
-    );
-  };
+  const handleConfirmPayment = () => {};
 
   return (
     <Container className="flex justify-center">

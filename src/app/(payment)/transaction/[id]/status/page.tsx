@@ -2,11 +2,12 @@ import PaymentStatus from '@/components/payment/payment-status';
 import { Box } from '@/components';
 import { redirect } from 'next/navigation';
 
-export default function TransactionStatusPage({
+export default async function TransactionStatusPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const transaction = {
     status: 'PAID',
     event: {
@@ -53,7 +54,7 @@ export default function TransactionStatusPage({
   const totals = calculateTotals(transaction);
 
   if (transaction.status !== 'PAID' && transaction.status !== 'FAILED') {
-    redirect(`/transaction/${params.id}`);
+    redirect(`/transaction/${id}`);
   }
 
   if (!transaction) {
