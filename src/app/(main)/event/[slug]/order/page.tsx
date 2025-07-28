@@ -26,6 +26,7 @@ interface FormDataContact {
 interface FormDataVisitor {
   visitors: {
     fullName: string;
+    // TODO: PHASE 2
     // phoneNumber: string;
     // email: string;
     // countryCode: string;
@@ -74,7 +75,7 @@ const OrderPage = () => {
 
   // Autofill logic in parent
   const contactMethods = useForm<FormDataContact>({
-    mode: 'onSubmit', // Changed from 'onChange' to 'onSubmit' to prevent showing errors immediately
+    mode: 'onSubmit',
     defaultValues: {
       fullName: isLoggedIn ? userData.fullName : order.full_name || '',
       phoneNumber: isLoggedIn
@@ -100,10 +101,11 @@ const OrderPage = () => {
   };
 
   const visitorMethods = useForm<FormDataVisitor>({
-    mode: 'onSubmit', // Changed to 'onSubmit' to prevent showing errors immediately
+    mode: 'onSubmit',
     defaultValues: {
       visitors: mockOrder.tickets.map(() => ({
         fullName: '',
+        // TODO: PHASE 2
         // phoneNumber: '',
         // email: '',
         // countryCode: '+62',
@@ -133,11 +135,6 @@ const OrderPage = () => {
   //     router.replace(`/event/${params.slug}`);
   //   }
   // }, [router, params.slug]);
-
-  // Remove automatic trigger to prevent showing errors on first load
-  // React.useEffect(() => {
-  //   contactMethods.trigger();
-  // }, []);
 
   if (isLoading) {
     return <div className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
