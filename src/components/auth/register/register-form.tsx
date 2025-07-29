@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from 'axios';
+import axios from '@/lib/api/axios-server';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email, usePasswordValidation } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
