@@ -10,16 +10,19 @@ type AuthLayoutProps = {
   children?: ReactNode;
 };
 
-const backgrounds = [
-  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-1.jpg`,
-  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-2.jpg`,
-  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-3.jpg`,
-  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-4.jpg`,
-  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-5.jpg',
-];
-
 const AuthLayout = ({ children }: AuthLayoutProps) => {
+  const baseUrl = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
+
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const backgrounds = [
+    `${baseUrl}/assets/WEB/auth-background-1.jpg`,
+    `${baseUrl}/assets/WEB/auth-background-2.jpg`,
+    `${baseUrl}/assets/WEB/auth-background-3.jpg`,
+    `${baseUrl}/assets/WEB/auth-background-4.jpg`,
+    `${baseUrl}/assets/WEB/auth-background-5.jpg`,
+  ];
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
