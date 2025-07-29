@@ -3,18 +3,16 @@ import { Modal, Button, Typography } from '@/components';
 
 interface SuccessModalProps {
   open: boolean;
-  onClose: () => void;
   onLogin: () => void;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
   open,
-  onClose,
   onLogin,
 }) => (
   <Modal
     open={open}
-    onClose={onClose}
+    onClose={onLogin}
     title="Registration successful"
     children={
       <>
