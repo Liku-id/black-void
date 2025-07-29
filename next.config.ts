@@ -8,13 +8,23 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: [
-      'dummyimage.com',
-      'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
-      'wukong-staging-private.s3.ap-southeast-3.amazonaws.com',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dummyimage.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'wukong-staging-private.s3.ap-southeast-3.amazonaws.com',
+        pathname: '/**',
+      },
     ],
-    // Modern formats for better compression (only affects raster images: PNG, JPG, etc.)
-    // SVG files remain unchanged and are already optimized
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

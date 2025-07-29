@@ -11,10 +11,10 @@ type AuthLayoutProps = {
 };
 
 const backgrounds = [
-  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/auth-background-1.jpg`,
-  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-2.jpg',
-  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-3.jpg',
-  'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-4.jpg',
+  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-1.jpg`,
+  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-2.jpg`,
+  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-3.jpg`,
+  `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/assets/WEB/auth-background-4.jpg`,
   'https://wukong-staging-public.s3.ap-southeast-3.amazonaws.com/assets/WEB/auth-background-5.jpg',
 ];
 
@@ -36,19 +36,21 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <Box className="relative hidden w-1/2 overflow-hidden lg:block">
           {/* Backgrounds stacked on top of each other */}
           {backgrounds.map((bg, index) => (
-            <Image
+            <img
               key={index}
               src={bg}
               alt={`Background ${index + 1}`}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
               style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
                 objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,
                 zIndex: index === currentIndex ? 1 : 0,
               }}
               className="absolute inset-0"
-              priority={index === 0}
             />
           ))}
 

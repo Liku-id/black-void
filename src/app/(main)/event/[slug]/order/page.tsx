@@ -5,8 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useCountdown } from '@/utils/timer';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
-import { orderAtom } from '@/atoms/order';
-import { fetchAuthAtom, userDataAtom } from '@/store';
+import { orderAtom } from '@/store/atoms/order';
+import { useAuth } from '@/lib/session/use-auth';
 import { Box, Container } from '@/components';
 import ContactDetailSection from '@/components/event/contact-detail';
 import VisitorDetailSection from '@/components/event/visitor-detail';
@@ -38,6 +38,7 @@ const OrderPage = () => {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug;
+  const { isLoggedIn, userData } = useAuth();
 
   // Fetch Data
   const { data, isLoading, error } = useSWR(
@@ -54,8 +55,6 @@ const OrderPage = () => {
 
   // Initial State
   const [order, setOrder] = useAtom(orderAtom);
-  const [isLoggedIn] = useAtom(fetchAuthAtom);
-  const [userData] = useAtom(userDataAtom);
   // Calculate secondsLeft from expiredAt
   const expiredAtStr = mockOrder.expiredAt;
   const expiredAt = expiredAtStr ? new Date(expiredAtStr) : null;
@@ -77,12 +76,12 @@ const OrderPage = () => {
   const contactMethods = useForm<FormDataContact>({
     mode: 'onSubmit',
     defaultValues: {
-      fullName: isLoggedIn ? userData.fullName : order.full_name || '',
-      phoneNumber: isLoggedIn
+      fullName: isLoggedIn && userData ? userData.fullName : order.full_name || '',
+      phoneNumber: isLoggedIn && userData
         ? splitPhoneNumber(userData.phoneNumber || '').phoneNumber
         : order.phone_number || '',
-      email: isLoggedIn ? userData.email : order.email || '',
-      countryCode: isLoggedIn
+      email: isLoggedIn && userData ? userData.email : order.email || '',
+      countryCode: isLoggedIn && userData
         ? splitPhoneNumber(userData.phoneNumber || '').countryCode
         : order.country_code || '+62',
     },

@@ -285,7 +285,6 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       {/* Success Modal */}
       <SuccessModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
         onLogin={() => router.replace('/login')}
       />
     </Box>

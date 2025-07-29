@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import axios from '@/lib/api/axios-server';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
-import { useAtom } from 'jotai';
-import { userDataAtom } from '@/store';
+import { useAuth } from '@/lib/session/use-auth';
 import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
@@ -20,12 +19,12 @@ interface FormDataLogin {
 
 const LoginForm = () => {
   const router = useRouter();
+  const { checkAuth } = useAuth();
 
   // Initialize state
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [, setUserData] = useAtom(userDataAtom);
 
   const methods = useForm<FormDataLogin>({});
 
@@ -37,8 +36,8 @@ const LoginForm = () => {
       const response = await axios.post('/api/auth/login', formData);
 
       if (response.status === 200) {
+        await checkAuth(); // Refresh auth state
         router.replace('/');
-        setUserData(response.data?.data);
       }
     } catch (error) {
       console.error(error);
