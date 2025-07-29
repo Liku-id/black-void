@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { serialize } from 'cookie';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { clearAuthCookies } from '@/lib/cookies';
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,27 +17,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ message: 'Logout successful' });
 
-    response.headers.append(
-      'Set-Cookie',
-      serialize('access_token', '', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict' as const,
-        path: '/',
-        maxAge: 0,
-      })
-    );
-
-    response.headers.append(
-      'Set-Cookie',
-      serialize('refresh_token', '', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict' as const,
-        path: '/',
-        maxAge: 0,
-      })
-    );
+    clearAuthCookies(response);
 
     return response;
   } catch (e) {

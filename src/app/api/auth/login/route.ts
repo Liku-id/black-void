@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { serialize } from 'cookie';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { setAuthCookies } from '@/lib/cookies';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,30 +14,11 @@ export async function POST(request: NextRequest) {
       data: data.body?.user,
     });
 
-    // Set Cookies
-    response.headers.set(
-      'Set-Cookie',
-      serialize('access_token', data.body.accessToken, {
-        // ...cookieOptions,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict' as const,
-        path: '/',
-        maxAge: 60 * 60 * 24,
-      })
-    );
-
-    response.headers.append(
-      'Set-Cookie',
-      serialize('refresh_token', data.body.refreshToken, {
-        // ...cookieOptions,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict' as const,
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
-      })
-    );
+    setAuthCookies(response, {
+      accessToken: data.body.accessToken,
+      refreshToken: data.body.refreshToken,
+      userRole: data.body?.user?.role,
+    });
 
     return response;
   } catch (e) {
