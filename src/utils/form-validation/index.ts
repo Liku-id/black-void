@@ -5,6 +5,35 @@ export const email = (value: string) =>
     ? 'Invalid email format'
     : undefined;
 
+export const fullName = (value: string) => {
+  if (!value) return undefined;
+  if (value.length < 2) {
+    return 'Minimum 2 characters';
+  }
+  if (!/^[a-zA-Z\s]+$/.test(value)) {
+    return 'Full Name cannot contain numbers or symbols';
+  }
+  return undefined;
+};
+
+export const phoneNumber = (value: string, countryCode: string = '+62') => {
+  if (!value) return undefined;
+  if (!/^[0-9]+$/.test(value)) {
+    return 'Only numbers allowed';
+  }
+  if (value.startsWith('0')) {
+    return 'Phone number cannot start with 0';
+  }
+  const totalLength = countryCode.replace('+', '').length + value.length;
+  if (totalLength < 8) {
+    return 'Minimum 8 digits total';
+  }
+  if (totalLength > 15) {
+    return 'Maximum 15 digits total';
+  }
+  return undefined;
+};
+
 export const validatePassword = (value: string) => {
   if (value.length < 8 || value.length > 12) {
     return 'Password must be between 8-12 characters';

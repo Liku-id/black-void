@@ -9,6 +9,7 @@ import { getErrorMessage } from '@/lib/api/error-handler';
 import { Box, Typography } from '@/components';
 import Loading from '@/components/layout/loading';
 import debounce from '@/utils/debounce';
+import { formatCountdownTime } from '@/utils/formatter';
 import SuccessModal from './success-modal';
 
 interface VerifyOtpFormProps {
@@ -205,12 +206,6 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
 
   if (!payload.phoneNumber) return null;
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   return (
     <Box className="flex flex-col items-center">
       {loading && <Loading />}
@@ -220,7 +215,9 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
         {payload.phoneNumber}
       </Typography>
 
-      <Typography className="mb-2">{formatTime(seconds)}</Typography>
+      {!modalOpen && (
+        <Typography className="mb-2">{formatCountdownTime(seconds)}</Typography>
+      )}
 
       <Box className="mt-8 mb-2 flex gap-4">
         {otp.map((value, index) => (
