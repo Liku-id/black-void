@@ -4,6 +4,7 @@ import { FormProvider, UseFormReturn } from 'react-hook-form';
 import Image from 'next/image';
 import AccordionArrow from '@/assets/icons/accordion-arrow.svg';
 import { formatCountdownTime } from '@/utils/formatter';
+import { fullName, phoneNumber } from '@/utils/form-validation';
 import type { FormDataContact } from '../types';
 
 interface ContactDetailSectionProps {
@@ -100,7 +101,10 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                     id="fullname_field"
                     name="fullName"
                     placeholder="Full name*"
-                    rules={{ required: 'Full name is required' }}
+                    rules={{
+                      required: 'Full name is required',
+                      validate: fullName
+                    }}
                     className="w-full"
                   />
                   <Typography
@@ -136,14 +140,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                   placeholder="Phone Number*"
                   rules={{
                     required: 'Phone Number is required',
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: 'Only numbers allowed',
-                    },
-                    minLength: {
-                      value: 8,
-                      message: 'Minimum 8 digits',
-                    },
+                    validate: (value) => phoneNumber(value, countryCode)
                   }}
                   selectedCountryCode={countryCode}
                   onCountryCodeChange={val => setCountryCode(val)}

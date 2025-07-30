@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from '@/lib/api/axios-server';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email, usePasswordValidation } from '@/utils/form-validation';
+import { email, usePasswordValidation, fullName, phoneNumber } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAtom } from 'jotai';
 import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
@@ -103,7 +103,7 @@ const RegisterForm = () => {
                 className="mb-8 w-[270px]"
                 rules={{
                   required: 'Full Name is required',
-                  minLength: { value: 2, message: 'Minimum 2 characters' },
+                  validate: fullName
                 }}
               />
 
@@ -126,14 +126,7 @@ const RegisterForm = () => {
                 className="mb-10 w-[270px]"
                 rules={{
                   required: 'Phone Number is required',
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: 'Only numbers allowed',
-                  },
-                  minLength: {
-                    value: 8,
-                    message: 'Minimum 8 digits',
-                  },
+                  validate: (value) => phoneNumber(value, countryCode)
                 }}
                 selectedCountryCode={countryCode}
                 onCountryCodeChange={val => setCountryCode(val)}
@@ -168,7 +161,7 @@ const RegisterForm = () => {
 
               <Box className="relative mb-8 flex items-center gap-4">
                 <TextField
-                  id="repeat_password_field"
+                  id="confirm_password_field"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Repeat Password"
