@@ -3,6 +3,8 @@ import { Box, Button, Typography, TextField } from '@/components';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 import Image from 'next/image';
 import AccordionArrow from '@/assets/icons/accordion-arrow.svg';
+import { formatCountdownTime } from '@/utils/formatter';
+import { fullName, phoneNumber } from '@/utils/form-validation';
 import type { FormDataContact } from '../types';
 
 interface ContactDetailSectionProps {
@@ -12,14 +14,6 @@ interface ContactDetailSectionProps {
   onBack: () => void;
   onSubmit: (data: FormDataContact) => void;
 }
-
-const formatTime = (s: number) => {
-  const m = Math.floor(s / 60)
-    .toString()
-    .padStart(2, '0');
-  const sec = (s % 60).toString().padStart(2, '0');
-  return `${m}:${sec}`;
-};
 
 const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
   eventData,
@@ -33,7 +27,13 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
     () => methods.getValues('countryCode') || '+62'
   );
 
-  const onContactSubmit = (data: FormDataContact) => {
+  const onContactSubmit = async (data: FormDataContact) => {
+    // Validate form before submitting
+    const isValid = await methods.trigger();
+    if (!isValid) {
+      return;
+    }
+
     data.countryCode = countryCode;
     onSubmit(data);
     setSubmitted(true);
@@ -83,7 +83,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
           size={16}
           color="text-red"
           className="font-bold">
-          {formatTime(secondsLeft)}
+          {formatCountdownTime(secondsLeft)}
         </Typography>
       </Box>
 
@@ -101,7 +101,10 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                     id="fullname_field"
                     name="fullName"
                     placeholder="Full name*"
-                    rules={{ required: 'Full name is required' }}
+                    rules={{
+                      required: 'Full name is required',
+                      validate: fullName
+                    }}
                     className="w-full"
                   />
                   <Typography
@@ -137,14 +140,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                   placeholder="Phone Number*"
                   rules={{
                     required: 'Phone Number is required',
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: 'Only numbers allowed',
-                    },
-                    minLength: {
-                      value: 8,
-                      message: 'Minimum 8 digits',
-                    },
+                    validate: (value) => phoneNumber(value, countryCode)
                   }}
                   selectedCountryCode={countryCode}
                   onCountryCodeChange={val => setCountryCode(val)}

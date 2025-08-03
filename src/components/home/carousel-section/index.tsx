@@ -36,14 +36,13 @@ export default function CarouselSection() {
       <Container>
         <Box className="flex justify-center">
           {/* Mobile: Slider */}
-          <Box className="block md:hidden relative w-[350px] overflow-hidden">
+          <Box className="relative block w-[350px] overflow-hidden md:hidden">
             <Slider
               autoScroll={false}
-              className="w-full h-[200px]"
+              className="h-[200px] w-full"
               itemWidth={350}
               gap={0}
-              pagination
-            >
+              pagination>
               {items.map((item: { url: string }, i: number) => (
                 <Image
                   key={i}
@@ -51,7 +50,7 @@ export default function CarouselSection() {
                   alt={`Image ${i + 1}`}
                   width={350}
                   height={200}
-                  className="object-cover w-full h-full"
+                  className="h-full w-full object-cover"
                   draggable={false}
                 />
               ))}

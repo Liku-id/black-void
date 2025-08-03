@@ -4,6 +4,7 @@ import Image from 'next/image';
 import accordionArrow from '@/assets/icons/accordion-arrow.svg';
 
 interface PaymentMethodAccordionProps {
+  id: string;
   title: string;
   methods: any[];
   filterKey: string;
@@ -12,6 +13,7 @@ interface PaymentMethodAccordionProps {
 }
 
 const PaymentMethodAccordion: React.FC<PaymentMethodAccordionProps> = ({
+  id,
   title,
   methods,
   filterKey,
@@ -28,6 +30,7 @@ const PaymentMethodAccordion: React.FC<PaymentMethodAccordionProps> = ({
   return (
     <>
       <Box
+        id={id}
         className="flex cursor-pointer items-center justify-between py-3 lg:py-4"
         onClick={() => setOpen(v => !v)}>
         <Typography type="heading" size={20} color="text-black">

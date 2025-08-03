@@ -1,17 +1,15 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import axios from 'axios';
-import { useAtom } from 'jotai';
-import { fetchAuthAtom, userDataAtom } from '@/store';
+import axios from '@/lib/api/axios-server';
 import { getErrorMessage } from '@/lib/api/error-handler';
-import { Box, TextField, Button, Typography, Container } from '@/components';
+import { useAuth } from '@/lib/session/use-auth';
+import { Box, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
 // import searchIcon from '@/assets/icons/search.svg';
-import { useState } from 'react';
 import burgerIcon from '@/assets/icons/burger.svg';
 import closeIcon from '@/assets/icons/close.svg';
 import ProfileMenu from './profile-menu';
@@ -20,19 +18,13 @@ import LogOutModal from './logout-modal';
 export default function Header() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { isLoggedIn, userData, checkAuth } = useAuth();
 
   // Initialize state
   const [openMenu, setOpenMenu] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
-  const [isLoggedIn, checkAuth] = useAtom(fetchAuthAtom);
-  const [userData] = useAtom(userDataAtom);
-  // const [searchValue, setSearchValue] = useState('');
-
-  // const handleSearch = () => {
-  //   console.log('search:', searchValue);
-  // };
 
   // Logout
   const onLogout = async () => {
@@ -40,9 +32,12 @@ export default function Header() {
     setLoading(true);
     try {
       const response = await axios.post('/api/auth/logout', {
-        userId: userData.id,
+        userId: userData?.id,
       });
       if (response.status === 200) {
+        setOpenMenu(false);
+        setOpenLogoutModal(false);
+        checkAuth(); // Refresh auth state
         router.replace('/');
       }
     } catch (error) {
@@ -58,11 +53,6 @@ export default function Header() {
       setOpenMenu(true);
     }
   }, [searchParams]);
-
-  // Check auth
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center px-4">
@@ -119,7 +109,7 @@ export default function Header() {
             </Link>
           )}
 
-          {isLoggedIn === true && (
+          {isLoggedIn === true && userData && (
             <ProfileMenu
               userData={userData}
               setOpenModal={setOpenLogoutModal}
@@ -179,7 +169,7 @@ export default function Header() {
           <Box className="mt-11 h-8 w-full animate-pulse bg-gray-200 md:ml-6" />
         )}
 
-        {isLoggedIn === true && (
+        {isLoggedIn === true && userData && (
           <ProfileMenu
             className="mt-11"
             userData={userData}

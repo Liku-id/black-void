@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     await axios.post('/v1/auth/password/change', {
       email: formData.email,
       token: formData.token,
-      newPassword: formData.newPassword,
+      newPassword: formData.password,
     });
 
     return NextResponse.json({
@@ -18,4 +18,4 @@ export async function POST(request: NextRequest) {
   } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);
   }
-} 
+}

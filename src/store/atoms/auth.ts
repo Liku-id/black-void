@@ -1,5 +1,4 @@
 import { atom } from 'jotai';
-import axios from 'axios';
 
 // Types
 export interface RegisterFormData {
@@ -10,7 +9,7 @@ export interface RegisterFormData {
   phoneNumber: string;
 }
 
-// Base atoms
+// Register form atom for multi-step registration
 export const registerFormAtom = atom<RegisterFormData>({
   email: '',
   password: '',
@@ -18,17 +17,4 @@ export const registerFormAtom = atom<RegisterFormData>({
   fullName: '',
   phoneNumber: '',
 });
-
-export const authAtom = atom<boolean | null>(null);
-
-export const fetchAuthAtom = atom(
-  get => get(authAtom),
-  async (_get, set) => {
-    try {
-      const response = await axios.get('/api/auth/me');
-      set(authAtom, response.data.loggedIn);
-    } catch {
-      set(authAtom, false);
-    }
-  }
-);
+	

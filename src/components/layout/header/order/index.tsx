@@ -2,12 +2,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '@/assets/logo/logo.svg';
-import { Box } from '@/components/common/box';
+import { Container } from '@/components';
 
 export default function Header() {
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center px-4">
-      <Box className="flex h-20 w-full max-w-7xl border border-black bg-white px-6 py-6 shadow-[4px_4px_0px_0px_#FFF]">
+      <Container className="flex h-16 items-center border border-black bg-white px-4 py-4 shadow-[4px_4px_0px_0px_#FFF] md:h-20 lg:px-6 lg:py-6">
         <Link href="/" aria-label="Home">
           <Image
             src={logo}
@@ -18,7 +18,7 @@ export default function Header() {
             priority
           />
         </Link>
-      </Box>
+      </Container>
     </header>
   );
 }

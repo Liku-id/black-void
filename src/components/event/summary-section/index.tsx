@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { UseFormReturn } from 'react-hook-form';
 import { useParams, useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
+// import axios from 'axios';
 import { Box, Button, Typography } from '@/components';
-import { formatRupiah } from '@/utils/formatter';
-import dashedDivider from '@/assets/images/dashed-divider.svg';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
-import { UseFormReturn } from 'react-hook-form';
+import Loading from '@/components/layout/loading';
 import type { TicketSummary, FormDataVisitor } from '../types';
+import dashedDivider from '@/assets/images/dashed-divider.svg';
+import { formatRupiah } from '@/utils/formatter';
 
 interface SummarySectionProps {
   eventData?: any;
   tickets: TicketSummary[];
   isContactValid?: boolean;
-  isVisitorValid: boolean;
-  visitorMethods: UseFormReturn<FormDataVisitor>;
+  isVisitorValid?: boolean;
+  visitorMethods?: UseFormReturn<FormDataVisitor>;
 }
 
 // Main Component
@@ -33,6 +35,8 @@ const SummarySection: React.FC<SummarySectionProps> = ({
   const isOrderPage = pathname.endsWith('/order');
 
   // Initialize State
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const ticketCount = tickets.reduce((a, t) => a + t.count, 0);
@@ -45,11 +49,46 @@ const SummarySection: React.FC<SummarySectionProps> = ({
   const tax = Math.round(totalPrice * pb1Rate);
   const grandTotal = totalPrice + adminFee + tax;
 
-  const handleContinue = () => {
-    const visitorData = visitorMethods.getValues();
-    // Lakukan logic submit/lanjut dengan visitorData
-    console.log(visitorData);
-    router.push(`/event/${slug}/order`);
+  const handleContinue = async () => {
+    if (isOrderPage) {
+      if (visitorMethods) {
+        const isValid = await visitorMethods.trigger();
+        if (!isValid) {
+          // Scroll to visitor detail section to show errors
+          const visitorSection = document.querySelector(
+            '[data-visitor-section]'
+          );
+          if (visitorSection) {
+            visitorSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          return;
+        }
+      }
+      const visitorData = visitorMethods?.getValues();
+      console.log('Proceeding with visitor data:', visitorData);
+      console.log(selectedPayment);
+    } else {
+      setError(null);
+      setLoading(true);
+
+      try {
+        //   const ticket = tickets[0];
+        //   const payload = {
+        //     tickets: [{
+        //       id: ticket.id,
+        //       quantity: ticket.count
+        //     }],
+        //   };
+
+        //   const { data: response } = await axios.post('/api/order/create', payload);
+        //   console.log('Order created:', response);
+        router.push(`/event/${slug}/order`);
+      } catch (error: any) {
+        setError(error?.response?.data?.error || 'Failed to create order');
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   function getContinueDisabled() {
@@ -59,6 +98,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
     return ticketCount === 0;
   }
 
+  if (loading) return <Loading />;
   return (
     <Box className="w-full border border-black bg-white p-4 shadow-[4px_4px_0px_0px_#fff]">
       <Typography
@@ -90,6 +130,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
 
       {/* Expand/Collapse Detail */}
       <Typography
+        id="open_order_detail_link"
         type="body"
         size={12}
         color="text-black"
@@ -121,6 +162,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
             Choose your Payment Method
           </Typography>
           <PaymentMethodAccordion
+            id="va_payment_dropdown"
             title="Virtual Account"
             methods={eventData?.paymentMethods || []}
             filterKey="VIRTUAL ACCOUNT"
@@ -128,6 +170,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
             setSelectedPayment={setSelectedPayment}
           />
           <PaymentMethodAccordion
+            id="qris_payment_dropdown"
             title="QRIS"
             methods={eventData?.paymentMethods || []}
             filterKey="QRIS"
@@ -135,6 +178,12 @@ const SummarySection: React.FC<SummarySectionProps> = ({
             setSelectedPayment={setSelectedPayment}
           />
         </Box>
+      )}
+
+      {error && (
+        <Typography type="body" size={12} color="text-red" className="mt-6">
+          {error}
+        </Typography>
       )}
 
       <Box className="mt-6 flex justify-center">

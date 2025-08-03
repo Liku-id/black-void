@@ -4,10 +4,10 @@ import axios from '@/lib/api/axios-server';
 
 export async function GET(
   req: NextRequest,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = context.params;
+    const { slug } = await context.params;
     const res = await axios.get(`/v1/events/${slug}`);
     const data = res.data;
 

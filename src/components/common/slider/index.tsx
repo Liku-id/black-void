@@ -148,13 +148,16 @@ export function Slider({
             }
           : {})}>
         <Box
-          className={"flex w-full transition-transform duration-300 ease-out"}
+          className={'flex w-full transition-transform duration-300 ease-out'}
           style={{
             transform: `translateX(-${currentIndex * itemWidth + dragOffset}px)`,
             gap: `${gap}px`,
           }}>
           {childrenArray.map((child, index) => (
-            <Box key={index} className="flex-shrink-0 select-none" style={{ width: itemWidth }}>
+            <Box
+              key={index}
+              className="flex-shrink-0 select-none"
+              style={{ width: itemWidth }}>
               {child}
             </Box>
           ))}

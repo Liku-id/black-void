@@ -12,6 +12,7 @@ import {
   // Button,
   // Select,
 } from '@/components';
+import { fullName } from '@/utils/form-validation';
 import type { FormDataVisitor, Ticket, OrderState } from '../types';
 
 interface VisitorDetailSectionProps {
@@ -95,8 +96,11 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
         Visitor Details
       </Typography>
       <FormProvider {...methods}>
-        <Box className="bg-white px-4 py-4 lg:mb-8 lg:px-10 lg:py-6">
+        <Box
+          data-visitor-section
+          className="bg-white px-4 py-4 lg:mb-8 lg:px-10 lg:py-6">
           <Checkbox
+            id="same_contact_detail_checkbox"
             size="sm"
             variant="white"
             checked={sameAsContact}
@@ -119,9 +123,13 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                 <Box className="mb-4 flex gap-8">
                   <Box className="flex-1">
                     <TextField
+                      id={`visitor_${idx + 1}_fullname_field`}
                       name={`visitors.${idx}.fullName`}
                       placeholder="Full name*"
-                      rules={{ required: 'Full name is required' }}
+                      rules={{
+                        required: 'Full name is required',
+                        validate: fullName
+                      }}
                       disabled={sameAsContact && idx === 0}
                     />
                   </Box>
@@ -132,14 +140,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                       placeholder="Phone Number*"
                       rules={{
                         required: 'Phone Number is required',
-                        pattern: {
-                          value: /^[0-9]+$/,
-                          message: 'Only numbers allowed',
-                        },
-                        minLength: {
-                          value: 8,
-                          message: 'Minimum 8 digits',
-                        },
+                        validate: (value) => phoneNumber(value, visitors?.[idx]?.countryCode ?? '+62')
                       }}
                       selectedCountryCode={
                         visitors?.[idx]?.countryCode ?? '+62'
