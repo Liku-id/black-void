@@ -7,11 +7,11 @@ import { clearSession } from '@/lib/session';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    
+
     // Get access token from cookies
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token')?.value;
-    
+
     if (!accessToken) {
       // If no access token, just clear session locally
       await clearSession();

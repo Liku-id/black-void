@@ -23,12 +23,15 @@ export const sessionOptions = {
 };
 
 export async function getSession() {
-  const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
-  
+  const session = await getIronSession<SessionData>(
+    await cookies(),
+    sessionOptions
+  );
+
   if (!session.isLoggedIn) {
     session.isLoggedIn = false;
   }
-  
+
   return session;
 }
 
@@ -41,4 +44,4 @@ export async function saveSession(session: SessionData) {
 export async function clearSession() {
   const session = await getSession();
   session.destroy();
-} 
+}

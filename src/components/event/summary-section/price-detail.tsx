@@ -3,6 +3,7 @@ import { formatRupiah } from '@/utils/formatter';
 
 interface PriceDetailProps {
   totalPrice: number;
+  paymentMethodFee: number;
   adminFee: number;
   tax: number;
   className?: string;
@@ -10,6 +11,7 @@ interface PriceDetailProps {
 
 const PriceDetail: React.FC<PriceDetailProps> = ({
   totalPrice,
+  paymentMethodFee,
   adminFee,
   tax,
   className = '',
@@ -32,6 +34,22 @@ const PriceDetail: React.FC<PriceDetailProps> = ({
         color="text-muted"
         className="font-bold">
         {formatRupiah(totalPrice)}
+      </Typography>
+    </Box>
+    <Box className="flex justify-between lg:mb-1">
+      <Typography
+        type="body"
+        size={12}
+        color="text-muted"
+        className="font-light">
+        Payment Method Fee
+      </Typography>
+      <Typography
+        type="body"
+        size={12}
+        color="text-muted"
+        className="font-bold">
+        {formatRupiah(paymentMethodFee)}
       </Typography>
     </Box>
     <Box className="flex justify-between lg:mb-1">

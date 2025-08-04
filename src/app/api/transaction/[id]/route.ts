@@ -2,21 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest, context: any) {
+  const { id } = context.params;
+
   try {
-    const body = await request.json();
-
-    const ticket = body.tickets[0];
-    const payload = {
-      ticketTypeId: ticket.id || ticket.ticketTypeId,
-      quantity: ticket.quantity,
-    };
-
-    const { data } = await axios.post('/v1/orders', payload);
+    const { data } = await axios.get(`/v1/transactions/${id}`);
     return NextResponse.json({
+      transaction: data.body,
       message: data.message,
       success: true,
-      data: data.order,
     });
   } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);

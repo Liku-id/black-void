@@ -86,7 +86,7 @@ export function Carousel({
               src={images[currentIndex]}
               alt=""
               className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating && showPrev ? 'scale-105' : 'scale-100'} cursor-pointer opacity-100`}
-              onClick={() => console.log(currentIndex)}
+              onClick={() => {}}
               draggable={false}
             />
           </>
@@ -95,7 +95,7 @@ export function Carousel({
             src={images[currentIndex]}
             alt=""
             className="absolute h-full w-full cursor-pointer object-cover"
-            onClick={() => console.log(currentIndex)}
+            onClick={() => {}}
             draggable={false}
           />
         )}

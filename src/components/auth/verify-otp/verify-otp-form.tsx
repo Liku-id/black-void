@@ -280,10 +280,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       </Box>
 
       {/* Success Modal */}
-      <SuccessModal
-        open={modalOpen}
-        onLogin={() => router.replace('/login')}
-      />
+      <SuccessModal open={modalOpen} onLogin={() => router.replace('/login')} />
     </Box>
   );
 };

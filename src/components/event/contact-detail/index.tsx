@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, TextField } from '@/components';
-import { FormProvider, UseFormReturn } from 'react-hook-form';
+import React from 'react';
 import Image from 'next/image';
-import AccordionArrow from '@/assets/icons/accordion-arrow.svg';
+import { FormProvider, UseFormReturn } from 'react-hook-form';
+import { Box, Button, Typography, TextField } from '@/components';
 import { formatCountdownTime } from '@/utils/formatter';
-import { fullName, phoneNumber } from '@/utils/form-validation';
+import { email, fullName, phoneNumber } from '@/utils/form-validation';
 import type { FormDataContact } from '../types';
+import AccordionArrow from '@/assets/icons/accordion-arrow.svg';
 
 interface ContactDetailSectionProps {
   eventData: any;
@@ -22,23 +22,11 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
   onBack,
   onSubmit,
 }) => {
-  const [submitted, setSubmitted] = useState(false);
-  const [countryCode, setCountryCode] = useState(
-    () => methods.getValues('countryCode') || '+62'
-  );
-
   const onContactSubmit = async (data: FormDataContact) => {
-    // Validate form before submitting
-    const isValid = await methods.trigger();
-    if (!isValid) {
-      return;
-    }
-
-    data.countryCode = countryCode;
     onSubmit(data);
-    setSubmitted(true);
   };
 
+  if (!eventData) return null;
   return (
     <>
       <Box
@@ -103,7 +91,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                     placeholder="Full name*"
                     rules={{
                       required: 'Full name is required',
-                      validate: fullName
+                      validate: fullName,
                     }}
                     className="w-full"
                   />
@@ -120,7 +108,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                     id="email_field"
                     name="email"
                     placeholder="Email Address*"
-                    rules={{ required: 'Email is required' }}
+                    rules={{ required: 'Email is required', validate: email }}
                     className="w-full"
                   />
                   <Typography
@@ -140,10 +128,13 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
                   placeholder="Phone Number*"
                   rules={{
                     required: 'Phone Number is required',
-                    validate: (value) => phoneNumber(value, countryCode)
+                    validate: value =>
+                      phoneNumber(value, methods.watch('countryCode')),
                   }}
-                  selectedCountryCode={countryCode}
-                  onCountryCodeChange={val => setCountryCode(val)}
+                  selectedCountryCode={methods.watch('countryCode') || '+62'}
+                  onCountryCodeChange={val =>
+                    methods.setValue('countryCode', val)
+                  }
                   countryCodes={[
                     { label: '+62', value: '+62' },
                     { label: '+1', value: '+1' },
@@ -171,15 +162,6 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
               correct. We will send the ticket to the e-mail that you declared.
             </Typography>
 
-            {submitted && (
-              <Typography
-                type="body"
-                size={10}
-                color="text-green"
-                className="mb-1 text-center">
-                Contact details saved !
-              </Typography>
-            )}
             <Button
               id="save_and_continue_button"
               type="submit"

@@ -1,69 +1,15 @@
-import PaymentStatus from '@/components/payment/payment-status';
-import { Box } from '@/components';
-import { redirect } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
-export default async function TransactionStatusPage({
+const TransactionStatus = dynamic(
+  () => import('@/components/payment/transaction-status')
+);
+
+export default function TransactionStatusPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
-  const transaction = {
-    status: 'PAID',
-    event: {
-      name: 'Summer Music Festival 2024',
-    },
-    eventOrganizer: {
-      name: 'Wukong Entertainment',
-      event_organizer_logo: '',
-    },
-    transactionNumber: 'EVENTA123',
-    createdAt: '2024-07-01T12:00:00Z',
-    expiredAt: '2024-07-01T12:05:00Z',
-    paymentMethod: {
-      type: 'va',
-      number: '1234567890123456',
-      amount: 3600000,
-      bankType: 'bca',
-    },
-    tickets: [
-      {
-        type: 'VIP',
-        quantity: 2,
-        price: 1500000,
-      },
-    ],
-    adminFee: 5,
-  };
+  const { id } = params;
 
-  // Calculate totals
-  const calculateTotals = (transaction: any) => {
-    const subtotal = transaction.tickets.reduce(
-      (sum: number, ticket: any) => sum + ticket.price * ticket.quantity,
-      0
-    );
-    const adminFee = Math.round(subtotal * (transaction.adminFee / 100));
-    const pb1 = Math.round(
-      subtotal * Number(process.env.NEXT_PUBLIC_PB1 || 0.1)
-    );
-    const totalPayment = subtotal + adminFee + pb1;
-
-    return { subtotal, adminFee, pb1, totalPayment };
-  };
-
-  const totals = calculateTotals(transaction);
-
-  if (transaction.status !== 'PAID' && transaction.status !== 'FAILED') {
-    redirect(`/transaction/${id}`);
-  }
-
-  if (!transaction) {
-    return (
-      <Box className="flex min-h-screen items-center justify-center">
-        <Box className="text-gray-500">No transaction data found</Box>
-      </Box>
-    );
-  }
-
-  return <PaymentStatus transaction={transaction} totals={totals} />;
+  return <TransactionStatus transactionId={id} />;
 }

@@ -5,7 +5,12 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from '@/lib/api/axios-server';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email, usePasswordValidation, fullName, phoneNumber } from '@/utils/form-validation';
+import {
+  email,
+  usePasswordValidation,
+  fullName,
+  phoneNumber,
+} from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAtom } from 'jotai';
 import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
@@ -103,7 +108,7 @@ const RegisterForm = () => {
                 className="mb-8 w-[270px]"
                 rules={{
                   required: 'Full Name is required',
-                  validate: fullName
+                  validate: fullName,
                 }}
               />
 
@@ -126,7 +131,7 @@ const RegisterForm = () => {
                 className="mb-10 w-[270px]"
                 rules={{
                   required: 'Phone Number is required',
-                  validate: (value) => phoneNumber(value, countryCode)
+                  validate: value => phoneNumber(value, countryCode),
                 }}
                 selectedCountryCode={countryCode}
                 onCountryCodeChange={val => setCountryCode(val)}

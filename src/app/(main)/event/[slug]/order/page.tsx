@@ -1,19 +1,20 @@
 'use client';
+import axios from 'axios';
 import useSWR from 'swr';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCountdown } from '@/utils/timer';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
-import { orderAtom } from '@/store/atoms/order';
+import { contactDetailAtom, orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { Box, Container } from '@/components';
+import Loading from '@/components/layout/loading';
 import ContactDetailSection from '@/components/event/contact-detail';
 import VisitorDetailSection from '@/components/event/visitor-detail';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import useStickyObserver from '@/utils/sticky-observer';
-// import { getOrderId } from '@/utils/local-storage';
 
 // Contact form data type
 interface FormDataContact {
@@ -40,31 +41,32 @@ const OrderPage = () => {
   const slug = params.slug;
   const { isLoggedIn, userData } = useAuth();
 
-  // Fetch Data
-  const { data, isLoading, error } = useSWR(
-    slug ? `/api/events/${slug}` : null
-  );
-
-  const mockOrder = {
-    tickets: [
-      { id: 'tkt-1', name: 'VIP', price: '500000', count: 2 },
-      { id: 'tkt-2', name: 'Reguler', price: '150000', count: 1 },
-    ],
-    expiredAt: '2024-07-01T12:00:00Z',
-  };
-
   // Initial State
-  const [order, setOrder] = useAtom(orderAtom);
-  // Calculate secondsLeft from expiredAt
-  const expiredAtStr = mockOrder.expiredAt;
-  const expiredAt = expiredAtStr ? new Date(expiredAtStr) : null;
-  const now = new Date();
-  const initialSeconds = expiredAt
-    ? Math.max(0, Math.floor((expiredAt.getTime() - now.getTime()) / 1000))
-    : 900;
-  const [secondsLeft] = useCountdown(initialSeconds);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [order] = useAtom(orderBookingAtom);
+  const [contactDetail, setContactDetail] = useAtom(contactDetailAtom);
+  const [initialSeconds, setInitialSeconds] = useState(900);
+  const [secondsLeft, resetCountdown] = useCountdown(initialSeconds);
+  const [selectedPayment, setSelectedPayment] = useState<{
+    id: string;
+    name: string;
+    paymentMethodFee: number;
+  } | null>(null);
 
-  // Helper function to split phone number using regex
+  // Fetch Data
+  const {
+    data: eventData,
+    isLoading: eventLoading,
+    error: eventError,
+  } = useSWR(slug ? `/api/events/${slug}` : null);
+
+  const {
+    data: orderData,
+    isLoading: orderLoading,
+    error: orderError,
+  } = useSWR(order.orderId ? `/api/order/${order.orderId}` : null);
+
   const splitPhoneNumber = (phone: string) => {
     const match = phone.match(/^(\+\d+)(.+)$/);
     return match
@@ -72,24 +74,29 @@ const OrderPage = () => {
       : { countryCode: '+62', phoneNumber: phone };
   };
 
-  // Autofill logic in parent
+  // Autofill
   const contactMethods = useForm<FormDataContact>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     defaultValues: {
-      fullName: isLoggedIn && userData ? userData.fullName : order.full_name || '',
-      phoneNumber: isLoggedIn && userData
-        ? splitPhoneNumber(userData.phoneNumber || '').phoneNumber
-        : order.phone_number || '',
-      email: isLoggedIn && userData ? userData.email : order.email || '',
-      countryCode: isLoggedIn && userData
-        ? splitPhoneNumber(userData.phoneNumber || '').countryCode
-        : order.country_code || '+62',
+      fullName:
+        isLoggedIn && userData
+          ? userData.fullName
+          : contactDetail.full_name || '',
+      phoneNumber:
+        isLoggedIn && userData
+          ? splitPhoneNumber(userData.phoneNumber || '').phoneNumber
+          : contactDetail.phone_number || '',
+      email:
+        isLoggedIn && userData ? userData.email : contactDetail.email || '',
+      countryCode:
+        isLoggedIn && userData
+          ? splitPhoneNumber(userData.phoneNumber || '').countryCode
+          : contactDetail.country_code || '+62',
     },
   });
 
   const onContactSubmit = (data: FormDataContact) => {
-    console.log(data);
-    setOrder(prev => ({
+    setContactDetail(prev => ({
       ...prev,
       full_name: data.fullName,
       country_code: data.countryCode,
@@ -100,16 +107,18 @@ const OrderPage = () => {
   };
 
   const visitorMethods = useForm<FormDataVisitor>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     defaultValues: {
-      visitors: mockOrder.tickets.map(() => ({
-        fullName: '',
-        // TODO: PHASE 2
-        // phoneNumber: '',
-        // email: '',
-        // countryCode: '+62',
-        // idType: '',
-      })),
+      visitors: orderData
+        ? Array.from({ length: orderData.quantity }, () => ({
+            fullName: '',
+            // TODO: PHASE 2
+            // phoneNumber: '',
+            // email: '',
+            // countryCode: '+62',
+            // idType: '',
+          }))
+        : [],
     },
   });
 
@@ -127,30 +136,98 @@ const OrderPage = () => {
     112
   );
 
-  // Check for orderId in localStorage on mount
-  // useEffect(() => {
-  //   const orderId = getOrderId();
-  //   if (!orderId) {
-  //     router.replace(`/event/${params.slug}`);
-  //   }
-  // }, [router, params.slug]);
+  const isDisabled =
+    !contactMethods.formState.isValid ||
+    !visitorMethods.formState.isValid ||
+    !selectedPayment;
 
-  if (isLoading) {
-    return <div className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
+  const handleContinue = async () => {
+    const isValid = await visitorMethods.trigger();
+    if (!isValid) {
+      const visitorSection = document.querySelector('[data-visitor-section]');
+      if (visitorSection) {
+        visitorSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const visitorData = visitorMethods?.getValues();
+      const contactData = contactMethods.getValues();
+
+      const payload = {
+        orderId: order.orderId,
+        paymentMethodId: selectedPayment?.id,
+        attendee: visitorData?.visitors?.map(v => v.fullName),
+        contactDetails: {
+          name: contactData.fullName,
+          email: contactData.email,
+          phone: contactData.countryCode + contactData.phoneNumber,
+        },
+      };
+
+      const { data: response } = await axios.post(
+        '/api/transaction/create',
+        payload
+      );
+
+      if (response.success) {
+        router.push(`/transaction/${response.id}`);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      setError(error?.response?.data?.error || 'Failed to create transaction');
+    }
+  };
+
+  useEffect(() => {
+    if (orderData && orderData.expiredAt) {
+      const expiredAt = new Date(orderData.expiredAt);
+      const now = new Date();
+      setInitialSeconds(
+        Math.max(0, Math.floor((expiredAt.getTime() - now.getTime()) / 1000))
+      );
+      resetCountdown();
+    }
+  }, [orderData, resetCountdown]);
+
+  // Redirect
+  useEffect(() => {
+    if (
+      !eventLoading &&
+      !orderLoading &&
+      (secondsLeft === 0 || !order.orderId || !eventData)
+    ) {
+      router.replace(`/event/${slug}`);
+    }
+  }, [
+    secondsLeft,
+    order.orderId,
+    eventData,
+    eventLoading,
+    orderLoading,
+    router,
+    slug,
+  ]);
+
+  if (eventLoading || orderLoading || !order.orderId) {
+    return <Box className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
   }
 
-  if (error) {
-    return <div className="text-red-500">Failed to load order data</div>;
+  if (eventError || orderError) {
+    return <Box className="text-red-500">Failed to load order data</Box>;
   }
 
   return (
     <>
+      {loading && <Loading />}
       <Container className="relative mx-auto flex max-w-[1140px]">
         <Box className="flex-1">
           <Container className="flex gap-16 px-4">
             <Box className="w-full lg:w-5/10 lg:max-w-5/10 xl:w-6/10 xl:max-w-6/10">
               <ContactDetailSection
-                eventData={data}
+                eventData={eventData}
                 secondsLeft={secondsLeft}
                 methods={contactMethods}
                 onBack={() => router.back()}
@@ -159,9 +236,9 @@ const OrderPage = () => {
               <Box className="relative mt-8 mb-25 lg:mb-0">
                 <Box className="absolute top-[-120px]" ref={visitorDetailRef} />
                 <VisitorDetailSection
-                  methods={visitorMethods}
-                  order={order}
-                  tickets={mockOrder.tickets}
+                  visitorMethods={visitorMethods}
+                  contactMethods={contactMethods}
+                  tickets={orderData.tickets}
                 />
               </Box>
             </Box>
@@ -182,21 +259,25 @@ const OrderPage = () => {
           }
           style={!isSticky ? { top: absoluteTop } : {}}>
           <SummarySection
-            eventData={data}
-            tickets={mockOrder.tickets}
-            isContactValid={contactMethods.formState.isValid}
-            isVisitorValid={visitorMethods.formState.isValid}
-            visitorMethods={visitorMethods}
+            eventData={eventData}
+            tickets={orderData.tickets}
+            selectedPayment={selectedPayment}
+            setSelectedPayment={setSelectedPayment}
+            onContinue={handleContinue}
+            disabled={isDisabled}
+            error={error}
           />
         </Box>
         {/* MOBILE: Sticky summary section (right column) */}
         <Box className="fixed bottom-0 left-0 z-50 block w-full lg:hidden">
           <SummarySectionMobile
-            eventData={data}
-            tickets={mockOrder.tickets}
-            isContactValid={contactMethods.formState.isValid}
-            isVisitorValid={visitorMethods.formState.isValid}
-            visitorMethods={visitorMethods}
+            eventData={eventData}
+            tickets={orderData.tickets}
+            selectedPayment={selectedPayment}
+            setSelectedPayment={setSelectedPayment}
+            onContinue={handleContinue}
+            disabled={isDisabled}
+            error={error}
           />
         </Box>
       </Container>

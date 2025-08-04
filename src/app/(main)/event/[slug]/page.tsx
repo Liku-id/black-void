@@ -1,28 +1,38 @@
 'use client';
 import useSWR from 'swr';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
+import { useAtom } from 'jotai';
+import axios from 'axios';
 import { Box, Container } from '@/components';
 import EventDetailSection from '@/components/event/event-detail-section';
 import EventPageSkeleton from '@/components/event/skeletons';
 import TicketListSection from '@/components/event/ticket-list-section';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
-import useStickyObserver from '@/utils/sticky-observer';
 import OwnerSection from '@/components/event/owner-section';
+import Loading from '@/components/layout/loading';
+import useStickyObserver from '@/utils/sticky-observer';
+import { orderBookingAtom } from '@/store/atoms/order';
 
 export default function Event() {
   const params = useParams();
   const slug = params?.slug as string;
-
+  const router = useRouter();
   // Fetch event data
-  const { data, isLoading, error } = useSWR(
-    slug ? `/api/events/${slug}` : null
-  );
+  const {
+    data: eventData,
+    isLoading: eventLoading,
+    error: eventError,
+  } = useSWR(slug ? `/api/events/${slug}` : null);
 
   // Initialize state
+  const [, setOrderBooking] = useAtom(orderBookingAtom);
+  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
   const selectedTickets = tickets.filter((t: any) => t.count > 0);
+  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
 
   // Sticky observer logic using custom hook
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -30,7 +40,7 @@ export default function Event() {
   const { isSticky, absoluteTop, isReady } = useStickyObserver(
     stickyRef as React.RefObject<HTMLDivElement>,
     sentinelRef as React.RefObject<HTMLDivElement>,
-    data ? 215 : 0
+    eventData ? 215 : 0
   );
 
   // Ticket count change handler
@@ -47,10 +57,37 @@ export default function Event() {
     ticketSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleContinue = async () => {
+    try {
+      const ticket = selectedTickets[0];
+      const payload = {
+        tickets: [
+          {
+            id: ticket.id,
+            quantity: ticket.count,
+          },
+        ],
+      };
+
+      const { data: response } = await axios.post('/api/order/create', payload);
+
+      if (response.success) {
+        setOrderBooking({
+          orderId: response.data.id,
+          expiredAt: response.data.expiredAt,
+        });
+        router.push(`/event/${slug}/order`);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      setError(error?.response?.data?.error || 'Failed to create order');
+    }
+  };
+
   useEffect(() => {
-    if (data?.ticketTypes && Array.isArray(data.ticketTypes)) {
+    if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
       setTickets(
-        data.ticketTypes.map((t: any) => ({
+        eventData.ticketTypes.map((t: any) => ({
           id: t.id,
           name: t.name,
           price: t.price,
@@ -58,17 +95,19 @@ export default function Event() {
           max_order_quantity: t.max_order_quantity,
           description: t.description,
           sales_start_date: t.sales_start_date,
+          quantity: t.quantity,
+          purchased_amount: t.purchased_amount,
         }))
       );
     }
-  }, [data?.ticketTypes]);
+  }, [eventData?.ticketTypes]);
 
   // Skeleton/loading
-  if (isLoading) {
+  if (eventLoading) {
     return <EventPageSkeleton />;
   }
 
-  if (error || !data) {
+  if (eventError || !eventData) {
     return (
       <Container className="py-16">
         <Box className="text-red-500">Failed to load event data</Box>
@@ -78,13 +117,14 @@ export default function Event() {
 
   return (
     <main>
+      {loading && <Loading />}
       <Container className="relative mx-auto flex max-w-[1440px]">
         {/* Left: Main event content, responsive width */}
         <Box className="flex-1 overflow-hidden">
           <Container className="flex gap-20 px-4 lg:px-8 xl:gap-16 xl:px-0">
             <Box className="w-full lg:w-5/10 lg:max-w-5/10 xl:w-6/10 xl:max-w-6/10">
               <EventDetailSection
-                data={data}
+                data={eventData}
                 onChooseTicket={scrollToTickets}
               />
             </Box>
@@ -97,7 +137,7 @@ export default function Event() {
             <Container className="flex gap-20 px-4 lg:px-8 xl:gap-16 xl:px-0">
               <Box className="w-full max-w-full py-8 lg:w-5/10 lg:max-w-5/10 lg:py-14 xl:w-6/10 xl:max-w-6/10">
                 <TicketListSection
-                  data={data}
+                  data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
                 />
@@ -118,12 +158,24 @@ export default function Event() {
           }
           // Only apply absolute top when not sticky and ready
           style={!isSticky && isReady ? { top: absoluteTop } : {}}>
-          <SummarySection eventData={data} tickets={selectedTickets} />
+          <SummarySection
+            eventData={eventData}
+            tickets={selectedTickets}
+            onContinue={handleContinue}
+            disabled={isDisabled}
+            error={error}
+          />
         </Box>
 
         {/* MOBILE: Sticky summary section (right column) */}
         <Box className="fixed bottom-0 left-0 z-50 block w-full lg:hidden">
-          <SummarySectionMobile eventData={data} tickets={selectedTickets} />
+          <SummarySectionMobile
+            eventData={eventData}
+            tickets={selectedTickets}
+            onContinue={handleContinue}
+            disabled={isDisabled}
+            error={error}
+          />
         </Box>
       </Container>
 
@@ -133,8 +185,8 @@ export default function Event() {
       <Container className="relative mx-auto flex">
         <Box className="flex-1 px-4 pt-12 lg:pt-15">
           <OwnerSection
-            eventOrganizer={data.eventOrganizer}
-            termAndConditions={data.termAndConditions}
+            eventOrganizer={eventData.eventOrganizer}
+            termAndConditions={eventData.termAndConditions}
           />
         </Box>
       </Container>

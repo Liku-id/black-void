@@ -17,12 +17,12 @@ axiosInstance.interceptors.request.use(
         .split('; ')
         .find(row => row.startsWith('access_token='))
         ?.split('=')[1];
-      
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-    
+
     return config;
   },
   function (error) {
@@ -40,8 +40,10 @@ axiosInstance.interceptors.response.use(
       // Token expired - clear session and redirect to login
       if (typeof window !== 'undefined') {
         // Clear session
-        document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie =
+          'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie =
+          'refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         // Redirect to login
         window.location.href = '/login';
       }

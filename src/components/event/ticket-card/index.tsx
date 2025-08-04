@@ -30,7 +30,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
       ? (ticket.description ?? '')
       : (ticket.description ?? '').slice(0, MAX_DESC_LENGTH) + '...';
   const minusDisabled = count === 0 || isOtherActive;
-  const plusDisabled = count === ticket.max_order_quantity || isOtherActive;
+  const remainingTickets = ticket.quantity - ticket.purchased_amount - count;
+  const plusDisabled =
+    count === ticket.max_order_quantity ||
+    isOtherActive ||
+    ticket.quantity < ticket.purchased_amount + count + 1;
 
   // Card shadow logic
   const cardClass = [
@@ -100,6 +104,12 @@ const TicketCard: React.FC<TicketCardProps> = ({
               Maks. {ticket.max_order_quantity} Tiket per kategori
             </Typography>
           )}
+          {plusDisabled &&
+            ticket.quantity < ticket.purchased_amount + count + 1 && (
+              <Typography type="body" size={10} color="text-red">
+                Remaining {remainingTickets > 0 ? remainingTickets : 0} tickets
+              </Typography>
+            )}
         </Box>
 
         <Box className="flex items-center gap-2">
