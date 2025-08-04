@@ -74,7 +74,11 @@ export default function QRCodeScanner({
 
         const config = {
           fps: 10,
-          disableFlip: false,
+          videoConstraints: {
+            facingMode: 'environment', // prefer kamera belakang di HP
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
         };
 
         await qrCodeScanner.start(

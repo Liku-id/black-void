@@ -14,7 +14,7 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { ticketId } = params;
+    const { ticketId } = await params;
 
     // Get authorization header
     const authHeader = request.headers.get('authorization');
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const { ticketId } = params;
+    const { ticketId } = await params;
     const body = await request.json();
 
     // Validate request body
