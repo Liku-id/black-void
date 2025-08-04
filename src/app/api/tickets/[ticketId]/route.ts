@@ -3,8 +3,7 @@ import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
 interface UpdateTicketRequest {
-  ticketId: string;
-  status: 'redeemed' | 'checked_in';
+  ticketStatus: 'redeemed' | 'checked_in';
 }
 
 interface RouteParams {
@@ -20,20 +19,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Get authorization header
     const authHeader = request.headers.get('authorization');
 
-    console.log(authHeader, '<<authHeaderauthHeader');
-    
-
-    const { data } = await axios.get(
-      `/v1/tickets/${ticketId}`,
-      {
-        headers: authHeader ? { Authorization: authHeader } : {},
-      }
-    );
+    const { data } = await axios.get(`/v1/tickets/${ticketId}`, {
+      headers: authHeader ? { Authorization: authHeader } : {},
+    });
 
     return NextResponse.json({
       message: 'Ticket retrieved successfully',
       success: true,
-      data,
+      data: data?.body,
     });
   } catch (error) {
     return handleErrorAPI(error as AxiosErrorResponse);
@@ -44,7 +37,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { ticketId } = params;
     const body = await request.json();
-    
+
     // Validate request body
     if (!body.status) {
       return NextResponse.json(
@@ -56,22 +49,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const authHeader = request.headers.get('authorization');
 
     const requestData: UpdateTicketRequest = {
-      ticketId,
-      status: body.status,
+      ticketStatus: body.status,
     };
 
-    const { data } = await axios.put(
-      `/v1/tickets/${ticketId}`,
-      requestData,
-      {
-        headers: authHeader ? { Authorization: authHeader } : {},
-      }
-    );
+    const { data } = await axios.put(`/v1/tickets/${ticketId}`, requestData, {
+      headers: authHeader ? { Authorization: authHeader } : {},
+    });
 
     return NextResponse.json({
       message: 'Ticket updated successfully',
       success: true,
-      data,
+      data: data?.body,
     });
   } catch (error) {
     return handleErrorAPI(error as AxiosErrorResponse);

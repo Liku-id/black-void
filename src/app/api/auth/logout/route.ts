@@ -4,34 +4,37 @@ import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 import { clearSession } from '@/lib/session';
 
-export async function POST(request: NextRequest) {
+export async function POST(_: NextRequest) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('access_token')?.value;
+
   try {
-    const formData = await request.json();
-    
-    // Get access token from cookies
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('access_token')?.value;
-    
-    if (!accessToken) {
-      // If no access token, just clear session locally
-      await clearSession();
-      return NextResponse.json({ message: 'Logout successful' });
+    if (accessToken) {
+      // Call logout backend
+      await axios.post('/v1/auth/logout', null, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     }
 
-    // Call backend logout with access token
-    await axios.post('/v1/auth/logout', formData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    // Delete any session & cookies resulting from backend logout
+    await clearSession();
+    cookieStore.delete('access_token');
+    // cookieStore.delete('refresh_token'); 
+    cookieStore.delete('user_role');
+
+    return NextResponse.json({
+      success: true,
+      message: 'Logout successful',
     });
-
-    // Clear session
-    await clearSession();
-
-    return NextResponse.json({ message: 'Logout successful' });
   } catch (e) {
-    // Even if backend call fails, clear session locally
+    // If the backend fails, still delete the session so that the user is considered logged out.
     await clearSession();
+    cookieStore.delete('access_token');
+    cookieStore.delete('refresh_token');
+    cookieStore.delete('user_role');
+
     return handleErrorAPI(e as AxiosErrorResponse);
   }
 }

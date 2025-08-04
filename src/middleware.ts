@@ -4,12 +4,7 @@ export function middleware(req: NextRequest) {
   // Initial
   const pathname = req.nextUrl.pathname;
   const accessToken = req.cookies.get('access_token')?.value;
-  const user_role = req.cookies.get('user_role')?.value;
-
-  console.log(user_role, '<<user_role');
-  console.log(accessToken, '<<accessToken');
-  console.log(pathname, '<<pathname');
-  
+  const userRole = req.cookies.get('user_role')?.value;
 
   // Routes restricted when logged in
   const notAllowWhenLogin = [
@@ -42,7 +37,7 @@ export function middleware(req: NextRequest) {
   }
 
   // Redirect users with unauthorized roles away from specific pages
-  // if(user_role !== 'scanner' && guardWhenNotAuthorized.includes(pathname)) {
+  // if(userRole !== 'scanner' && guardWhenNotAuthorized.includes(pathname)) {
   //   return NextResponse.redirect(new URL('/ticket/auth', req.url));
   // }
 
