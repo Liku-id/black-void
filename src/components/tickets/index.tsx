@@ -38,8 +38,8 @@ const Ticket = () => {
       );
       const url = window.URL.createObjectURL(res.data);
       const eventName = data?.event?.name?.replace(/\s+/g, '_') || 'ticket';
-      const eventDate = data?.ticketType?.ticket_start_date
-        ? formatDate(data.ticketType.ticket_start_date, 'date')
+      const eventDate = data?.ticketType?.ticketStartDate
+        ? formatDate(data.ticketType.ticketStartDate, 'date')
         : 'download';
       const fileName = `${eventName}-${eventDate}.pdf`;
       const a = document.createElement('a');
@@ -93,7 +93,7 @@ const Ticket = () => {
 
           <Box className="border bg-white p-4 shadow-[4px_4px_0px_0px_#fff] md:p-6">
             <Typography type="heading" size={26} className="block text-center">
-              {data.event.eventOrganizer?.name} | {data.event.name}
+              {data.event?.eventOrganizer?.name} | {data.event.name}
             </Typography>
 
             <Box className="border-gray my-6 rounded-[14px] border-[0.5px] p-[14px]">
@@ -139,7 +139,7 @@ const Ticket = () => {
                           size={14}
                           className="font-light">
                           {formatDate(
-                            data.ticketType.ticket_start_date,
+                            data.ticketType.ticketStartDate,
                             'datetime'
                           )}
                         </Typography>

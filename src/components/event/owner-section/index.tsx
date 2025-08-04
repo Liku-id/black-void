@@ -3,10 +3,7 @@ import Image from 'next/image';
 import { Box, Typography } from '@/components';
 
 interface OwnerSectionProps {
-  eventOrganizer: {
-    event_organizer_pic?: string;
-    name: string;
-  };
+  eventOrganizer: any;
   termAndConditions: string;
 }
 
@@ -52,9 +49,9 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         Promotor Info
       </Typography>
       <Box className="flex items-center gap-3">
-        {eventOrganizer.event_organizer_pic ? (
+        {eventOrganizer?.asset?.url ? (
           <Image
-            src={eventOrganizer.event_organizer_pic}
+            src={eventOrganizer?.asset?.url}
             alt="Owner Logo"
             width={48}
             height={48}
