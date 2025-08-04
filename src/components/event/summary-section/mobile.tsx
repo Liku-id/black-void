@@ -1,72 +1,66 @@
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { useParams, useRouter, usePathname } from 'next/navigation';
 import { Box, Button, Typography } from '@/components';
-import { formatRupiah } from '@/utils/formatter';
-import accordionArrow from '@/assets/icons/accordion-arrow.svg';
-import dashedDivider from '@/assets/images/dashed-divider.svg';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
-import { UseFormReturn } from 'react-hook-form';
-import type { TicketSummary, FormDataVisitor } from '../types';
+import { formatRupiah } from '@/utils/formatter';
+import accordionArrow from '@/assets/icons/accordion-arrow.svg';
+import dashedDivider from '@/assets/images/dashed-divider.svg';
+import type { TicketSummary } from '../types';
 
 interface SummarySectionProps {
   eventData?: any;
   tickets: TicketSummary[];
-  isContactValid?: boolean;
-  isVisitorValid?: boolean;
-  visitorMethods?: UseFormReturn<FormDataVisitor>;
+  selectedPayment?: {
+    id: string;
+    name: string;
+    paymentMethodFee: number;
+  } | null;
+  setSelectedPayment?: (method: {
+    id: string;
+    name: string;
+    paymentMethodFee: number;
+  }) => void;
+  onContinue: () => void;
+  disabled: boolean;
+  error: string;
 }
 
 const SummarySectionMobile: React.FC<SummarySectionProps> = ({
   eventData,
   tickets,
-  isContactValid,
-  isVisitorValid,
-  visitorMethods,
+  selectedPayment,
+  setSelectedPayment,
+  onContinue,
+  disabled,
+  error,
 }) => {
-  const router = useRouter();
-  const params = useParams();
-  const slug = params.slug;
   const pathname = usePathname();
   const isOrderPage = pathname.endsWith('/order');
 
   // Initialize State
   const [showDetail, setShowDetail] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<any | null>(null);
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   const ticketCount = tickets.reduce((a, t) => a + t.count, 0);
   const totalPrice = tickets.reduce(
     (sum, t) => sum + t.count * Number(t.price),
     0
   );
-  const adminFee = eventData
-    ? Math.round((totalPrice * eventData.adminFee) / 100)
-    : 0;
+  const adminFee = Math.round((totalPrice * eventData.adminFee) / 100);
   const pb1Rate = Number(process.env.NEXT_PUBLIC_PB1) || 0.1;
   const tax = Math.round(totalPrice * pb1Rate);
-  const grandTotal = totalPrice + adminFee + tax;
+  const paymentMethodFee = selectedPayment?.paymentMethodFee
+    ? selectedPayment?.paymentMethodFee < 1
+      ? Math.round(totalPrice * selectedPayment?.paymentMethodFee / 100)
+      : selectedPayment?.paymentMethodFee
+    : 0;
+  const grandTotal = totalPrice + adminFee + tax + paymentMethodFee;
 
   const handleSeeDetails = () => {
     setShowDetail(v => !v);
   };
-
-  const handleContinue = () => {
-    if (isOrderPage) {
-      setShowPaymentMethod(false);
-      const visitorData = visitorMethods?.getValues();
-    } else {
-      router.push(`/event/${slug}/order`);
-    }
-  };
-
-  function getContinueDisabled() {
-    if (isOrderPage) {
-      return !isContactValid || !isVisitorValid || !selectedPayment;
-    }
-    return ticketCount === 0;
-  }
 
   return (
     <Box className="bg-white p-4 shadow-[0_0_12px_0_rgba(0,0,0,0.3)]">
@@ -123,6 +117,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             <TicketList tickets={tickets} />
             <PriceDetail
               totalPrice={totalPrice}
+              paymentMethodFee={paymentMethodFee}
               adminFee={adminFee}
               tax={tax}
               className="pointer-events-auto"
@@ -176,8 +171,8 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             title="Virtual Account"
             methods={eventData?.paymentMethods || []}
             filterKey="VIRTUAL ACCOUNT"
-            selectedPayment={selectedPayment}
-            setSelectedPayment={setSelectedPayment}
+            selectedPayment={selectedPayment || null}
+            setSelectedPayment={setSelectedPayment || (() => {})}
           />
 
           <PaymentMethodAccordion
@@ -185,18 +180,28 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             title="QRIS"
             methods={eventData?.paymentMethods || []}
             filterKey="QRIS"
-            selectedPayment={selectedPayment}
-            setSelectedPayment={setSelectedPayment}
+            selectedPayment={selectedPayment || null}
+            setSelectedPayment={setSelectedPayment || (() => {})}
           />
           <Box className="mb-4" />
         </>
       )}
 
+      {error && (
+        <Typography
+          type="body"
+          size={12}
+          color="text-red"
+          className="mt-5 block text-center">
+          {error}
+        </Typography>
+      )}
+
       <Button
         id="continue_button"
         className="h-12 w-full"
-        onClick={handleContinue}
-        disabled={getContinueDisabled()}>
+        onClick={onContinue}
+        disabled={disabled}>
         Continue
       </Button>
     </Box>

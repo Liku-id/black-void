@@ -8,8 +8,16 @@ interface PaymentMethodAccordionProps {
   title: string;
   methods: any[];
   filterKey: string;
-  selectedPayment: string | null;
-  setSelectedPayment: (id: string) => void;
+  selectedPayment: {
+    id: string;
+    name: string;
+    paymentMethodFee: number;
+  } | null;
+  setSelectedPayment: (method: {
+    id: string;
+    name: string;
+    paymentMethodFee: number;
+  }) => void;
 }
 
 const PaymentMethodAccordion: React.FC<PaymentMethodAccordionProps> = ({
@@ -52,7 +60,7 @@ const PaymentMethodAccordion: React.FC<PaymentMethodAccordionProps> = ({
           {filtered.map((method: any) => (
             <Radio
               key={method.id}
-              checked={selectedPayment === method}
+              checked={selectedPayment?.id === method.id}
               onChange={() => setSelectedPayment(method)}
               name="payment-method">
               <Box className="flex items-center gap-4">

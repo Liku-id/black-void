@@ -27,7 +27,7 @@ export function useAuth() {
     try {
       const response = await axios.get('/api/auth/me');
       const isLoggedIn = response.data.loggedIn;
-      
+
       setAuthState({
         isLoggedIn,
         userData: response.data.user || null,
@@ -44,7 +44,7 @@ export function useAuth() {
 
   useEffect(() => {
     checkAuth();
-    
+
     // Listen for visibility change (user comes back to tab)
     const handleVisibilityChange = () => {
       if (!document.hidden) {
@@ -53,7 +53,7 @@ export function useAuth() {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    
+
     // Cleanup listeners on unmount
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -64,4 +64,4 @@ export function useAuth() {
     ...authState,
     checkAuth,
   };
-} 
+}

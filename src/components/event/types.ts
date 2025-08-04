@@ -26,6 +26,8 @@ export interface Ticket {
   max_order_quantity?: number;
   description?: string;
   sales_start_date?: string;
+  quantity: number;
+  purchased_amount: number;
 }
 
 export interface TicketSummary {
@@ -35,7 +37,7 @@ export interface TicketSummary {
   count: number;
 }
 
-export interface OrderState {
+export interface ContactDetails {
   full_name?: string;
   phone_number?: string;
   email?: string;

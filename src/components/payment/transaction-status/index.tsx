@@ -1,36 +1,67 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Container, Box, Button } from '@/components';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { formatDate, formatRupiah } from '@/utils/formatter';
 import Image from 'next/image';
 import successStatus from '@/assets/icons/success-status.svg';
 import failedStatus from '@/assets/icons/failed-status.svg';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
+import useSWR from 'swr';
+import Loading from '@/components/layout/loading';
 
-interface PaymentStatusProps {
-  transaction: any;
-  totals: {
-    subtotal: number;
-    adminFee: number;
-    pb1: number;
-    totalPayment: number;
-  };
-}
-
-export default function PaymentStatus({
-  transaction,
-  totals,
-}: PaymentStatusProps) {
+export default function PaymentStatus () {
   const router = useRouter();
+  const params = useParams();
+  const transactionId = params.id;
+
+  const { data, isLoading } = useSWR(
+    transactionId ? `/api/transaction/${transactionId}` : null
+  );
+
+  const getTransactionAndTotals = () => {
+    const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
+    const subtotal = ticketType.price * ticketType.quantity;
+    const adminFee = Math.round(
+      subtotal * ((data.transaction.adminFee ?? 0) / 100)
+    );
+    const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee;
+    const pb1 = Math.round(
+      subtotal * Number(process.env.NEXT_PUBLIC_PB1 || 0.1)
+    );
+    const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
+    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment };
+    return { totals };
+  };
 
   const handleButtonClick = () => {
-    if (transaction.status === 'PAID') {
-      router.push(`/transaction/${transaction.id}/tickets`);
+    if (data.transaction.status === 'paid') {
+      router.push(`/transaction/${data.transaction.id}/tickets`);
     } else {
       router.push('/');
     }
   };
+
+  useEffect(() => {
+    if (
+      data &&
+      data.transaction &&
+      data.transaction.status !== 'failed' &&
+      data.transaction.status !== 'paid'
+    ) {
+      router.push(`/transaction/${transactionId}`);
+    }
+  }, [data, router]);
+
+  if (isLoading) return <Loading />;
+  if (!isLoading && !data)
+    return (
+      <Container>
+        <Box className="text-muted flex h-[200px] items-center justify-center">
+          No data
+        </Box>
+      </Container>
+    );
 
   return (
     <Container className="flex justify-center">
@@ -40,11 +71,11 @@ export default function PaymentStatus({
           size={30}
           color="text-white"
           className="mb-2">
-          {transaction.status === 'PAID' ? 'Youre All Set!' : 'Oopsie...'}
+          {data.transaction.status === 'paid' ? 'Youre All Set!' : 'Oopsie...'}
         </Typography>
 
         <Box className="border bg-white p-6 shadow-[4px_4px_0px_0px_#fff]">
-          {transaction.status === 'PAID' ? (
+          {data.transaction.status === 'paid' ? (
             <Box className="flex flex-col items-center justify-center">
               <Image src={successStatus} alt="status" width={64} height={64} />
               <Typography type="heading" size={24} className="mt-4">
@@ -59,9 +90,11 @@ export default function PaymentStatus({
 
           <Box className="border-gray my-6 rounded-[14px] border-[0.5px] p-[14px]">
             <Box className="flex items-center gap-2">
-              {transaction.eventOrganizer.event_organizer_logo ? (
+              {data.transaction.event.eventOrganizer?.event_organizer_pic ? (
                 <Image
-                  src={transaction.eventOrganizer.event_organizer_logo}
+                  src={
+                    data.transaction.event.eventOrganizer?.event_organizer_pic
+                  }
                   alt="logo"
                   width={48}
                   height={48}
@@ -71,12 +104,12 @@ export default function PaymentStatus({
               )}
               <Box>
                 <Typography type="heading" size={22}>
-                  {transaction.eventOrganizer.name}
+                  {data.transaction.event.eventOrganizer?.name}
                 </Typography>
                 <Typography type="body" size={12} className="font-light">
                   Transaction Number:{' '}
                   <span className="font-bold">
-                    {transaction.transactionNumber}
+                    {data.transaction.transactionNumber}
                   </span>
                 </Typography>
               </Box>
@@ -88,20 +121,21 @@ export default function PaymentStatus({
               className="my-2 w-full"
             />
 
-            {transaction.tickets.map((t: any, idx: number) => (
-              <Box key={t.id} className="mt-3 border-l-2 border-black pl-2">
-                <Typography type="body" size={12} className="mb-1 font-bold">
-                  {t.type}
-                </Typography>
-                <Typography
-                  type="body"
-                  size={12}
-                  color="text-muted"
-                  className="font-light">
-                  Total ticket: {t.quantity} Tiket
-                </Typography>
-              </Box>
-            ))}
+            {/* {data.transaction.ticketType.map((t: any, idx: number) => ( */}
+            {/* <Box key={t.id} className="mt-3 border-l-2 border-black pl-2"> */}
+            <Box className="mt-3 border-l-2 border-black pl-2">
+              <Typography type="body" size={12} className="mb-1 font-bold">
+                {data.transaction.ticketType.name}
+              </Typography>
+              <Typography
+                type="body"
+                size={12}
+                color="text-muted"
+                className="font-light">
+                Total ticket: {data.transaction.ticketType.quantity} Tiket
+              </Typography>
+            </Box>
+            {/* ))} */}
           </Box>
 
           <Typography type="heading" size={22} className="mb-4">
@@ -120,7 +154,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatDate(transaction.createdAt, 'date')}
+              {formatDate(data.transaction.createdAt, 'date')}
             </Typography>
           </Box>
           <Box className="mb-2 flex justify-between">
@@ -136,7 +170,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {transaction.transactionNumber}
+              {data.transaction.transactionNumber}
             </Typography>
           </Box>
           <Box className="flex justify-between">
@@ -152,7 +186,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {transaction.paymentMethod.type}
+              {data.transaction.paymentMethod.name}
             </Typography>
           </Box>
 
@@ -171,7 +205,23 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatRupiah(totals.subtotal)}
+              {formatRupiah(getTransactionAndTotals().totals.subtotal)}
+            </Typography>
+          </Box>
+          <Box className="mb-2 flex justify-between">
+            <Typography
+              type="body"
+              size={12}
+              color="text-muted"
+              className="font-light">
+              Payment Method Fee
+            </Typography>
+            <Typography
+              type="body"
+              size={12}
+              color="text-muted"
+              className="font-bold">
+              {formatRupiah(getTransactionAndTotals().totals.paymentMethodFee)}
             </Typography>
           </Box>
           <Box className="mb-2 flex justify-between">
@@ -187,7 +237,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatRupiah(totals.adminFee)}
+              {formatRupiah(getTransactionAndTotals().totals.adminFee)}
             </Typography>
           </Box>
           <Box className="flex justify-between">
@@ -203,7 +253,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatRupiah(totals.pb1)}
+              {formatRupiah(getTransactionAndTotals().totals.pb1)}
             </Typography>
           </Box>
 
@@ -222,7 +272,7 @@ export default function PaymentStatus({
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatRupiah(totals.totalPayment)}
+              {formatRupiah(getTransactionAndTotals().totals.totalPayment)}
             </Typography>
           </Box>
 
@@ -230,7 +280,9 @@ export default function PaymentStatus({
             id="view_tickets_button"
             onClick={handleButtonClick}
             className="mx-auto mt-6 block">
-            {transaction.status === 'PAID' ? 'View Tickets' : 'Back to Home'}
+            {data.transaction.status === 'paid'
+              ? 'View Tickets'
+              : 'Back to Home'}
           </Button>
         </Box>
       </Box>

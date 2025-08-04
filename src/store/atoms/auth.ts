@@ -17,4 +17,3 @@ export const registerFormAtom = atom<RegisterFormData>({
   fullName: '',
   phoneNumber: '',
 });
-	
