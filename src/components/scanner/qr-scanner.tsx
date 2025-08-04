@@ -1,18 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { Box, Typography } from '@/components';
-import Image from 'next/image';
-import logo from '@/assets/logo/white-logo.svg';
-import { QrCode } from 'lucide-react';
-import successIcon from '@/assets/icons/success.svg';
-import locationIcon from '@/assets/icons/location-pin.svg';
-import calendarIcon from '@/assets/icons/calendar-days.svg';
-import errorIcon from '@/assets/icons/error.svg';
-import ticketIcon from '@/assets/icons/ticket.svg';
-import clockIcon from '@/assets/icons/clock.svg';
-import { formatRupiah, formatDate, formatTime } from '@/utils/formatter';
+import { Box } from '@/components';
 
 export default function QRCodeScanner({
   onSuccess,
@@ -48,7 +38,7 @@ export default function QRCodeScanner({
               cameraId,
               {
                 fps: 10,
-                aspectRatio: 1.0,
+                aspectRatio: window.innerWidth / window.innerHeight,
               },
               (decodedText) => {
                 onSuccess(decodedText);
@@ -82,26 +72,24 @@ export default function QRCodeScanner({
     };
   }, [onSuccess]);
 
-    // useEffect(() => {
-    //   // Style the video element after camera starts
-    //   if (cameraStarted) {
-    //     setTimeout(() => {
-    //       const timer = setTimeout(() => {
-    //         const videoElement = scannerRef.current?.querySelector('video');
-    //         if (videoElement) {
-    //           videoElement.style.width = '100vw';
-    //           videoElement.style.height = '100vh';
-    //           videoElement.style.objectFit = 'cover';
-    //           videoElement.style.position = 'absolute';
-    //           videoElement.style.top = '0';
-    //           videoElement.style.left = '0';
-    //         }
-    //       }, 500);
+  useEffect(() => {
+    if (cameraStarted) {
+      const timer = setTimeout(() => {
+        const videoElement = scannerRef.current?.querySelector('video');
+        if (videoElement) {
+          videoElement.style.width = '100vw';
+          videoElement.style.height = '100vh';
+          videoElement.style.objectFit = 'cover';
+          videoElement.style.position = 'absolute';
+          videoElement.style.top = '0';
+          videoElement.style.left = '0';
+          videoElement.style.zIndex = '20'; // lebih tinggi dari scanner box kalau perlu
+        }
+      }, 500); // Delay agar kamera betul-betul sudah render
 
-    //       return () => clearTimeout(timer);
-    //     }, 1000);
-    //   }
-    // }, [cameraStarted]);
+      return () => clearTimeout(timer);
+    }
+  }, [cameraStarted]);
 
   return (
     <Box

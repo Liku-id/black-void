@@ -5,8 +5,7 @@ import axios from 'axios';
 import { QrCode } from 'lucide-react';
 import { Box, Typography, Button } from '@/components';
 import QRCodeScanner from '@/components/scanner/qr-scanner';
-import TicketInfoCard from '@/components/scanner/Iinfo-card';
-
+import TicketInfoCard from '@/components/scanner/info-card';
 
 export default function ScannerPage() {
   const [scannedData, setScannedData] = useState<any | null>(null);
@@ -17,21 +16,16 @@ export default function ScannerPage() {
   const successSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
 
-  // Auto hide after 5s
-  // useEffect(() => {
-  //   if (scannedData) {
-  //     setShowResult(true);
-  //     const timeout = setTimeout(() => {
-  //       setShowResult(false);
-  //       setScannedData(null);
-  //     }, 5000);
-  //     return () => clearTimeout(timeout);
-  //   }
-  // }, [scannedData]);
-
   const handleScanSuccess = async (ticketId: string) => {
+
+    console.log(ticketId, "<<ticketId");
+    
+
     try {
       const { data } = await axios.get(`/api/tickets/${ticketId}`);
+
+      console.log(data, "<<data");
+      
 
       if (data.status === 'issued') {
         await axios.put(`/api/tickets/${ticketId}`, {

@@ -36,16 +36,21 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.response?.status === 401) {
-      // Token expired - clear session and redirect to login
-      if (typeof window !== 'undefined') {
+    // Only clear session if status is 401 AND current path is not /login
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      
+      // Skip clearing session if already on login page
+      if (currentPath !== '/login' && currentPath !== '/ticket/auth') {
         // Clear session
         document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         document.cookie = 'refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
         // Redirect to login
         window.location.href = '/login';
       }
     }
+    
     return Promise.reject(error);
   }
 );

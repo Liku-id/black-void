@@ -89,6 +89,7 @@ const ForgotPasswordForm = () => {
         onClose={() => setModalOpen(false)}
         sentEmail={sentEmail}
         onResend={handleResend}
+        isLoading={loading}
       />
     </>
   );

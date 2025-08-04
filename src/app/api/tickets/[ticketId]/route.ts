@@ -20,6 +20,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Get authorization header
     const authHeader = request.headers.get('authorization');
 
+    console.log(authHeader, '<<authHeaderauthHeader');
+    
+
     const { data } = await axios.get(
       `/v1/tickets/${ticketId}`,
       {
