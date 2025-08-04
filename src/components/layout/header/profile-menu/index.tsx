@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/utils/utils';
 import { Box, Typography } from '@/components';
@@ -84,9 +84,10 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           </Box>
         </Box>
 
-        <Link id="my_tickets_link" href="/my-tickets">
+        {/* TODO: PHASE 2 */}
+        {/* <Link id="my_tickets_link" href="/my-tickets">
           <Typography className="mb-4 cursor-pointer">My Ticket</Typography>
-        </Link>
+        </Link> */}
 
         <hr className="my-4 border-gray-300" />
 

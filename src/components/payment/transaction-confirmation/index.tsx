@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useCountdown } from '@/utils/timer';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import useSWR from 'swr';
 import { resetOrderBookingAtom } from '@/store';
@@ -13,12 +13,10 @@ import Loading from '@/components/layout/loading';
 const VAComponent = dynamic(() => import('./va'));
 const QRISComponent = dynamic(() => import('./qris'));
 
-export default function PaymentConfirmation({
-  transactionId,
-}: {
-  transactionId: string;
-}) {
+export default function PaymentConfirmation() {
   const router = useRouter();
+  const params = useParams();
+  const transactionId = params.id;
 
   const { data, isLoading, mutate } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null

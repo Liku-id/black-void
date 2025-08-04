@@ -4,12 +4,6 @@ const TransactionStatus = dynamic(
   () => import('@/components/payment/transaction-status')
 );
 
-export default function TransactionStatusPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
-
-  return <TransactionStatus transactionId={id} />;
+export default function TransactionStatusPage() {
+  return <TransactionStatus  />;
 }

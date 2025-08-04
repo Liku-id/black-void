@@ -26,8 +26,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "Mandiri Virtual Account": {
-    "name": "Mandiri Virtual Account",
+  "MANDIRI Virtual Account": {
+    "name": "MANDIRI Virtual Account",
     "steps": [
       "Login ke aplikasi Livin' by Mandiri.",
       "Pilih menu Bayar > Multipayment.",

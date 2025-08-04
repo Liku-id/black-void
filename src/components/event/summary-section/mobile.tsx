@@ -53,7 +53,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
   const tax = Math.round(totalPrice * pb1Rate);
   const paymentMethodFee = selectedPayment?.paymentMethodFee
     ? selectedPayment?.paymentMethodFee < 1
-      ? Math.round(totalPrice * selectedPayment?.paymentMethodFee)
+      ? Math.round(totalPrice * selectedPayment?.paymentMethodFee / 100)
       : selectedPayment?.paymentMethodFee
     : 0;
   const grandTotal = totalPrice + adminFee + tax + paymentMethodFee;

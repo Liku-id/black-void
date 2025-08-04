@@ -1,11 +1,9 @@
-import TransactionConfirmation from '@/components/payment/transaction-confirmation';
+import dynamic from 'next/dynamic';
 
-export default function TransactionPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = params;
+const TransactionConfirmation = dynamic(
+  () => import('@/components/payment/transaction-confirmation')
+);
 
-  return <TransactionConfirmation transactionId={id} />;
+export default function TransactionPage() {
+  return <TransactionConfirmation />;
 }

@@ -46,9 +46,9 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
         </Typography>
       </Box>
       <Box className="flex items-center">
-        {eventData.eventOrganizer.event_organizer_pic ? (
+        {eventData.eventOrganizer?.event_organizer_pic ? (
           <Image
-            src={eventData.eventOrganizer.event_organizer_pic}
+            src={eventData?.eventOrganize?.event_organizer_pic}
             alt="Owner Logo"
             width={48}
             height={48}
@@ -58,7 +58,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
           <Box className="mr-4 h-12 w-12 rounded-[14px] bg-white" />
         )}
         <Typography type="heading" size={30} color="text-white">
-          {eventData.eventOrganizer.name}
+          {eventData.eventOrganizer?.name}
         </Typography>
       </Box>
       <hr className="my-4 border-t border-white/50 lg:my-3" />

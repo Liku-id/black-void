@@ -1,5 +1,6 @@
 'use client';
 import React, { Fragment } from 'react';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
 import useSWR from 'swr';
 import { Typography, Container, Box, Button, QRCode } from '@/components';
@@ -10,11 +11,10 @@ import dashedDivider from '@/assets/images/dashed-divider.svg';
 import { formatDate } from '@/utils/formatter';
 import Loading from '../layout/loading';
 
-interface TicketProps {
-  transactionId: string;
-}
+const Ticket = () => {
+  const params = useParams();
+  const transactionId = params.id;
 
-const Ticket: React.FC<TicketProps> = ({ transactionId }) => {
   // Initialize state
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);

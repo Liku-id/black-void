@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { Typography, Container, Box, Button } from '@/components';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { formatDate, formatRupiah } from '@/utils/formatter';
 import Image from 'next/image';
 import successStatus from '@/assets/icons/success-status.svg';
@@ -10,12 +10,10 @@ import dashedDivider from '@/assets/images/dashed-divider.svg';
 import useSWR from 'swr';
 import Loading from '@/components/layout/loading';
 
-export default function PaymentStatus({
-  transactionId,
-}: {
-  transactionId: string;
-}) {
+export default function PaymentStatus () {
   const router = useRouter();
+  const params = useParams();
+  const transactionId = params.id;
 
   const { data, isLoading } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null

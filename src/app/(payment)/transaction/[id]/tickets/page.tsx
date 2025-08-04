@@ -2,8 +2,7 @@ import dynamic from 'next/dynamic';
 
 const Ticket = dynamic(() => import('@/components/tickets'));
 
-export default function TicketPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function TicketPage () {
 
-  return <Ticket transactionId={id} />;
+  return <Ticket />;
 }

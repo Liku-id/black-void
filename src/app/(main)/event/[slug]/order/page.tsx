@@ -68,30 +68,20 @@ const OrderPage = () => {
   } = useSWR(order.orderId ? `/api/order/${order.orderId}` : null);
 
   const splitPhoneNumber = (phone: string) => {
-    const match = phone.match(/^(\+\d+)(.+)$/);
+    const match = phone.match(/^(\+\d{1,2})(\d{9,15})$/);
+
     return match
       ? { countryCode: match[1], phoneNumber: match[2] }
       : { countryCode: '+62', phoneNumber: phone };
   };
 
-  // Autofill
   const contactMethods = useForm<FormDataContact>({
     mode: 'onChange',
     defaultValues: {
-      fullName:
-        isLoggedIn && userData
-          ? userData.fullName
-          : contactDetail.full_name || '',
-      phoneNumber:
-        isLoggedIn && userData
-          ? splitPhoneNumber(userData.phoneNumber || '').phoneNumber
-          : contactDetail.phone_number || '',
-      email:
-        isLoggedIn && userData ? userData.email : contactDetail.email || '',
-      countryCode:
-        isLoggedIn && userData
-          ? splitPhoneNumber(userData.phoneNumber || '').countryCode
-          : contactDetail.country_code || '+62',
+      fullName: "",
+      phoneNumber: '',
+      email: '',
+      countryCode: '+62',
     },
   });
 
@@ -210,6 +200,20 @@ const OrderPage = () => {
     router,
     slug,
   ]);
+
+    useEffect(() => {
+    if (isLoggedIn && userData) {
+      contactMethods.setValue('fullName', userData.fullName || '');
+      contactMethods.setValue('phoneNumber', splitPhoneNumber(userData.phoneNumber || '').phoneNumber);
+      contactMethods.setValue('email', userData.email || '');
+      contactMethods.setValue('countryCode', splitPhoneNumber(userData.phoneNumber || '').countryCode);
+    } else if (contactDetail) {
+      contactMethods.setValue('fullName', contactDetail.full_name || '');
+      contactMethods.setValue('phoneNumber', splitPhoneNumber(contactDetail.phone_number || '').phoneNumber);
+      contactMethods.setValue('email', contactDetail.email || '');
+      contactMethods.setValue('countryCode', contactDetail.country_code || '+62');
+    }
+  }, [isLoggedIn, userData, contactDetail, contactMethods.setValue]);
 
   if (eventLoading || orderLoading || !order.orderId) {
     return <Box className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
