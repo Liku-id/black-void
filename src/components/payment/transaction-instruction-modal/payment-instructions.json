@@ -35,8 +35,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "Permata Virtual Account": {
-    "name": "Permata Virtual Account",
+  "PERMATA Virtual Account": {
+    "name": "PERMATA Virtual Account",
     "steps": [
       "Login ke PermataMobile X.",
       "Pilih menu Pembayaran > Virtual Account.",
@@ -44,8 +44,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "CIMB Niaga Virtual Account": {
-    "name": "CIMB Niaga Virtual Account",
+  "CIMB Virtual Account": {
+    "name": "CIMB Virtual Account",
     "steps": [
       "Login ke OCTO Mobile.",
       "Pilih menu Transfer > Ke Rekening CIMB Niaga Lainnya.",

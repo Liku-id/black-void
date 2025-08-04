@@ -46,9 +46,9 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
         </Typography>
       </Box>
       <Box className="flex items-center">
-        {eventData.eventOrganizer?.event_organizer_pic ? (
+        {eventData.eventOrganizer?.asset?.url ? (
           <Image
-            src={eventData?.eventOrganize?.event_organizer_pic}
+            src={eventData?.eventOrganize?.asset?.url}
             alt="Owner Logo"
             width={48}
             height={48}

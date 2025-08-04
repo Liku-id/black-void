@@ -21,9 +21,9 @@ export default function PaymentStatus () {
 
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const subtotal = ticketType.price * ticketType.quantity;
+    const subtotal = ticketType.price * data.transaction.orderQuantity;
     const adminFee = Math.round(
-      subtotal * ((data.transaction.adminFee ?? 0) / 100)
+      subtotal * ((data.transaction.event.adminFee ?? 0) / 100)
     );
     const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(
@@ -90,10 +90,10 @@ export default function PaymentStatus () {
 
           <Box className="border-gray my-6 rounded-[14px] border-[0.5px] p-[14px]">
             <Box className="flex items-center gap-2">
-              {data.transaction.event.eventOrganizer?.event_organizer_pic ? (
+              {data.transaction.event.eventOrganizer?.asset?.url ? (
                 <Image
                   src={
-                    data.transaction.event.eventOrganizer?.event_organizer_pic
+                    data.transaction.event.eventOrganizer?.asset?.url
                   }
                   alt="logo"
                   width={48}
@@ -104,7 +104,7 @@ export default function PaymentStatus () {
               )}
               <Box>
                 <Typography type="heading" size={22}>
-                  {data.transaction.event.eventOrganizer?.name}
+                  {data.transaction.event.eventOrganizer?.name} | {data.transaction.event.name}
                 </Typography>
                 <Typography type="body" size={12} className="font-light">
                   Transaction Number:{' '}
@@ -132,7 +132,7 @@ export default function PaymentStatus () {
                 size={12}
                 color="text-muted"
                 className="font-light">
-                Total ticket: {data.transaction.ticketType.quantity} Tiket
+                Total ticket: {data.transaction.orderQuantity} Tiket
               </Typography>
             </Box>
             {/* ))} */}

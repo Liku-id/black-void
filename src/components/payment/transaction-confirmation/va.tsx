@@ -42,9 +42,9 @@ export default function PaymentConfirmationVA({
 
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const subtotal = ticketType.price * ticketType.quantity;
+    const subtotal = ticketType.price * data.transaction.orderQuantity;
     const adminFee = Math.round(
-      subtotal * ((data.transaction.adminFee ?? 0) / 100)
+      subtotal * ((data.transaction.event.adminFee ?? 0) / 100)
     );
     const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(
@@ -65,7 +65,6 @@ export default function PaymentConfirmationVA({
     }
   };
 
-  console.log(secondsLeft)
   return (
     <>
       <Container className="flex justify-center">
