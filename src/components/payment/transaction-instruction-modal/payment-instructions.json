@@ -1,5 +1,5 @@
 {
-  "bca": {
+  "BCA Virtual Account": {
     "name": "BCA Virtual Account",
     "steps": [
       "Login ke aplikasi BCA Mobile.",
@@ -8,7 +8,7 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "bni": {
+  "BNI Virtual Account": {
     "name": "BNI Virtual Account",
     "steps": [
       "Login ke aplikasi BNI Mobile Banking.",
@@ -17,7 +17,7 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "bri": {
+  "BRI Virtual Account": {
     "name": "BRI Virtual Account",
     "steps": [
       "Login ke aplikasi BRImo.",
@@ -26,8 +26,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "mandiri": {
-    "name": "Mandiri Virtual Account",
+  "MANDIRI Virtual Account": {
+    "name": "MANDIRI Virtual Account",
     "steps": [
       "Login ke aplikasi Livin' by Mandiri.",
       "Pilih menu Bayar > Multipayment.",
@@ -35,8 +35,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "permata": {
-    "name": "Permata Virtual Account",
+  "PERMATA Virtual Account": {
+    "name": "PERMATA Virtual Account",
     "steps": [
       "Login ke PermataMobile X.",
       "Pilih menu Pembayaran > Virtual Account.",
@@ -44,8 +44,8 @@
       "Konfirmasi pembayaran."
     ]
   },
-  "cimb": {
-    "name": "CIMB Niaga Virtual Account",
+  "CIMB Virtual Account": {
+    "name": "CIMB Virtual Account",
     "steps": [
       "Login ke OCTO Mobile.",
       "Pilih menu Transfer > Ke Rekening CIMB Niaga Lainnya.",

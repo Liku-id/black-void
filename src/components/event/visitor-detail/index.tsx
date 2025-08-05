@@ -1,5 +1,5 @@
 'use client';
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 // TODO: PHASE 2
 // import { useWatch } from 'react-hook-form';
@@ -13,17 +13,17 @@ import {
   // Select,
 } from '@/components';
 import { fullName } from '@/utils/form-validation';
-import type { FormDataVisitor, Ticket, OrderState } from '../types';
+import type { FormDataVisitor, Ticket, FormDataContact } from '../types';
 
 interface VisitorDetailSectionProps {
-  methods: UseFormReturn<FormDataVisitor>;
-  order: OrderState | null;
+  contactMethods: UseFormReturn<FormDataContact>;
+  visitorMethods: UseFormReturn<FormDataVisitor>;
   tickets: Ticket[];
 }
 
 const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
-  methods,
-  order,
+  contactMethods,
+  visitorMethods,
   tickets,
 }) => {
   const [sameAsContact, setSameAsContact] = useState(false);
@@ -35,31 +35,34 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
   //   { label: 'SIM', value: 'sim' },
   // ];
 
+  const attendees = tickets
+    ? tickets.flatMap(ticket =>
+        Array.from({ length: ticket.count }, () => ticket)
+      )
+    : [];
+
   const isContactSaved = Boolean(
-    order?.full_name?.trim() &&
-      order?.phone_number?.trim() &&
-      order?.email?.trim()
+    contactMethods.getValues().fullName?.trim() &&
+      contactMethods.getValues().phoneNumber?.trim() &&
+      contactMethods.getValues().email?.trim()
   );
 
-  // Extract contact data and validation from order
-  const contactData = useMemo(
-    () => ({
-      fullName: order?.full_name ?? '',
-      // phoneNumber: order?.phone_number ?? '',
-      // email: order?.email ?? '',
-    }),
-    [order]
-  );
+  // Hapus useEffect, pindah ke onChange checkbox
+  const handleSameAsContactChange = (checked: boolean) => {
+    setSameAsContact(checked);
 
-  // Autofill/clear first form section
-  useEffect(() => {
-    if (sameAsContact) {
+    if (checked) {
+      visitorMethods.setValue(
+        'visitors.0.fullName',
+        contactMethods.getValues().fullName
+      );
+      visitorMethods.trigger('visitors.0.fullName');
       // TODO: PHASE 2
-      // const fullPhoneNumber = contactData.phoneNumber || '';
+      // const fullPhoneNumber = contactMethods.getValues().phoneNumber || '';
       // const countryCodes = ['+62', '+1', '+65', '+44']; // Supported country codes
       // let countryCode = '+62'; // Default country code
       // let localNumber = fullPhoneNumber;
-
+      //
       // for (const code of countryCodes) {
       //   if (fullPhoneNumber.startsWith(code)) {
       //     countryCode = code;
@@ -67,35 +70,36 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
       //     break;
       //   }
       // }
-
+      //
       // localNumber = localNumber || '';
       // console.log('PARSED PHONE:', { countryCode, localNumber });
-      methods.setValue('visitors.0.fullName', contactData.fullName);
-      // TODO: PHASE 2
-      // methods.setValue('visitors.0.phoneNumber', localNumber);
-      // methods.setValue('visitors.0.email', contactData.email);
-      // methods.setValue('visitors.0.countryCode', countryCode);
+      // visitorMethods.setValue('visitors.0.phoneNumber', localNumber);
+      // visitorMethods.setValue('visitors.0.email', contactMethods.getValues().email);
+      // visitorMethods.setValue('visitors.0.countryCode', countryCode);
     } else {
-      methods.setValue('visitors.0.fullName', '');
+      visitorMethods.setValue('visitors.0.fullName', '');
+      visitorMethods.trigger('visitors.0.fullName');
       // TODO: PHASE 2
-      // methods.setValue('visitors.0.phoneNumber', '');
-      // methods.setValue('visitors.0.email', '');
-      // methods.setValue('visitors.0.countryCode', '+62');
+      // visitorMethods.setValue('visitors.0.phoneNumber', '');
+      // visitorMethods.setValue('visitors.0.email', '');
+      // visitorMethods.setValue('visitors.0.countryCode', '+62');
     }
-  }, [sameAsContact, contactData, methods]);
+  };
 
   // TODO: PHASE 2
   // const visitors = useWatch({
-  //   control: methods.control,
+  //   control: visitorMethods.control,
   //   name: 'visitors',
   // });
+
+  if (!tickets) return null;
 
   return (
     <>
       <Typography type="heading" size={22} className="mb-2" color="text-white">
         Visitor Details
       </Typography>
-      <FormProvider {...methods}>
+      <FormProvider {...visitorMethods}>
         <Box
           data-visitor-section
           className="bg-white px-4 py-4 lg:mb-8 lg:px-10 lg:py-6">
@@ -104,15 +108,15 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
             size="sm"
             variant="white"
             checked={sameAsContact}
-            onChange={() => setSameAsContact(v => !v)}
+            onChange={e => handleSameAsContactChange(e.target.checked)}
             className="mb-6 bg-white text-xs font-light"
             disabled={!isContactSaved}>
             Same as contact details
           </Checkbox>
           {/* Ticket list */}
           <Box className="px-4">
-            {tickets.map((ticket, idx) => (
-              <Fragment key={ticket.id}>
+            {attendees.map((ticket, idx) => (
+              <Fragment key={`${ticket.id}-${idx}`}>
                 <Typography
                   type="heading"
                   size={22}
@@ -128,7 +132,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                       placeholder="Full name*"
                       rules={{
                         required: 'Full name is required',
-                        validate: fullName
+                        validate: fullName,
                       }}
                       disabled={sameAsContact && idx === 0}
                     />
@@ -146,7 +150,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                         visitors?.[idx]?.countryCode ?? '+62'
                       }
                       onCountryCodeChange={val =>
-                        methods.setValue(`visitors.${idx}.countryCode`, val)
+                        visitorMethods.setValue(`visitors.${idx}.countryCode`, val)
                       }
                       countryCodes={[
                         { label: '+62', value: '+62' },
@@ -175,13 +179,13 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                       placeholder="ID Type*"
                       rules={{ required: 'ID Type is required' }}
                       error={
-                        methods.formState.errors.visitors?.[idx]?.idType
+                        visitorMethods.formState.errors.visitors?.[idx]?.idType
                           ?.message
                       }
                     />
                   </Box>
                 </Box> */}
-                {idx !== tickets.length - 1 && (
+                {idx !== attendees.length - 1 && (
                   <hr className="border-muted my-6 border border-[0.5px]" />
                 )}
               </Fragment>

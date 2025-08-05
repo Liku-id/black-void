@@ -6,10 +6,7 @@ interface SuccessModalProps {
   onLogin: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({
-  open,
-  onLogin,
-}) => (
+const SuccessModal: React.FC<SuccessModalProps> = ({ open, onLogin }) => (
   <Modal
     open={open}
     onClose={onLogin}

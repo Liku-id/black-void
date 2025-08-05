@@ -22,7 +22,6 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
     `${baseUrl}/assets/WEB/auth-background-4.jpg`,
     `${baseUrl}/assets/WEB/auth-background-5.jpg`,
   ];
-  
 
   useEffect(() => {
     const interval = setInterval(() => {
