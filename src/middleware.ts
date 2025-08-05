@@ -8,6 +8,7 @@ export function middleware(req: NextRequest) {
 
   // Routes restricted when logged in
   const notAllowWhenLogin = [
+    '/ticket/auth',
     '/login',
     '/change-password',
     '/reset-password',
