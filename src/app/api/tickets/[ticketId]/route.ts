@@ -6,17 +6,12 @@ interface UpdateTicketRequest {
   ticketStatus: 'redeemed' | 'checked_in';
 }
 
-interface RouteParams {
-  params: {
-    ticketId: string;
-  };
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ ticketId: string }> }
+) {
   try {
     const { ticketId } = await params;
-
-    // Get authorization header
     const authHeader = request.headers.get('authorization');
 
     const { data } = await axios.get(`/v1/tickets/${ticketId}`, {
@@ -33,17 +28,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ ticketId: string }> }
+) {
   try {
     const { ticketId } = await params;
     const body = await request.json();
 
-    // Validate request body
     if (!body.status) {
-      return NextResponse.json(
-        { error: 'Status is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Status is required' }, { status: 400 });
     }
 
     const authHeader = request.headers.get('authorization');
