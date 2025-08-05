@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import axios from '@/lib/api/axios-server';
+import axios from '@/lib/api/axios-client';
 
 interface UserData {
   id: string;

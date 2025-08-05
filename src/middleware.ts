@@ -37,9 +37,9 @@ export function middleware(req: NextRequest) {
   }
 
   // Redirect users with unauthorized roles away from specific pages
-  // if(userRole !== 'scanner' && guardWhenNotAuthorized.includes(pathname)) {
-  //   return NextResponse.redirect(new URL('/ticket/auth', req.url));
-  // }
+  if (!userRole && guardWhenNotAuthorized.includes(pathname)) {
+    return NextResponse.redirect(new URL('/ticket/auth', req.url));
+  }
 
   if (accessToken) {
     const requestHeaders = new Headers(req.headers);

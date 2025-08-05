@@ -4,24 +4,28 @@ import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 import { clearSession } from '@/lib/session';
 
-export async function POST(_: NextRequest) {
+export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get('access_token')?.value;
+  const authHeader = request.headers.get('authorization');
+  const { userId } = await request.json();
 
   try {
-    if (accessToken) {
-      // Call logout backend
-      await axios.post('/v1/auth/logout', null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+    if (userId) {
+      await axios.post(
+        '/v1/auth/logout',
+        { userId },
+        {
+          headers: {
+            Authorization: authHeader,
+          },
+        }
+      );
     }
 
     // Delete any session & cookies resulting from backend logout
     await clearSession();
     cookieStore.delete('access_token');
-    // cookieStore.delete('refresh_token'); 
+    cookieStore.delete('refresh_token');
     cookieStore.delete('user_role');
 
     return NextResponse.json({

@@ -99,7 +99,9 @@ export default function TicketInfoCard({
             {data.eventDate && (
               <Box className="flex items-center gap-3 mt-2">
                 <Image src={calendarIcon} alt="date" width={20} height={20} />
-                <Typography size={14}>{formatDate(data.eventDate)}</Typography>
+                <Typography size={14}>
+                  {formatDate(data.eventDate, 'datetime')}
+                </Typography>
               </Box>
             )}
 

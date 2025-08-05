@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import axios from '@/lib/api/axios-server';
+import axios from '@/lib/api/axios-client';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
 import { Box, Button, Typography, Container } from '@/components';

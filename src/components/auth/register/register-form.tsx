@@ -3,9 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import axios from '@/lib/api/axios-server';
+import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
-import { email, usePasswordValidation, fullName, phoneNumber } from '@/utils/form-validation';
+import {
+  email,
+  usePasswordValidation,
+  fullName,
+  phoneNumber,
+} from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAtom } from 'jotai';
 import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
@@ -24,6 +29,7 @@ const RegisterForm = () => {
   const [countryCode, setCountryCode] = useState('+62');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkLoad, setCheckLoad] = useState(false);
   const [step, setStep] = useState(1);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -73,7 +79,19 @@ const RegisterForm = () => {
 
   const handleContinue = async () => {
     const valid = await trigger(['fullName', 'email', 'phoneNumber']);
+
     if (valid) {
+      setCheckLoad(true);
+      const { data } = await axios.post('/api/auth/check-availability', {
+        email: getValues('email'),
+        phoneNumber: `${countryCode}${(getValues('phoneNumber') || '').trim()}`,
+      });
+
+      if (!data.isValid) {
+        setCheckLoad(false);
+        setError('The email or phone number you entered is already registered');
+        return;
+      }
       setStep(2);
     }
   };
@@ -85,7 +103,8 @@ const RegisterForm = () => {
       {step === 2 && (
         <span
           className="absolute top-0 left-0 flex cursor-pointer"
-          onClick={() => setStep(1)}>
+          onClick={() => setStep(1)}
+        >
           <Typography>Back</Typography>
         </span>
       )}
@@ -93,7 +112,8 @@ const RegisterForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           {step === 1 && (
             <>
               <TextField
@@ -103,7 +123,7 @@ const RegisterForm = () => {
                 className="mb-8 w-[270px]"
                 rules={{
                   required: 'Full Name is required',
-                  validate: fullName
+                  validate: fullName,
                 }}
               />
 
@@ -126,10 +146,10 @@ const RegisterForm = () => {
                 className="mb-10 w-[270px]"
                 rules={{
                   required: 'Phone Number is required',
-                  validate: (value) => phoneNumber(value, countryCode)
+                  validate: (value) => phoneNumber(value, countryCode),
                 }}
                 selectedCountryCode={countryCode}
-                onCountryCodeChange={val => setCountryCode(val)}
+                onCountryCodeChange={(val) => setCountryCode(val)}
                 countryCodes={[
                   { label: '+62', value: '+62' },
                   { label: '+1', value: '+1' },
@@ -140,8 +160,10 @@ const RegisterForm = () => {
               <Button
                 id="continue_button"
                 type="button"
-                onClick={handleContinue}>
-                Continue
+                onClick={handleContinue}
+                disabled={checkLoad}
+              >
+                {checkLoad ? 'Verifying...' : 'Continue'}
               </Button>
             </>
           )}
@@ -168,7 +190,7 @@ const RegisterForm = () => {
                   className="w-[270px]"
                   rules={{
                     required: 'Repeat Password is required',
-                    validate: value =>
+                    validate: (value) =>
                       value === getValues('password') ||
                       'Password does not match',
                   }}
@@ -219,7 +241,8 @@ const RegisterForm = () => {
                 <Checkbox
                   id="register_checkbox"
                   checked={agree}
-                  onChange={() => setAgree(!agree)}>
+                  onChange={() => setAgree(!agree)}
+                >
                   <Typography size={12} className="text-white">
                     I agree to the{' '}
                     <span className="cursor-pointer underline">
@@ -238,7 +261,8 @@ const RegisterForm = () => {
                 id="register_button"
                 data-testid="register_button"
                 type="submit"
-                disabled={!allValid || loading}>
+                disabled={!allValid || loading}
+              >
                 Submit
               </Button>
             </>

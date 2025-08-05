@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from '@/lib/api/axios-server';
+import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';

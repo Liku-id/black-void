@@ -21,19 +21,4 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle 401
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    // NOTE: do not redirect directly on the server
-    if (typeof window !== 'undefined' && error.response?.status === 401) {
-      const currentPath = window.location.pathname;
-      if (currentPath !== '/login' && currentPath !== '/ticket/auth') {
-        window.location.href = '/login';
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
 export default axiosInstance;
