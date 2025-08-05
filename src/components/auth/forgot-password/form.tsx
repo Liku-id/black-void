@@ -1,19 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { Button, TextField, Typography } from '@/components';
 import Loading from '@/components/layout/loading';
 import SentModal from './sent-modal';
+import { useRouter } from 'next/navigation';
 
 interface ForgotPasswordData {
   email: string;
 }
 
 const ForgotPasswordForm = () => {
+  const router = useRouter();
   // Initialize state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,6 +34,9 @@ const ForgotPasswordForm = () => {
       if (response.status === 200) {
         setSentEmail(formData.email);
         setModalOpen(true);
+        if (response.data.token) {
+          router.replace(`/reset-password?token=${response.data.token}&email=${formData.email}`);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -62,7 +67,8 @@ const ForgotPasswordForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
             id="email_field"
             name="email"
@@ -89,6 +95,7 @@ const ForgotPasswordForm = () => {
         onClose={() => setModalOpen(false)}
         sentEmail={sentEmail}
         onResend={handleResend}
+        isLoading={loading}
       />
     </>
   );

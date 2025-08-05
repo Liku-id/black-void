@@ -7,6 +7,7 @@ export interface SessionData {
     fullName: string;
     email: string;
     phoneNumber: string;
+    role?: string;
   };
   isLoggedIn: boolean;
 }

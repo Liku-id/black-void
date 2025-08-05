@@ -5,17 +5,12 @@ import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    const { data } = await axios.post('/v1/auth/password/request', formData);
-
-    let token = '';
-    if (process.env.NODE_ENV !== 'production') {
-      token = data.message?.split('Token: ')[1];
-    }
+    const { data } = await axios.post('/v1/users/check-availability', formData);
 
     return NextResponse.json({
-      message: 'Forgot password email sent',
+      message: 'User available',
       success: true,
-      token,
+      isValid: data.body?.isValid,
     });
   } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);
