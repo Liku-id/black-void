@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
@@ -20,6 +20,7 @@ interface FormDataLogin {
 const LoginForm = () => {
   const router = useRouter();
   const { checkAuth } = useAuth();
+  const pathname = usePathname();
 
   // Initialize state
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +38,13 @@ const LoginForm = () => {
 
       if (response.status === 200) {
         await checkAuth(); // Refresh auth state
-        router.replace('/');
+
+        // handle redirect based on current path
+        if (pathname === '/ticket/auth') {
+          router.replace('/ticket/scanner');
+        } else {
+          router.replace('/');
+        }
       }
     } catch (error) {
       console.error(error);
@@ -55,7 +62,8 @@ const LoginForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
             id="email_field"
             name="email"
