@@ -15,6 +15,7 @@ import VisitorDetailSection from '@/components/event/visitor-detail';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import useStickyObserver from '@/utils/sticky-observer';
+import EventPageSkeleton from '@/components/event/skeletons';
 
 // Contact form data type
 interface FormDataContact {
@@ -78,7 +79,7 @@ const OrderPage = () => {
   const contactMethods = useForm<FormDataContact>({
     mode: 'onChange',
     defaultValues: {
-      fullName: "",
+      fullName: '',
       phoneNumber: '',
       email: '',
       countryCode: '+62',
@@ -201,22 +202,34 @@ const OrderPage = () => {
     slug,
   ]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (isLoggedIn && userData) {
       contactMethods.setValue('fullName', userData.fullName || '');
-      contactMethods.setValue('phoneNumber', splitPhoneNumber(userData.phoneNumber || '').phoneNumber);
+      contactMethods.setValue(
+        'phoneNumber',
+        splitPhoneNumber(userData.phoneNumber || '').phoneNumber
+      );
       contactMethods.setValue('email', userData.email || '');
-      contactMethods.setValue('countryCode', splitPhoneNumber(userData.phoneNumber || '').countryCode);
+      contactMethods.setValue(
+        'countryCode',
+        splitPhoneNumber(userData.phoneNumber || '').countryCode
+      );
     } else if (contactDetail) {
       contactMethods.setValue('fullName', contactDetail.full_name || '');
-      contactMethods.setValue('phoneNumber', splitPhoneNumber(contactDetail.phone_number || '').phoneNumber);
+      contactMethods.setValue(
+        'phoneNumber',
+        splitPhoneNumber(contactDetail.phone_number || '').phoneNumber
+      );
       contactMethods.setValue('email', contactDetail.email || '');
-      contactMethods.setValue('countryCode', contactDetail.country_code || '+62');
+      contactMethods.setValue(
+        'countryCode',
+        contactDetail.country_code || '+62'
+      );
     }
   }, [isLoggedIn, userData, contactDetail, contactMethods.setValue]);
 
   if (eventLoading || orderLoading || !order.orderId) {
-    return <Box className="min-h-[600px] w-full animate-pulse bg-gray-100" />;
+    return <EventPageSkeleton />;
   }
 
   if (eventError || orderError) {

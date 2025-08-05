@@ -5,5 +5,5 @@ const TransactionStatus = dynamic(
 );
 
 export default function TransactionStatusPage() {
-  return <TransactionStatus  />;
+  return <TransactionStatus />;
 }

@@ -10,7 +10,7 @@ import dashedDivider from '@/assets/images/dashed-divider.svg';
 import useSWR from 'swr';
 import Loading from '@/components/layout/loading';
 
-export default function PaymentStatus () {
+export default function PaymentStatus() {
   const router = useRouter();
   const params = useParams();
   const transactionId = params.id;
@@ -25,7 +25,7 @@ export default function PaymentStatus () {
     const adminFee = Math.round(
       subtotal * ((data.transaction.event.adminFee ?? 0) / 100)
     );
-    const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee;
+    const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee < 1 ? Math.round((subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100) : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(
       subtotal * Number(process.env.NEXT_PUBLIC_PB1 || 0.1)
     );
@@ -92,9 +92,7 @@ export default function PaymentStatus () {
             <Box className="flex items-center gap-2">
               {data.transaction.event.eventOrganizer?.asset?.url ? (
                 <Image
-                  src={
-                    data.transaction.event.eventOrganizer?.asset?.url
-                  }
+                  src={data.transaction.event.eventOrganizer?.asset?.url}
                   alt="logo"
                   width={48}
                   height={48}
@@ -104,7 +102,8 @@ export default function PaymentStatus () {
               )}
               <Box>
                 <Typography type="heading" size={22}>
-                  {data.transaction.event.eventOrganizer?.name} | {data.transaction.event.name}
+                  {data.transaction.event.eventOrganizer?.name} |{' '}
+                  {data.transaction.event.name}
                 </Typography>
                 <Typography type="body" size={12} className="font-light">
                   Transaction Number:{' '}

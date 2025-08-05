@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
@@ -28,7 +28,6 @@ export default function PaymentConfirmation() {
   // const now = new Date();
   const [initialSeconds, setInitialSeconds] = useState(900);
   const [secondsLeft, resetCountdown] = useCountdown(initialSeconds);
-  console.log('secondsLeft', secondsLeft);
   const [, resetOrder] = useAtom(resetOrderBookingAtom);
 
   useEffect(() => {
@@ -40,14 +39,15 @@ export default function PaymentConfirmation() {
   }, [data, router, resetOrder, transactionId]);
 
   useEffect(() => {
-      if (data && data.transaction && data.transaction.expiresAt) {
-        const expiredAt = new Date(data.transaction.expiresAt);
-        const now = new Date();
-        setInitialSeconds(Math.max(0, Math.floor((expiredAt.getTime() - now.getTime()) / 1000)));
-        console.log('Initial seconds set to:', initialSeconds);
-        resetCountdown();
-      }
-    }, [data, resetCountdown]);
+    if (data && data.transaction && data.transaction.expiresAt) {
+      const expiredAt = new Date(data.transaction.expiresAt);
+      const now = new Date();
+      setInitialSeconds(
+        Math.max(0, Math.floor((expiredAt.getTime() - now.getTime()) / 1000))
+      );
+      resetCountdown();
+    }
+  }, [data, resetCountdown]);
 
   if (isLoading) return <Loading />;
   if (!isLoading && !data)

@@ -2,46 +2,30 @@ import React from 'react';
 import { Box, Container } from '@/components';
 
 const EventPageSkeleton = () => (
-  <Container className="min-h-[1200px]">
-    <Box className="mb-14 h-[353px] w-full animate-pulse rounded bg-gray-200 px-4" />
-    <Box>
-      <Box className="min-h-[180px] w-[534px]">
-        <Box className="mb-4 h-10 w-2/3 animate-pulse rounded bg-gray-200" />
-        <Box className="grid grid-cols-2 gap-16">
-          {[0, 1].map(col => (
-            <Box key={col}>
-              {[0, 1].map(row => (
-                <Box
-                  key={row}
-                  className={`flex items-center gap-2${row === 0 ? 'mb-4' : ''}`}>
-                  <Box className="h-6 w-6 animate-pulse rounded bg-gray-100" />
-                  <Box
-                    className={`h-6 ${col === 0 ? (row === 0 ? 'w-32' : 'w-24') : row === 0 ? 'w-40' : 'w-32'} animate-pulse rounded bg-gray-100`}
-                  />
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </Box>
-      </Box>
+  <Container className="min-h-[1000px] px-4 lg:min-h-[1200px] lg:px-8 xl:px-0">
+    <Box className="mb-10 grid w-full grid-cols-1 gap-8 lg:mb-16 lg:grid-cols-[450px_1fr] xl:grid-cols-[630px_1fr] xl:gap-14">
+      <Box className="h-[210px] w-full animate-pulse bg-gray-200 lg:h-[353px]" />
+      <Box className="hidden h-[273px] w-full animate-pulse bg-gray-200 lg:block" />
+    </Box>
+
+    <Box className="grid grid-cols-1 gap-10 lg:mb-8 lg:grid-cols-2 lg:gap-16">
       <Box>
-        <Box className="mb-4 h-6 w-1/4 animate-pulse rounded bg-gray-200" />
-        <Box className="mb-4 h-16 w-full animate-pulse rounded bg-gray-100" />
+        <Box className="mb-2 h-10 w-2/3 animate-pulse bg-gray-200 lg:mb-4" />
+        <Box className="mb-2 h-4 w-1/3 animate-pulse bg-gray-200 lg:mb-4 lg:h-6" />
+        <Box className="mb-2 h-4 w-2/3 animate-pulse bg-gray-200 lg:mb-4 lg:h-6" />
+        <Box className="mb-2 block h-4 w-1/3 animate-pulse bg-gray-200 lg:mb-4 lg:hidden lg:h-6" />
+        <Box className="block h-4 w-2/3 animate-pulse bg-gray-200 lg:hidden lg:h-6" />
+      </Box>
+      <Box className="mb-10 block lg:hidden">
+        <Box className="m-auto mb-12 flex h-10 w-[140px] animate-pulse bg-gray-200 text-center" />
+        <Box className="mb-2 h-4 w-1/3 animate-pulse bg-gray-200 lg:h-6" />
+        <Box className="mb-2 h-4 w-2/3 animate-pulse bg-gray-200 lg:h-6" />
       </Box>
     </Box>
-    <Box className="mb-6 flex min-h-[44px] gap-4">
-      {[...Array(3)].map((_, i) => (
-        <Box key={i} className="h-8 w-24 animate-pulse rounded bg-gray-100" />
-      ))}
-    </Box>
-    <Box className="min-h-[420px] space-y-4">
-      {[...Array(3)].map((_, i) => (
-        <Box
-          key={i}
-          className="h-40 w-full animate-pulse rounded bg-gray-100"
-        />
-      ))}
-    </Box>
+
+    <Box className="bg-light-gray mb-8 h-[425px] w-full animate-pulse" />
+
+    <Box className="bg-light-gray mb-4 h-[225px] w-full animate-pulse" />
   </Container>
 );
 
