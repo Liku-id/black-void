@@ -16,10 +16,7 @@ export async function POST(req: NextRequest) {
       type: body.ticketType?.name,
       attendee: ticket.visitor_name,
       qrValue: ticket.ticket_id,
-      date: formatDate(
-        body.ticketType?.ticketStartDate,
-        'datetime'
-      ),
+      date: formatDate(body.ticketType?.ticketStartDate, 'datetime'),
       address: body.event?.address,
       mapLocation: body.event?.mapLocationUrl,
       ticketType: body.ticketType,

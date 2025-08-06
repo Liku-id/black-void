@@ -1,7 +1,7 @@
 'use client';
 import React, { Fragment } from 'react';
 import { useParams } from 'next/navigation';
-import axios from 'axios';
+import axios from '@/lib/api/axios-client';
 import useSWR from 'swr';
 import { Typography, Container, Box, Button, QRCode } from '@/components';
 import Image from 'next/image';
