@@ -11,6 +11,7 @@ import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
+import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
 
 interface FormDataLogin {
   email: string;
@@ -21,6 +22,7 @@ const LoginForm = () => {
   const router = useRouter();
   const { checkAuth } = useAuth();
   const pathname = usePathname();
+  const destination: string = getSessionStorage('destination') ?? '';
 
   // Initialize state
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +45,9 @@ const LoginForm = () => {
         if (pathname === '/ticket/auth') {
           router.replace('/ticket/scanner');
         } else {
-          router.replace('/');
+          const redirectPath = destination || '/';
+          setSessionStorage('destination', '');
+          router.replace(redirectPath);
         }
       }
     } catch (error) {
