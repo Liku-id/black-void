@@ -31,9 +31,7 @@ export default function Header() {
     setError('');
     setLoading(true);
     try {
-      const response = await axios.post('/api/auth/logout', {
-        userId: userData?.id,
-      });
+      const response = await axios.post('/api/auth/logout');
       if (response.status === 200) {
         setOpenMenu(false);
         setOpenLogoutModal(false);

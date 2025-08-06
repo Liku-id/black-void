@@ -6,7 +6,7 @@ const LoginForm = dynamic(() => import('@/components/auth/login/form'));
 
 export default function TicketScanner() {
   return (
-    <Box className="relative min-h-screen flex items-center justify-center bg-black text-white">
+    <Box className="relative min-h-dvh flex items-center justify-center bg-black text-white">
       <Box className="w-full max-w-sm px-4">
         <Box className="mb-8 text-center">
           <Typography className="mb-4">Hi partner 👋</Typography>

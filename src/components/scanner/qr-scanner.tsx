@@ -85,7 +85,6 @@ export default function QRCodeScanner({
           selectedCamera.id,
           config,
           async (decodedText) => {
-            // ✅ Prevent multiple calls
             if (hasScannedRef.current) return;
             hasScannedRef.current = true;
 

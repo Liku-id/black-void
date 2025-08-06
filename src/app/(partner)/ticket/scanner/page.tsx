@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/api/axios-client';
 import {
   QrCode,
   RotateCcw,
@@ -201,7 +201,7 @@ export default function ScannerPage() {
   };
 
   return (
-    <Box className="relative min-h-screen bg-black text-white overflow-hidden">
+    <Box className="relative min-h-dvh bg-black text-white overflow-hidden">
       {/* Audio */}
       <audio ref={successSound} src="/sounds/success.mp3" />
       <audio ref={errorSound} src="/sounds/error.mp3" />

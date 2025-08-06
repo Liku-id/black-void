@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
-import { saveSession } from '@/lib/session';
-import { cookies } from 'next/headers';
+import { saveSession, setAuthCookies } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,28 +17,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save session with user data (iron-session)
+    // Save session with user data
     await saveSession({
       isLoggedIn: true,
       user: body.user,
     });
 
-    // Save access_token & user_role in cookies for middleware
-    const cookieStore = await cookies();
-    cookieStore.set('access_token', body.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    cookieStore.set('user_role', body.user.role, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
+    // Set cookies using helper
+    await setAuthCookies({
+      accessToken: body.accessToken,
+      refreshToken: body.refreshToken,
+      userRole: body.user.role,
     });
 
     return NextResponse.json({
