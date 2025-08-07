@@ -22,7 +22,7 @@ export default function ScannerLayout({
         alt="Logo"
         height={32}
         width={120}
-        className="absolute top-6 left-6 h-8 w-auto z-50"
+        className="absolute top-6 left-6 z-50 h-8 w-auto"
         priority
       />
       {children}

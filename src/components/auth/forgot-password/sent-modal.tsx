@@ -14,7 +14,7 @@ const SentModal: React.FC<SentModalProps> = ({
   onClose,
   sentEmail,
   onResend,
-  isLoading
+  isLoading,
 }) => (
   <Modal
     open={open}
@@ -32,7 +32,11 @@ const SentModal: React.FC<SentModalProps> = ({
         </Typography>
       </>
     }
-    footer={<Button onClick={onResend} disabled={isLoading}>{isLoading? "Sending...":"Resend Link"}</Button>}
+    footer={
+      <Button onClick={onResend} disabled={isLoading}>
+        {isLoading ? 'Sending...' : 'Resend Link'}
+      </Button>
+    }
   />
 );
 

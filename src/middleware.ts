@@ -23,7 +23,7 @@ export function middleware(req: NextRequest) {
 
   // Validation
   const isRestrictedWhenLoggedIn = notAllowWhenLogin.includes(pathname);
-  const isRestrictedWhenNotLoggedIn = guardWhenNotLogin.some((route) =>
+  const isRestrictedWhenNotLoggedIn = guardWhenNotLogin.some(route =>
     pathname.startsWith(route)
   );
 

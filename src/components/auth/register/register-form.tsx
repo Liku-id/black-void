@@ -103,8 +103,7 @@ const RegisterForm = () => {
       {step === 2 && (
         <span
           className="absolute top-0 left-0 flex cursor-pointer"
-          onClick={() => setStep(1)}
-        >
+          onClick={() => setStep(1)}>
           <Typography>Back</Typography>
         </span>
       )}
@@ -112,8 +111,7 @@ const RegisterForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           {step === 1 && (
             <>
               <TextField
@@ -146,10 +144,10 @@ const RegisterForm = () => {
                 className="mb-10 w-[270px]"
                 rules={{
                   required: 'Phone Number is required',
-                  validate: (value) => phoneNumber(value, countryCode),
+                  validate: value => phoneNumber(value, countryCode),
                 }}
                 selectedCountryCode={countryCode}
-                onCountryCodeChange={(val) => setCountryCode(val)}
+                onCountryCodeChange={val => setCountryCode(val)}
                 countryCodes={[
                   { label: '+62', value: '+62' },
                   { label: '+1', value: '+1' },
@@ -161,8 +159,7 @@ const RegisterForm = () => {
                 id="continue_button"
                 type="button"
                 onClick={handleContinue}
-                disabled={checkLoad}
-              >
+                disabled={checkLoad}>
                 {checkLoad ? 'Verifying...' : 'Continue'}
               </Button>
             </>
@@ -190,7 +187,7 @@ const RegisterForm = () => {
                   className="w-[270px]"
                   rules={{
                     required: 'Repeat Password is required',
-                    validate: (value) =>
+                    validate: value =>
                       value === getValues('password') ||
                       'Password does not match',
                   }}
@@ -241,8 +238,7 @@ const RegisterForm = () => {
                 <Checkbox
                   id="register_checkbox"
                   checked={agree}
-                  onChange={() => setAgree(!agree)}
-                >
+                  onChange={() => setAgree(!agree)}>
                   <Typography size={12} className="text-white">
                     I agree to the{' '}
                     <span className="cursor-pointer underline">
@@ -261,8 +257,7 @@ const RegisterForm = () => {
                 id="register_button"
                 data-testid="register_button"
                 type="submit"
-                disabled={!allValid || loading}
-              >
+                disabled={!allValid || loading}>
                 Submit
               </Button>
             </>

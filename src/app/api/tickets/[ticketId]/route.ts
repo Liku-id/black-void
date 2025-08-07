@@ -37,7 +37,10 @@ export async function PUT(
     const body = await request.json();
 
     if (!body.status) {
-      return NextResponse.json({ error: 'Status is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Status is required' },
+        { status: 400 }
+      );
     }
 
     const authHeader = request.headers.get('authorization');

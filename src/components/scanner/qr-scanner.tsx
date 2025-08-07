@@ -66,7 +66,7 @@ export default function QRCodeScanner({
 
         const selectedCamera =
           devices.find(
-            (d) =>
+            d =>
               d.label.toLowerCase().includes('back') ||
               d.label.toLowerCase().includes('rear') ||
               d.label.toLowerCase().includes('environment')
@@ -84,7 +84,8 @@ export default function QRCodeScanner({
         await qrCodeScanner.start(
           selectedCamera.id,
           config,
-          async (decodedText) => {
+          async decodedText => {
+            // ✅ Prevent multiple calls
             if (hasScannedRef.current) return;
             hasScannedRef.current = true;
 
@@ -96,7 +97,7 @@ export default function QRCodeScanner({
             // Call parent handler
             onSuccess(decodedText);
           },
-          (errorMessage) => {
+          errorMessage => {
             if (enableLogs) {
               console.log('QR decode error (normal):', errorMessage);
             }
@@ -121,15 +122,15 @@ export default function QRCodeScanner({
   }, [cameraStarted, disabled]);
 
   return (
-    <Box className="relative w-full h-full">
+    <Box className="relative h-full w-full">
       <Box
         id="qr-reader"
         ref={scannerRef}
-        className={`absolute inset-0 w-full h-full z-10 ${disabled ? 'opacity-50' : ''}`}
+        className={`absolute inset-0 z-10 h-full w-full ${disabled ? 'opacity-50' : ''}`}
       />
 
       {disabled && (
-        <Box className="absolute inset-0 bg-black bg-opacity-50 z-25 flex items-center justify-center">
+        <Box className="bg-opacity-50 absolute inset-0 z-25 flex items-center justify-center bg-black">
           <Typography size={14} className="text-gray-400">
             Scanner Disabled
           </Typography>
@@ -137,17 +138,17 @@ export default function QRCodeScanner({
       )}
 
       {cameraError && (
-        <Box className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-30">
-          <Box className="text-center p-6 max-w-sm">
-            <Box className="w-16 h-16 border-2 border-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+        <Box className="bg-opacity-90 absolute inset-0 z-30 flex items-center justify-center bg-black">
+          <Box className="max-w-sm p-6 text-center">
+            <Box className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-500">
               <Typography size={24} className="text-red-500">
                 !
               </Typography>
             </Box>
-            <Typography size={16} className="text-white mb-2">
+            <Typography size={16} className="mb-2 text-white">
               Camera Error
             </Typography>
-            <Typography size={14} className="text-gray-300 text-center">
+            <Typography size={14} className="text-center text-gray-300">
               {cameraError}
             </Typography>
           </Box>
@@ -155,9 +156,9 @@ export default function QRCodeScanner({
       )}
 
       {isInitializing && cameraStarted && !cameraError && !disabled && (
-        <Box className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
+        <Box className="bg-opacity-50 absolute inset-0 z-30 flex items-center justify-center bg-black">
           <Box className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-green-400"></div>
             <Typography size={14} className="text-green-400">
               Initializing Camera...
             </Typography>

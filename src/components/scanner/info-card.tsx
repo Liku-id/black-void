@@ -50,9 +50,9 @@ export default function TicketInfoCard({
   };
 
   return (
-    <Box className={`rounded-t-2xl shadow-xl p-6 ${getStatusColor()}`}>
+    <Box className={`rounded-t-2xl p-6 shadow-xl ${getStatusColor()}`}>
       {/* Status Message */}
-      <Box className="flex items-center gap-2 mb-4">
+      <Box className="mb-4 flex items-center gap-2">
         <Image src={getStatusIcon()} alt="status icon" width={24} height={24} />
         <Typography className={`text-xl font-semibold ${getStatusIconColor()}`}>
           {getStatusText()}
@@ -61,7 +61,7 @@ export default function TicketInfoCard({
 
       {/* Error Message */}
       {isError && data.message && (
-        <Box className="mb-4 p-3 bg-red-100 rounded-lg">
+        <Box className="mb-4 rounded-lg bg-red-100 p-3">
           <Typography size={14} className="text-red-800">
             {data.message}
           </Typography>
@@ -71,10 +71,10 @@ export default function TicketInfoCard({
       {/* Ticket ID */}
       {data.ticketId && (
         <Box className="mb-4">
-          <Typography size={12} className="text-gray-600 mb-1">
+          <Typography size={12} className="mb-1 text-gray-600">
             Ticket ID
           </Typography>
-          <Typography size={14} className="font-mono bg-gray-100 p-2 rounded">
+          <Typography size={14} className="rounded bg-gray-100 p-2 font-mono">
             {data.ticketId}
           </Typography>
         </Box>
@@ -97,7 +97,7 @@ export default function TicketInfoCard({
             )}
 
             {data.eventDate && (
-              <Box className="flex items-center gap-3 mt-2">
+              <Box className="mt-2 flex items-center gap-3">
                 <Image src={calendarIcon} alt="date" width={20} height={20} />
                 <Typography size={14}>
                   {formatDate(data.eventDate, 'datetime')}
@@ -106,7 +106,7 @@ export default function TicketInfoCard({
             )}
 
             {data.location && (
-              <Box className="flex items-start gap-3 mt-2">
+              <Box className="mt-2 flex items-start gap-3">
                 <Image
                   src={locationIcon}
                   alt="location"
@@ -122,12 +122,11 @@ export default function TicketInfoCard({
       {/* Success or Warning Message */}
 
       {/* Scan Another Ticket Button */}
-      <Box className="flex mt-6">
+      <Box className="mt-6 flex">
         <Button
           onClick={resetScanner}
-          className="flex-1 bg-white text-black hover:bg-gray-100 py-3 rounded-md"
-        >
-          <RotateCcw className="w-4 h-4 mr-2" />
+          className="flex-1 rounded-md bg-white py-3 text-black hover:bg-gray-100">
+          <RotateCcw className="mr-2 h-4 w-4" />
           Scan Another Ticket
         </Button>
       </Box>
