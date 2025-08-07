@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from '@/assets/logo/white-logo.svg';
 
 export const metadata: Metadata = {
@@ -17,14 +18,16 @@ export default function ScannerLayout({
 }) {
   return (
     <main>
-      <Image
-        src={logo}
-        alt="Logo"
-        height={32}
-        width={120}
-        className="absolute top-6 left-6 h-8 w-auto z-50"
-        priority
-      />
+      <Link href="/" aria-label="Home">
+        <Image
+          src={logo}
+          alt="Logo"
+          height={32}
+          width={120}
+          className="absolute top-6 left-6 h-8 w-auto z-50"
+          priority
+        />
+      </Link>
       {children}
     </main>
   );

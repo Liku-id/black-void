@@ -55,7 +55,7 @@ export function middleware(req: NextRequest) {
   }
 
   // Redirect users staff from buyer access
-  if (userRole === 'admin' && (isBuyerPage || pathname === '/')) {
+  if (userRole === 'admin' && isBuyerPage) {
     return NextResponse.redirect(new URL('/ticket/scanner', req.url));
   }
 
