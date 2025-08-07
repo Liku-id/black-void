@@ -19,13 +19,25 @@ export function middleware(req: NextRequest) {
   const guardWhenNotLogin = ['/my-tickets'];
 
   // Routes restricted when role is not authorized
-  const guardWhenNotAuthorized = ['/ticket/scanner'];
+  const staffAccess = ['/ticket/scanner'];
+
+  const buyerAccess = [
+    '/ticket/auth',
+    '/login',
+    '/change-password',
+    '/reset-password',
+    '/register',
+    '/even',
+    '/transaction',
+  ];
 
   // Validation
   const isRestrictedWhenLoggedIn = notAllowWhenLogin.includes(pathname);
   const isRestrictedWhenNotLoggedIn = guardWhenNotLogin.some((route) =>
     pathname.startsWith(route)
   );
+  const isStaffPage = staffAccess.some((route) => pathname.startsWith(route));
+  const isBuyerPage = buyerAccess.some((route) => pathname.startsWith(route));
 
   // Redirect logged-in users away from login-related pages
   if (accessToken && isRestrictedWhenLoggedIn) {
@@ -38,8 +50,13 @@ export function middleware(req: NextRequest) {
   }
 
   // Redirect users with unauthorized roles away from specific pages
-  if (!userRole && guardWhenNotAuthorized.includes(pathname)) {
+  if (userRole !== 'admin' && isStaffPage) {
     return NextResponse.redirect(new URL('/ticket/auth', req.url));
+  }
+
+  // Redirect users staff from buyer access
+  if (userRole === 'admin' && (isBuyerPage || pathname === '/')) {
+    return NextResponse.redirect(new URL('/ticket/scanner', req.url));
   }
 
   if (accessToken) {

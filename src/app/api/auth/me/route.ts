@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
+import axios from '@/lib/api/axios-server';
+import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const session = await getSession();
+    const token = req.cookies.get('access_token')?.value;
 
-    if (!session.isLoggedIn || !session.user) {
+    if (!token) {
       return NextResponse.json({ loggedIn: false, user: null });
     }
 
-    return NextResponse.json({
-      loggedIn: true,
-      user: session.user,
+    const { data } = await axios.get('/v1/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
     });
-  } catch (error) {
-    console.error('Session validation failed:', error);
-    return NextResponse.json({ loggedIn: false, user: null });
+
+    return NextResponse.json({ loggedIn: true, user: data?.body });
+  } catch (e) {
+    return handleErrorAPI(e as AxiosErrorResponse);
   }
 }

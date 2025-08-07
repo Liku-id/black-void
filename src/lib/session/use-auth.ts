@@ -1,67 +1,44 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
+import { useAtom } from 'jotai';
+import { authAtom } from '@/store';
 import axios from '@/lib/api/axios-client';
 
-interface UserData {
-  id: string;
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-}
-
-interface AuthState {
-  isLoggedIn: boolean | null;
-  userData: UserData | null;
-  loading: boolean;
-}
-
 export function useAuth() {
-  const [authState, setAuthState] = useState<AuthState>({
-    isLoggedIn: null,
-    userData: null,
-    loading: true,
-  });
+  const [auth, setAuth] = useAtom(authAtom);
 
   const checkAuth = useCallback(async () => {
+    setAuth((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await axios.get('/api/auth/me');
-      const isLoggedIn = response.data.loggedIn;
-
-      setAuthState({
-        isLoggedIn,
-        userData: response.data.user || null,
+      const res = await axios.get('/api/auth/me');
+      setAuth({
+        isLoggedIn: res.data.loggedIn,
+        userData: res.data.user || null,
         loading: false,
       });
     } catch {
-      setAuthState({
-        isLoggedIn: false,
-        userData: null,
+      setAuth({ isLoggedIn: false, userData: null, loading: false });
+    }
+  }, [setAuth]);
+
+  // Setter manual
+  const setAuthUser = useCallback(
+    (user: any) => {
+      setAuth({
+        isLoggedIn: true,
+        userData: user,
         loading: false,
       });
-    }
-  }, []);
+    },
+    [setAuth]
+  );
 
   useEffect(() => {
-    checkAuth();
+    if (auth.isLoggedIn === null) {
+      checkAuth();
+    }
+  }, [auth.isLoggedIn, checkAuth]);
 
-    // Listen for visibility change (user comes back to tab)
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        checkAuth();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Cleanup listeners on unmount
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [checkAuth]);
-
-  return {
-    ...authState,
-    checkAuth,
-  };
+  return { ...auth, checkAuth, setAuthUser };
 }

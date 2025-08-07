@@ -12,6 +12,7 @@ import SuccessIcon from '@/assets/icons/success.svg';
 import Image from 'next/image';
 import SuccessModal from './success-modal';
 import axios from 'axios';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 interface ResetPasswordData {
   password: string;
@@ -69,7 +70,7 @@ const ResetPasswordForm = () => {
       if (res.status !== 200) throw new Error(data.message || 'Unknown error');
       setModalOpen(true);
     } catch (error: any) {
-      setError(error.message);
+      setError(getErrorMessage(error));
     } finally {
       setLoading(false);
     }

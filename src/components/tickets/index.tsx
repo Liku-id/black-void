@@ -116,7 +116,7 @@ const Ticket = () => {
 
                   <Box className="grid grid-cols-5 gap-6 pl-0 md:grid-cols-5 md:gap-4">
                     <Box className="col-span-5 flex flex-col items-center justify-center md:col-span-2">
-                      <QRCode value={t.ticket_id} size={200} />
+                      <QRCode value={t.id} size={200} />
                     </Box>
 
                     <Box className="col-span-5 mt-0 md:col-span-3 md:mt-2 md:mr-8">
