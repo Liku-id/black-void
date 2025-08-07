@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import axios from '@/lib/api/axios-server';
-import { clearSession } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
@@ -27,7 +26,6 @@ export async function POST(request: NextRequest) {
     console.warn('Backend logout failed, proceeding with local logout:', err);
   }
 
-  await clearSession();
   cookieStore.delete('access_token');
   cookieStore.delete('refresh_token');
   cookieStore.delete('user_role');

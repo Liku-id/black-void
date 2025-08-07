@@ -9,6 +9,14 @@ export interface RegisterFormData {
   phoneNumber: string;
 }
 
+interface UserData {
+  id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  role?: string;
+}
+
 // Register form atom for multi-step registration
 export const registerFormAtom = atom<RegisterFormData>({
   email: '',
@@ -16,4 +24,15 @@ export const registerFormAtom = atom<RegisterFormData>({
   confirmPassword: '',
   fullName: '',
   phoneNumber: '',
+});
+
+// User auth
+export const authAtom = atom<{
+  isLoggedIn: boolean | null;
+  userData: UserData | null;
+  loading: boolean;
+}>({
+  isLoggedIn: null,
+  userData: null,
+  loading: true,
 });

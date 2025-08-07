@@ -20,7 +20,7 @@ interface FormDataLogin {
 
 const LoginForm = () => {
   const router = useRouter();
-  const { checkAuth } = useAuth();
+  const { setAuthUser } = useAuth();
   const pathname = usePathname();
   const destination: string = getSessionStorage('destination') ?? '';
 
@@ -39,7 +39,7 @@ const LoginForm = () => {
       const response = await axios.post('/api/auth/login', formData);
 
       if (response.status === 200) {
-        await checkAuth(); // Refresh auth state
+        setAuthUser(response.data.data);
 
         // handle redirect based on current path
         if (pathname === '/ticket/auth') {

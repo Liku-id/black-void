@@ -79,7 +79,7 @@ export default function ScannerPage() {
             visitorName: ticketData.visitor_name,
             ticketName: ticketData.ticket_name,
             eventDate: ticketData.redeemed_at,
-            ticketId: ticketId,
+            ticketId: ticketData.ticket_id || ticketId,
             message: 'Ticket successfully redeemed!',
           });
 
@@ -90,16 +90,20 @@ export default function ScannerPage() {
             visitorName: ticketData.visitor_name,
             ticketName: ticketData.ticket_name,
             eventDate: ticketData.redeemed_at,
-            ticketId: ticketId,
+            ticketId: ticketData.ticket_id || ticketId,
             message: 'This ticket has already been redeemed',
           });
 
           errorSound.current?.play();
         } else {
+          const message =
+            ticketData.ticket_status === 'cancelled'
+              ? 'This ticket has been cancelled and cannot be used'
+              : 'Ticket not active. Please complete payment or confirmation';
           setScannedData({
             status: 'invalid_ticket',
-            ticketId: ticketId,
-            message: `Invalid ticket status: ${ticketData.status}`,
+            ticketId: ticketData.ticket_id || ticketId,
+            message,
           });
 
           errorSound.current?.play();

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
-import { saveSession, setAuthCookies } from '@/lib/session';
+import { setAuthCookies } from '@/lib/session';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,12 +16,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // Save session with user data
-    await saveSession({
-      isLoggedIn: true,
-      user: body.user,
-    });
 
     // Set cookies using helper
     await setAuthCookies({

@@ -18,31 +18,28 @@ import LogOutModal from './logout-modal';
 export default function Header() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { isLoggedIn, userData, checkAuth } = useAuth();
+  const { isLoggedIn, userData, checkAuth, loading } = useAuth();
 
   // Initialize state
   const [openMenu, setOpenMenu] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingLogout, setLoadingLogout] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
 
   // Logout
   const onLogout = async () => {
     setError('');
-    setLoading(true);
+    setLoadingLogout(true);
     try {
-      const response = await axios.post('/api/auth/logout');
-      if (response.status === 200) {
-        setOpenMenu(false);
-        setOpenLogoutModal(false);
-        checkAuth(); // Refresh auth state
-        router.replace('/');
-      }
+      await axios.post('/api/auth/logout');
+      setOpenMenu(false);
+      setOpenLogoutModal(false);
+      await checkAuth(); // reset auth global
+      router.replace('/');
     } catch (error) {
-      console.error(error);
       setError(getErrorMessage(error));
     } finally {
-      setLoading(false);
+      setLoadingLogout(false);
     }
   };
 
@@ -79,12 +76,14 @@ export default function Header() {
           <Link
             href="mailto:support@wukong.co.id"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <Typography
               type="body"
               size={16}
               color="text-black"
-              className="hover:text-green ml-6 cursor-pointer">
+              className="hover:text-green ml-6 cursor-pointer"
+            >
               Contact Us
             </Typography>
           </Link>
@@ -103,17 +102,17 @@ export default function Header() {
             </Typography>
           </Link>
 
-          {isLoggedIn === null && (
+          {loading && (
             <Box className="ml-6 h-8 w-18 animate-pulse rounded-md bg-gray-200" />
           )}
 
-          {isLoggedIn === false && (
+          {!loading && !isLoggedIn && (
             <Link id="login_button" href="/login" className="ml-6">
               <Button>Log In</Button>
             </Link>
           )}
 
-          {isLoggedIn === true && userData && (
+          {!loading && isLoggedIn && userData && (
             <ProfileMenu
               userData={userData}
               setOpenModal={setOpenLogoutModal}
@@ -144,7 +143,8 @@ export default function Header() {
           <Box
             onClick={() => setOpenMenu(true)}
             aria-label="Menu"
-            className="cursor-pointer">
+            className="cursor-pointer"
+          >
             <Image src={burgerIcon} alt="Menu" width={28} height={28} />
           </Box>
         </Box>
@@ -152,7 +152,8 @@ export default function Header() {
       {/* Mobile Fullscreen Menu Popup */}
       <Box
         className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} flex h-full min-h-screen flex-col`}
-        style={{ willChange: 'transform' }}>
+        style={{ willChange: 'transform' }}
+      >
         <Box className="flex items-start justify-between">
           <Link href="/" aria-label="Home">
             <Image
@@ -186,7 +187,8 @@ export default function Header() {
             href="mailto:support@wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-green mb-6">
+            className="hover:text-green mb-6"
+          >
             <Typography type="body" size={16} color="text-white">
               Contact Us
             </Typography>
@@ -215,7 +217,7 @@ export default function Header() {
         open={openLogoutModal}
         onClose={() => setOpenLogoutModal(false)}
         onLogout={onLogout}
-        loading={loading}
+        loading={loadingLogout}
       />
     </header>
   );
