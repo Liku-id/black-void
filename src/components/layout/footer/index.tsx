@@ -72,7 +72,7 @@ const Footer = () => {
                 About Us
               </Link>
               <Link
-                href="/terms-and-conditions"
+                href="/term-and-condition"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Terms & Conditions
               </Link>
@@ -103,14 +103,14 @@ const Footer = () => {
               <Box className="mb-2 flex items-center gap-4">
                 <Image src={smsIcon} alt="sms" width={24} height={24} />
                 <Link
-                  href="https://wa.me/6281388119390"
+                  href="https://wa.me/6285121328284"
                   target="_blank"
                   rel="noopener noreferrer">
                   <Typography
                     type="body"
                     color="text-white"
                     className="cursor-pointer text-[14px] transition">
-                    +62 813-8811-9390
+                    +62 851-2132-8284
                   </Typography>
                 </Link>
               </Box>

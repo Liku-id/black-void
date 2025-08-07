@@ -25,7 +25,12 @@ export default function PaymentStatus() {
     const adminFee = Math.round(
       subtotal * ((data.transaction.event.adminFee ?? 0) / 100)
     );
-    const paymentMethodFee = data.transaction.paymentMethod.paymentMethodFee < 1 ? Math.round((subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100) : data.transaction.paymentMethod.paymentMethodFee;
+    const paymentMethodFee =
+      data.transaction.paymentMethod.paymentMethodFee < 1
+        ? Math.round(
+            (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
+          )
+        : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(
       subtotal * Number(process.env.NEXT_PUBLIC_PB1 || 0.1)
     );
@@ -62,6 +67,16 @@ export default function PaymentStatus() {
         </Box>
       </Container>
     );
+
+  if (data.transaction.status === 'pending') {
+    return (
+      <Container className="flex justify-center">
+        <Box className="min-w-full px-4 sm:min-w-[485px] sm:px-0">
+          <Box className="mb-4 h-[700px] w-full animate-pulse bg-gray-300" />
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container className="flex justify-center">

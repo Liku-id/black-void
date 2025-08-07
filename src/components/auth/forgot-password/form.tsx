@@ -35,7 +35,9 @@ const ForgotPasswordForm = () => {
         setSentEmail(formData.email);
         setModalOpen(true);
         if (response.data.token) {
-          router.replace(`/reset-password?token=${response.data.token}&email=${formData.email}`);
+          router.replace(
+            `/reset-password?token=${response.data.token}&email=${formData.email}`
+          );
         }
       }
     } catch (error) {
@@ -67,8 +69,7 @@ const ForgotPasswordForm = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           <TextField
             id="email_field"
             name="email"
