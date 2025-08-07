@@ -88,14 +88,19 @@ export default function Header() {
             </Typography>
           </Link>
 
-          <Typography
-            type="body"
-            size={16}
-            color="text-black"
-            className="hover:text-green ml-6 cursor-pointer"
-          >
-            Become Creator ?
-          </Typography>
+          <Link
+            href="https://form.typeform.com/to/kHYsLPnZ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-green">
+            <Typography
+              type="body"
+              size={16}
+              color="text-black"
+              className="hover:text-green ml-6 cursor-pointer">
+              Become Creator ?
+            </Typography>
+          </Link>
 
           {loading && (
             <Box className="ml-6 h-8 w-18 animate-pulse rounded-md bg-gray-200" />
@@ -188,7 +193,11 @@ export default function Header() {
               Contact Us
             </Typography>
           </Link>
-          <Link href="#" className="hover:text-green">
+          <Link
+            href="https://form.typeform.com/to/kHYsLPnZ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-green">
             <Typography type="body" size={16} color="text-white">
               Become Creator ?
             </Typography>

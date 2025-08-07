@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Add multiple ticketTypeIds if provided
-    ticketTypeIds.forEach((id) => {
+    ticketTypeIds.forEach(id => {
       queryParams.append('ticketTypeIds', id);
     });
 

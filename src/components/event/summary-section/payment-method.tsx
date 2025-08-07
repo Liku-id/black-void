@@ -59,6 +59,7 @@ const PaymentMethodAccordion: React.FC<PaymentMethodAccordionProps> = ({
         <Box className="grid grid-cols-2 gap-4 pb-3">
           {filtered.map((method: any) => (
             <Radio
+              id={`${method.paymentCode.toLowerCase()}_payment`}
               key={method.id}
               checked={selectedPayment?.id === method.id}
               onChange={() => setSelectedPayment(method)}

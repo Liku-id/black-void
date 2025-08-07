@@ -78,7 +78,9 @@ const Ticket = () => {
               Your Ticket
             </Typography>
             <Box className="block">
-              <Button onClick={handleDownload}>Download</Button>
+              <Button id="download_button" onClick={handleDownload}>
+                Download
+              </Button>
               {error && (
                 <Typography
                   type="body"

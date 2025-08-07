@@ -45,8 +45,8 @@ const logoutUser = async () => {
 };
 
 axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     const originalRequest = error.config;
 
     if (originalRequest.url?.includes('/auth/login')) {

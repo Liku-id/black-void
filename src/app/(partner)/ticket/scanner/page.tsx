@@ -57,7 +57,7 @@ export default function ScannerPage() {
     setLoading(true);
     setError(null);
     setShowResult(true); // Set this IMMEDIATELY to stop scanner
-    setScanCount((prev) => prev + 1);
+    setScanCount(prev => prev + 1);
 
     // Stop camera immediately to prevent further scans
     setCameraStarted(false);
@@ -176,20 +176,20 @@ export default function ScannerPage() {
   const getStatusIcon = () => {
     if (loading)
       return (
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
       );
     if (scannedData?.status === 'success')
       return (
-        <CheckCircle className="w-8 h-8 text-green-400 animate-success-pulse" />
+        <CheckCircle className="animate-success-pulse h-8 w-8 text-green-400" />
       );
     if (scannedData?.status === 'already_redeemed')
-      return <AlertCircle className="w-8 h-8 text-yellow-400" />;
+      return <AlertCircle className="h-8 w-8 text-yellow-400" />;
     if (
       scannedData?.status === 'failed' ||
       scannedData?.status === 'invalid_ticket'
     )
-      return <XCircle className="w-8 h-8 text-red-400 animate-error-shake" />;
-    return <QrCode className="w-8 h-8 text-gray-400" />;
+      return <XCircle className="animate-error-shake h-8 w-8 text-red-400" />;
+    return <QrCode className="h-8 w-8 text-gray-400" />;
   };
 
   const getStatusText = () => {
@@ -205,15 +205,15 @@ export default function ScannerPage() {
   };
 
   return (
-    <Box className="relative min-h-dvh bg-black text-white overflow-hidden">
+    <Box className="relative min-h-screen overflow-hidden bg-black text-white">
       {/* Audio */}
       <audio ref={successSound} src="/sounds/success.mp3" />
       <audio ref={errorSound} src="/sounds/error.mp3" />
 
       {/* Header */}
-      <Box className="absolute top-0 left-0 right-0 z-40 bg-black bg-opacity-80 backdrop-blur-sm">
+      <Box className="bg-opacity-80 absolute top-0 right-0 left-0 z-40 bg-black backdrop-blur-sm">
         <Box className="flex items-center justify-between">
-          <Box className="flex items-center gap-3 absolute top-16 left-6">
+          <Box className="absolute top-16 left-6 flex items-center gap-3">
             {getStatusIcon()}
             <Box>
               <Typography size={16} className="font-semibold">
@@ -228,9 +228,8 @@ export default function ScannerPage() {
           {showResult && (
             <Button
               onClick={resetScanner}
-              className="flex items-center gap-2 bg-white text-black hover:bg-gray-100"
-            >
-              <RotateCcw className="w-4 h-4" />
+              className="flex items-center gap-2 bg-white text-black hover:bg-gray-100">
+              <RotateCcw className="h-4 w-4" />
               Scan Again
             </Button>
           )}
@@ -250,24 +249,24 @@ export default function ScannerPage() {
       )}
 
       {/* Scanner Box Overlay */}
-      <Box className="absolute inset-0 flex flex-col items-center justify-center z-30 pt-20">
-        <Box className="w-80 h-80 relative">
+      <Box className="absolute inset-0 z-30 flex flex-col items-center justify-center pt-20">
+        <Box className="relative h-80 w-80">
           <Box
             className="absolute inset-0 z-0 rounded-lg"
             style={{ boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.7)' }}
           />
 
           {/* Green Corners */}
-          <Box className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-green-400 rounded-tl-lg z-10 animate-corner-glow" />
-          <Box className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-green-400 rounded-tr-lg z-10 animate-corner-glow" />
-          <Box className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-green-400 rounded-bl-lg z-10 animate-corner-glow" />
-          <Box className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-green-400 rounded-br-lg z-10 animate-corner-glow" />
+          <Box className="animate-corner-glow absolute top-0 left-0 z-10 h-8 w-8 rounded-tl-lg border-t-4 border-l-4 border-green-400" />
+          <Box className="animate-corner-glow absolute top-0 right-0 z-10 h-8 w-8 rounded-tr-lg border-t-4 border-r-4 border-green-400" />
+          <Box className="animate-corner-glow absolute bottom-0 left-0 z-10 h-8 w-8 rounded-bl-lg border-b-4 border-l-4 border-green-400" />
+          <Box className="animate-corner-glow absolute right-0 bottom-0 z-10 h-8 w-8 rounded-br-lg border-r-4 border-b-4 border-green-400" />
 
           {/* Loading Overlay */}
           {loading && (
-            <Box className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg z-20">
+            <Box className="bg-opacity-50 absolute inset-0 z-20 flex items-center justify-center rounded-lg bg-black">
               <Box className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-2"></div>
+                <div className="mx-auto mb-2 h-12 w-12 animate-spin rounded-full border-b-2 border-green-400"></div>
                 <Typography size={14} className="text-green-400">
                   Processing Ticket...
                 </Typography>
@@ -278,8 +277,7 @@ export default function ScannerPage() {
 
         <Typography
           size={14}
-          className="mt-6 text-white text-center px-6 py-3 bg-black bg-opacity-70 backdrop-blur-sm rounded-xl border border-gray-700"
-        >
+          className="bg-opacity-70 mt-6 rounded-xl border border-gray-700 bg-black px-6 py-3 text-center text-white backdrop-blur-sm">
           {loading
             ? 'Processing ticket...'
             : showResult
@@ -292,9 +290,9 @@ export default function ScannerPage() {
 
       {/* Camera Loading - Only show briefly during initial load */}
       {(!cameraStarted || !cameraInitialized) && !showResult && (
-        <Box className="absolute inset-0 flex items-center justify-center text-gray-400 bg-black z-40">
+        <Box className="absolute inset-0 z-40 flex items-center justify-center bg-black text-gray-400">
           <Box className="text-center">
-            <Box className="w-20 h-20 border-2 border-gray-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+            <Box className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-xl border-2 border-gray-600">
               <QrCode size={40} />
             </Box>
             <Typography size={16} className="mb-2">
@@ -309,9 +307,9 @@ export default function ScannerPage() {
 
       {/* Error Display */}
       {error && !showResult && (
-        <Box className="absolute top-20 left-4 right-4 z-50">
-          <Box className="bg-red-500 text-white p-4 rounded-lg flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+        <Box className="absolute top-20 right-4 left-4 z-50">
+          <Box className="flex items-center gap-3 rounded-lg bg-red-500 p-4 text-white">
+            <AlertCircle className="h-5 w-5 flex-shrink-0" />
             <Typography size={14}>{error}</Typography>
           </Box>
         </Box>
@@ -319,12 +317,11 @@ export default function ScannerPage() {
 
       {/* Slide-Up Result */}
       <Box
-        className={`absolute bottom-0 left-0 w-full scanner-transition z-50 ${
+        className={`scanner-transition absolute bottom-0 left-0 z-50 w-full ${
           showResult
             ? 'translate-y-0 opacity-100'
             : 'translate-y-full opacity-0'
-        }`}
-      >
+        }`}>
         {scannedData && (
           <TicketInfoCard data={scannedData} resetScanner={resetScanner} />
         )}
