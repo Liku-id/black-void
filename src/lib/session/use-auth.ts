@@ -9,7 +9,7 @@ export function useAuth() {
   const [auth, setAuth] = useAtom(authAtom);
 
   const checkAuth = useCallback(async () => {
-    setAuth((prev) => ({ ...prev, loading: true }));
+    setAuth(prev => ({ ...prev, loading: true }));
     try {
       const res = await axios.get('/api/auth/me');
       setAuth({

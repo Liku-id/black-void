@@ -205,7 +205,7 @@ export default function ScannerPage() {
   };
 
   return (
-    <Box className="relative min-h-screen overflow-hidden bg-black text-white">
+    <Box className="relative min-h-dvh overflow-hidden bg-black text-white">
       {/* Audio */}
       <audio ref={successSound} src="/sounds/success.mp3" />
       <audio ref={errorSound} src="/sounds/error.mp3" />
@@ -249,7 +249,7 @@ export default function ScannerPage() {
       )}
 
       {/* Scanner Box Overlay */}
-      <Box className="absolute inset-0 z-30 flex flex-col items-center justify-center pt-20">
+      <Box className="absolute inset-0 z-30 flex flex-col items-center justify-center">
         <Box className="relative h-80 w-80">
           <Box
             className="absolute inset-0 z-0 rounded-lg"

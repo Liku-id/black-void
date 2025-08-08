@@ -1,68 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  // Initial
+  // Configuration
   const pathname = req.nextUrl.pathname;
   const accessToken = req.cookies.get('access_token')?.value;
-  const userRole = req.cookies.get('user_role')?.value;
+  const userRole = req.cookies.get('user_role')?.value || '';
 
-  // Routes restricted when logged in
-  const notAllowWhenLogin = [
+  const scannerRoles = ['admin', 'ground_staff'];
+  const restrictedWhenLoggedIn = [
     '/ticket/auth',
     '/login',
     '/change-password',
     '/reset-password',
     '/register',
   ];
-
-  // Routes restricted when not logged in
-  const guardWhenNotLogin = ['/my-tickets'];
-
-  // Routes restricted when role is not authorized
-  const staffAccess = ['/ticket/scanner'];
-
-  const buyerAccess = [
-    '/ticket/auth',
-    '/login',
-    '/change-password',
-    '/reset-password',
-    '/register',
-    '/even',
+  const protectedRoutes = ['/my-tickets'];
+  const staffOnlyRoutes = ['/ticket/scanner'];
+  const buyerOnlyRoutes = [
+    '/event',
     '/transaction',
+    '/cookie-policy',
+    '/privacy-policy',
+    '/term-and-condition',
   ];
 
-  // Validation
-  const isRestrictedWhenLoggedIn = notAllowWhenLogin.includes(pathname);
-  const isRestrictedWhenNotLoggedIn = guardWhenNotLogin.some(route =>
-    pathname.startsWith(route)
-  );
-  const isStaffPage = staffAccess.some((route) => pathname.startsWith(route));
-  const isBuyerPage = buyerAccess.some((route) => pathname.startsWith(route));
+  // Helper functions
+  const isRouteMatch = (routes: string[]) =>
+    routes.some((route) => pathname.startsWith(route));
+  const isStaffRole = () => scannerRoles.includes(userRole);
+  const redirect = (path: string) =>
+    NextResponse.redirect(new URL(path, req.url));
 
-  // Redirect logged-in users away from login-related pages
+  // Validation logic
+  const isRestrictedWhenLoggedIn = restrictedWhenLoggedIn.includes(pathname);
+  const isProtectedRoute = isRouteMatch(protectedRoutes);
+  const isStaffPage = isRouteMatch(staffOnlyRoutes);
+  const isBuyerPage = isRouteMatch(buyerOnlyRoutes);
+  const userIsStaff = isStaffRole();
+
+  // Redirect logged-in users from auth pages
   if (accessToken && isRestrictedWhenLoggedIn) {
-    return NextResponse.redirect(new URL('/', req.url));
+    return redirect(userIsStaff ? '/ticket/scanner' : '/');
   }
 
-  // Redirect non-logged-in users away from protected pages
-  if (!accessToken && isRestrictedWhenNotLoggedIn) {
-    return NextResponse.redirect(new URL('/login', req.url));
+  // Redirect unauthenticated users from protected routes
+  if (!accessToken && isProtectedRoute) {
+    return redirect('/login');
   }
 
-  // Redirect users with unauthorized roles away from specific pages
-  if (userRole !== 'admin' && isStaffPage) {
-    return NextResponse.redirect(new URL('/ticket/auth', req.url));
+  // Redirect non-staff from staff pages
+  if (!userIsStaff && isStaffPage) {
+    return redirect('/ticket/auth');
   }
 
-  // Redirect users staff from buyer access
-  if (userRole === 'admin' && isBuyerPage) {
-    return NextResponse.redirect(new URL('/ticket/scanner', req.url));
+  // Redirect staff from buyer pages
+  if (userIsStaff && isBuyerPage) {
+    return redirect('/ticket/scanner');
   }
 
+  // Add authorization header if authenticated
   if (accessToken) {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set('Authorization', `Bearer ${accessToken}`);
-
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 

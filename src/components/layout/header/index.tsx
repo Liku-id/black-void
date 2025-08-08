@@ -76,14 +76,12 @@ export default function Header() {
           <Link
             href="mailto:support@wukong.co.id"
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             <Typography
               type="body"
               size={16}
               color="text-black"
-              className="hover:text-green ml-6 cursor-pointer"
-            >
+              className="hover:text-green ml-6 cursor-pointer">
               Contact Us
             </Typography>
           </Link>
@@ -143,8 +141,7 @@ export default function Header() {
           <Box
             onClick={() => setOpenMenu(true)}
             aria-label="Menu"
-            className="cursor-pointer"
-          >
+            className="cursor-pointer">
             <Image src={burgerIcon} alt="Menu" width={28} height={28} />
           </Box>
         </Box>
@@ -152,8 +149,7 @@ export default function Header() {
       {/* Mobile Fullscreen Menu Popup */}
       <Box
         className={`fixed inset-0 z-[100] bg-black px-4 pt-6 transition-transform duration-300 ${openMenu ? 'pointer-events-auto translate-x-0 opacity-100' : 'pointer-events-none translate-x-full opacity-0'} flex h-full min-h-screen flex-col`}
-        style={{ willChange: 'transform' }}
-      >
+        style={{ willChange: 'transform' }}>
         <Box className="flex items-start justify-between">
           <Link href="/" aria-label="Home">
             <Image
@@ -187,8 +183,7 @@ export default function Header() {
             href="mailto:support@wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-green mb-6"
-          >
+            className="hover:text-green mb-6">
             <Typography type="body" size={16} color="text-white">
               Contact Us
             </Typography>
