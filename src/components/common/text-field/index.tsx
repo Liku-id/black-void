@@ -57,7 +57,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   );
   const inputClass = (disabled?: boolean) =>
     cn(
-      'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 focus:outline-none',
+      'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 focus:outline-none w-full',
       disabled && 'text-gray-400 cursor-not-allowed'
     );
 

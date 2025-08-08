@@ -49,6 +49,8 @@ const OrderPage = () => {
   const [contactDetail, setContactDetail] = useAtom(contactDetailAtom);
   const [initialSeconds, setInitialSeconds] = useState(900);
   const [secondsLeft, resetCountdown] = useCountdown(initialSeconds);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isVisitorDetailChecked, setIsVisitorDetailChecked] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<{
     id: string;
     name: string;
@@ -87,6 +89,12 @@ const OrderPage = () => {
   });
 
   const onContactSubmit = (data: FormDataContact) => {
+    if (isVisitorDetailChecked) {
+      visitorMethods.setValue(
+        'visitors.0.fullName',
+        contactMethods.getValues().fullName
+      );
+    }
     setContactDetail(prev => ({
       ...prev,
       full_name: data.fullName,
@@ -121,10 +129,10 @@ const OrderPage = () => {
   // Sticky logic
   const stickyRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const { isSticky, absoluteTop } = useStickyObserver(
+  const { isSticky, absoluteTop, isReady } = useStickyObserver(
     stickyRef as React.RefObject<HTMLDivElement>,
     sentinelRef as React.RefObject<HTMLDivElement>,
-    112
+    eventData && orderData ? 112 : 0
   );
 
   const isDisabled =
@@ -203,7 +211,7 @@ const OrderPage = () => {
   ]);
 
   useEffect(() => {
-    if (isLoggedIn && userData) {
+    if (isLoggedIn && userData && !isInitialized) {
       contactMethods.setValue('fullName', userData.fullName || '');
       contactMethods.setValue(
         'phoneNumber',
@@ -214,6 +222,7 @@ const OrderPage = () => {
         'countryCode',
         splitPhoneNumber(userData.phoneNumber || '').countryCode
       );
+      setIsInitialized(false);
     } else if (contactDetail) {
       contactMethods.setValue('fullName', contactDetail.full_name || '');
       contactMethods.setValue(
@@ -253,6 +262,8 @@ const OrderPage = () => {
               <Box className="relative mt-8 mb-25 lg:mb-0">
                 <Box className="absolute top-[-120px]" ref={visitorDetailRef} />
                 <VisitorDetailSection
+                  isVisitorDetailChecked={isVisitorDetailChecked}
+                  setIsVisitorDetailChecked={setIsVisitorDetailChecked}
                   visitorMethods={visitorMethods}
                   contactMethods={contactMethods}
                   tickets={orderData.tickets}
@@ -272,9 +283,9 @@ const OrderPage = () => {
                 'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
               : // Absolute mode
                 'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
-            ' hidden lg:block'
+            ' hidden lg:block z-1'
           }
-          style={!isSticky ? { top: absoluteTop } : {}}>
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
           <SummarySection
             eventData={eventData}
             tickets={orderData.tickets}

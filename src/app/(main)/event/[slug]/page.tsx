@@ -154,7 +154,7 @@ export default function Event() {
             (isSticky
               ? 'sticky top-30 right-8 bottom-10 -ml-[455px] w-[455px] self-start xl:right-37.5 xl:w-[455px] 2xl:right-[708px]'
               : 'absolute right-8 w-[455px] xl:right-37.5 xl:w-[455px]') +
-            ' hidden lg:block'
+            ' hidden lg:block z-1'
           }
           // Only apply absolute top when not sticky and ready
           style={!isSticky && isReady ? { top: absoluteTop } : {}}>
