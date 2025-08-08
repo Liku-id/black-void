@@ -15,7 +15,7 @@ export default function EventListSection() {
       <EventCard
         key={event.id}
         metaUrl={event.metaUrl}
-        image={event.eventAssets?.[0]?.asset?.url}
+        image={`/api/s3-proxy/${event.eventAssets?.[0]?.asset?.key}`}
         title={event.name}
         location={event.address || '-'}
         date={event.createdAt ? formatDate(event.createdAt, 'date') : '-'}

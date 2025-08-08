@@ -16,6 +16,7 @@
     "postinstall": "echo '⚠️  IMPORTANT: This project uses React 19. If you encounter peer dependency issues, run: npm install --legacy-peer-deps'"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.863.0",
     "@types/three": "^0.177.0",
     "axios": "1.10.0",
     "class-variance-authority": "^0.7.1",
