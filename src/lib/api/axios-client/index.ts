@@ -15,7 +15,7 @@ let failedQueue: Array<{
 }> = [];
 
 const processQueue = (error: any = null) => {
-  failedQueue.forEach((prom) => {
+  failedQueue.forEach(prom => {
     if (error) {
       prom.reject(error);
     } else {
