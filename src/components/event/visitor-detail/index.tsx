@@ -1,5 +1,5 @@
 'use client';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 // TODO: PHASE 2
 // import { useWatch } from 'react-hook-form';
@@ -16,18 +16,20 @@ import { fullName } from '@/utils/form-validation';
 import type { FormDataVisitor, Ticket, FormDataContact } from '../types';
 
 interface VisitorDetailSectionProps {
+  isVisitorDetailChecked: boolean;
+  setIsVisitorDetailChecked: React.Dispatch<React.SetStateAction<boolean>>;
   contactMethods: UseFormReturn<FormDataContact>;
   visitorMethods: UseFormReturn<FormDataVisitor>;
   tickets: Ticket[];
 }
 
 const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
+  isVisitorDetailChecked,
+  setIsVisitorDetailChecked,
   contactMethods,
   visitorMethods,
   tickets,
 }) => {
-  const [sameAsContact, setSameAsContact] = useState(false);
-
   // TODO: PHASE 2
   // const IDTypesOptions = [
   //   { label: 'KTP', value: 'ktp' },
@@ -48,8 +50,8 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
   );
 
   // Hapus useEffect, pindah ke onChange checkbox
-  const handleSameAsContactChange = (checked: boolean) => {
-    setSameAsContact(checked);
+  const handleVisitorDetailChecked = (checked: boolean) => {
+    setIsVisitorDetailChecked(checked);
 
     if (checked) {
       visitorMethods.setValue(
@@ -107,8 +109,8 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
             id="same_contact_detail_checkbox"
             size="sm"
             variant="white"
-            checked={sameAsContact}
-            onChange={e => handleSameAsContactChange(e.target.checked)}
+            checked={isVisitorDetailChecked}
+            onChange={e => handleVisitorDetailChecked(e.target.checked)}
             className="mb-6 bg-white text-xs font-light"
             disabled={!isContactSaved}>
             Same as contact details
@@ -134,7 +136,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                         required: 'Full name is required',
                         validate: fullName,
                       }}
-                      disabled={sameAsContact && idx === 0}
+                      disabled={isVisitorDetailChecked && idx === 0}
                     />
                   </Box>
                   {/* TODO: PHASE 2 */}

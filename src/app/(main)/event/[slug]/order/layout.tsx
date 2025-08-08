@@ -7,11 +7,9 @@ export default function AuthSegmentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main>
       <Suspense>
         <OrderHeader />
         {children}
       </Suspense>
-    </main>
   );
 }
