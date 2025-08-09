@@ -46,17 +46,20 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
         </Typography>
       </Box>
       <Box className="flex items-center">
-        {eventData.eventOrganizer?.asset?.url ? (
-          <Image
-            src={eventData?.eventOrganize?.asset?.url}
-            alt="Owner Logo"
-            width={48}
-            height={48}
-            className="mr-4 rounded-[14px]"
-          />
-        ) : (
-          <Box className="mr-4 h-12 w-12 rounded-[14px] bg-white" />
-        )}
+        <Box className="mr-4 flex h-12 w-12 items-center rounded-[14px] bg-white">
+          {eventData.eventOrganizer?.asset?.url ? (
+            <Image
+              src={eventData?.eventOrganizer?.asset?.url}
+              alt="Owner Logos"
+              width={48}
+              height={48}
+              objectFit="contain"
+              unoptimized
+            />
+          ) : (
+            <Box className="mr-4 h-12 w-12 rounded-[14px] bg-white" />
+          )}
+        </Box>
         <Typography type="heading" size={30} color="text-white">
           {eventData.eventOrganizer?.name}
         </Typography>
