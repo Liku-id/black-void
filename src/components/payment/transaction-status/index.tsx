@@ -111,6 +111,7 @@ export default function PaymentStatus() {
                   alt="logo"
                   width={48}
                   height={48}
+                  unoptimized
                 />
               ) : (
                 <Box className="border-gray h-12 w-12 rounded-[14px] border bg-white"></Box>
