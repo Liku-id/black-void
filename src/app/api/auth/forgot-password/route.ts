@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const { data } = await axios.post('/v1/auth/password/request', formData);
 
     let token = '';
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.STAGING === 'true') {
       token = data.message?.split('Token: ')[1];
     }
 

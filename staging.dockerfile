@@ -26,7 +26,7 @@ RUN npm run build
 # Step 2: Use a minimal image for running the app
 FROM node:20-alpine AS runner
 
-ENV NODE_ENV=develop
+ENV NODE_ENV=production
 
 WORKDIR /app
 
