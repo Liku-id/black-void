@@ -36,7 +36,10 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/login', formData);
+      const response = await axios.post('/api/auth/login', {
+        origin: pathname,
+        form: formData,
+      });
 
       if (response.status === 200) {
         setAuthUser(response.data.data);

@@ -283,7 +283,7 @@ const OrderPage = () => {
                 'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
               : // Absolute mode
                 'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
-            ' hidden lg:block z-1'
+            ' z-1 hidden lg:block'
           }
           style={!isSticky && isReady ? { top: absoluteTop } : {}}>
           <SummarySection

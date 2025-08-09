@@ -37,7 +37,6 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
               height={210}
               className="object-cover"
               draggable={false}
-              unoptimized
             />
           ))}
         </Slider>
