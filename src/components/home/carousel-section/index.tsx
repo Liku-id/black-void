@@ -52,7 +52,6 @@ export default function CarouselSection() {
                   height={200}
                   className="h-full w-full object-cover"
                   draggable={false}
-                  unoptimized
                 />
               ))}
             </Slider>

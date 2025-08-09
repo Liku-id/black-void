@@ -6,7 +6,6 @@ export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('access_token')?.value;
   const userRole = req.cookies.get('user_role')?.value || '';
 
-  const scannerRoles = ['admin', 'ground_staff'];
   const restrictedWhenLoggedIn = [
     '/ticket/auth',
     '/login',
@@ -26,8 +25,7 @@ export function middleware(req: NextRequest) {
 
   // Helper functions
   const isRouteMatch = (routes: string[]) =>
-    routes.some((route) => pathname.startsWith(route));
-  const isStaffRole = () => scannerRoles.includes(userRole);
+    routes.some(route => pathname.startsWith(route));
   const redirect = (path: string) =>
     NextResponse.redirect(new URL(path, req.url));
 
@@ -36,7 +34,8 @@ export function middleware(req: NextRequest) {
   const isProtectedRoute = isRouteMatch(protectedRoutes);
   const isStaffPage = isRouteMatch(staffOnlyRoutes);
   const isBuyerPage = isRouteMatch(buyerOnlyRoutes);
-  const userIsStaff = isStaffRole();
+  const userIsStaff = userRole === 'ground_staff';
+  const userIsAdmin = userRole === 'admin';
 
   // Redirect logged-in users from auth pages
   if (accessToken && isRestrictedWhenLoggedIn) {
@@ -49,7 +48,7 @@ export function middleware(req: NextRequest) {
   }
 
   // Redirect non-staff from staff pages
-  if (!userIsStaff && isStaffPage) {
+  if (!userIsStaff && !userIsAdmin && isStaffPage) {
     return redirect('/ticket/auth');
   }
 
