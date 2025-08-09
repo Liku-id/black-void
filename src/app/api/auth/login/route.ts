@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message:
-            'Access denied. Your account role is not permitted to perform this action.',
+            'Access denied. Your account is not permitted to perform this action',
         },
         { status: 403 }
       );
