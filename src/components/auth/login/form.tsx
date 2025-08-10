@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { email } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
-import { Button, TextField, Typography } from '@/components';
+import { Box, Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
@@ -28,6 +28,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showExpiryMessage, setShowExpiryMessage] = useState(false);
 
   const methods = useForm<FormDataLogin>({});
 
@@ -50,6 +51,7 @@ const LoginForm = () => {
         } else {
           const redirectPath = destination || '/';
           setSessionStorage('destination', '');
+          setSessionStorage('isExpiry', '');
           router.replace(redirectPath);
         }
       }
@@ -61,10 +63,33 @@ const LoginForm = () => {
     }
   };
 
+  useEffect(() => {
+    const isExpiry = getSessionStorage('isExpiry');
+    if (isExpiry) {
+      setShowExpiryMessage(true);
+
+      // After 5 seconds, hide the message and reset sessionStorage
+      const timeout = setTimeout(() => {
+        setShowExpiryMessage(false);
+        setSessionStorage('isExpiry', '');
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, []);
+
   return (
     <>
       {/* Loading */}
       {loading && <Loading />}
+
+      {/* Expiry message */}
+      {showExpiryMessage && (
+        <Box
+          className={`bg-danger fixed top-5 left-1/2 z-[9999] -translate-x-1/2 rounded-md px-5 py-2 text-white transition-opacity duration-500 ease-in-out ${showExpiryMessage ? 'opacity-100' : 'opacity-0'} `}>
+          Session has expired. Please log in again to continue.
+        </Box>
+      )}
 
       <FormProvider {...methods}>
         <form

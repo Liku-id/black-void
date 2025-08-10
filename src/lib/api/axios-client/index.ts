@@ -34,6 +34,7 @@ const logoutUser = async () => {
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname + window.location.search;
       setSessionStorage('destination', currentPath);
+      setSessionStorage('isExpiry', '1');
 
       if (window.location.pathname.includes('/ticket/scanner')) {
         window.location.href = '/ticket/auth';
