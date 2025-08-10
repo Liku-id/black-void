@@ -21,15 +21,13 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         type="heading"
         size={22}
         color="text-white"
-        className="leading-none"
-      >
+        className="leading-none">
         Terms & Conditions
       </Typography>
       <Typography
         type="body"
         size={12}
-        className="my-3 max-h-[120px] overflow-hidden text-white"
-      >
+        className="my-3 max-h-[120px] overflow-hidden text-white">
         {showFull
           ? termAndConditions
           : termAndConditions.slice(0, maxChar) + (isLong ? '...' : '')}
@@ -38,8 +36,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         <button
           className="mt-1 text-xs text-blue-500 underline"
           onClick={() => setShowFull(!showFull)}
-          type="button"
-        >
+          type="button">
           {!showFull ? 'See details' : 'Show less'}
         </button>
       )}
@@ -48,8 +45,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         type="heading"
         size={22}
         color="text-white"
-        className="mt-8 mb-3 lg:mt-10"
-      >
+        className="mt-8 mb-3 lg:mt-10">
         Promotor Info
       </Typography>
       <Box className="flex items-center gap-3">
@@ -71,8 +67,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
           type="body"
           size={14}
           color="text-white"
-          className="font-bold"
-        >
+          className="font-bold">
           {eventOrganizer.name}
         </Typography>
       </Box>
