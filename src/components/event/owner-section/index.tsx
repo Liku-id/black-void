@@ -49,17 +49,20 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         Promotor Info
       </Typography>
       <Box className="flex items-center gap-3">
-        {eventOrganizer?.asset?.url ? (
-          <Image
-            src={eventOrganizer?.asset?.url}
-            alt="Owner Logo"
-            width={48}
-            height={48}
-            className="mr-4 rounded-[14px]"
-          />
-        ) : (
-          <Box className="mr-4 h-12 w-12 rounded-[14px] bg-white" />
-        )}
+        <Box className="mr-4 flex h-12 w-12 items-center rounded-[14px] bg-white">
+          {eventOrganizer?.asset?.url ? (
+            <Image
+              src={eventOrganizer?.asset?.url}
+              alt="Owner Logo"
+              width={48}
+              height={48}
+              objectFit="contain"
+              unoptimized
+            />
+          ) : (
+            <Box className="mr-4 h-12 w-12 rounded-[14px] bg-white" />
+          )}
+        </Box>
         <Typography
           type="body"
           size={14}
