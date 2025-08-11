@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, ReactNode, useRef } from 'react';
 import { Box } from '@/components';
+import { useRouter } from 'next/navigation';
 
 /**
  * Example usage:
@@ -22,6 +23,7 @@ interface SliderProps {
   className?: string;
   draggable?: boolean;
   pagination?: boolean;
+  pages?: string[];
 }
 
 export function clampIndex(
@@ -50,9 +52,11 @@ export function Slider({
   className = '',
   draggable = true,
   pagination = false,
+  pages,
 }: SliderProps) {
+  const router = useRouter();
   const childrenArray = Array.isArray(children) ? children : [children];
-  const totalItemWidth = itemWidth + gap * 4;
+  const totalItemWidth = itemWidth + gap;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -71,8 +75,8 @@ export function Slider({
     const onEnd = () => {
       if (isDraggingRef.current) handleEnd();
     };
-    window.addEventListener('mouseup', onEnd);
-    window.addEventListener('touchend', onEnd);
+    window.addEventListener('mouseup', onEnd, { passive: true });
+    window.addEventListener('touchend', onEnd, { passive: true });
     return () => {
       window.removeEventListener('mouseup', onEnd);
       window.removeEventListener('touchend', onEnd);
@@ -80,14 +84,14 @@ export function Slider({
   }, [isDragging]);
 
   useEffect(() => {
-    if (!autoScroll) return;
-    const interval = setInterval(() => {
+    if (!autoScroll || isDragging) return;
+    const id = setInterval(() => {
       setCurrentIndex(prev =>
         prev + 1 >= childrenArray.length ? 0 : prev + 1
       );
     }, scrollInterval);
-    return () => clearInterval(interval);
-  }, [autoScroll, scrollInterval, childrenArray.length]);
+    return () => clearInterval(id);
+  }, [autoScroll, scrollInterval, childrenArray.length, isDragging]);
 
   const handleStart = (x: number) => {
     setIsDragging(true);
@@ -108,7 +112,9 @@ export function Slider({
     if (!isDragging) return;
     setIsDragging(false);
     if (!hasDragged) {
+      const href = pages?.[currentIndex];
       setDragOffset(0);
+      if (href) router.push(href);
       return;
     }
     const newIndex = clampIndex(
@@ -119,7 +125,6 @@ export function Slider({
     );
     setCurrentIndex(newIndex);
     setDragOffset(0);
-    setHasDragged(false);
   };
 
   const handlePaginationClick = (index: number) => {
@@ -132,7 +137,7 @@ export function Slider({
     <Box className={className + ' flex flex-col items-center'}>
       <Box
         className={
-          `relative w-full overflow-hidden` +
+          `relative w-full touch-pan-y overflow-hidden` +
           (draggable
             ? ` cursor-grab${isDragging ? ' cursor-grabbing' : ''}`
             : '')
@@ -148,9 +153,9 @@ export function Slider({
             }
           : {})}>
         <Box
-          className={'flex w-full transition-transform duration-300 ease-out'}
+          className="flex w-full transition-transform duration-300 ease-out"
           style={{
-            transform: `translateX(-${currentIndex * itemWidth + dragOffset}px)`,
+            transform: `translateX(-${currentIndex * totalItemWidth + dragOffset}px)`,
             gap: `${gap}px`,
           }}>
           {childrenArray.map((child, index) => (
@@ -163,7 +168,7 @@ export function Slider({
           ))}
         </Box>
       </Box>
-      {/* Pagination Bar Bawah */}
+      {/* Pagination */}
       {pagination && (
         <Box className="mt-4 flex w-full flex-row justify-center gap-2">
           {childrenArray.map((_, index) => (
