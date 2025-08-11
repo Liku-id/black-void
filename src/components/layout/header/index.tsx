@@ -101,7 +101,7 @@ export default function Header() {
           </Link>
 
           {loading && (
-            <Box className="ml-6 h-8 w-18 animate-pulse rounded-md bg-gray-200" />
+            <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
 
           {!loading && !isLoggedIn && (
