@@ -90,6 +90,7 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
+                unoptimized
               />
             )}
             {pages.length > 0 ? (
@@ -102,6 +103,7 @@ export function Carousel({
                   height={height}
                   sizes={sizes}
                   draggable={false}
+                  unoptimized
                 />
               </Link>
             ) : (
@@ -113,6 +115,7 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
+                unoptimized
               />
             )}
           </>
@@ -126,6 +129,7 @@ export function Carousel({
               height={height}
               sizes={sizes}
               draggable={false}
+              unoptimized
             />
           </Link>
         )}
