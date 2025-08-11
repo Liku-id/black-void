@@ -124,7 +124,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                   size={22}
                   color="text-black"
                   className="mb-1 lg:mb-4">
-                  Tiket {ticket.name} #{idx + 1}
+                  Ticket {ticket.name} #{idx + 1}
                 </Typography>
                 <Box className="mb-4 flex gap-8">
                   <Box className="flex-1">

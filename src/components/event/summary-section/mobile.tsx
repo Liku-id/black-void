@@ -78,7 +78,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             size={12}
             color="text-black"
             className="font-light">
-            Total Payments:{' '}
+            Total Payment:{' '}
             <span className="font-bold">{ticketCount} Ticket</span>
           </Typography>
           <Box className="mt-1 flex items-start justify-between">

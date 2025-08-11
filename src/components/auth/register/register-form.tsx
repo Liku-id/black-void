@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import axios from '@/lib/api/axios-client';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
@@ -177,7 +178,6 @@ const RegisterForm = () => {
                 endIcon={showPassword ? eyeOpened : eyeClosed}
                 onEndIconClick={() => setShowPassword(!showPassword)}
               />
-
               <Box className="relative mb-8 flex items-center gap-4">
                 <TextField
                   id="confirm_password_field"
@@ -208,7 +208,6 @@ const RegisterForm = () => {
                   </Box>
                 )}
               </Box>
-
               {/* Password Strength */}
               <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 px-3 md:grid-cols-2">
                 <Checkbox checked={passwordChecks.length} disabled>
@@ -232,7 +231,6 @@ const RegisterForm = () => {
                   </Typography>
                 </Checkbox>
               </Box>
-
               {/* Checkbox Terms */}
               <Box className="mb-6 flex w-[335px]">
                 <Checkbox
@@ -241,18 +239,29 @@ const RegisterForm = () => {
                   onChange={() => setAgree(!agree)}>
                   <Typography size={12} className="text-white">
                     I agree to the{' '}
-                    <span className="cursor-pointer underline">
+                    <Link
+                      href="/term-and-condition"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      onMouseDown={e => e.stopPropagation()}
+                      className="cursor-pointer underline">
                       terms and conditions
-                    </span>{' '}
+                    </Link>{' '}
                     and{' '}
-                    <span className="cursor-pointer underline">
+                    <Link
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      onMouseDown={e => e.stopPropagation()}
+                      className="cursor-pointer underline">
                       privacy policy
-                    </span>{' '}
+                    </Link>{' '}
                     applicable at Wukong
                   </Typography>
                 </Checkbox>
               </Box>
-
               <Button
                 id="register_button"
                 data-testid="register_button"

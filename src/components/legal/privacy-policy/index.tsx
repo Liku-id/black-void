@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
   return (
     <section>
       <Container className="text-white">
-        <Box className="px-4">
+        <Box className="px-4 lg:px-8 xl:px-0">
           <Typography type="heading" size={24}>
             Privacy Policy
           </Typography>

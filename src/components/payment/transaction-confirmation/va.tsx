@@ -95,7 +95,7 @@ export default function PaymentConfirmationVA({
               color="text-muted"
               className="mb-6 font-light">
               Complete your booking in:{' '}
-              <span className="text-base text-red-500">
+              <span className="text-red font-bold">
                 {formatCountdownTime(secondsLeft)}
               </span>
             </Typography>

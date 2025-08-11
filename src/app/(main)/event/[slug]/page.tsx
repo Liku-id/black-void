@@ -43,14 +43,32 @@ export default function Event() {
     eventData ? 215 : 0
   );
 
-  // Ticket count change handler
-  const handleChangeCount = (id: string, delta: number) => {
-    setTickets((prev: any) =>
-      prev.map((t: any) =>
-        t.id === id ? { ...t, count: Math.max(0, t.count + delta) } : t
+const handleChangeCount = (id: string, delta: number) => {
+  setTickets((prev: any[]) => {
+    const target = prev.find(t => t.id === id);
+    if (!target) return prev;
+
+    const available = Math.max(0, (target.quantity ?? 0) - (target.purchased_amount ?? 0));
+    const nextCount = Math.max(
+      0,
+      Math.min(
+        target.max_order_quantity ?? Infinity,
+        Math.min(available, (target.count ?? 0) + delta)
       )
     );
-  };
+
+    if (nextCount === target.count) return prev;
+
+    const shouldResetOthers = nextCount > 0;
+
+    return prev.map(t => {
+      if (t.id === id) return { ...t, count: nextCount };
+      if (shouldResetOthers && (t.count ?? 0) !== 0) return { ...t, count: 0 };
+      return t;
+    });
+  });
+};
+
 
   const ticketSectionRef = useRef<HTMLDivElement>(null);
   const scrollToTickets = () => {

@@ -18,7 +18,7 @@ const TicketList: React.FC<{ tickets: TicketSummary[] }> = ({ tickets }) => (
             size={12}
             color="text-muted"
             className="font-light">
-            Total ticket: {t.count} Tiket
+            Total: {t.count} Tickets
           </Typography>
           <Typography
             type="body"
