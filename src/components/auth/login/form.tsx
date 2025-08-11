@@ -84,17 +84,17 @@ const LoginForm = () => {
       {loading && <Loading />}
 
       {/* Expiry message */}
-      {showExpiryMessage && (
-        <Box
-          className={`bg-danger fixed top-5 left-1/2 z-[9999] -translate-x-1/2 rounded-md px-5 py-2 text-white transition-opacity duration-500 ease-in-out ${showExpiryMessage ? 'opacity-100' : 'opacity-0'} `}>
-          Session has expired. Please log in again to continue.
-        </Box>
-      )}
+      <Box
+        className={`bg-danger fixed top-5 left-1/2 z-[9999] -translate-x-1/2 rounded-md px-5 py-2 text-white transition-opacity duration-500 ease-in-out ${showExpiryMessage ? 'opacity-100' : 'opacity-0'} `}
+      >
+        Session has expired. Please log in again to continue.
+      </Box>
 
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
             id="email_field"
             name="email"
