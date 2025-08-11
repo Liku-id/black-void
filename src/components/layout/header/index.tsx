@@ -96,7 +96,7 @@ export default function Header() {
               size={16}
               color="text-black"
               className="hover:text-green ml-6 cursor-pointer">
-              Become Creator ?
+              Become Creator?
             </Typography>
           </Link>
 
@@ -194,7 +194,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="hover:text-green">
             <Typography type="body" size={16} color="text-white">
-              Become Creator ?
+              Become Creator?
             </Typography>
           </Link>
           <Box className="flex-1" />
