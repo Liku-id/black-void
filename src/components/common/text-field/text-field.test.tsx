@@ -130,7 +130,7 @@ describe('TextField', () => {
 
       const input = screen.getByPlaceholderText('Email');
       expect(input).toHaveClass(
-        'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 outline-none focus:outline-none focus:ring-0 border-danger'
+        'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 focus:outline-none w-full border-danger'
       );
     });
   });

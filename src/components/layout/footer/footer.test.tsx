@@ -30,7 +30,7 @@ describe('Footer', () => {
 
   it('renders about links', () => {
     render(<Footer />);
-    expect(screen.getByText(/About Us/i)).toBeInTheDocument();
+    expect(screen.getByText(/ABOUT WUKONG/i)).toBeInTheDocument();
     expect(screen.getByText(/Terms & Conditions/i)).toBeInTheDocument();
     expect(screen.getByText(/Privacy Policy/i)).toBeInTheDocument();
     expect(screen.getByText(/Cookie Policy/i)).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Footer', () => {
 
   it('renders contact info', () => {
     render(<Footer />);
-    expect(screen.getByText(/\+62 813-8811-9390/i)).toBeInTheDocument();
+    expect(screen.getByText(/\+62 851-2132-8284/i)).toBeInTheDocument();
     expect(screen.getByText(/support@wukong.co.id/i)).toBeInTheDocument();
   });
 });

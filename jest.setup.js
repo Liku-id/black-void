@@ -18,6 +18,9 @@ jest.mock('next/navigation', () => ({
   usePathname() {
     return '/';
   },
+  useParams() {
+    return { id: 'test-id' };
+  },
 }));
 
 // Mock Three.js
@@ -46,7 +49,7 @@ jest.mock('three', () => ({
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -67,7 +70,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: props => <img {...props} />,
+  default: (props) => <img {...props} />,
 }));
 
 if (typeof global.Request === 'undefined') {
@@ -75,7 +78,7 @@ if (typeof global.Request === 'undefined') {
 }
 if (typeof global.NextResponse === 'undefined') {
   global.NextResponse = {
-    json: jest.fn(data => data),
+    json: jest.fn((data) => data),
   };
 }
 if (typeof global.Response === 'undefined') {
@@ -85,3 +88,63 @@ if (typeof global.Response === 'undefined') {
     }
   };
 }
+
+// Mock axios
+const axiosMock = {
+  create: jest.fn(() => ({
+    interceptors: {
+      request: { use: jest.fn() },
+      response: { use: jest.fn() },
+    },
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+    defaults: {
+      baseURL: '',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  })),
+  default: {
+    interceptors: {
+      request: { use: jest.fn() },
+      response: { use: jest.fn() },
+    },
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+  isAxiosError: jest.fn((error) => {
+    return error && typeof error === 'object' && 'isAxiosError' in error;
+  }),
+};
+
+jest.mock('axios', () => axiosMock);
+
+// Mock axios-client specifically
+jest.mock('@/lib/api/axios-client', () => ({
+  default: {
+    interceptors: {
+      request: { use: jest.fn() },
+      response: { use: jest.fn() },
+    },
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+    defaults: {
+      baseURL: '',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  },
+}));
+
+// Mock jotai store
+jest.mock('jotai', () => ({
+  useAtom: jest.fn(() => [
+    { isLoggedIn: false, userData: null, loading: false },
+    jest.fn(),
+  ]),
+  atom: jest.fn((initialValue) => initialValue),
+}));
