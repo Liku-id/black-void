@@ -1,0 +1,56 @@
+{
+  "BCA Virtual Account": {
+    "name": "BCA Virtual Account",
+    "steps": [
+      "Login ke aplikasi BCA Mobile.",
+      "Pilih menu Transfer > Virtual Account.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  },
+  "BNI Virtual Account": {
+    "name": "BNI Virtual Account",
+    "steps": [
+      "Login ke aplikasi BNI Mobile Banking.",
+      "Pilih menu Transfer > Virtual Account Billing.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  },
+  "BRI Virtual Account": {
+    "name": "BRI Virtual Account",
+    "steps": [
+      "Login ke aplikasi BRImo.",
+      "Pilih menu Pembayaran > BRIVA.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  },
+  "MANDIRI Virtual Account": {
+    "name": "MANDIRI Virtual Account",
+    "steps": [
+      "Login ke aplikasi Livin' by Mandiri.",
+      "Pilih menu Bayar > Multipayment.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  },
+  "PERMATA Virtual Account": {
+    "name": "PERMATA Virtual Account",
+    "steps": [
+      "Login ke PermataMobile X.",
+      "Pilih menu Pembayaran > Virtual Account.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  },
+  "CIMB Virtual Account": {
+    "name": "CIMB Virtual Account",
+    "steps": [
+      "Login ke OCTO Mobile.",
+      "Pilih menu Transfer > Ke Rekening CIMB Niaga Lainnya.",
+      "Masukkan nomor VA dan nominal.",
+      "Konfirmasi pembayaran."
+    ]
+  }
+}
