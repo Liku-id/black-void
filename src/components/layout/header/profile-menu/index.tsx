@@ -69,7 +69,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
       {/* Animated Menu */}
       <Box
-        className={`absolute right-0 mt-4 w-75 origin-top-right border bg-white px-4 py-5 shadow-[4px_4px_0px_0px_#FFF] transition-all duration-300 lg:mt-9 ${
+        className={`absolute right-0 mt-4 hidden w-75 origin-top-right border bg-white px-4 py-5 shadow-[4px_4px_0px_0px_#FFF] transition-all duration-300 lg:mt-9 lg:block ${
           open
             ? 'pointer-events-auto scale-100 opacity-100'
             : 'pointer-events-none scale-95 opacity-0'
@@ -102,6 +102,23 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             id="logout_button"
             className="transition-all duration-300 group-hover:font-medium group-hover:text-red-500">
             Log Out
+          </Typography>
+        </Box>
+
+        <hr className="mt-4 border-gray-300" />
+      </Box>
+
+      {/* Mobile Accordion Menu */}
+      <Box
+        className={`transition-all duration-300 ease-in-out lg:hidden ${
+          open ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        } overflow-hidden`}>
+        <Box className="mt-4 px-12">
+          <Typography color="text-white" className="mb-1">
+            {userData.fullName}
+          </Typography>
+          <Typography size={12} className="text-white">
+            {userData.email}
           </Typography>
         </Box>
 
