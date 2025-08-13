@@ -27,9 +27,8 @@ describe('EventListSection', () => {
   it('renders skeleton when loading', () => {
     mockedUseSWR.mockReturnValue({ isLoading: true });
     render(<EventListSection />);
-    expect(
-      screen.getAllByText('', { selector: '.animate-pulse' })
-    ).toHaveLength(4);
+    const skeletonCards = screen.getAllByTestId('event-card');
+    expect(skeletonCards).toHaveLength(4);
   });
 
   it('renders event cards when data is present', () => {

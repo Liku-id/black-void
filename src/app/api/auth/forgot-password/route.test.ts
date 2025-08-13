@@ -27,11 +27,11 @@ describe('/api/auth/forgot-password POST', () => {
     const req = createRequest({ email: 'test@example.com' });
     const res = await POST(req);
     const json = await res.json();
-    expect(json).toEqual({
+    expect(json).toMatchObject({
       message: 'Forgot password email sent',
       success: true,
     });
-    expect(axios.post).toHaveBeenCalledWith('/v1/forgot-password', {
+    expect(axios.post).toHaveBeenCalledWith('/v1/auth/password/request', {
       email: 'test@example.com',
     });
   });

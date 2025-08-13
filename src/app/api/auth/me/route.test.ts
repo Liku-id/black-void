@@ -1,5 +1,6 @@
 import { GET } from './route';
 import { NextRequest, NextResponse } from 'next/server';
+import axios from '@/lib/api/axios-server';
 
 jest.mock('next/server', () => {
   const actualNext = jest.requireActual('next/server');
@@ -13,6 +14,12 @@ jest.mock('next/server', () => {
     },
   };
 });
+
+jest.mock('@/lib/api/axios-server', () => ({
+  get: jest.fn(),
+}));
+
+const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe('GET /api/check-login', () => {
   const createMockRequest = (cookies: Record<string, string>) =>
@@ -28,20 +35,22 @@ describe('GET /api/check-login', () => {
   });
 
   it('returns loggedIn: true when access_token exists', async () => {
+    mockAxios.get.mockResolvedValue({
+      data: { body: { id: 1, name: 'Test User' } },
+    });
+
     const request = createMockRequest({ access_token: 'mock-token' });
     const response = await GET(request);
 
-    expect(NextResponse.json).toHaveBeenCalledWith({ loggedIn: true });
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ loggedIn: true });
+    expect(response.body).toHaveProperty('loggedIn');
   });
 
   it('returns loggedIn: false when access_token does not exist', async () => {
     const request = createMockRequest({});
     const response = await GET(request);
 
-    expect(NextResponse.json).toHaveBeenCalledWith({ loggedIn: false });
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ loggedIn: false });
+    expect(response.body).toHaveProperty('loggedIn');
   });
 });

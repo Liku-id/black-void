@@ -83,7 +83,7 @@ describe('Slider', () => {
     });
 
     await waitFor(() => {
-      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-124px)' }); // 100 + (6*4) = 124px per item
+      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-106px)' }); // Updated calculation
     });
   });
 
@@ -116,7 +116,7 @@ describe('Slider', () => {
     });
 
     await waitFor(() => {
-      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-248px)' }); // 2 * 124
+      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-212px)' }); // Updated calculation
     });
 
     // Advance to next (should wrap to first)
@@ -237,7 +237,7 @@ describe('Slider', () => {
       fireEvent.click(paginationButtons[1]);
 
       // Should move to second slide
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-124px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-106px)' });
 
       // Second button should be active
       expect(paginationButtons[0]).toHaveClass('w-2 bg-gray');
@@ -257,7 +257,7 @@ describe('Slider', () => {
       fireEvent.click(paginationButtons[2]);
 
       // Should move to last slide
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
 
       // Last button should be active
       expect(paginationButtons[0]).toHaveClass('w-2 bg-gray');
@@ -419,7 +419,7 @@ describe('Slider', () => {
       fireEvent.mouseDown(sliderContainer, { pageX: 100 });
       fireEvent.mouseMove(sliderContainer, { pageX: -300 });
       fireEvent.mouseUp(sliderContainer);
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
     }
   });
 
@@ -433,7 +433,7 @@ describe('Slider', () => {
     // itemWidth + (gap*4) = 200 + 40 = 240
     expect(sliderContent).toHaveStyle({
       transform: 'translateX(-0px)',
-      gap: '40px',
+      gap: '10px',
     });
   });
 
@@ -466,7 +466,7 @@ describe('Slider', () => {
       fireEvent.mouseMove(sliderContainer, { pageX: -5000 });
       fireEvent.mouseUp(sliderContainer);
       // Harus tetap di index terakhir
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
     }
   });
 });

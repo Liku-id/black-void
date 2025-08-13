@@ -26,7 +26,10 @@ let mockSWRData: any = {
 };
 
 jest.mock('swr', () => () => mockSWRData);
-jest.mock('axios', () => ({
+jest.mock('next/navigation', () => ({
+  useParams: jest.fn(() => ({ id: 'test-id' })),
+}));
+jest.mock('@/lib/api/axios-client', () => ({
   post: jest.fn().mockResolvedValue({
     data: new Blob(['PDF'], { type: 'application/pdf' }),
   }),
@@ -68,10 +71,10 @@ describe('Ticket', () => {
   });
 
   it('renders ticket info', () => {
-    render(<Ticket transactionId="trx-1" />);
+    render(<Ticket />);
     expect(screen.getByText('Your Ticket')).toBeInTheDocument();
     expect(screen.getByText('Organizer | Event Name')).toBeInTheDocument();
-    expect(screen.getByText('VIP #1')).toBeInTheDocument();
+    expect(screen.getByText('#1')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Event Address')).toBeInTheDocument();
     expect(screen.getByText('See Location')).toBeInTheDocument();
@@ -79,19 +82,19 @@ describe('Ticket', () => {
 
   it('shows "No tickets available" if no data', () => {
     mockSWRData = { data: null, isLoading: false };
-    render(<Ticket transactionId="trx-2" />);
+    render(<Ticket />);
     expect(screen.getByText('No tickets available')).toBeInTheDocument();
   });
 
   it('calls handleDownload when Download button is clicked', async () => {
-    render(<Ticket transactionId="trx-1" />);
+    render(<Ticket />);
     const downloadBtn = screen.getByText('Download');
     fireEvent.click(downloadBtn);
   });
 
   it('opens location in new tab when See Location button is clicked', () => {
     window.open = jest.fn();
-    render(<Ticket transactionId="trx-1" />);
+    render(<Ticket />);
     fireEvent.click(screen.getByText('See Location'));
     expect(window.open).toHaveBeenCalledWith(
       'https://maps.google.com',
@@ -120,11 +123,11 @@ describe('Ticket', () => {
         return originalCreateElement(tagName);
       });
 
-    render(<Ticket transactionId="trx-1" />);
+    render(<Ticket />);
     const downloadBtn = screen.getByText('Download');
     fireEvent.click(downloadBtn);
 
-    await new Promise(r => setTimeout(r, 0));
+    await new Promise((r) => setTimeout(r, 0));
 
     expect(createObjectURLMock).toHaveBeenCalled();
     expect(clickMock).toHaveBeenCalled();
