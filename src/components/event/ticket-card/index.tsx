@@ -30,7 +30,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
       ? (ticket.description ?? '')
       : (ticket.description ?? '').slice(0, MAX_DESC_LENGTH) + '...';
   const minusDisabled = count === 0;
-  const available = Math.max(0, (ticket.quantity ?? 0) - (ticket.purchased_amount ?? 0));
+  const available = Math.max(
+    0,
+    (ticket.quantity ?? 0) - (ticket.purchased_amount ?? 0)
+  );
   const plusDisabled =
     count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
@@ -95,11 +98,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
       {available <= 0 ? (
         <Button
           id={`${ticket.name}_sold`}
-          className="w-full uppercase cursor-not-allowed bg-gray text-black font-bebas text-[22px] disabled:opacity-100 font-light"
+          className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"
           disabled
           aria-disabled="true"
-          type="button"
-        >
+          type="button">
           SOLD
         </Button>
       ) : (
@@ -108,10 +110,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Typography type="heading" size={20}>
               TOTAL TICKETS
             </Typography>
-            {(
-              (count >= (ticket.max_order_quantity ?? Infinity)) ||
-              ((ticket.quantity ?? 0) <= ((ticket.purchased_amount ?? 0) + count))
-            ) && (
+            {(count >= (ticket.max_order_quantity ?? Infinity) ||
+              (ticket.quantity ?? 0) <=
+                (ticket.purchased_amount ?? 0) + count) && (
               <Typography type="body" size={10} color="text-red">
                 Maximum purchase limit reached
               </Typography>
