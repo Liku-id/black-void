@@ -13,6 +13,7 @@ const customJestConfig = {
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.(svg)$': '<rootDir>/src/__mocks__/fileMock.js',
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
