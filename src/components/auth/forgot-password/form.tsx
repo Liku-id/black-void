@@ -29,8 +29,18 @@ const ForgotPasswordForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/forgot-password', formData);
+      const { data } = await axios.post('/api/auth/check-availability', {
+        email: formData.email,
+      });
 
+      // If Email Is Registered
+      if (data.isValid) {
+        setError('The email you entered is not found');
+        return;
+      }
+
+      // If Email Is Registered, proceed with forgot-password request
+      const response = await axios.post('/api/auth/forgot-password', formData);
       if (response.status === 200) {
         setSentEmail(formData.email);
         setModalOpen(true);

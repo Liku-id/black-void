@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Container, Box, Typography } from '@/components';
 import logo from '@/assets/logo/white-logo.svg';
 import emailIcon from '@/assets/icons/email.svg';
+import instagramIcon from '@/assets/icons/Instagram.svg';
 import smsIcon from '@/assets/icons/sms.svg';
 
 const Footer = () => {
@@ -66,11 +67,11 @@ const Footer = () => {
               ABOUT WUKONG
             </Typography>
             <Box className="flex flex-col gap-2">
-              <Link
+              {/* <Link
                 href="/about-us"
                 className="hover:text-green font-onest text-[14px] text-white">
                 About Us
-              </Link>
+              </Link> */}
               <Link
                 href="/term-and-condition"
                 className="hover:text-green font-onest text-[14px] text-white">
@@ -97,7 +98,23 @@ const Footer = () => {
               FOLLOW US ON
             </Typography>
 
-            <Box className="mb-10 flex flex-col gap-2">{null}</Box>
+            <Box className="mb-10 flex flex-col gap-2">
+              <Link
+                href="https://www.instagram.com/wukong.co.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
+                <Image
+                  src={instagramIcon}
+                  alt="Instagram"
+                  width={24}
+                  height={24}
+                  className="box-content rounded-full bg-white p-2"
+                  draggable={false}
+                  priority
+                />
+              </Link>
+            </Box>
 
             <Box>
               <Box className="mb-2 flex items-center gap-4">

@@ -29,12 +29,13 @@ const TicketCard: React.FC<TicketCardProps> = ({
     showFull || !isTruncated
       ? (ticket.description ?? '')
       : (ticket.description ?? '').slice(0, MAX_DESC_LENGTH) + '...';
-  const minusDisabled = count === 0 || isOtherActive;
-  const remainingTickets = ticket.quantity - ticket.purchased_amount - count;
+  const minusDisabled = count === 0;
+  const available = Math.max(
+    0,
+    (ticket.quantity ?? 0) - (ticket.purchased_amount ?? 0)
+  );
   const plusDisabled =
-    count === ticket.max_order_quantity ||
-    isOtherActive ||
-    ticket.quantity < ticket.purchased_amount + count + 1;
+    count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
   // Card shadow logic
   const cardClass = [
@@ -94,44 +95,51 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
       <hr className="border-muted my-3" />
 
-      <Box className="flex items-center justify-between">
-        <Box className="flex items-center gap-4">
-          <Typography type="heading" size={20}>
-            TOTAL TICKETS
-          </Typography>
-          {ticket.count === ticket.max_order_quantity && (
-            <Typography type="body" size={10} color="text-red">
-              Maks. {ticket.max_order_quantity} Tiket per kategori
+      {available <= 0 ? (
+        <Button
+          id={`${ticket.name}_sold`}
+          className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"
+          disabled
+          aria-disabled="true"
+          type="button">
+          SOLD
+        </Button>
+      ) : (
+        <Box className="flex items-center justify-between">
+          <Box className="flex items-center gap-4">
+            <Typography type="heading" size={20}>
+              TOTAL TICKETS
             </Typography>
-          )}
-          {plusDisabled &&
-            ticket.quantity < ticket.purchased_amount + count + 1 && (
+            {(count >= (ticket.max_order_quantity ?? Infinity) ||
+              (ticket.quantity ?? 0) <=
+                (ticket.purchased_amount ?? 0) + count) && (
               <Typography type="body" size={10} color="text-red">
-                Remaining {remainingTickets > 0 ? remainingTickets : 0} tickets
+                Maximum purchase limit reached
               </Typography>
             )}
-        </Box>
+          </Box>
 
-        <Box className="flex items-center gap-2">
-          <Button
-            id={`${ticket.name}_ticket_minus_icon`}
-            className={`flex h-8 w-8 items-center justify-center text-lg ${minusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
-            onClick={() => onChange(ticket.id, -1)}
-            disabled={minusDisabled}
-            type="button">
-            -
-          </Button>
-          <span className="w-6 text-center">{count}</span>
-          <Button
-            id={`${ticket.name}_ticket_plus_icon`}
-            className={`flex h-8 w-8 items-center justify-center text-lg ${plusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
-            onClick={() => onChange(ticket.id, 1)}
-            disabled={plusDisabled}
-            type="button">
-            +
-          </Button>
+          <Box className="flex items-center gap-2">
+            <Button
+              id={`${ticket.name}_ticket_minus_icon`}
+              className={`flex h-8 w-8 items-center justify-center text-lg ${minusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
+              onClick={() => onChange(ticket.id, -1)}
+              disabled={minusDisabled}
+              type="button">
+              -
+            </Button>
+            <span className="w-6 text-center">{count}</span>
+            <Button
+              id={`${ticket.name}_ticket_plus_icon`}
+              className={`flex h-8 w-8 items-center justify-center text-lg ${plusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
+              onClick={() => onChange(ticket.id, 1)}
+              disabled={plusDisabled}
+              type="button">
+              +
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

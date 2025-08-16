@@ -147,7 +147,7 @@ export default function PaymentStatus() {
                 size={12}
                 color="text-muted"
                 className="font-light">
-                Total ticket: {data.transaction.orderQuantity} Tiket
+                Total: {data.transaction.orderQuantity} Ticket
               </Typography>
             </Box>
             {/* ))} */}

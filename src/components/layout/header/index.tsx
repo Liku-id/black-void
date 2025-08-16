@@ -8,6 +8,7 @@ import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
 import { Box, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
+import logout from '@/assets/icons/logout.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
 // import searchIcon from '@/assets/icons/search.svg';
 import burgerIcon from '@/assets/icons/burger.svg';
@@ -96,12 +97,12 @@ export default function Header() {
               size={16}
               color="text-black"
               className="hover:text-green ml-6 cursor-pointer">
-              Become Creator ?
+              Become Creator?
             </Typography>
           </Link>
 
           {loading && (
-            <Box className="ml-6 h-8 w-18 animate-pulse rounded-md bg-gray-200" />
+            <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
 
           {!loading && !isLoggedIn && (
@@ -194,12 +195,25 @@ export default function Header() {
             rel="noopener noreferrer"
             className="hover:text-green">
             <Typography type="body" size={16} color="text-white">
-              Become Creator ?
+              Become Creator?
             </Typography>
           </Link>
           <Box className="flex-1" />
 
-          {isLoggedIn === false && (
+          {isLoggedIn ? (
+            <Box
+              className="group text-danger mb-40 flex cursor-pointer items-center justify-center gap-2 transition-all duration-300 hover:gap-3 hover:text-red-500"
+              onClick={() => {
+                setOpenLogoutModal(true);
+              }}>
+              <Image src={logout} alt="logout" width={24} height={24} />
+              <Typography
+                id="logout_button"
+                className="transition-all duration-300 group-hover:font-medium group-hover:text-red-500">
+                Log Out
+              </Typography>
+            </Box>
+          ) : (
             <Link href="/login" className="mb-40 flex justify-center">
               <Button className="px-[18px] py-[8px]">Log In</Button>
             </Link>

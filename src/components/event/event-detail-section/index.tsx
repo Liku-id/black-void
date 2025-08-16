@@ -16,22 +16,20 @@ interface EventDetailProps {
 }
 
 const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
-  const images = Array.isArray(data.eventAssets)
-    ? data.eventAssets.map((ea: any) => ea.asset.url)
-    : [];
+  const items = (data && data.eventAssets) || [];
 
   return (
     <section>
-      <Box className="block lg:hidden">
+      <Box className="block md:hidden">
         <Slider
           autoScroll={false}
           className="h-[210px] w-full"
           itemWidth={375}
           pagination>
-          {images.map((url, i) => (
+          {items.map((item: any, i: number) => (
             <Image
               key={i}
-              src={url}
+              src={item.asset.url}
               alt={`Image ${i + 1}`}
               width={375}
               height={210}
@@ -42,9 +40,14 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
           ))}
         </Slider>
       </Box>
-      <Box className="hidden lg:block">
+      <Box className="hidden md:block">
         <Carousel
-          images={images}
+          images={items.map(
+            (item: { asset: { url: string } }) => item.asset.url
+          )}
+          width={613}
+          height={309}
+          sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
           className="h-[353px] px-4"
           arrowPosition="inside"
         />

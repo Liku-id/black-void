@@ -3,12 +3,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { Box, Button } from '@/components';
 import Image from 'next/image';
+import Link from 'next/link';
 import carouselArrow from '@/assets/icons/carousel-arrow.svg';
 
 interface CarouselProps {
   images: string[];
-  width?: number | string;
-  height?: number;
+  pages?: string[];
+  width: number;
+  height: number;
+  sizes: string;
   className?: string;
   animate?: boolean;
   arrowPosition?: 'inside' | 'outside';
@@ -18,6 +21,10 @@ type Direction = 'next' | 'prev';
 
 export function Carousel({
   images,
+  pages = [],
+  width,
+  height,
+  sizes,
   className = '',
   animate = true,
   arrowPosition = 'outside',
@@ -75,29 +82,56 @@ export function Carousel({
         {animate ? (
           <>
             {showPrev && (
-              <img
+              <Image
                 src={images[prevIndex]}
                 alt=""
                 className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating ? 'scale-90 opacity-0' : 'scale-100 opacity-100'} `}
+                width={width}
+                height={height}
+                sizes={sizes}
                 draggable={false}
+                unoptimized
               />
             )}
-            <img
-              src={images[currentIndex]}
-              alt=""
-              className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating && showPrev ? 'scale-105' : 'scale-100'} cursor-pointer opacity-100`}
-              onClick={() => {}}
-              draggable={false}
-            />
+            {pages.length > 0 ? (
+              <Link href={pages[currentIndex]} passHref>
+                <Image
+                  src={images[currentIndex]}
+                  alt=""
+                  className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating && showPrev ? 'scale-105' : 'scale-100'} cursor-pointer opacity-100`}
+                  width={width}
+                  height={height}
+                  sizes={sizes}
+                  draggable={false}
+                  unoptimized
+                />
+              </Link>
+            ) : (
+              <Image
+                src={images[currentIndex]}
+                alt=""
+                className="absolute h-full w-full object-cover"
+                width={width}
+                height={height}
+                sizes={sizes}
+                draggable={false}
+                unoptimized
+              />
+            )}
           </>
         ) : (
-          <img
-            src={images[currentIndex]}
-            alt=""
-            className="absolute h-full w-full cursor-pointer object-cover"
-            onClick={() => {}}
-            draggable={false}
-          />
+          <Link href={pages[currentIndex] || '#'} passHref>
+            <Image
+              src={images[currentIndex]}
+              alt=""
+              className="absolute h-full w-full cursor-pointer object-cover"
+              width={width}
+              height={height}
+              sizes={sizes}
+              draggable={false}
+              unoptimized
+            />
+          </Link>
         )}
 
         {/* Left Arrow */}
