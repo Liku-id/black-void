@@ -100,7 +100,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
 
       if (response.status === 200) {
         setIsResentSuccess(true);
-        setSeconds(60);
+        setSeconds(initialSeconds);
         setOtp(['', '', '', '', '', '']);
 
         // Focus first input
