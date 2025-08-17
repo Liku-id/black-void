@@ -12,7 +12,7 @@ interface ShowSnackOptions {
   variant?: SnackVariant;
 }
 
-export const useSnackBanner = () => {
+export const useSnackBar = () => {
   const [snackState, setSnackState] = useState<SnackState>({
     show: false,
     text: '',

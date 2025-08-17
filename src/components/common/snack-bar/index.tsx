@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@/components';
 
 export type SnackVariant = 'error' | 'success' | 'warning' | 'info';
 
-interface SnackBannerProps {
+interface SnackBarProps {
   show: boolean;
   onHide?: () => void;
   text: string;
@@ -24,7 +24,7 @@ const variantStyles: Record<SnackVariant, string> = {
   info: 'bg-blue-500 text-white',
 };
 
-const SnackBanner: React.FC<SnackBannerProps> = ({
+const SnackBar: React.FC<SnackBarProps> = ({
   show,
   onHide,
   text,
@@ -37,81 +37,95 @@ const SnackBanner: React.FC<SnackBannerProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Handle show/hide logic with proper animations
+  
   useEffect(() => {
-    if (show && !shouldRender) {
-      // Show: First render in DOM, then animate
+    if (show) {
+      // mount then enter animation (double rAF to ensure the transition class is applied)
       setShouldRender(true);
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setIsVisible(true);
-        });
+        requestAnimationFrame(() => setIsVisible(true));
       });
-
-      // Auto hide if enabled
-      if (autoHide && autoHideDelay > 0) {
-        const timeout = setTimeout(() => {
-          handleHide();
-        }, autoHideDelay);
-
-        return () => clearTimeout(timeout);
-      }
-    } else if (!show && shouldRender) {
-      // Hide: First animate out, then remove from DOM
-      handleHide();
+    } else if (shouldRender) {
+      // exit animation then unmount
+      setIsVisible(false);
+      const t = setTimeout(() => {
+        setShouldRender(false);
+        onHide?.(); // optional, if you want to synchronize the parent state
+      }, 500);
+      return () => clearTimeout(t);
     }
-  }, [show, shouldRender, autoHide, autoHideDelay]);
+  }, [show, shouldRender, onHide]);
 
-  const handleHide = () => {
+  // separate auto-hide timer to prevent it from being "cleared" by re-rendering
+  useEffect(() => {
+    // reset the timer every time the content reappears / the text changes
+    if (show && autoHide && autoHideDelay > 0) {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        // triggers hide the same as clicking close
+        setIsVisible(false);
+        setTimeout(() => {
+          setShouldRender(false);
+          onHide?.();
+        }, 500);
+      }, autoHideDelay);
+    }
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+
+    // Add `text` so the timer restarts if the message changes while it's still displayed
+  }, [show, text, autoHide, autoHideDelay, onHide]);
+
+  if (!shouldRender) return null;
+
+  const positionClasses = position === 'top' ? 'top-5' : 'bottom-5';
+
+  const handleManualClose = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
     setIsVisible(false);
-    // Wait for animation to complete before removing from DOM
     setTimeout(() => {
       setShouldRender(false);
       onHide?.();
     }, 500);
   };
 
-  // Don't render if not needed
-  if (!shouldRender) return null;
-
-  const positionClasses = position === 'top' 
-    ? 'top-5' 
-    : 'bottom-5';
-
   return (
     <Box
       className={`
-        fixed ${positionClasses} left-1/2 z-[9999] 
-        -translate-x-1/2 rounded-md px-5 py-3 
-        shadow-lg min-w-[300px] max-w-[90vw] 
+        fixed ${positionClasses} left-1/2 z-[9999]
+        -translate-x-1/2 rounded-md px-5 py-3
+        shadow-lg min-w-[300px] max-w-[90vw]
         transition-all duration-500 ease-in-out
         ${variantStyles[variant]}
-        ${isVisible 
-          ? 'opacity-100 transform translate-y-0 scale-100' 
-          : `opacity-0 transform ${position === 'top' ? '-translate-y-3' : 'translate-y-3'} scale-95`
+        ${
+          isVisible
+            ? 'opacity-100 transform translate-y-0 scale-100'
+            : `opacity-0 transform scale-95 ${position === 'top' ? '-translate-y-3' : 'translate-y-3'}`
         }
         ${className}
       `}
     >
       <Box className="flex items-center justify-between gap-3">
-        <span className="flex-1 text-sm font-medium">
-          {text}
-        </span>
-        
+        <span className="flex-1 text-sm font-medium">{text}</span>
         {showCloseButton && (
-          <button 
-            onClick={handleHide}
+          <button
+            onClick={handleManualClose}
             className="flex-shrink-0 text-current hover:opacity-70 transition-opacity"
             aria-label="Close notification"
           >
-            <svg 
-              className="w-4 h-4" 
-              fill="none" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth="2" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
               <path d="M6 18L18 6M6 6l12 12" />
@@ -123,4 +137,4 @@ const SnackBanner: React.FC<SnackBannerProps> = ({
   );
 };
 
-export default SnackBanner;
+export default SnackBar;

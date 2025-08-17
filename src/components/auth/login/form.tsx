@@ -12,8 +12,8 @@ import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
 import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
-import { useSnackBanner } from '@/utils/use-snack-bar';
-import SnackBanner from '@/components/common/snack-bar';
+import { useSnackBar } from '@/utils/use-snack-bar';
+import SnackBar from '@/components/common/snack-bar';
 
 interface FormDataLogin {
   email: string;
@@ -25,7 +25,7 @@ const LoginForm = () => {
   const { setAuthUser } = useAuth();
   const pathname = usePathname();
   const destination: string = getSessionStorage('destination') ?? '';
-  const { snackState, hideSnack, showError } = useSnackBanner();
+  const { snackState, hideSnack, showError } = useSnackBar();
 
   // Initialize state
   const [showPassword, setShowPassword] = useState(false);
@@ -79,15 +79,13 @@ const LoginForm = () => {
       {loading && <Loading />}
 
       {/* Expiry message */}
-      <SnackBanner
+      <SnackBar
         show={snackState.show}
         onHide={hideSnack}
         text={snackState.text}
         variant={snackState.variant}
-        autoHide={true}
         autoHideDelay={5000}
         position="top"
-        showCloseButton={true}
       />
 
       <FormProvider {...methods}>

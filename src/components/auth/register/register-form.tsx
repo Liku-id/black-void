@@ -93,6 +93,7 @@ const RegisterForm = () => {
         setError('The email or phone number you entered is already registered');
         return;
       }
+      setError("")
       setStep(2);
     }
   };
