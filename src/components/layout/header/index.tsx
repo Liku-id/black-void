@@ -8,6 +8,7 @@ import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
 import { Box, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
+import logout from '@/assets/icons/logout.svg';
 import whiteLogo from '@/assets/logo/white-logo.svg';
 // import searchIcon from '@/assets/icons/search.svg';
 import burgerIcon from '@/assets/icons/burger.svg';
@@ -199,7 +200,20 @@ export default function Header() {
           </Link>
           <Box className="flex-1" />
 
-          {isLoggedIn === false && (
+          {isLoggedIn ? (
+            <Box
+              className="group text-danger mb-40 flex cursor-pointer items-center justify-center gap-2 transition-all duration-300 hover:gap-3 hover:text-red-500"
+              onClick={() => {
+                setOpenLogoutModal(true);
+              }}>
+              <Image src={logout} alt="logout" width={24} height={24} />
+              <Typography
+                id="logout_button"
+                className="transition-all duration-300 group-hover:font-medium group-hover:text-red-500">
+                Log Out
+              </Typography>
+            </Box>
+          ) : (
             <Link href="/login" className="mb-40 flex justify-center">
               <Button className="px-[18px] py-[8px]">Log In</Button>
             </Link>
