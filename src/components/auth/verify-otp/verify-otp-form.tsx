@@ -32,7 +32,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
   const [payload] = useAtom(registerFormAtom);
 
   // Validate if form is complete
-  const isFormValid = otp.every(digit => digit !== '' && /^\d$/.test(digit));
+  const isFormValid = otp.every((digit) => digit !== '' && /^\d$/.test(digit));
 
   const handleChange = (index: number, value: string) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -177,7 +177,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
     if (seconds <= 0) return;
 
     const timer = setInterval(() => {
-      setSeconds(prev => (prev > 0 ? prev - 1 : 0));
+      setSeconds((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -216,7 +216,11 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       </Typography>
 
       {!modalOpen && (
-        <Typography className="mb-2">{formatCountdownTime(seconds)}</Typography>
+        <Typography
+          className={`mb-2 ${seconds < 60 ? 'text-danger' : 'text-white'}`}
+        >
+          {formatCountdownTime(seconds)}
+        </Typography>
       )}
 
       <Box className="mt-8 mb-2 flex gap-4">
@@ -224,7 +228,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
           <input
             id={`otp_code_${index + 1}_field`}
             key={index}
-            ref={el => {
+            ref={(el) => {
               inputRefs.current[index] = el;
             }}
             type="text"
@@ -235,8 +239,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
             disabled={loading || isSuccess}
             className={`h-10 w-8 bg-white text-center text-[16px] font-bold text-black transition-all outline-none focus:translate-x-[-2px] focus:translate-y-[-2px] focus:border focus:shadow-[4px_4px_0px_0px_#FFFF] ${error ? 'border-danger' : ''}`}
             value={value}
-            onChange={e => handleChange(index, e.target.value)}
-            onKeyDown={e => handleKeyDown(index, e)}
+            onChange={(e) => handleChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
             onPaste={handlePaste}
           />
         ))}
@@ -251,7 +255,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       <Box
         className={`mt-4 flex gap-1 transition-opacity duration-500 ${
           isResentSuccess || seconds === 0 ? 'opacity-100' : 'opacity-0'
-        }`}>
+        }`}
+      >
         <Typography size={12}>
           {isResentSuccess ? 'OTP has been resent' : "Didn't get the OTP?"}
         </Typography>
@@ -267,11 +272,12 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
                 className="cursor-pointer underline"
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     reSendOtp();
                   }
-                }}>
+                }}
+              >
                 Resend OTP
               </span>
             )}

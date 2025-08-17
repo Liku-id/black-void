@@ -13,28 +13,26 @@ export async function setAuthCookies({
 }: CookieOptions) {
   const cookieStore = await cookies();
 
-  cookieStore.set('access_token', accessToken, {
+  const baseOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
+    sameSite: 'strict' as const,
     path: '/',
+  };
+
+  cookieStore.set('access_token', accessToken, {
+    ...baseOptions,
     maxAge: 60 * 60 * 24, // 1 day
   });
 
   cookieStore.set('refresh_token', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    path: '/',
+    ...baseOptions,
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
   if (userRole) {
     cookieStore.set('user_role', userRole, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      path: '/',
+      ...baseOptions,
       maxAge: 60 * 60 * 24 * 7,
     });
   }
