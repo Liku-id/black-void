@@ -284,7 +284,7 @@ export default function PaymentConfirmationVA({
                   size={12}
                   color="text-muted"
                   className="font-light">
-                  PB1
+                  Tax
                 </Typography>
                 <Typography
                   type="body"

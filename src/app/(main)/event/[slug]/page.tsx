@@ -189,7 +189,7 @@ export default function Event() {
         </Box>
 
         {/* MOBILE: Sticky summary section (right column) */}
-        <Box className="fixed bottom-0 left-0 z-50 block w-full lg:hidden">
+        <Box className="fixed bottom-0 left-0 z-1 block w-full lg:hidden">
           <SummarySectionMobile
             eventData={eventData}
             tickets={selectedTickets}
