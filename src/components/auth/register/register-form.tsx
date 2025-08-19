@@ -95,7 +95,7 @@ const RegisterForm = () => {
       }
 
       setCheckLoad(false);
-      setError("")
+      setError('');
       setStep(2);
     }
   };

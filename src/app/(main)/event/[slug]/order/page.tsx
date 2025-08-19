@@ -236,7 +236,13 @@ const OrderPage = () => {
       );
       setIsInitialized(true);
     }
-  }, [isLoggedIn, userData, contactDetail, contactMethods.setValue, isInitialized]);
+  }, [
+    isLoggedIn,
+    userData,
+    contactDetail,
+    contactMethods.setValue,
+    isInitialized,
+  ]);
 
   if (eventLoading || orderLoading || !order.orderId) {
     return <EventPageSkeleton />;
