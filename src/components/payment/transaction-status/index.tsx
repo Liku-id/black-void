@@ -261,7 +261,7 @@ export default function PaymentStatus() {
               size={12}
               className="font-light"
               color="text-muted">
-              PB1
+              Tax
             </Typography>
             <Typography
               type="body"
