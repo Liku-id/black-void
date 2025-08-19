@@ -74,7 +74,7 @@ const PriceDetail: React.FC<PriceDetailProps> = ({
         size={12}
         color="text-muted"
         className="font-light">
-        PB1
+        Tax
       </Typography>
       <Typography
         type="body"

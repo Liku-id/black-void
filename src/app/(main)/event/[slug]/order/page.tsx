@@ -222,8 +222,8 @@ const OrderPage = () => {
         'countryCode',
         splitPhoneNumber(userData.phoneNumber || '').countryCode
       );
-      setIsInitialized(false);
-    } else if (contactDetail) {
+      setIsInitialized(true);
+    } else if (contactDetail.full_name && !isInitialized) {
       contactMethods.setValue('fullName', contactDetail.full_name || '');
       contactMethods.setValue(
         'phoneNumber',
@@ -234,8 +234,9 @@ const OrderPage = () => {
         'countryCode',
         contactDetail.country_code || '+62'
       );
+      setIsInitialized(true);
     }
-  }, [isLoggedIn, userData, contactDetail, contactMethods.setValue]);
+  }, [isLoggedIn, userData, contactDetail, contactMethods.setValue, isInitialized]);
 
   if (eventLoading || orderLoading || !order.orderId) {
     return <EventPageSkeleton />;
