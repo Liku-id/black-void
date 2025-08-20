@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       eventOrganizerName: body.event?.eventOrganizer?.name,
       type: body.ticketType?.name,
       attendee: ticket.visitor_name,
-      qrValue: ticket.id,
+      qrValue: ticket.ticket_id,
       date: formatDate(body.ticketType?.ticketStartDate, 'datetime'),
       address: body.event?.address,
       mapLocation: body.event?.mapLocationUrl,
@@ -27,51 +27,18 @@ export async function POST(req: NextRequest) {
     // Path ke file EJS template
     const templatePath = path.resolve(
       process.cwd(),
-      process.env.NODE_ENV === 'production' 
-        ? './src/app/api/transaction/[id]/tickets/export/template.ejs' 
-        : 'src/app/api/transaction/[id]/tickets/export/template.ejs'
+      process.env.NODE_ENV === 'production' ? '/api/transaction/[id]/tickets/export/template.ejs' : 'src/app/api/transaction/[id]/tickets/export/template.ejs'
     );
     const template = await fs.readFile(templatePath, 'utf-8');
 
     // Render HTML dari EJS
     const html = ejs.render(template, { tickets, body });
 
-    // Configure Puppeteer for production environment
-    const puppeteerOptions = process.env.NODE_ENV === 'production' 
-      ? {
-          executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
-          args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process',
-            '--disable-gpu'
-          ],
-        }
-      : {};
-
     // Generate PDF pakai Puppeteer
-    const browser = await puppeteer.launch(puppeteerOptions);
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    
-    // Set viewport for consistent rendering
-    await page.setViewport({ width: 1280, height: 720 });
-    
     await page.setContent(html, { waitUntil: 'networkidle0' });
-    const pdfBuffer = await page.pdf({ 
-      format: 'A4', 
-      landscape: false,
-      printBackground: true,
-      margin: {
-        top: '20px',
-        bottom: '20px',
-        left: '20px',
-        right: '20px'
-      }
-    });
+    const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
     await browser.close();
 
     return new NextResponse(Buffer.from(pdfBuffer), {
