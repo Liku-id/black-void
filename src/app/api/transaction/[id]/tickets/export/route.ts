@@ -5,7 +5,11 @@ import { formatDate } from '@/utils/formatter';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 import { ticketTemplate } from '@/lib/templates/ticket-template';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
+  let browser: Awaited<ReturnType<typeof puppeteer.launch>> | null = null;
+
   try {
     const body = await req.json();
 
@@ -14,7 +18,7 @@ export async function POST(req: NextRequest) {
       eventOrganizerName: body.event?.eventOrganizer?.name,
       type: body.ticketType?.name,
       attendee: ticket.visitor_name,
-      qrValue: ticket.ticket_id,
+      qrValue: ticket.id,
       date: formatDate(body.ticketType?.ticketStartDate, 'datetime'),
       address: body.event?.address,
       mapLocation: body.event?.mapLocationUrl,
@@ -28,14 +32,14 @@ export async function POST(req: NextRequest) {
     // Render HTML dari EJS
     const html = ejs.render(template, { tickets, body });
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
+        '--disable-gpu',
+      ],
     });
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0' });
@@ -51,5 +55,11 @@ export async function POST(req: NextRequest) {
     });
   } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);
+  } finally {
+    if (browser) {
+      try {
+        await browser.close();
+      } catch {}
+    }
   }
 }
