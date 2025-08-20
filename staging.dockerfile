@@ -1,67 +1,41 @@
-# ---------- builder ----------
-FROM node:20-bookworm-slim AS builder
+# Step 1: Install dependencies and build the Next.js app
+FROM node:20-alpine AS builder
 
-# Tidak perlu lib GUI di sini
-RUN apt-get update && apt-get install -y ca-certificates wget \
-  && rm -rf /var/lib/apt/lists/*
-
-ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
-
-USER node
+# Set working directory
 WORKDIR /app
 
-COPY --chown=node:node package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps
+# Install necessary OS deps
+RUN apk add --no-cache libc6-compat
 
-# Unduh Chrome for Testing (disimpan di cache Puppeteer)
-RUN npx puppeteer browsers install chrome
+# Copy dependency definitions
+COPY package.json package-lock.json* ./
 
-COPY --chown=node:node . .
-COPY --chown=node:node .env.production .env.production
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy the rest of the project
+COPY . .
+
+# Copy environment file for frontend build
+# Make sure .env.production exists in repo or generated before build
+COPY .env.production .env.production
+
+# Build the Next.js app
 RUN npm run build
 
-# ---------- runner ----------
-FROM node:20-bookworm-slim AS runner
+# Step 2: Use a minimal image for running the app
+FROM node:20-alpine AS runner
+
 ENV NODE_ENV=production
-ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
 
-# Lib runtime Chrome + font (biar karakter Latin/emoji tampil baik)
-RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    fonts-liberation \
-    fonts-noto \
-    fonts-noto-color-emoji \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libc6 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxext6 \
-    libxi6 \
-    libxrandr2 \
-    libgbm1 \
-    libgtk-3-0 \
-    libnss3 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libxshmfence1 \
-  && rm -rf /var/lib/apt/lists/*
-
-USER node
 WORKDIR /app
 
+# Copy only the necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-# Bawa Chrome yang sudah diunduh Puppeteer (wajib)
-COPY --from=builder /home/node/.cache/puppeteer /home/node/.cache/puppeteer
-
 EXPOSE 3000
+
 CMD ["npm", "start"]
