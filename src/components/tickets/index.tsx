@@ -1,7 +1,6 @@
 'use client';
 import React, { Fragment } from 'react';
 import { useParams } from 'next/navigation';
-import axios from '@/lib/api/axios-client';
 import useSWR from 'swr';
 import { Typography, Container, Box, Button, QRCode } from '@/components';
 import Image from 'next/image';
@@ -10,6 +9,9 @@ import locationIcon from '@/assets/icons/location.svg';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import { formatDate } from '@/utils/formatter';
 import Loading from '../layout/loading';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { ticketTemplate } from './template';
 
 const Ticket = () => {
   const params = useParams();
@@ -28,25 +30,88 @@ const Ticket = () => {
     setError(null);
 
     try {
-      const res = await axios.post(
-        `/api/transaction/${transactionId}/tickets/export`,
-        data,
-        {
-          responseType: 'blob',
-          headers: { 'Content-Type': 'application/json' },
+      // Prepare ticket data
+      const tickets = (data.tickets || []).map((ticket: any) => ({
+        eventName: data.event?.name,
+        eventOrganizerName: data.event?.eventOrganizer?.name,
+        type: data.ticketType?.name,
+        attendee: ticket.visitor_name,
+        qrValue: ticket.ticket_id,
+        date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
+        address: data.event?.address,
+        mapLocation: data.event?.mapLocationUrl,
+        ticketType: data.ticketType,
+        event: data.event,
+        raw: ticket,
+      }));
+
+      // Generate PDF with proper page breaks
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      // Process each ticket individually
+      for (let i = 0; i < tickets.length; i++) {
+        if (i > 0) {
+          pdf.addPage();
         }
-      );
-      const url = window.URL.createObjectURL(res.data);
+
+        // Generate HTML for single ticket
+        const singleTicketHtml = ticketTemplate([tickets[i]]);
+
+        // Create temporary iframe for this ticket
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.left = '-9999px';
+        iframe.style.top = '-9999px';
+        iframe.style.width = '605px';
+        iframe.style.height = '400px';
+        iframe.style.border = 'none';
+        iframe.style.visibility = 'hidden';
+        iframe.style.opacity = '0';
+        iframe.style.pointerEvents = 'none';
+        iframe.style.zIndex = '-9999';
+        document.body.appendChild(iframe);
+
+        // Write HTML to iframe
+        iframe.contentDocument!.write(singleTicketHtml);
+        iframe.contentDocument!.close();
+
+        // Wait for fonts and content to load
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // Capture this ticket
+        const canvas = await html2canvas(iframe.contentDocument!.body, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 605,
+          height: 400,
+          onclone: clonedDoc => {
+            const clonedBody = clonedDoc.body;
+            if (clonedBody) {
+              clonedBody.style.backgroundColor = '#ffffff';
+            }
+          },
+        });
+
+        // Clean up iframe
+        document.body.removeChild(iframe);
+
+        // Add ticket to PDF
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 170;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+      }
+
+      // Generate filename
       const eventName = data?.event?.name?.replace(/\s+/g, '_') || 'ticket';
       const eventDate = data?.ticketType?.ticketStartDate
         ? formatDate(data.ticketType.ticketStartDate, 'date')
         : 'download';
       const fileName = `${eventName}-${eventDate}.pdf`;
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
+      pdf.save(fileName);
       setLoading(false);
     } catch (error) {
       setLoading(false);

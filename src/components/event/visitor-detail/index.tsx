@@ -104,7 +104,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
       <FormProvider {...visitorMethods}>
         <Box
           data-visitor-section
-          className="bg-white px-4 py-4 lg:mb-8 xl:px-10 lg:py-6">
+          className="bg-white px-4 py-4 lg:mb-8 lg:py-6 xl:px-10">
           <Checkbox
             id="same_contact_detail_checkbox"
             size="sm"
