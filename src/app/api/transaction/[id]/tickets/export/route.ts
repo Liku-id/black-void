@@ -27,11 +27,8 @@ export async function POST(req: NextRequest) {
     // Path ke file EJS template
     const templatePath = path.resolve(
       process.cwd(),
-      process.env.NODE_ENV === 'production'
-        ? '/api/transaction/[id]/tickets/export/template.ejs'
-        : 'src/app/api/transaction/[id]/tickets/export/template.ejs'
+      'public/templates/ticket.ejs'
     );
-
     const template = await fs.readFile(templatePath, 'utf-8');
 
     // Render HTML dari EJS
