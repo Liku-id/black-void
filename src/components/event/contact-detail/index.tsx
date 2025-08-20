@@ -83,7 +83,7 @@ const ContactDetailSection: React.FC<ContactDetailSectionProps> = ({
       </Typography>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onContactSubmit)}>
-          <Box className="mb-8 w-full bg-white px-4 py-4 lg:py-6 xl:px-10">
+          <Box className="mb-8 w-full bg-white px-4 py-4 xl:px-10 lg:py-6">
             <Box className="mb-4 flex flex-col gap-4 px-4 xl:mb-6 xl:flex-row xl:gap-8">
               {/* Kolom kiri: Full Name & Email */}
               <Box className="flex min-w-0 flex-1 flex-col gap-4">
