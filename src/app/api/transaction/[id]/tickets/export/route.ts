@@ -82,7 +82,6 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (e) {
-    console.error('PDF Generation Error:', e);
     return handleErrorAPI(e as AxiosErrorResponse);
   }
 }
