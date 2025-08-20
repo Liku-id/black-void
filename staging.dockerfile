@@ -1,10 +1,11 @@
+# ---------- builder ----------
 FROM node:20-bookworm-slim AS builder
 
-ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer \
-    NEXT_TELEMETRY_DISABLED=1
-
-RUN apt-get update && apt-get install -y ca-certificates \
+# Tidak perlu lib GUI di sini
+RUN apt-get update && apt-get install -y ca-certificates wget \
   && rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
 
 USER node
 WORKDIR /app
@@ -12,42 +13,28 @@ WORKDIR /app
 COPY --chown=node:node package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
 
+# Unduh Chrome for Testing (disimpan di cache Puppeteer)
 RUN npx puppeteer browsers install chrome
 
 COPY --chown=node:node . .
 COPY --chown=node:node .env.production .env.production
 RUN npm run build
 
-RUN npm prune --omit=dev
-
-
+# ---------- runner ----------
 FROM node:20-bookworm-slim AS runner
+ENV NODE_ENV=production
+ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
 
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer \
-    TMPDIR=/tmp
-
+# Lib runtime Chrome + font (biar karakter Latin/emoji tampil baik)
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
     fonts-noto \
     fonts-noto-color-emoji \
-    libc6 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
-    libatspi2.0-0 \
-    libcairo2 \
-    libcups2 \
-    libdrm2 \
-    libfontconfig1 \
-    libgdk-pixbuf2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
+    libc6 \
     libx11-6 \
     libx11-xcb1 \
     libxcb1 \
@@ -55,26 +42,26 @@ RUN apt-get update && apt-get install -y \
     libxcursor1 \
     libxdamage1 \
     libxext6 \
-    libxfixes3 \
     libxi6 \
     libxrandr2 \
-    libxrender1 \
-    libxshmfence1 \
-    libxss1 \
     libgbm1 \
+    libgtk-3-0 \
+    libnss3 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libxshmfence1 \
   && rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /tmp/chrome_ud && chown -R node:node /tmp
 
 USER node
 WORKDIR /app
 
-COPY --from=builder --chown=node:node /app/public ./public
-COPY --from=builder --chown=node:node /app/.next ./.next
-COPY --from=builder --chown=node:node /app/node_modules ./node_modules
-COPY --from=builder --chown=node:node /app/package.json ./package.json
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
-COPY --from=builder --chown=node:node /home/node/.cache/puppeteer /home/node/.cache/puppeteer
+# Bawa Chrome yang sudah diunduh Puppeteer (wajib)
+COPY --from=builder /home/node/.cache/puppeteer /home/node/.cache/puppeteer
 
 EXPOSE 3000
 CMD ["npm", "start"]
