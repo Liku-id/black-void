@@ -11,20 +11,20 @@ phases:
 
   build:
     commands:
-    - echo "==> Preparing for Docker build"
-    - echo "Workspace directory structure:"
-    - ls -la
-    - echo "==> Building Docker image"
-    - |
-      docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG -f staging.dockerfile .
+      - echo "==> Preparing for Docker build"
+      - echo "Workspace directory structure:"
+      - ls -la
+      - echo "==> Building Docker image"
+      - |
+        docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG -f staging.dockerfile .
 
   post_build:
     commands:
-    - echo "==> Pushing image to ECR"
-    - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
-    - echo "==> Writing imagedefinitions.json"
-    - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $ECR_REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - echo "==> Pushing image to ECR"
+      - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
+      - echo "==> Writing imagedefinitions.json"
+      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $ECR_REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
-  - imagedefinitions.json
+    - imagedefinitions.json
