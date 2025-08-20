@@ -27,55 +27,30 @@ export async function POST(req: NextRequest) {
       raw: ticket,
     }));
 
-    const html = ejs.render(ticketTemplate, { tickets, body });
+    const template = ticketTemplate;
 
-    const enableSingleProcess = process.env.CHROME_SINGLE_PROCESS === 'true';
-
-    const args = [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--no-proxy-server',
-      '--proxy-bypass-list=*',
-    ];
-
-    if (enableSingleProcess) {
-      args.push('--single-process', '--no-zygote');
-    }
+    // Render HTML dari EJS
+    const html = ejs.render(template, { tickets, body });
 
     browser = await puppeteer.launch({
       headless: true,
-      executablePath: puppeteer.executablePath(),
-      args,
-      timeout: 60_000,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
     });
-
     const page = await browser.newPage();
-    await page.emulateMediaType('screen');
     await page.setContent(html, { waitUntil: 'networkidle0' });
+    const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
+    await browser.close();
 
-    const pdf = await page.pdf({
-      format: 'A4',
-      landscape: false,
-      printBackground: true,
-      preferCSSPageSize: true,
-      margin: { top: '12mm', right: '12mm', bottom: '12mm', left: '12mm' },
-    });
-
-    const eventName = (body.event?.name || 'ticket').replace(/\s+/g, '_');
-    const eventDate = body?.ticketType?.ticketStartDate
-      ? formatDate(body.ticketType.ticketStartDate, 'date')
-      : 'download';
-    const fileName = `${eventName}-${eventDate}.pdf`;
-
-    return new NextResponse(new Uint8Array(pdf).buffer, {
+    return new NextResponse(Buffer.from(pdfBuffer), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Disposition': 'attachment; filename="ticket.pdf"',
       },
     });
   } catch (e) {
