@@ -39,6 +39,7 @@ const SnackBar: React.FC<SnackBarProps> = ({
   const [shouldRender, setShouldRender] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  
   useEffect(() => {
     if (show) {
       // mount then enter animation (double rAF to ensure the transition class is applied)
@@ -96,26 +97,37 @@ const SnackBar: React.FC<SnackBarProps> = ({
 
   return (
     <Box
-      className={`fixed ${positionClasses} left-1/2 z-[9999] max-w-[90vw] min-w-[300px] -translate-x-1/2 rounded-md px-5 py-3 shadow-lg transition-all duration-500 ease-in-out ${variantStyles[variant]} ${
-        isVisible
-          ? 'translate-y-0 scale-100 transform opacity-100'
-          : `scale-95 transform opacity-0 ${position === 'top' ? '-translate-y-3' : 'translate-y-3'}`
-      } ${className} `}>
+      className={`
+        fixed ${positionClasses} left-1/2 z-[9999]
+        -translate-x-1/2 rounded-md px-5 py-3
+        shadow-lg min-w-[300px] max-w-[90vw]
+        transition-all duration-500 ease-in-out
+        ${variantStyles[variant]}
+        ${
+          isVisible
+            ? 'opacity-100 transform translate-y-0 scale-100'
+            : `opacity-0 transform scale-95 ${position === 'top' ? '-translate-y-3' : 'translate-y-3'}`
+        }
+        ${className}
+      `}
+    >
       <Box className="flex items-center justify-between gap-3">
         <span className="flex-1 text-sm font-medium">{text}</span>
         {showCloseButton && (
           <button
             onClick={handleManualClose}
-            className="flex-shrink-0 text-current transition-opacity hover:opacity-70"
-            aria-label="Close notification">
+            className="flex-shrink-0 text-current hover:opacity-70 transition-opacity"
+            aria-label="Close notification"
+          >
             <svg
-              className="h-4 w-4"
+              className="w-4 h-4"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+            >
               <path d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>

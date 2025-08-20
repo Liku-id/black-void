@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ejs from 'ejs';
 import puppeteer from 'puppeteer';
+import path from 'path';
+import fs from 'fs/promises';
 import { formatDate } from '@/utils/formatter';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
-import { ticketTemplate } from '@/lib/templates/ticket-template';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +24,8 @@ export async function POST(req: NextRequest) {
       raw: ticket,
     }));
 
-    const template = ticketTemplate;
+    const templatePath = path.join(process.cwd(), 'public/templates/ticket-template.ejs');
+    const template = await fs.readFile(templatePath, 'utf-8');
 
     // Render HTML dari EJS
     const html = ejs.render(template, { tickets, body });

@@ -32,33 +32,21 @@ export const useSnackBar = () => {
   }, []);
 
   // Convenience methods for different variants
-  const showError = useCallback(
-    (text: string) => {
-      showSnack({ text, variant: 'error' });
-    },
-    [showSnack]
-  );
+  const showError = useCallback((text: string) => {
+    showSnack({ text, variant: 'error' });
+  }, [showSnack]);
 
-  const showSuccess = useCallback(
-    (text: string) => {
-      showSnack({ text, variant: 'success' });
-    },
-    [showSnack]
-  );
+  const showSuccess = useCallback((text: string) => {
+    showSnack({ text, variant: 'success' });
+  }, [showSnack]);
 
-  const showWarning = useCallback(
-    (text: string) => {
-      showSnack({ text, variant: 'warning' });
-    },
-    [showSnack]
-  );
+  const showWarning = useCallback((text: string) => {
+    showSnack({ text, variant: 'warning' });
+  }, [showSnack]);
 
-  const showInfo = useCallback(
-    (text: string) => {
-      showSnack({ text, variant: 'info' });
-    },
-    [showSnack]
-  );
+  const showInfo = useCallback((text: string) => {
+    showSnack({ text, variant: 'info' });
+  }, [showSnack]);
 
   return {
     snackState,
