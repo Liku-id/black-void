@@ -27,30 +27,55 @@ export async function POST(req: NextRequest) {
       raw: ticket,
     }));
 
-    const template = ticketTemplate;
+    const html = ejs.render(ticketTemplate, { tickets, body });
 
-    // Render HTML dari EJS
-    const html = ejs.render(template, { tickets, body });
+    const enableSingleProcess = process.env.CHROME_SINGLE_PROCESS === 'true';
+
+    const args = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--no-proxy-server',
+      '--proxy-bypass-list=*',
+    ];
+
+    if (enableSingleProcess) {
+      args.push('--single-process', '--no-zygote');
+    }
 
     browser = await puppeteer.launch({
       headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
+      executablePath: puppeteer.executablePath(),
+      args,
+      timeout: 60_000,
     });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
-    await browser.close();
 
-    return new NextResponse(Buffer.from(pdfBuffer), {
+    const page = await browser.newPage();
+    await page.emulateMediaType('screen');
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+
+    const pdf = await page.pdf({
+      format: 'A4',
+      landscape: false,
+      printBackground: true,
+      preferCSSPageSize: true,
+      margin: { top: '12mm', right: '12mm', bottom: '12mm', left: '12mm' },
+    });
+
+    const eventName = (body.event?.name || 'ticket').replace(/\s+/g, '_');
+    const eventDate = body?.ticketType?.ticketStartDate
+      ? formatDate(body.ticketType.ticketStartDate, 'date')
+      : 'download';
+    const fileName = `${eventName}-${eventDate}.pdf`;
+
+    return new NextResponse(new Uint8Array(pdf).buffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="ticket.pdf"',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
       },
     });
   } catch (e) {
