@@ -36,7 +36,7 @@ const Ticket = () => {
         eventOrganizerName: data.event?.eventOrganizer?.name,
         type: data.ticketType?.name,
         attendee: ticket.visitor_name,
-        qrValue: ticket.ticket_id,
+        qrValue: ticket.id,
         date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
         address: data.event?.address,
         mapLocation: data.event?.mapLocationUrl,
