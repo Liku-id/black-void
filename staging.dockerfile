@@ -17,24 +17,45 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Copy environment file for frontend build
-# Make sure .env.production exists in repo or generated before build
 COPY .env.production .env.production
 
 # Build the Next.js app
 RUN npm run build
 
-# Step 2: Use a minimal image for running the app
+# Step 2: Runtime image with Chromium support
 FROM node:20-alpine AS runner
 
 ENV NODE_ENV=production
 
 WORKDIR /app
 
+# Install Chromium and dependencies for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Tell Puppeteer to skip installing Chrome and use the installed Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Create a non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
 # Copy only the necessary files
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Copy the EJS template
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+
+USER nextjs
 
 EXPOSE 3000
 
