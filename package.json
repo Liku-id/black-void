@@ -13,7 +13,7 @@
     "test": "jest --config ./config/jest.config.js",
     "test:watch": "jest --config ./config/jest.config.js --watch",
     "test:coverage": "jest --config ./config/jest.config.js --coverage",
-    "postinstall": "echo '⚠️  IMPORTANT: This project uses React 19. If you encounter peer dependency issues, run: npm install --legacy-peer-deps' && npx puppeteer browsers install chrome"
+    "postinstall": "echo '⚠️  IMPORTANT: This project uses React 19. If you encounter peer dependency issues, run: npm install --legacy-peer-deps'"
   },
   "dependencies": {
     "@types/three": "^0.177.0",
