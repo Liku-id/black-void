@@ -14,7 +14,11 @@ import {
 } from '@/utils/form-validation';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAtom } from 'jotai';
-import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
+import {
+  otpExpiresAtAtom,
+  registerFormAtom,
+  RegisterFormData,
+} from '@/store/atoms/auth';
 import { Box, Button, TextField, Typography, Checkbox } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
@@ -35,6 +39,7 @@ const RegisterForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [, setPaylod] = useAtom(registerFormAtom);
+  const [, setExpiresAt] = useAtom(otpExpiresAtAtom);
 
   const methods = useForm<RegisterFormData>({
     mode: 'onChange',
@@ -68,6 +73,7 @@ const RegisterForm = () => {
       });
 
       if (response.status === 200) {
+        setExpiresAt(response.data.expiresAt || null);
         router.replace('/register/verify-otp');
       }
     } catch (error) {

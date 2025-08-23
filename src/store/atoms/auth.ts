@@ -36,3 +36,6 @@ export const authAtom = atom<{
   userData: null,
   loading: true,
 });
+
+// ExpiredAt atom for OTP expiration tracking
+export const otpExpiresAtAtom = atom<number | null>(null);

@@ -88,7 +88,9 @@ export const ticketTemplate = (tickets: any[]) => `<!DOCTYPE html>
   </style>
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center justify-start">
-  ${tickets.map((ticket, idx) => `
+  ${tickets
+    .map(
+      (ticket, idx) => `
     <div class="ticket-card">
       <div class="text-center mb-4 tracking-wide title" style="font-size:26px;">
         ${ticket.eventOrganizerName} | ${ticket.eventName}
@@ -127,6 +129,8 @@ export const ticketTemplate = (tickets: any[]) => `<!DOCTYPE html>
         </div>
       </div>
     </div>
-  `).join('')}
+  `
+    )
+    .join('')}
 </body>
 </html>`;

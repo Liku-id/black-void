@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { registerFormAtom } from '@/store';
+import { otpExpiresAtAtom, registerFormAtom } from '@/store';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { Box, Typography } from '@/components';
 import Loading from '@/components/layout/loading';
@@ -12,11 +12,7 @@ import debounce from '@/utils/debounce';
 import { formatCountdownTime } from '@/utils/formatter';
 import SuccessModal from './success-modal';
 
-interface VerifyOtpFormProps {
-  initialSeconds?: number;
-}
-
-const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
+const VerifyOtpForm = () => {
   const router = useRouter();
 
   // Initialize state
@@ -24,15 +20,26 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [resendLoad, setResendLoad] = useState(false);
-  const [seconds, setSeconds] = useState(initialSeconds);
+  const [seconds, setSeconds] = useState(0);
   const [error, setError] = useState('');
   const [isResentSuccess, setIsResentSuccess] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [payload] = useAtom(registerFormAtom);
+  const [expiresAt, setExpiresAt] = useAtom(otpExpiresAtAtom);
 
   // Validate if form is complete
-  const isFormValid = otp.every(digit => digit !== '' && /^\d$/.test(digit));
+  const isFormValid = otp.every((digit) => digit !== '' && /^\d$/.test(digit));
+
+  const focusFirst = () => {
+    const el = inputRefs.current[0];
+    if (el) {
+      el.focus();
+      try {
+        el.setSelectionRange(0, 1);
+      } catch {}
+    }
+  };
 
   const handleChange = (index: number, value: string) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -89,7 +96,6 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
   // Resend OTP handler
   const reSendOtp = async () => {
     if (resendLoad) return;
-
     setResendLoad(true);
     setError('');
 
@@ -100,20 +106,14 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
 
       if (response.status === 200) {
         setIsResentSuccess(true);
-        setSeconds(initialSeconds);
+        setExpiresAt(response.data.expiresAt);
+        (debouncedSubmit as any)?.cancel?.();
         setOtp(['', '', '', '', '', '']);
 
-        // Focus first input
-        if (inputRefs.current[0]) {
-          inputRefs.current[0]?.focus();
-        }
-
-        setTimeout(() => {
-          setIsResentSuccess(false);
-        }, 3000);
+        setTimeout(() => setIsResentSuccess(false), 3000);
       }
-    } catch (error) {
-      setError(getErrorMessage(error));
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setResendLoad(false);
     }
@@ -129,6 +129,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       }
     } catch (error) {
       setError(getErrorMessage(error));
+      setIsSuccess(false);
+      setOtp(['', '', '', '', '', '']);
     }
   }, [payload]);
 
@@ -152,11 +154,9 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
         }
       } catch (error) {
         setError(getErrorMessage(error));
-        setOtp(['', '', '', '', '', '']);
+        (debouncedSubmit as any)?.cancel?.();
 
-        if (inputRefs.current[0]) {
-          inputRefs.current[0]?.focus();
-        }
+        setOtp(['', '', '', '', '', '']);
       } finally {
         setLoading(false);
       }
@@ -169,19 +169,29 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
     debounce((code: string) => {
       onSubmit(code);
     }, 300),
-    [payload.phoneNumber]
+    [onSubmit]
   );
 
-  // Timer effect
   useEffect(() => {
-    if (seconds <= 0) return;
+    if (!expiresAt) return;
 
-    const timer = setInterval(() => {
-      setSeconds(prev => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
+    const update = () => {
+      const msLeft = expiresAt * 1000 - Date.now();
+      const next = Math.max(0, Math.ceil(msLeft / 1000));
+      setSeconds(next);
+    };
 
-    return () => clearInterval(timer);
-  }, [seconds]);
+    update();
+    const id = setInterval(update, 1000);
+
+    const onVis = () => update();
+    document.addEventListener('visibilitychange', onVis);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [expiresAt]);
 
   // Auto-submit when OTP is complete
   useEffect(() => {
@@ -199,10 +209,12 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
 
   // Auto-focus first input on mount
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0]?.focus();
+    if (!loading && !isSuccess && otp.every((d) => d === '')) {
+      requestAnimationFrame(() => {
+        focusFirst();
+      });
     }
-  }, []);
+  }, [loading, isSuccess, otp]);
 
   if (!payload.phoneNumber) return null;
 
@@ -217,7 +229,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
 
       {!modalOpen && (
         <Typography
-          className={`mb-2 ${seconds < 60 ? 'text-danger' : 'text-white'}`}>
+          className={`mb-2 ${seconds < 60 ? 'text-danger' : 'text-white'}`}
+        >
           {formatCountdownTime(seconds)}
         </Typography>
       )}
@@ -227,7 +240,7 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
           <input
             id={`otp_code_${index + 1}_field`}
             key={index}
-            ref={el => {
+            ref={(el) => {
               inputRefs.current[index] = el;
             }}
             type="text"
@@ -238,8 +251,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
             disabled={loading || isSuccess}
             className={`h-10 w-8 bg-white text-center text-[16px] font-bold text-black transition-all outline-none focus:translate-x-[-2px] focus:translate-y-[-2px] focus:border focus:shadow-[4px_4px_0px_0px_#FFFF] ${error ? 'border-danger' : ''}`}
             value={value}
-            onChange={e => handleChange(index, e.target.value)}
-            onKeyDown={e => handleKeyDown(index, e)}
+            onChange={(e) => handleChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
             onPaste={handlePaste}
           />
         ))}
@@ -254,7 +267,8 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
       <Box
         className={`mt-4 flex gap-1 transition-opacity duration-500 ${
           isResentSuccess || seconds === 0 ? 'opacity-100' : 'opacity-0'
-        }`}>
+        }`}
+      >
         <Typography size={12}>
           {isResentSuccess ? 'OTP has been resent' : "Didn't get the OTP?"}
         </Typography>
@@ -270,11 +284,12 @@ const VerifyOtpForm = ({ initialSeconds = 60 }: VerifyOtpFormProps) => {
                 className="cursor-pointer underline"
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     reSendOtp();
                   }
-                }}>
+                }}
+              >
                 Resend OTP
               </span>
             )}
