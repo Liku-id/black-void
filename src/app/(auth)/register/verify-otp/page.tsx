@@ -19,7 +19,7 @@ export default function VerifyOtpPage() {
       </Box>
 
       {/* Form */}
-      <VerifyOtpForm initialSeconds={180} />
+      <VerifyOtpForm />
     </Box>
   );
 }
