@@ -11,7 +11,7 @@ export default function CreatorListSection() {
       id: org.id,
       name: org.name,
       logo:
-        org.asset?.url ||
+        org.asset_url ||
         'https://dummyimage.com/80x80/CCCCCC/666666.png&text=No+Image',
     })) || [];
 
