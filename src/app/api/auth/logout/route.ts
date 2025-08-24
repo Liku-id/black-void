@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     sameSite: 'strict' as const,
     path: '/',
     expires: new Date(0),
+    maxAge: 0,
   };
 
   cookieStore.set('access_token', '', options);
