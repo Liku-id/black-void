@@ -28,7 +28,9 @@ export function middleware(req: NextRequest) {
     routes.some((route) => pathname.startsWith(route));
 
   const mk = (res: NextResponse) => {
-    res.headers.set('Cache-Control', 'no-store');
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.headers.set('Pragma', 'no-cache');
+    res.headers.set('Expires', '0');
     res.headers.set('Vary', 'Cookie');
     return res;
   };

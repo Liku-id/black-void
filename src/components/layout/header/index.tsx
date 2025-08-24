@@ -37,6 +37,7 @@ export default function Header() {
       setOpenLogoutModal(false);
       await checkAuth(); // reset auth global
       router.replace('/');
+      router.refresh();
     } catch (error) {
       setError(getErrorMessage(error));
     } finally {
