@@ -29,10 +29,10 @@ export function middleware(req: NextRequest) {
 
   const mk = (res: NextResponse) => {
     res.headers.set('Cache-Control', 'no-store');
-    res.headers.set('x-middleware-cache', 'no-cache'); 
+    res.headers.set('Vary', 'Cookie');
     return res;
   };
-  
+
   const redirect = (path: string) =>
     mk(NextResponse.redirect(new URL(path, req.url)));
 
@@ -65,11 +65,7 @@ export function middleware(req: NextRequest) {
   }
 
   // Add authorization header if authenticated
-  if (accessToken) {
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set('Authorization', `Bearer ${accessToken}`);
-    return NextResponse.next({ request: { headers: requestHeaders } });
-  }
-
-  return NextResponse.next();
+  const res = mk(NextResponse.next());
+  if (accessToken) res.headers.set('Authorization', `Bearer ${accessToken}`);
+  return res;
 }
