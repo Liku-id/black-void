@@ -25,9 +25,16 @@ export function middleware(req: NextRequest) {
 
   // Helper functions
   const isRouteMatch = (routes: string[]) =>
-    routes.some(route => pathname.startsWith(route));
+    routes.some((route) => pathname.startsWith(route));
+
+  const mk = (res: NextResponse) => {
+    res.headers.set('Cache-Control', 'no-store');
+    res.headers.set('x-middleware-cache', 'no-cache'); 
+    return res;
+  };
+  
   const redirect = (path: string) =>
-    NextResponse.redirect(new URL(path, req.url));
+    mk(NextResponse.redirect(new URL(path, req.url)));
 
   // Validation logic
   const isRestrictedWhenLoggedIn = restrictedWhenLoggedIn.includes(pathname);
