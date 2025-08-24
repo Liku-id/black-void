@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         .post('/v1/auth/logout', null, {
           headers: authHeader ? { Authorization: authHeader } : {},
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn('Backend logout failed (ignored):', err);
         });
     }
@@ -26,12 +26,22 @@ export async function POST(request: NextRequest) {
     console.warn('Backend logout failed, proceeding with local logout:', err);
   }
 
-  cookieStore.delete('access_token');
-  cookieStore.delete('refresh_token');
-  cookieStore.delete('user_role');
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict' as const,
+    path: '/',
+    expires: new Date(0),
+  };
 
-  return NextResponse.json({
+  cookieStore.set('access_token', '', options);
+  cookieStore.set('refresh_token', '', options);
+  cookieStore.set('user_role', '', options);
+
+  const res = NextResponse.json({
     success: true,
     message: 'Logout successful',
   });
+  res.headers.set('Cache-Control', 'no-store');
+  return res;
 }
