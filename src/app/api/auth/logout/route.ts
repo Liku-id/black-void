@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import axios from '@/lib/api/axios-server';
+
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const authHeader = request.headers.get('authorization');
+
   let force = false;
   try {
     const body = await request.json();
     force = Boolean(body?.force);
   } catch {}
+  
   try {
     if (!force) {
       axios

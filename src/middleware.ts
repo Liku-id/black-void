@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 export function middleware(req: NextRequest) {
   // Configuration
   const pathname = req.nextUrl.pathname;
   const accessToken = req.cookies.get('access_token')?.value;
   const userRole = req.cookies.get('user_role')?.value || '';
+
   const restrictedWhenLoggedIn = [
     '/ticket/auth',
     '/login',
@@ -34,18 +36,22 @@ export function middleware(req: NextRequest) {
   const isBuyerPage = isRouteMatch(buyerOnlyRoutes);
   const userIsStaff = userRole === 'ground_staff';
   const userIsAdmin = userRole === 'admin';
+
   // Redirect logged-in users from auth pages
   if (accessToken && isRestrictedWhenLoggedIn) {
     return redirect(userIsStaff ? '/ticket/scanner' : '/');
   }
+
   // Redirect unauthenticated users from protected routes
   if (!accessToken && isProtectedRoute) {
     return redirect('/login');
   }
+
   // Redirect non-staff from staff pages
   if (!userIsStaff && !userIsAdmin && isStaffPage) {
     return redirect('/ticket/auth');
   }
+  
   // Redirect staff from buyer pages
   if (userIsStaff && isBuyerPage) {
     return redirect('/ticket/scanner');
