@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         .post('/v1/auth/logout', null, {
           headers: authHeader ? { Authorization: authHeader } : {},
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn('Backend logout failed (ignored):', err);
         });
     }

@@ -4,7 +4,7 @@ import axios from '@/lib/api/axios-server';
 
 export async function GET() {
   try {
-    const res = await axios.get('/v1/event-organizers');
+    const res = await axios.get('/v1/event-organizers/logos');
     const data = res.data;
 
     if (res.status !== 200) {
