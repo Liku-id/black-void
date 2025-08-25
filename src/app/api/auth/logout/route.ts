@@ -11,14 +11,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     force = Boolean(body?.force);
   } catch {}
-  
+
   try {
     if (!force) {
       axios
         .post('/v1/auth/logout', null, {
           headers: authHeader ? { Authorization: authHeader } : {},
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn('Backend logout failed (ignored):', err);
         });
     }
