@@ -17,11 +17,11 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   tickets,
   handleChangeCount,
 }) => {
-  // Collect all sales_start_date
+  // Collect all ticketStartDate
   const dates = useMemo(() => {
     if (!data.ticketTypes) return [];
     const rawDates = data.ticketTypes
-      .map((t: any) => t.sales_start_date)
+      .map((t: any) => t.ticketStartDate)
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();

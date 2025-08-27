@@ -26,6 +26,7 @@ export interface Ticket {
   max_order_quantity?: number;
   description?: string;
   sales_start_date?: string;
+  ticketStartDate?: string;
   quantity: number;
   purchased_amount: number;
 }
