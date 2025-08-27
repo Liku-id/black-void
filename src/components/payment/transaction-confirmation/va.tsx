@@ -53,7 +53,7 @@ export default function PaymentConfirmationVA({
           )
         : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(
-      subtotal * Number(process.env.NEXT_PUBLIC_PB1 || 0.1)
+      subtotal * (data.transaction.event.tax / 100)
     );
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
     const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment };
