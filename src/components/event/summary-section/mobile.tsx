@@ -51,7 +51,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
   const adminFee = eventData.adminFee <= 100 
     ? Math.round((totalPrice * eventData.adminFee) / 100)
     : Math.round(eventData.adminFee);
-  const pb1Rate = Number(process.env.NEXT_PUBLIC_PB1) || 0.1;
+  const pb1Rate = Math.round(eventData.tax / 100);
   const tax = Math.round(totalPrice * pb1Rate);
   const paymentMethodFee = selectedPayment?.paymentMethodFee
     ? selectedPayment?.paymentMethodFee < 1
