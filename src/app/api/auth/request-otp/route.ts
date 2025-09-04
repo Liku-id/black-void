@@ -7,15 +7,14 @@ export async function POST(request: NextRequest) {
     const formData = await request.json();
     const { data } = await axios.post('/v1/auth/otp/request', formData);
 
-    const expiredIn = data.expiredIn ?? 180;
-    const nowSec = Math.floor(Date.now() / 1000);
-    const expiresAt = nowSec + expiredIn;
+    console.log(data, 'data otp');
+
+    const expiresAtSec = Math.floor(new Date(data.expiredAt).getTime() / 1000);
 
     return NextResponse.json({
       message: 'OTP sent successfully',
       success: true,
-      expiredIn,
-      expiresAt,
+      expiresAt: expiresAtSec,
     });
   } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);
