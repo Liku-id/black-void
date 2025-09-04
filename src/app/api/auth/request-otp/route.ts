@@ -7,8 +7,6 @@ export async function POST(request: NextRequest) {
     const formData = await request.json();
     const { data } = await axios.post('/v1/auth/otp/request', formData);
 
-    console.log(data, 'data otp');
-
     const expiresAtSec = Math.floor(new Date(data.expiredAt).getTime() / 1000);
 
     return NextResponse.json({

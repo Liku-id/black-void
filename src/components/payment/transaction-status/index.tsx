@@ -31,9 +31,7 @@ export default function PaymentStatus() {
             (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
           )
         : data.transaction.paymentMethod.paymentMethodFee;
-    const pb1 = Math.round(
-      subtotal * (data.transaction.event.tax / 100)
-    );
+    const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
     const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment };
     return { totals };
