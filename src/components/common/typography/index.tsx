@@ -41,15 +41,28 @@ export function Typography({
   color,
   className,
   children,
+  dangerouslySetInnerHTML,
   ...props
 }: TypographyProps) {
   const font = type === 'heading' ? 'font-bebas' : 'font-onest';
 
-  // Get text size class from map, fallback to default
   const textSize = sizeClassMap[size] ?? 'text-[16px]';
 
+  if (dangerouslySetInnerHTML) {
+    return (
+      <Tag 
+        className={cn(font, textSize, color, className)} 
+        dangerouslySetInnerHTML={dangerouslySetInnerHTML}
+        {...props}
+      />
+    );
+  }
+
   return (
-    <Tag className={cn(font, textSize, color, className)} {...props}>
+    <Tag 
+      className={cn(font, textSize, color, className)} 
+      {...props}
+    >
       {children}
     </Tag>
   );

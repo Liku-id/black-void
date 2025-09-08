@@ -18,5 +18,6 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   type?: TypographyType;
   size?: TypographySize;
   color?: TypographyColor;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  dangerouslySetInnerHTML?: { __html: string };
 }
