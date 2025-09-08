@@ -27,11 +27,13 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
       <Typography
         type="body"
         size={12}
-        className="my-3 max-h-[120px] overflow-hidden text-white">
-        {showFull
-          ? termAndConditions
-          : termAndConditions.slice(0, maxChar) + (isLong ? '...' : '')}
-      </Typography>
+        className="my-3 max-h-[120px] overflow-hidden text-white"
+        dangerouslySetInnerHTML={{
+          __html: showFull
+            ? termAndConditions
+            : termAndConditions.slice(0, maxChar) + (isLong ? '...' : '')
+        }}
+      />
       {isLong && (
         <button
           className="mt-1 text-xs text-blue-500 underline"
