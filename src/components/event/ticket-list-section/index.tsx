@@ -17,19 +17,36 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   tickets,
   handleChangeCount,
 }) => {
-  // Collect all ticketStartDate
+  // Collect all ticket_start_date
   const dates = useMemo(() => {
     if (!data.ticketTypes) return [];
     const rawDates = data.ticketTypes
-      .map((t: any) => t.ticketStartDate)
+      .map((t: any) => t.ticketStartDate || t.ticket_start_date)
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();
+    
     return unique;
   }, [data.ticketTypes]);
 
   const [selectedDate, setSelectedDate] = useState(dates[0] || '');
   const activeTicketId = tickets.find(t => t.count > 0)?.id;
+  const today = new Date();
+  const todayString = today.toISOString().split('T')[0]; 
+
+  // Filter tickets based on date and sales period
+  const filteredTickets = useMemo(() => {
+    return tickets.filter(ticket => {
+      if (ticket.ticket_start_date !== selectedDate) return false;
+      if (ticket.sales_start_date && todayString < ticket.sales_start_date) {
+        return false;
+      }
+      if (ticket.sales_end_date && todayString > ticket.sales_end_date) {
+        return false;
+      }
+      return true;
+    });
+  }, [tickets, selectedDate, todayString]);
 
   // Render Ticket Card
   function renderTicketCard(ticket: Ticket) {
@@ -76,9 +93,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
 
       <hr className="border-muted block border-t-[0.5px] lg:hidden" />
 
-      {tickets
-        .filter(ticket => ticket.sales_start_date === selectedDate)
-        .map(renderTicketCard)}
+      {filteredTickets.map(renderTicketCard)}
     </section>
   );
 };

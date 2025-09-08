@@ -116,6 +116,8 @@ export default function Event() {
           max_order_quantity: t.max_order_quantity,
           description: t.description,
           sales_start_date: t.sales_start_date,
+          sales_end_date: t.sales_end_date,
+          ticket_start_date: t.ticketStartDate,
           quantity: t.quantity,
           purchased_amount: t.purchased_amount,
         }))
