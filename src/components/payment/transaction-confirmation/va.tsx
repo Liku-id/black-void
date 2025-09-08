@@ -43,9 +43,9 @@ export default function PaymentConfirmationVA({
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
     const subtotal = ticketType.price * data.transaction.orderQuantity;
-    const adminFee = Math.round(
-      subtotal * ((data.transaction.event.adminFee ?? 0) / 100)
-    );
+    const adminFee = (data.transaction.event.adminFee ?? 0) <= 100 
+      ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
+      : Math.round(data.transaction.event.adminFee ?? 0);
     const paymentMethodFee =
       data.transaction.paymentMethod.paymentMethodFee < 1
         ? Math.round(

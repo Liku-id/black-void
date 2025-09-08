@@ -47,7 +47,9 @@ const SummarySection: React.FC<SummarySectionProps> = ({
     (sum, t) => sum + t.count * Number(t.price),
     0
   );
-  const adminFee = Math.round((totalPrice * eventData.adminFee) / 100);
+  const adminFee = eventData.adminFee <= 100 
+    ? Math.round((totalPrice * eventData.adminFee) / 100)
+    : Math.round(eventData.adminFee);
   const pb1Rate = Math.round(eventData.tax / 100);
   const tax = Math.round(totalPrice * pb1Rate);
   const paymentMethodFee = selectedPayment?.paymentMethodFee
