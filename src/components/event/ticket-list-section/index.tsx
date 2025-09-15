@@ -25,14 +25,14 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();
-    
+
     return unique;
   }, [data.ticketTypes]);
 
   const [selectedDate, setSelectedDate] = useState(dates[0] || '');
   const activeTicketId = tickets.find(t => t.count > 0)?.id;
   const today = new Date();
-  const todayString = today.toISOString().split('T')[0]; 
+  const todayString = today.toISOString().split('T')[0];
 
   // Filter tickets based on date and sales period
   const filteredTickets = useMemo(() => {

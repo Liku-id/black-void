@@ -67,11 +67,11 @@ const Footer = () => {
               ABOUT WUKONG
             </Typography>
             <Box className="flex flex-col gap-2">
-              {/* <Link
+              <Link
                 href="/about-us"
                 className="hover:text-green font-onest text-[14px] text-white">
                 About Us
-              </Link> */}
+              </Link>
               <Link
                 href="/term-and-condition"
                 className="hover:text-green font-onest text-[14px] text-white">
