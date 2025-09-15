@@ -18,7 +18,11 @@ export default function EventListSection() {
         image={event.eventAssets?.[0]?.asset?.url}
         title={event.name}
         location={event.address || '-'}
-        date={event.lowestPriceTicketType?.ticketStartDate ? formatDate(event.lowestPriceTicketType?.ticketStartDate, 'date') : '-'}
+        date={
+          event.lowestPriceTicketType?.ticketStartDate
+            ? formatDate(event.lowestPriceTicketType?.ticketStartDate, 'date')
+            : '-'
+        }
         price={
           event.lowestPriceTicketType?.price
             ? formatRupiah(event.lowestPriceTicketType.price)

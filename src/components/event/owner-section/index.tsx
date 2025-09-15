@@ -31,7 +31,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         dangerouslySetInnerHTML={{
           __html: showFull
             ? termAndConditions
-            : termAndConditions.slice(0, maxChar) + (isLong ? '...' : '')
+            : termAndConditions.slice(0, maxChar) + (isLong ? '...' : ''),
         }}
       />
       {isLong && (

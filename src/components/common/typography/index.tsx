@@ -50,8 +50,8 @@ export function Typography({
 
   if (dangerouslySetInnerHTML) {
     return (
-      <Tag 
-        className={cn(font, textSize, color, className)} 
+      <Tag
+        className={cn(font, textSize, color, className)}
         dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         {...props}
       />
@@ -59,10 +59,7 @@ export function Typography({
   }
 
   return (
-    <Tag 
-      className={cn(font, textSize, color, className)} 
-      {...props}
-    >
+    <Tag className={cn(font, textSize, color, className)} {...props}>
       {children}
     </Tag>
   );
