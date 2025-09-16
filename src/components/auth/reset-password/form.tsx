@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useMemo, Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextField, Typography, Box, Checkbox } from '@/components';
 import Loading from '@/components/layout/loading';
@@ -20,12 +19,6 @@ interface ResetPasswordData {
 }
 
 const ResetPasswordForm = () => {
-  // Get token & email from query string
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const token = searchParams.get('token');
-  const email = searchParams.get('email');
-
   // Initialize state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -62,8 +55,6 @@ const ResetPasswordForm = () => {
     setLoading(true);
     try {
       const res = await axios.post('/api/auth/reset-password', {
-        email,
-        token,
         password: formData.password,
       });
       const data = res.data;
@@ -76,12 +67,6 @@ const ResetPasswordForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (!token || !email) {
-      router.replace('/forgot-password');
-    }
-  }, [token, email, router]);
-
   return (
     <Suspense>
       {/* Loading overlay */}
@@ -91,7 +76,8 @@ const ResetPasswordForm = () => {
         <form
           data-testid="reset-password-form"
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center">
+          className="flex flex-col items-center"
+        >
           <TextField
             id="password_field"
             name="password"
@@ -164,7 +150,8 @@ const ResetPasswordForm = () => {
           <Button
             id="reset_password_button"
             type="submit"
-            disabled={!allValid || loading}>
+            disabled={!allValid || loading}
+          >
             Reset Password
           </Button>
 
