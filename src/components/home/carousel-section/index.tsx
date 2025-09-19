@@ -39,7 +39,7 @@ export default function CarouselSection() {
           <Box className="relative block w-[350px] overflow-hidden md:hidden">
             <Slider
               autoScroll={false}
-              className="h-[200px] w-full"
+              className="h-[224px] w-full"
               itemWidth={350}
               gap={0}
               pagination
