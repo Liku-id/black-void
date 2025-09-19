@@ -18,6 +18,7 @@ export default function EventListSection() {
         image={event.eventAssets?.[0]?.asset?.url}
         title={event.name}
         location={event.address || '-'}
+        status={event.eventStatus}
         date={event.lowestPriceTicketType?.ticketStartDate ? formatDate(event.lowestPriceTicketType?.ticketStartDate, 'date') : '-'}
         price={
           event.lowestPriceTicketType?.price

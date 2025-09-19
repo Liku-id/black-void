@@ -23,7 +23,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
       <Box className="block md:hidden">
         <Slider
           autoScroll={false}
-          className="h-[210px] w-full"
+          className="h-[240px] w-full"
           itemWidth={375}
           pagination>
           {items.map((item: any, i: number) => (
@@ -32,7 +32,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
               src={item.asset.url}
               alt={`Image ${i + 1}`}
               width={375}
-              height={210}
+              height={240}
               className="object-cover"
               draggable={false}
               unoptimized
@@ -63,7 +63,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
           </Typography>
           <Box className="grid gap-2 lg:grid-cols-2 lg:gap-16">
             <Box>
-              <Box className="mb-2 flex items-center gap-2 lg:mb-4">
+              <Box className="mb-2 flex gap-2 lg:mb-4">
                 <Image
                   src={locationIcon}
                   alt="location"

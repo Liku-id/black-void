@@ -12,6 +12,7 @@ interface EventCardProps {
   location?: string;
   date?: string;
   price?: string;
+  status?: string;
   skeleton?: boolean;
 }
 
@@ -22,9 +23,11 @@ export default function EventCard({
   location,
   date,
   price,
+  status,
   skeleton = false,
 }: EventCardProps) {
   const router = useRouter();
+  console.log(status);
   if (skeleton) {
     return (
       <Box className="h-auto w-[270px] animate-pulse border border-black bg-white p-0 shadow-sm">
@@ -87,7 +90,7 @@ export default function EventCard({
           <Typography
             as="span"
             type="body"
-            className="font-onest text-[12px] leading-none font-light"
+            className="font-onest text-[12px] leading-none font-light truncate"
             color="text-muted">
             {location}
           </Typography>
@@ -118,12 +121,14 @@ export default function EventCard({
             className="font-bebas leading-none">
             {price}
           </Typography>
-          <Button
-            id={`${metaUrl}_buy_ticket_button`}
-            className="bg-green px-2 py-1 text-white"
-            onClick={() => router.push(`/event/${metaUrl}`)}>
-            Buy Ticket
-          </Button>
+          {status === 'on_going' && (
+            <Button
+              id={`${metaUrl}_buy_ticket_button`}
+              className="bg-green px-2 py-1 text-white"
+              onClick={() => router.push(`/event/${metaUrl}`)}>
+              Buy Ticket
+            </Button>
+          )}
         </Box>
       </Box>
     </Box>
