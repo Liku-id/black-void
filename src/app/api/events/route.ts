@@ -4,7 +4,7 @@ import axios from '@/lib/api/axios-server';
 
 export async function GET() {
   try {
-    const res = await axios.get('/v1/events?status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_APPROVED');
+    const res = await axios.get('/v1/events?status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_APPROVED&status=EVENT_STATUS_DONE');
     const data = res.data;
 
     if (res.status !== 200) {
