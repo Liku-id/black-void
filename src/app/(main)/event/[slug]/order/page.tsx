@@ -95,7 +95,7 @@ const OrderPage = () => {
         contactMethods.getValues().fullName
       );
     }
-    setContactDetail(prev => ({
+    setContactDetail((prev) => ({
       ...prev,
       full_name: data.fullName,
       country_code: data.countryCode,
@@ -158,7 +158,15 @@ const OrderPage = () => {
       const payload = {
         orderId: order.orderId,
         paymentMethodId: selectedPayment?.id,
-        attendee: visitorData?.visitors?.map(v => v.fullName),
+        attendee: visitorData?.visitors?.map((v) => ({
+          attendeeData: [
+            {
+              additionalFormId: orderData?.additionalForms[0]?.id,
+              value: v.fullName,
+            },
+          ],
+        })),
+
         contactDetails: {
           name: contactData.fullName,
           email: contactData.email,
@@ -292,7 +300,8 @@ const OrderPage = () => {
                 'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
             ' z-1 hidden lg:block'
           }
-          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}
+        >
           <SummarySection
             eventData={eventData}
             tickets={orderData.tickets}
