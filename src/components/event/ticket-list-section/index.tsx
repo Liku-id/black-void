@@ -38,21 +38,16 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   const filteredTickets = useMemo(() => {
     return tickets.filter(ticket => {
       if (ticket.ticket_start_date !== selectedDate) return false;
-      if (ticket.sales_start_date && todayString < ticket.sales_start_date) {
-        return false;
-      }
-      if (ticket.sales_end_date && todayString > ticket.sales_end_date) {
-        return false;
-      }
       return true;
     });
-  }, [tickets, selectedDate, todayString]);
+  }, [tickets, selectedDate]);
 
   // Render Ticket Card
   function renderTicketCard(ticket: Ticket) {
     const count = ticket.count;
     const isActive = count > 0;
     const isOtherActive = !!activeTicketId && activeTicketId !== ticket.id;
+    
     return (
       <TicketCard
         key={ticket.id}
