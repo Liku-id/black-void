@@ -37,6 +37,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
   const plusDisabled =
     count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
+  // Check if sales period has ended
+  const today = new Date().toISOString().split('T')[0];
+  const isSalesEnded = ticket.sales_end_date && today > ticket.sales_end_date;
+
   // Card shadow logic
   const cardClass = [
     'mt-6 lg:mt-4 border border-[var(--color-gray)] bg-white p-[14px] transition-shadow',
@@ -95,7 +99,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
       <hr className="border-muted my-3" />
 
-      {available <= 0 ? (
+      {available <= 0 || isSalesEnded ? (
         <Button
           id={`${ticket.name}_sold`}
           className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"

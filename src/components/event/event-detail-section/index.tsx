@@ -82,12 +82,20 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                   alt="location"
                   className="h-[20px] w-[20px] invert lg:h-[24px] lg:w-[24px]"
                 />
-                <Typography
-                  type="body"
-                  color="text-white"
-                  className="text-[12px] lg:text-[14px]">
-                  {formatDate(data.startDate)}
-                </Typography>
+                <Box className="inline-block">
+                  <Typography
+                    type="body"
+                    color="text-white"
+                    className="text-[12px] lg:text-[14px]">
+                    {formatDate(data.startDate)}
+                  </Typography>
+                  <Typography
+                    type="body"
+                    color="text-white"
+                    className="text-[12px] lg:text-[14px]">
+                    {formatDate(data.endDate)}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
 

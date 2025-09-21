@@ -36,7 +36,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
       />
       {isLong && (
         <button
-          className="mt-1 text-xs text-blue-500 underline"
+          className="mt-1 text-xs text-white underline"
           onClick={() => setShowFull(!showFull)}
           type="button">
           {!showFull ? 'See details' : 'Show less'}

@@ -26,27 +26,49 @@ export function formatCountdownTime(seconds: number): string {
   return `${minutes}:${secs}`;
 }
 
-export function formatDate(
-  date: string | Date,
-  variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
-): string {
+export function convertToWIB(date: string | Date): Date {
   let d: Date;
 
   if (typeof date === 'string') {
-    // ex: 2025-07-14 18:51:19.91875 +0700 WIB
-    const match = date.match(
-      /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})(?:\.\d+)? ([+-]\d{2})(\d{2})/
-    );
-    if (match) {
-      const [_, year, month, day, hour, min, sec, offsetH, offsetM] = match;
-      const iso = `${year}-${month}-${day}T${hour}:${min}:${sec}${offsetH}:${offsetM}`;
-      d = new Date(iso);
+    // Handle various date formats
+    if (date.includes('Z') || date.includes('UTC')) {
+      // ISO string with Z or UTC
+      d = new Date(date);
+    } else if (date.includes('+') || date.includes('-')) {
+      // Date with timezone offset
+      d = new Date(date);
     } else {
+      // Plain date string, assume it's already in local time
       d = new Date(date);
     }
   } else {
     d = new Date(date);
   }
+
+  // Convert to WIB (UTC+7)
+  const wibOffset = 7 * 60; // 7 hours in minutes
+  const utcTime = d.getTime() + (d.getTimezoneOffset() * 60000);
+  const wibTime = new Date(utcTime + (wibOffset * 60000));
+  
+  return wibTime;
+}
+
+export function getTodayWIB(): Date {
+  const now = new Date();
+  return convertToWIB(now);
+}
+
+export function getTodayWIBString(): string {
+  const today = getTodayWIB();
+  return today.toISOString().split('T')[0]; // YYYY-MM-DD format
+}
+
+export function formatDate(
+  date: string | Date,
+  variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
+): string {
+  // Convert to WIB first to ensure consistent timezone
+  const d = convertToWIB(date);
 
   if (isNaN(d.getTime())) return '-';
   if (variant === 'day') {
