@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Box, Button, Typography } from '@/components';
-import { formatRupiah } from '@/utils/formatter';
+import { formatRupiah, getTodayWIBString } from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
 
@@ -38,7 +38,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
     count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
   // Check if sales period has ended
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayWIBString();
   const isSalesEnded = ticket.sales_end_date && today > ticket.sales_end_date;
 
   // Card shadow logic
