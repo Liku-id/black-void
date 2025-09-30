@@ -90,7 +90,7 @@ export default function EventCard({
           <Typography
             as="span"
             type="body"
-            className="font-onest text-[12px] leading-none font-light truncate"
+            className="font-onest truncate text-[12px] leading-none font-light"
             color="text-muted">
             {location}
           </Typography>
