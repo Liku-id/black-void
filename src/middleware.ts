@@ -28,7 +28,7 @@ export function middleware(req: NextRequest) {
 
   // Helper functions
   const isRouteMatch = (routes: string[]) =>
-    routes.some((route) => pathname.startsWith(route));
+    routes.some(route => pathname.startsWith(route));
 
   const redirect = (path: string) =>
     NextResponse.redirect(new URL(path, req.url));

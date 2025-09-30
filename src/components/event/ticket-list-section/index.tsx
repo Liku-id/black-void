@@ -45,7 +45,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
     const count = ticket.count;
     const isActive = count > 0;
     const isOtherActive = !!activeTicketId && activeTicketId !== ticket.id;
-    
+
     return (
       <TicketCard
         key={ticket.id}

@@ -6,7 +6,9 @@ export async function GET(req: NextRequest) {
   try {
     const show = 5;
     const page = 1;
-    const res = await axios.get(`/v1/events?show=${show}&page=${page}&status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_DONE`);
+    const res = await axios.get(
+      `/v1/events?show=${show}&page=${page}&status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_DONE`
+    );
     const data = res.data;
 
     if (res.status !== 200) {

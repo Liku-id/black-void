@@ -76,8 +76,7 @@ const ResetPasswordForm = () => {
         <form
           data-testid="reset-password-form"
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col items-center"
-        >
+          className="flex flex-col items-center">
           <TextField
             id="password_field"
             name="password"
@@ -150,8 +149,7 @@ const ResetPasswordForm = () => {
           <Button
             id="reset_password_button"
             type="submit"
-            disabled={!allValid || loading}
-          >
+            disabled={!allValid || loading}>
             Reset Password
           </Button>
 
