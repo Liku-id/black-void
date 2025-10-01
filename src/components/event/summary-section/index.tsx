@@ -165,7 +165,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
 
         {/* <Box className={`flex justify-center ${error ? 'mt-1' : 'mt-6'}`}> */}
         <Box className={`mt-6 flex justify-center`}>
-          <Button id="continue_button" onClick={onContinue} disabled={disabled}>
+          <Button id="continue_checkout" onClick={onContinue} disabled={disabled}>
             Continue
           </Button>
         </Box>
