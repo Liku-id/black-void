@@ -166,7 +166,7 @@ const RegisterForm = () => {
                 ]}
               />
               <Button
-                id="continue_button"
+                id="continue_register"
                 type="button"
                 onClick={handleContinue}
                 disabled={checkLoad}>

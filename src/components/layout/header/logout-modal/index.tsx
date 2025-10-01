@@ -34,7 +34,7 @@ const LogOutModal: React.FC<LogOutModalProps> = ({
             No, Back to Home
           </Button>
           <Button
-            id="continue_button"
+            id="continue_logout_button"
             className="text-[12px] md:text-[14px]"
             variant="outline-white"
             onClick={onLogout}
