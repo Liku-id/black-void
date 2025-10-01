@@ -201,7 +201,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
       )}
 
       <Button
-        id="continue_checkout"
+        id={isOrderPage ? "continue_payment" : "continue_checkout"}
         className="h-12 w-full"
         onClick={onContinue}
         disabled={disabled}>
