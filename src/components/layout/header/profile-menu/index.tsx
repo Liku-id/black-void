@@ -18,12 +18,14 @@ interface ProfileMenuProps {
     email: string;
   };
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose?: () => void;
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
   className,
   userData,
   setOpenModal,
+  onClose,
 }) => {
   // Initialize state
   const [open, setOpen] = useState(false);
@@ -89,7 +91,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
         <Link
           id="my_tickets_link"
-          href="/ticket"
+          href="/tickets"
           className="mb-4 flex cursor-pointer items-center gap-2  transition-all duration-300 hover:gap-3"
           onClick={() => setOpen(false)}
         >
@@ -135,9 +137,12 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         </Box>
 
         <Link
-          href="/ticket"
+          href="/tickets"
           className="mt-4 flex cursor-pointer items-center gap-2 px-12 transition-all duration-300 hover:gap-3"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            onClose && onClose();
+          }}
         >
           <Image src={ticket} alt="ticket" width={24} height={24} />
           <Typography

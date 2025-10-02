@@ -16,7 +16,7 @@ export function middleware(req: NextRequest) {
     '/register',
   ];
 
-  const protectedRoutes = ['/my-tickets'];
+  const protectedRoutes = ['/tickets'];
   const staffOnlyRoutes = ['/ticket/scanner'];
   const buyerOnlyRoutes = [
     '/event',

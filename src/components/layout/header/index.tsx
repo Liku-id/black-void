@@ -160,7 +160,7 @@ export default function Header() {
         style={{ willChange: 'transform' }}
       >
         <Box className="flex items-start justify-between">
-          <Link href="/" aria-label="Home">
+          <Link href="/" aria-label="Home" onClick={() => setOpenMenu(false)}>
             <Image
               src={whiteLogo}
               alt="Logo"
@@ -184,6 +184,7 @@ export default function Header() {
             className="mt-11"
             userData={userData}
             setOpenModal={setOpenLogoutModal}
+            onClose={() => setOpenMenu(false)}
           />
         )}
 

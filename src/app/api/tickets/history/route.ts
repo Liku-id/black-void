@@ -31,11 +31,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    return NextResponse.json({
-      message: 'Ticket history retrieved successfully',
-      success: true,
-      data: data.body,
-    });
+    return NextResponse.json(data?.body);
   } catch (error) {
     return handleErrorAPI(error as AxiosErrorResponse);
   }
