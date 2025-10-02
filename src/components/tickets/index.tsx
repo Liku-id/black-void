@@ -76,7 +76,7 @@ const Ticket = () => {
         iframe.contentDocument!.close();
 
         // Wait for fonts and content to load
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Capture this ticket
         const canvas = await html2canvas(iframe.contentDocument!.body, {
@@ -87,7 +87,7 @@ const Ticket = () => {
           logging: false,
           width: 605,
           height: 400,
-          onclone: clonedDoc => {
+          onclone: (clonedDoc) => {
             const clonedBody = clonedDoc.body;
             if (clonedBody) {
               clonedBody.style.backgroundColor = '#ffffff';
@@ -139,7 +139,8 @@ const Ticket = () => {
               type="heading"
               size={30}
               color="text-white"
-              className="mb-6">
+              className="mb-6"
+            >
               Your Ticket
             </Typography>
             <Box className="block">
@@ -151,7 +152,8 @@ const Ticket = () => {
                   type="body"
                   size={10}
                   color="text-red"
-                  className="mt-2 text-center">
+                  className="mt-2 text-center"
+                >
                   {error}
                 </Typography>
               )}
@@ -170,7 +172,8 @@ const Ticket = () => {
                     <Typography
                       type="body"
                       size={18}
-                      className="ml-2 font-bold uppercase">
+                      className="ml-2 font-bold uppercase"
+                    >
                       {data.ticketType.name} #{idx + 1}
                     </Typography>
                   </Box>
@@ -190,7 +193,8 @@ const Ticket = () => {
                       <Typography
                         type="heading"
                         size={22}
-                        className="mb-4 text-center md:text-left">
+                        className="mb-4 text-center md:text-left"
+                      >
                         {t.visitor_name}
                       </Typography>
 
@@ -204,7 +208,8 @@ const Ticket = () => {
                         <Typography
                           type="body"
                           size={14}
-                          className="font-light">
+                          className="font-light"
+                        >
                           {formatDate(
                             data.ticketType.ticketStartDate,
                             'datetime'
@@ -222,7 +227,8 @@ const Ticket = () => {
                         <Typography
                           type="body"
                           size={14}
-                          className="font-light">
+                          className="font-light"
+                        >
                           {data.event.address}
                         </Typography>
                       </Box>
@@ -240,12 +246,14 @@ const Ticket = () => {
 
             <Button
               className="m-auto mt-6 flex h-6 border-[0.5px] border-black bg-white px-2"
-              onClick={() => window.open(data.event.mapLocationUrl, '_blank')}>
+              onClick={() => window.open(data.event.mapLocationUrl, '_blank')}
+            >
               <Typography
                 type="body"
                 size={12}
                 color="text-black"
-                className="font-light">
+                className="font-light"
+              >
                 See Location
               </Typography>
             </Button>
