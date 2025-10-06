@@ -4,7 +4,6 @@ import Script from 'next/script';
 import '../styles/globals.css';
 import '../styles/animations.css';
 import SWRProvider from '@/lib/api/swr-provider';
-import { PostHogProvider } from '@/lib/posthog';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -87,10 +86,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           />
         </noscript>
 
-
-        <PostHogProvider>
-          <SWRProvider>{children}</SWRProvider>
-        </PostHogProvider>
+        <SWRProvider>{children}</SWRProvider>
       </body>
     </html>
   );
