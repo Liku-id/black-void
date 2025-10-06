@@ -27,7 +27,6 @@ export default function EventCard({
   skeleton = false,
 }: EventCardProps) {
   const router = useRouter();
-  console.log(status);
   if (skeleton) {
     return (
       <Box className="h-auto w-[270px] animate-pulse border border-black bg-white p-0 shadow-sm">
