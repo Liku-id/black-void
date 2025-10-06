@@ -14,6 +14,7 @@ export function formatTime(date: string | Date): string {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
+      timeZone: 'UTC'
     })
     .replace(':', '.');
 }
@@ -32,10 +33,8 @@ export function convertToWIB(date: string | Date): Date {
   if (typeof date === 'string') {
     // Handle various date formats
     if (date.includes('Z') || date.includes('UTC')) {
-      // ISO string with Z or UTC - parse as UTC and convert to WIB
+      // ISO string with Z or UTC - parse as UTC, no timezone conversion
       d = new Date(date);
-      // Add 7 hours to convert UTC to WIB
-      d = new Date(d.getTime() + 7 * 60 * 60 * 1000);
     } else if (date.includes('+07:00') || date.includes('+0700')) {
       // Already in WIB timezone - parse directly
       d = new Date(date);
@@ -55,11 +54,11 @@ export function convertToWIB(date: string | Date): Date {
 
 export function getTodayWIB(): Date {
   const now = new Date();
-  return convertToWIB(now);
+  return now;
 }
 
 export function getTodayWIBString(): string {
-  const today = getTodayWIB();
+  const today = new Date();
   return today.toISOString().split('T')[0]; // YYYY-MM-DD format
 }
 
@@ -67,39 +66,41 @@ export function formatDate(
   date: string | Date,
   variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
 ): string {
-  // Convert to WIB first to ensure consistent timezone
-  const d = convertToWIB(date);
+  // Parse date and use UTC methods to avoid timezone conversion
+  const d = new Date(date);
 
   if (isNaN(d.getTime())) return '-';
   if (variant === 'day') {
-    return d.toLocaleDateString('en-EN', { weekday: 'long' });
+    return d.toLocaleDateString('en-EN', { 
+      weekday: 'long',
+      timeZone: 'UTC'
+    });
   }
   if (variant === 'date') {
-    // DD MMMM YYYY
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = d.toLocaleString('en-EN', { month: 'long' });
-    const year = d.getFullYear();
+    const day = d.getUTCDate();
+    const month = d.toLocaleString('en-EN', { 
+      month: 'short',
+      timeZone: 'UTC'
+    });
+    const year = d.getUTCFullYear();
     return `${day} ${month} ${year}`;
   }
   if (variant === 'datetime') {
-    // May 21, 2025, 05:00PM GMT+8
-    const month = d.toLocaleString('en-EN', { month: 'short' });
-    const day = d.getDate();
-    const year = d.getFullYear();
+    // May 21, 2025, 05:00PM UTC
+    const month = d.toLocaleString('en-EN', { 
+      month: 'short',
+      timeZone: 'UTC'
+    });
+    const day = d.getUTCDate();
+    const year = d.getUTCFullYear();
     const time = d.toLocaleTimeString('en-EN', {
       hour: 'numeric',
       minute: '2-digit',
       hour12: true,
+      timeZone: 'UTC'
     });
-    const timezone =
-      d
-        .toLocaleTimeString('en-EN', {
-          timeZoneName: 'short',
-        })
-        .split(' ')
-        .pop() || 'GMT+8';
 
-    return `${month} ${day}, ${year}, ${time} ${timezone}`;
+    return `${month} ${day}, ${year}, ${time}`;
   }
   // default 'full'
   return d.toLocaleDateString('en-EN', {
@@ -107,5 +108,6 @@ export function formatDate(
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC'
   });
 }

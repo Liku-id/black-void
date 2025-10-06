@@ -14,6 +14,7 @@ import Loading from '@/components/layout/loading';
 import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
 import { useSnackBar } from '@/utils/use-snack-bar';
 import SnackBar from '@/components/common/snack-bar';
+import { trackLogin, trackEvent } from '@/lib/posthog';
 
 interface FormDataLogin {
   email: string;
@@ -47,6 +48,13 @@ const LoginForm = () => {
       if (response.status === 200) {
         setAuthUser(response.data.data);
 
+        // Track successful login
+        trackLogin(
+          response.data.data.id || 'unknown',
+          response.data.data.name,
+          response.data.data.email
+        );
+
         // handle redirect based on current path
         if (pathname === '/ticket/auth') {
           router.replace('/ticket/scanner');
@@ -60,6 +68,12 @@ const LoginForm = () => {
     } catch (error) {
       console.error(error);
       setError(getErrorMessage(error));
+      
+      // Track failed login attempt
+      trackEvent('login_failed', { 
+        error: getErrorMessage(error),
+        email: formData.email 
+      });
     } finally {
       setLoading(false);
     }
