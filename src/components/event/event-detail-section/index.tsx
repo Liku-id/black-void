@@ -89,12 +89,22 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                     className="text-[12px] lg:text-[14px]">
                     {formatDate(data.startDate)}
                   </Typography>
-                  <Typography
-                    type="body"
-                    color="text-white"
-                    className="text-[12px] lg:text-[14px]">
-                    {formatDate(data.endDate)}
-                  </Typography>
+                  {(() => {
+                    const startDate = new Date(data.startDate);
+                    const endDate = new Date(data.endDate);
+                    const isSameDate = startDate.getUTCDate() === endDate.getUTCDate() && 
+                                      startDate.getUTCMonth() === endDate.getUTCMonth() && 
+                                      startDate.getUTCFullYear() === endDate.getUTCFullYear();
+                    
+                    return !isSameDate && (
+                      <Typography
+                        type="body"
+                        color="text-white"
+                        className="text-[12px] lg:text-[14px]">
+                        {formatDate(data.endDate)}
+                      </Typography>
+                    );
+                  })()}
                 </Box>
               </Box>
             </Box>
