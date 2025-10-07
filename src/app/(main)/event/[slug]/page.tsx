@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import axios from 'axios';
-import { Box, Container } from '@/components';
+import { Box, Container, Button, Typography, Modal } from '@/components';
 import EventDetailSection from '@/components/event/event-detail-section';
 import EventPageSkeleton from '@/components/event/skeletons';
 import TicketListSection from '@/components/event/ticket-list-section';
@@ -14,6 +14,7 @@ import OwnerSection from '@/components/event/owner-section';
 import Loading from '@/components/layout/loading';
 import useStickyObserver from '@/utils/sticky-observer';
 import { orderBookingAtom } from '@/store/atoms/order';
+import { useAuth } from '@/lib/session/use-auth';
 
 export default function Event() {
   const params = useParams();
@@ -31,8 +32,10 @@ export default function Event() {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const selectedTickets = tickets.filter((t: any) => t.count > 0);
   const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
+  const { isLoggedIn } = useAuth();
 
   // Sticky observer logic using custom hook
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -47,6 +50,12 @@ export default function Event() {
     setTickets((prev: any[]) => {
       const target = prev.find(t => t.id === id);
       if (!target) return prev;
+
+      // Check if user is trying to add a ticket (delta > 0) and is not logged in and ticket price is 0
+      if (delta > 0 && !isLoggedIn && target.price === 0) {
+        setShowLoginModal(true);
+        return prev;
+      }
 
       const available = Math.max(
         0,
@@ -103,6 +112,16 @@ export default function Event() {
       setLoading(false);
       setError(error?.response?.data?.error || 'Failed to create order');
     }
+  };
+
+  const handleLoginClick = () => {
+    setShowLoginModal(false);
+    router.push('/login');
+  };
+
+  const handleRegisterClick = () => {
+    setShowLoginModal(false);
+    router.push('/register');
   };
 
   useEffect(() => {
@@ -213,6 +232,35 @@ export default function Event() {
           />
         </Box>
       </Container>
+
+      {/* Login Modal */}
+      <Modal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Already have account?"
+        className="md:w-[454px]"
+        footer={
+          <Box className="flex justify-end gap-4">
+            <Button
+              type="button"
+              onClick={handleLoginClick}
+              className="border border-white bg-transparent px-6 py-3 text-white">
+              Login
+            </Button>
+            <Button
+              type="button"
+              onClick={handleRegisterClick}
+              className="border border-green bg-green px-6 py-3 text-white">
+              Register Account
+            </Button>
+          </Box>
+        }>
+        <Box className="mb-6">
+          <Typography type="body" size={14} color="text-white">
+            You can get this ticket by register/sign up an account first.
+          </Typography>
+        </Box>
+      </Modal>
     </main>
   );
 }

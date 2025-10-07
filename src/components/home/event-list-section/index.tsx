@@ -27,7 +27,7 @@ export default function EventListSection() {
         price={
           event.lowestPriceTicketType?.price
             ? formatRupiah(event.lowestPriceTicketType.price)
-            : 'TBA'
+            : "Free"
         }
       />
     ));
