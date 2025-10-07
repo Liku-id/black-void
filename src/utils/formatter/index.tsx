@@ -9,13 +9,12 @@ export function formatRupiah(value: number | string): string {
 }
 
 export function formatTime(date: string | Date): string {
-  return new Date(date)
-    .toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    })
-    .replace(':', '.');
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Jakarta'
+  }).format(new Date(date)).replace(':', '.');
 }
 
 export function formatCountdownTime(seconds: number): string {
@@ -67,45 +66,39 @@ export function formatDate(
   date: string | Date,
   variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
 ): string {
-  // Convert to WIB first to ensure consistent timezone
-  const d = convertToWIB(date);
-
+  const d = new Date(date);
+  
   if (isNaN(d.getTime())) return '-';
-  if (variant === 'day') {
-    return d.toLocaleDateString('en-EN', { weekday: 'long' });
-  }
-  if (variant === 'date') {
-    // DD MMMM YYYY
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = d.toLocaleString('en-EN', { month: 'long' });
-    const year = d.getFullYear();
-    return `${day} ${month} ${year}`;
-  }
-  if (variant === 'datetime') {
-    // May 21, 2025, 05:00PM GMT+8
-    const month = d.toLocaleString('en-EN', { month: 'short' });
-    const day = d.getDate();
-    const year = d.getFullYear();
-    const time = d.toLocaleTimeString('en-EN', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-    const timezone =
-      d
-        .toLocaleTimeString('en-EN', {
-          timeZoneName: 'short',
-        })
-        .split(' ')
-        .pop() || 'GMT+8';
+  
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'Asia/Jakarta'
+  };
 
-    return `${month} ${day}, ${year}, ${time} ${timezone}`;
+  switch (variant) {
+    case 'day':
+      options.weekday = 'long';
+      break;
+    case 'date':
+      options.day = 'numeric';
+      options.month = 'short';
+      options.year = 'numeric';
+      break;
+    case 'datetime':
+      options.day = 'numeric';
+      options.month = 'short';
+      options.year = 'numeric';
+      options.hour = 'numeric';
+      options.minute = '2-digit';
+      options.hour12 = true;
+      break;
+    case 'full':
+    default:
+      options.weekday = 'long';
+      options.day = 'numeric';
+      options.month = 'long';
+      options.year = 'numeric';
+      break;
   }
-  // default 'full'
-  return d.toLocaleDateString('en-EN', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+
+  return new Intl.DateTimeFormat('en-US', options).format(d);
 }
