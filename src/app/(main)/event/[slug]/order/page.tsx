@@ -135,10 +135,16 @@ const OrderPage = () => {
     eventData && orderData ? 112 : 0
   );
 
+  // Calculate totalPrice to determine if payment method is required
+  const totalPrice = orderData?.tickets?.reduce(
+    (sum: number, t: any) => sum + t.count * Number(t.price),
+    0
+  ) || 0;
+
   const isDisabled =
     !contactMethods.formState.isValid ||
     !visitorMethods.formState.isValid ||
-    !selectedPayment;
+    (totalPrice > 0 && !selectedPayment);
 
   const handleContinue = async () => {
     const isValid = await visitorMethods.trigger();
@@ -251,6 +257,30 @@ const OrderPage = () => {
     contactMethods.setValue,
     isInitialized,
   ]);
+
+  // Auto-select "Free" payment method when totalPrice = 0
+  useEffect(() => {
+    if (orderData?.tickets) {
+      const totalPrice = orderData.tickets.reduce(
+        (sum: number, t: any) => sum + t.count * Number(t.price),
+        0
+      );
+      
+      if (totalPrice === 0 && !selectedPayment) {
+        const freePaymentMethod = eventData?.paymentMethods?.find(
+          (method: any) => method.name.toLowerCase().includes('free') || method.type === 'FREE'
+        );
+        
+        if (freePaymentMethod) {
+          setSelectedPayment({
+            id: freePaymentMethod.id,
+            name: freePaymentMethod.name,
+            paymentMethodFee: 0,
+          });
+        }
+      }
+    }
+  }, [orderData?.tickets, eventData?.paymentMethods, selectedPayment]);
 
   if (eventLoading || orderLoading || !order.orderId) {
     return <EventPageSkeleton />;

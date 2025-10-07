@@ -21,7 +21,7 @@ export interface FormDataContact {
 export interface Ticket {
   id: string;
   name: string;
-  price: string;
+  price: number;
   count: number;
   max_order_quantity?: number;
   description?: string;

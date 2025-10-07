@@ -47,8 +47,9 @@ const SummarySection: React.FC<SummarySectionProps> = ({
     (sum, t) => sum + t.count * Number(t.price),
     0
   );
-  const adminFee =
-    eventData.adminFee <= 100
+  const adminFee = ticketCount === 0 || totalPrice === 0
+    ? 0 
+    : eventData.adminFee <= 100
       ? Math.round((totalPrice * eventData.adminFee) / 100)
       : Math.round(eventData.adminFee);
   const pb1Rate = eventData.tax / 100;
@@ -125,7 +126,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
           className="mt-4 w-full"
         />
 
-        {isOrderPage && (
+        {isOrderPage && totalPrice > 0 && (
           <Box className="mt-6">
             <Typography
               type="heading"

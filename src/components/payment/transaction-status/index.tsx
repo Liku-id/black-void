@@ -22,15 +22,16 @@ export default function PaymentStatus() {
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
     const subtotal = ticketType.price * data.transaction.orderQuantity;
-    const adminFee =
-      (data.transaction.event.adminFee ?? 0) <= 100
+    const adminFee = subtotal === 0
+      ? 0
+      : (data.transaction.event.adminFee ?? 0) <= 100
         ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
         : Math.round(data.transaction.event.adminFee ?? 0);
     const paymentMethodFee =
       data.transaction.paymentMethod.paymentMethodFee < 1
         ? Math.round(
-            (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
-          )
+          (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
+        )
         : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
