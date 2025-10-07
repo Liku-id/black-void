@@ -55,7 +55,7 @@ export const Modal = ({
         </Box>
         {children && <Box className="px-4 md:px-8">{children}</Box>}
         {footer && (
-          <Box className="flex justify-end px-4 pb-4 md:justify-start md:px-8 md:pb-8">
+          <Box className="flex justify-start px-4 pb-4 md:justify-end md:px-8 md:pb-8">
             {footer}
           </Box>
         )}

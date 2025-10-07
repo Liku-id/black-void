@@ -68,7 +68,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
           color="text-black"
           size={18}
           className="font-bold">
-          {formatRupiah(ticket.price)}
+          {ticket.price === 0 ? "Free" : formatRupiah(ticket.price)}
         </Typography>
       </Box>
       <Typography type="body" size={14} color="text-muted">

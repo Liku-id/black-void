@@ -48,8 +48,9 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
     (sum, t) => sum + t.count * Number(t.price),
     0
   );
-  const adminFee =
-    eventData.adminFee <= 100
+  const adminFee = ticketCount === 0 || totalPrice === 0
+    ? 0 
+    : eventData.adminFee <= 100
       ? Math.round((totalPrice * eventData.adminFee) / 100)
       : Math.round(eventData.adminFee);
   const pb1Rate = Math.round(eventData.tax / 100);
@@ -132,7 +133,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             />
           </Box>
 
-          {isOrderPage && (
+          {isOrderPage && totalPrice > 0 && (
             <Box
               id="payment_method_field"
               className="mb-4 flex items-center justify-between border border-solid border-black p-2"
