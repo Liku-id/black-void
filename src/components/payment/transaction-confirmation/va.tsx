@@ -327,7 +327,7 @@ export default function PaymentConfirmationVA({
             </Box>
 
             <Box className="flex justify-center">
-              <Button id="confirm_payment_button" onClick={mutate}>
+              <Button id="btn_ep_confirm_payment" onClick={mutate}>
                 Confirm Payment
               </Button>
             </Box>

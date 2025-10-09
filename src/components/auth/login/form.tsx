@@ -126,7 +126,7 @@ const LoginForm = () => {
             onEndIconClick={() => setShowPassword(!showPassword)}
           />
 
-          <Button id="login_button" type="submit">
+          <Button id="btn_li_login" type="submit">
             Log In
           </Button>
 

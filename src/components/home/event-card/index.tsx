@@ -122,7 +122,7 @@ export default function EventCard({
           </Typography>
           {status === 'on_going' && (
             <Button
-              id={`${metaUrl}_buy_ticket_button`}
+              id={`btn_buy_ticket_${metaUrl}`}
               className="bg-green px-2 py-1 text-white"
               onClick={() => router.push(`/event/${metaUrl}`)}>
               Buy Ticket

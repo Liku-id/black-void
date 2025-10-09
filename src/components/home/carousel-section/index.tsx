@@ -45,8 +45,11 @@ export default function CarouselSection() {
               pagination
               pages={items.map(
                 (item: { metaUrl: string }) => `/event/${item.metaUrl}`
+              )}
+              itemIds={items.map(
+                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
               )}>
-              {items.map((item: { url: string }, i: number) => (
+              {items.map((item: { url: string, metaUrl: string }, i: number) => (
                 <Image
                   key={i}
                   src={item.url}
@@ -67,6 +70,9 @@ export default function CarouselSection() {
               images={items.map((item: { url: string }) => item.url)}
               pages={items.map(
                 (item: { metaUrl: string }) => `/event/${item.metaUrl}`
+              )}
+              linkIds={items.map(
+                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
               )}
               width={800}
               height={456}

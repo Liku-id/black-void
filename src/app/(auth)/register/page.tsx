@@ -38,7 +38,7 @@ export default function RegisterPage() {
           <Typography size={12}>
             Already have an account?{' '}
             <Link
-              id="log_in_link"
+              id="btn_rgs_login"
               href="/login"
               className="hover:text-green underline">
               Log In
