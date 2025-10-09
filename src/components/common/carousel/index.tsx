@@ -9,6 +9,7 @@ import carouselArrow from '@/assets/icons/carousel-arrow.svg';
 interface CarouselProps {
   images: string[];
   pages?: string[];
+  linkIds?: string[];
   width: number;
   height: number;
   sizes: string;
@@ -22,6 +23,7 @@ type Direction = 'next' | 'prev';
 export function Carousel({
   images,
   pages = [],
+  linkIds = [],
   width,
   height,
   sizes,
@@ -94,7 +96,11 @@ export function Carousel({
               />
             )}
             {pages.length > 0 ? (
-              <Link href={pages[currentIndex]} passHref>
+              <Link 
+                id={linkIds[currentIndex] || undefined}
+                href={pages[currentIndex]} 
+                passHref
+              >
                 <Image
                   src={images[currentIndex]}
                   alt=""
@@ -120,7 +126,11 @@ export function Carousel({
             )}
           </>
         ) : (
-          <Link href={pages[currentIndex] || '#'} passHref>
+          <Link 
+            href={pages[currentIndex] || '#'} 
+            passHref
+            id={linkIds[currentIndex] || undefined}
+          >
             <Image
               src={images[currentIndex]}
               alt=""

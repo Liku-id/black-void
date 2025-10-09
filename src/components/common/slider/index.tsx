@@ -24,6 +24,7 @@ interface SliderProps {
   draggable?: boolean;
   pagination?: boolean;
   pages?: string[];
+  itemIds?: string[];
 }
 
 export function clampIndex(
@@ -53,6 +54,7 @@ export function Slider({
   draggable = true,
   pagination = false,
   pages,
+  itemIds = [],
 }: SliderProps) {
   const router = useRouter();
   const childrenArray = Array.isArray(children) ? children : [children];
@@ -161,6 +163,7 @@ export function Slider({
           {childrenArray.map((child, index) => (
             <Box
               key={index}
+              id={itemIds[index] || undefined}
               className="flex-shrink-0 select-none"
               style={{ width: itemWidth }}>
               {child}
