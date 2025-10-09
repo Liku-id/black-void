@@ -36,7 +36,7 @@ export default function LoginPage() {
           <Typography size={12}>
             Need an account?{' '}
             <Link
-              id="sign_up_link"
+              id="btn_rgs_signup"
               href="/register"
               className="hover:text-green underline">
               Sign up

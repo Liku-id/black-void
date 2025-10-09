@@ -166,7 +166,7 @@ const RegisterForm = () => {
                 ]}
               />
               <Button
-                id="continue_register"
+                id="btn_rgs_continue"
                 type="button"
                 onClick={handleContinue}
                 disabled={checkLoad}>
@@ -272,7 +272,7 @@ const RegisterForm = () => {
                 </Checkbox>
               </Box>
               <Button
-                id="register_button"
+                id="btn_rgs_submit"
                 data-testid="register_button"
                 type="submit"
                 disabled={!allValid || loading}>

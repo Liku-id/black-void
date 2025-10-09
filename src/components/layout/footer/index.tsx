@@ -38,21 +38,25 @@ const Footer = () => {
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
+                id="btn_music"
                 href="#project-list"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Music
               </Link>
               <Link
+                id="btn_sport"
                 href="#project-list"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Sports
               </Link>
               <Link
+                id="btn_exhibition"
                 href="#project-list"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Exhibition
               </Link>
               <Link
+                id="btn_festival"
                 href="#project-list"
                 className="hover:text-greenfont-onest text-[14px] text-white">
                 Festival
@@ -68,21 +72,25 @@ const Footer = () => {
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
+                id="btn_about_us"
                 href="/about-us"
                 className="hover:text-green font-onest text-[14px] text-white">
                 About Us
               </Link>
               <Link
+                id="btn_term_and_condition"
                 href="/term-and-condition"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Terms & Conditions
               </Link>
               <Link
+                id="btn_privacy_policy"
                 href="/privacy-policy"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Privacy Policy
               </Link>
               <Link
+                id="btn_cookie_policy"
                 href="/cookie-policy"
                 className="hover:text-green font-onest text-[14px] text-white">
                 Cookie Policy

@@ -144,7 +144,7 @@ const Ticket = () => {
               Your Ticket
             </Typography>
             <Box className="block">
-              <Button id="download_button" onClick={handleDownload}>
+              <Button id="btn_ep_download_ticket" onClick={handleDownload}>
                 Download
               </Button>
               {error && (

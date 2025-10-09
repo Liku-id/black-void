@@ -89,7 +89,7 @@ const ForgotPasswordForm = () => {
             rules={{ required: 'Email is required', validate: email }}
           />
 
-          <Button id="send_link_button" type="submit">
+          <Button id="btn_fyp_send_link" type="submit">
             Send Link
           </Button>
 

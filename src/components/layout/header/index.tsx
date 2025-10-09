@@ -77,6 +77,7 @@ export default function Header() {
         /> */}
         <Box className="ml-auto flex items-center">
           <Link
+            id="btn_contact"
             href="mailto:support@wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
@@ -92,6 +93,7 @@ export default function Header() {
           </Link>
 
           <Link
+            id="btn_become_creator"
             href="https://form.typeform.com/to/kHYsLPnZ"
             target="_blank"
             rel="noopener noreferrer"
@@ -112,7 +114,7 @@ export default function Header() {
           )}
 
           {!loading && !isLoggedIn && (
-            <Link id="login_button" href="/login" className="ml-6">
+            <Link id="btn_login" href="/login" className="ml-6">
               <Button>Log In</Button>
             </Link>
           )}
@@ -190,6 +192,7 @@ export default function Header() {
 
         <Box className="mt-[44px] flex flex-1 flex-col">
           <Link
+            id="btn_contact"
             href="mailto:support@wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
@@ -200,6 +203,7 @@ export default function Header() {
             </Typography>
           </Link>
           <Link
+            id="btn_become_creator"
             href="https://form.typeform.com/to/kHYsLPnZ"
             target="_blank"
             rel="noopener noreferrer"
@@ -228,7 +232,7 @@ export default function Header() {
             </Box>
           ) : (
             <Link href="/login" className="mb-40 flex justify-center">
-              <Button className="px-[18px] py-[8px]">Log In</Button>
+              <Button id="btn_login" className="px-[18px] py-[8px]">Log In</Button>
             </Link>
           )}
         </Box>
