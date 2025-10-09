@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useCountdown } from '@/utils/timer';
@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import { resetOrderBookingAtom } from '@/store';
 import { Box, Container } from '@/components';
 import Loading from '@/components/layout/loading';
+import axiosClient from '@/lib/api/axios-client';
 
 const VAComponent = dynamic(() => import('./va'));
 const QRISComponent = dynamic(() => import('./qris'));
@@ -29,6 +30,7 @@ export default function PaymentConfirmation() {
   const [initialSeconds, setInitialSeconds] = useState(900);
   const [secondsLeft, resetCountdown] = useCountdown(initialSeconds);
   const [, resetOrder] = useAtom(resetOrderBookingAtom);
+  const hasCalledInvalidate = useRef(false);
 
   useEffect(() => {
     resetOrder();
@@ -48,6 +50,23 @@ export default function PaymentConfirmation() {
       resetCountdown();
     }
   }, [data, resetCountdown]);
+
+  // Call invalidate API when countdown reaches 0
+  useEffect(() => {
+    const invalidateExpiredTransaction = async () => {
+      try {
+        await axiosClient.post('/api/order/invalidate-expired-transaction');
+        mutate();
+      } catch (error) {
+        console.error('Failed to invalidate expired transaction:', error);
+      }
+    };
+
+    if (secondsLeft === 0 && !hasCalledInvalidate.current) {
+      hasCalledInvalidate.current = true;
+      invalidateExpiredTransaction();
+    }
+  }, [secondsLeft]);
 
   if (isLoading) return <Loading />;
   if (!isLoading && !data)
