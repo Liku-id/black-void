@@ -277,7 +277,7 @@ const VerifyOtpForm = () => {
               'Sending OTP...'
             ) : (
               <span
-                id="resend_otp_link"
+                id="btn_rgs_otp_resend"
                 onClick={reSendOtp}
                 className="cursor-pointer underline"
                 role="button"

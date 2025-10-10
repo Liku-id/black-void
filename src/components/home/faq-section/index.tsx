@@ -94,6 +94,7 @@ export default function FAQSection() {
               return (
                 <Accordion
                   key={idx}
+                  id={`btn_faq_${idx + 1}`}
                   question={`${idx + 1}. ${faq.question}`}
                   answer={faq.answer}
                   open={openIdx === globalIdx}
@@ -111,6 +112,7 @@ export default function FAQSection() {
               return (
                 <Accordion
                   key={idx + 5}
+                  id={`btn_faq_${idx + 6}`}
                   question={`${idx + 6}. ${faq.question}`}
                   answer={faq.answer}
                   open={openIdx === globalIdx}

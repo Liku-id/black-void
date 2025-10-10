@@ -3,6 +3,7 @@ import Image from 'next/image';
 import accordionArrow from '@/assets/icons/accordion-arrow.svg';
 
 interface AccordionProps {
+  id?: string;
   question: string;
   answer: string;
   className?: string;
@@ -11,6 +12,7 @@ interface AccordionProps {
 }
 
 export default function Accordion({
+  id,
   question,
   answer,
   className,
@@ -36,6 +38,7 @@ export default function Accordion({
         {null}
       </Box>
       <Box
+        id={id}
         className={[
           'relative',
           'border',
