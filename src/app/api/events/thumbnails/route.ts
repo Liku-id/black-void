@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
       .map((event: any) => ({
         url: event.eventAssets?.[0]?.asset?.url,
         metaUrl: event.metaUrl,
+        status: event.eventStatus,
       }))
       .filter(
         (item: { url: string; metaUrl: string }) => item.url && item.metaUrl
