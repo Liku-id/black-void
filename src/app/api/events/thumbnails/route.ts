@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const show = 5;
     const page = 1;
     const res = await axios.get(
-      `/v1/events?show=${show}&page=${page}&status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_DONE`
+      `/v1/events?show=${show}&page=${page}&status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_DONE&status=EVENT_STATUS_APPROVED`
     );
     const data = res.data;
 
