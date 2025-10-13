@@ -6,6 +6,9 @@ import Image from 'next/image';
 export default function CarouselSection() {
   const { data, isLoading } = useSWR('/api/events/thumbnails');
   const items = data || [];
+  
+  // Create array to determine which items are clickable (ongoing events)
+  const clickableItems = items.map((item: { status?: string }) => item.status === 'on_going');
 
   if (isLoading) {
     return (
@@ -44,11 +47,13 @@ export default function CarouselSection() {
               gap={0}
               pagination
               pages={items.map(
-                (item: { metaUrl: string }) => `/event/${item.metaUrl}`
+                (item: { metaUrl: string; status?: string }) => 
+                  item.status === 'on_going' ? `/event/${item.metaUrl}` : '/'
               )}
               itemIds={items.map(
                 (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
-              )}>
+              )}
+              clickableItems={clickableItems}>
               {items.map((item: { url: string, metaUrl: string }, i: number) => (
                 <Image
                   key={i}
@@ -69,11 +74,13 @@ export default function CarouselSection() {
             <Carousel
               images={items.map((item: { url: string }) => item.url)}
               pages={items.map(
-                (item: { metaUrl: string }) => `/event/${item.metaUrl}`
+                (item: { metaUrl: string; status?: string }) => 
+                  item.status === 'on_going' ? `/event/${item.metaUrl}` : '/'
               )}
               linkIds={items.map(
                 (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
               )}
+              clickableItems={clickableItems}
               width={800}
               height={456}
               sizes="(min-width: 1024px) 800px, (min-width: 768px) 550px"

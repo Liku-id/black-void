@@ -10,6 +10,7 @@ interface CarouselProps {
   images: string[];
   pages?: string[];
   linkIds?: string[];
+  clickableItems?: boolean[];
   width: number;
   height: number;
   sizes: string;
@@ -24,6 +25,7 @@ export function Carousel({
   images,
   pages = [],
   linkIds = [],
+  clickableItems = [],
   width,
   height,
   sizes,
@@ -31,7 +33,15 @@ export function Carousel({
   animate = true,
   arrowPosition = 'outside',
 }: CarouselProps) {
+  // Filter out empty or invalid images
+  const validImages = images.filter(img => img && img.trim() !== '');
+  
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Return null if no valid images
+  if (validImages.length === 0) {
+    return null;
+  }
 
   // Animasi state
   const [prevIndex, setPrevIndex] = useState(0);
@@ -65,11 +75,11 @@ export function Carousel({
   }, []);
 
   const nextSlide = () => {
-    startAnimation('next', (currentIndex + 1) % images.length);
+    startAnimation('next', (currentIndex + 1) % validImages.length);
   };
 
   const prevSlide = () => {
-    startAnimation('prev', (currentIndex - 1 + images.length) % images.length);
+    startAnimation('prev', (currentIndex - 1 + validImages.length) % validImages.length);
   };
 
   const goToSlide = (index: number) => {
@@ -83,9 +93,9 @@ export function Carousel({
         {/* Animasi */}
         {animate ? (
           <>
-            {showPrev && (
+            {showPrev && validImages[prevIndex] && (
               <Image
-                src={images[prevIndex]}
+                src={validImages[prevIndex]}
                 alt=""
                 className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating ? 'scale-90 opacity-0' : 'scale-100 opacity-100'} `}
                 width={width}
@@ -96,52 +106,58 @@ export function Carousel({
               />
             )}
             {pages.length > 0 ? (
-              <Link 
-                id={linkIds[currentIndex] || undefined}
-                href={pages[currentIndex]} 
-                passHref
-              >
+              validImages[currentIndex] && (
+                <Link
+                  id={linkIds[currentIndex] || undefined}
+                  href={pages[currentIndex]}
+                  passHref
+                >
+                  <Image
+                    src={validImages[currentIndex]}
+                    alt=""
+                    className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating && showPrev ? 'scale-105' : 'scale-100'} ${clickableItems[currentIndex] !== false ? 'cursor-pointer' : 'cursor-default'} opacity-100`}
+                    width={width}
+                    height={height}
+                    sizes={sizes}
+                    draggable={false}
+                    unoptimized
+                  />
+                </Link>
+              )
+            ) : (
+              validImages[currentIndex] && (
                 <Image
-                  src={images[currentIndex]}
+                  src={validImages[currentIndex]}
                   alt=""
-                  className={`absolute h-full w-full object-cover transition-opacity transition-transform duration-500 ${isAnimating && showPrev ? 'scale-105' : 'scale-100'} cursor-pointer opacity-100`}
+                  className="absolute h-full w-full object-cover"
                   width={width}
                   height={height}
                   sizes={sizes}
                   draggable={false}
                   unoptimized
                 />
-              </Link>
-            ) : (
+              )
+            )}
+          </>
+        ) : (
+          validImages[currentIndex] && (
+            <Link
+              href={pages[currentIndex] || '#'}
+              passHref
+              id={linkIds[currentIndex] || undefined}
+            >
               <Image
-                src={images[currentIndex]}
+                src={validImages[currentIndex]}
                 alt=""
-                className="absolute h-full w-full object-cover"
+                className={`absolute h-full w-full object-cover ${clickableItems[currentIndex] !== false ? 'cursor-pointer' : 'cursor-default'}`}
                 width={width}
                 height={height}
                 sizes={sizes}
                 draggable={false}
                 unoptimized
               />
-            )}
-          </>
-        ) : (
-          <Link 
-            href={pages[currentIndex] || '#'} 
-            passHref
-            id={linkIds[currentIndex] || undefined}
-          >
-            <Image
-              src={images[currentIndex]}
-              alt=""
-              className="absolute h-full w-full cursor-pointer object-cover"
-              width={width}
-              height={height}
-              sizes={sizes}
-              draggable={false}
-              unoptimized
-            />
-          </Link>
+            </Link>
+          )
         )}
 
         {/* Left Arrow */}
@@ -152,7 +168,8 @@ export function Carousel({
               ? 'absolute top-1/2 left-4 z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
               : 'absolute top-1/2 left-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
           }
-          disabled={animate && isAnimating}>
+          disabled={animate && isAnimating}
+        >
           <Image src={carouselArrow} alt="Previous" width={46} height={46} />
         </Button>
 
@@ -164,7 +181,8 @@ export function Carousel({
               ? 'absolute top-1/2 right-4 z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
               : 'absolute top-1/2 right-[-88px] z-10 h-[46px] w-[46px] -translate-y-1/2 p-0'
           }
-          disabled={animate && isAnimating}>
+          disabled={animate && isAnimating}
+        >
           <Image
             src={carouselArrow}
             alt="Next"
