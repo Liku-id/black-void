@@ -245,7 +245,7 @@ export default function Event() {
               type="button"
               onClick={handleLoginClick}
               className="border border-white bg-transparent px-6 py-3 text-white">
-              Login
+              Get In
             </Button>
             <Button
               type="button"
