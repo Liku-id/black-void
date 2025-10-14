@@ -4,10 +4,8 @@ import axios from '@/lib/api/axios-server';
 
 export async function GET(req: NextRequest) {
   try {
-    const show = 5;
-    const page = 1;
     const res = await axios.get(
-      `/v1/events?show=${show}&page=${page}&status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_DONE`
+      `/v1/events?status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_APPROVED&status=EVENT_STATUS_DONE&limit=5&page=0`
     );
     const data = res.data;
 
@@ -25,7 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Mapping di API route
-    const items = (data.body.events || [])
+    const items = (data.body.data || [])
       .map((event: any) => ({
         url: event.eventAssets?.[0]?.asset?.url,
         metaUrl: event.metaUrl,

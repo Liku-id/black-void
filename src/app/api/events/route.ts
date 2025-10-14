@@ -5,7 +5,7 @@ import axios from '@/lib/api/axios-server';
 export async function GET() {
   try {
     const res = await axios.get(
-      '/v1/events?status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_APPROVED&status=EVENT_STATUS_DONE&show=50'
+      '/v1/events?status=EVENT_STATUS_ON_GOING&status=EVENT_STATUS_APPROVED&status=EVENT_STATUS_DONE&limit=50&page=0'
     );
     const data = res.data;
 
@@ -23,7 +23,7 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(data.body);
+    return NextResponse.json({ events: data.body?.data });
   } catch (error: any) {
     return handleErrorAPI(error);
   }
