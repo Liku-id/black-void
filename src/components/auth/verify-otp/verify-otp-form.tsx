@@ -221,9 +221,12 @@ const VerifyOtpForm = () => {
   return (
     <Box className="flex flex-col items-center">
       {loading && <Loading />}
+      <Typography size={41} type="heading">
+        Let's get wu verified
+      </Typography>
 
       <Typography className="my-4 text-center">
-        We already sent you one time password to this number{' '}
+        We've sent Wu an OTP code to your Whatsapp number{' '}
         {payload.phoneNumber}
       </Typography>
 

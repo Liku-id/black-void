@@ -14,12 +14,12 @@ export default function ForgotPasswordPage() {
           <Typography
             size={41}
             type="heading"
-            className="mb-4 font-normal uppercase">
-            Trouble logging in?
+            className="mb-4 font-normal uppercase leading-tight">
+            Getting Trouble <br />
+            logging in?
           </Typography>
           <Typography size={16} type="body">
-            Enter your registered email below to receive password reset
-            instructions
+            Enter your registered email below to receive password reset instructions
           </Typography>
         </Box>
 
