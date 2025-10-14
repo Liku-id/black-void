@@ -25,6 +25,7 @@ import eyeOpened from '@/assets/icons/eye-open.svg';
 import Loading from '@/components/layout/loading';
 import errorIcon from '@/assets/icons/error.svg';
 import SuccessIcon from '@/assets/icons/success.svg';
+import SuccessModal from '../verify-otp/success-modal';
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -40,6 +41,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [, setPaylod] = useAtom(registerFormAtom);
   const [, setExpiresAt] = useAtom(otpExpiresAtAtom);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const methods = useForm<RegisterFormData>({
     mode: 'onChange',
@@ -67,14 +69,24 @@ const RegisterForm = () => {
 
       // Set payload to global state
       setPaylod(payload);
-
       const response = await axios.post('/api/auth/request-otp', {
         phoneNumber: payload.phoneNumber,
       });
 
       if (response.status === 200) {
-        setExpiresAt(response.data.expiresAt || null);
-        router.replace('/register/verify-otp');
+        const verifyResponse = await axios.post('/api/auth/verify-otp', {
+          phoneNumber: payload.phoneNumber,
+          code: "000000"
+        });
+
+      if (verifyResponse.status === 200) {
+        const submitResponse = await axios.post('/api/auth/register', payload);
+        if (submitResponse.status === 200) {
+          setModalOpen(true);
+        }
+      }
+        // setExpiresAt(response.data.expiresAt || null);
+        // router.replace('/register/verify-otp');
       }
     } catch (error) {
       console.error(error);
@@ -288,6 +300,8 @@ const RegisterForm = () => {
           )}
         </form>
       </FormProvider>
+
+      <SuccessModal open={modalOpen} onLogin={() => router.replace('/login')} />
     </>
   );
 };
