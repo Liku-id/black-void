@@ -8,14 +8,14 @@ export default function LoginPage() {
   return (
     <Box className="mx-auto mt-24 mb-10 max-w-sm text-white md:mt-32">
       <Box className="mb-8 text-center md:mb-20">
-        <Typography className="mb-4">Welcome to Wukong,</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">
-          {'Log in to your account'.split('').map((child, idx) => (
+          {'are Wu in?'.split('').map((child, idx) => (
             <span className="hover-text" key={idx}>
               {child}
             </span>
           ))}
         </Typography>
+        <Typography className="mb-4">It takes a little more to find the chosen Wu!</Typography>
       </Box>
 
       {/* Form */}
