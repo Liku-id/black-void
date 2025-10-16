@@ -19,12 +19,14 @@ const Footer = () => {
             </Box>
             <Typography
               type="body"
-              className="font-onest mb-10 text-[18px] leading-normal font-semibold text-white">
+              className="font-onest mb-10 text-[18px] leading-normal font-semibold text-white"
+            >
               PT Aku Rela Kamu Bahagia
             </Typography>
             <Typography
               type="body"
-              className="font-onest text-[14px] leading-normal text-white">
+              className="font-onest text-[14px] leading-normal text-white"
+            >
               Jl. Ciniru III No.2, RT.2/RW.3, Rw. Barat,Kec. Kby. Baru, Jakarta
               Selatan 12180,Indonesia
             </Typography>
@@ -33,32 +35,38 @@ const Footer = () => {
           <Box>
             <Typography
               type="heading"
-              className="mb-4 text-[24px] leading-normal text-white">
+              as="h2"
+              className="mb-4 text-[24px] leading-normal text-white"
+            >
               EVENT TYPE
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
                 id="btn_music"
                 href="#project-list"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Music
               </Link>
               <Link
                 id="btn_sport"
                 href="#project-list"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Sports
               </Link>
               <Link
                 id="btn_exhibition"
                 href="#project-list"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Exhibition
               </Link>
               <Link
                 id="btn_festival"
                 href="#project-list"
-                className="hover:text-greenfont-onest text-[14px] text-white">
+                className="hover:text-greenfont-onest text-[14px] text-white"
+              >
                 Festival
               </Link>
             </Box>
@@ -67,32 +75,38 @@ const Footer = () => {
           <Box>
             <Typography
               type="heading"
-              className="mb-4 text-[24px] leading-normal text-white">
+              as="h2"
+              className="mb-4 text-[24px] leading-normal text-white"
+            >
               ABOUT WUKONG
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
                 id="btn_about_us"
                 href="/about-us"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 About Us
               </Link>
               <Link
                 id="btn_term_and_condition"
                 href="/term-and-condition"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Terms & Conditions
               </Link>
               <Link
                 id="btn_privacy_policy"
                 href="/privacy-policy"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Privacy Policy
               </Link>
               <Link
                 id="btn_cookie_policy"
                 href="/cookie-policy"
-                className="hover:text-green font-onest text-[14px] text-white">
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
                 Cookie Policy
               </Link>
             </Box>
@@ -101,8 +115,10 @@ const Footer = () => {
           <Box>
             <Typography
               type="heading"
+              as="h2"
               color="text-white"
-              className="mb-4 text-[24px] leading-normal">
+              className="mb-4 text-[24px] leading-normal"
+            >
               FOLLOW US ON
             </Typography>
 
@@ -111,7 +127,8 @@ const Footer = () => {
                 href="https://www.instagram.com/wukong.co.id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+              >
                 <Image
                   src={instagramIcon}
                   alt="Instagram"
@@ -130,11 +147,13 @@ const Footer = () => {
                 <Link
                   href="https://wa.me/6285121328284"
                   target="_blank"
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   <Typography
                     type="body"
                     color="text-white"
-                    className="cursor-pointer text-[14px] transition">
+                    className="cursor-pointer text-[14px] transition"
+                  >
                     +62 851-2132-8284
                   </Typography>
                 </Link>
@@ -144,11 +163,13 @@ const Footer = () => {
                 <Link
                   href="mailto:support@wukong.co.id"
                   target="_blank"
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   <Typography
                     type="body"
                     color="text-white"
-                    className="cursor-pointer text-[14px] transition">
+                    className="cursor-pointer text-[14px] transition"
+                  >
                     support@wukong.co.id
                   </Typography>
                 </Link>
@@ -160,7 +181,8 @@ const Footer = () => {
 
       <Typography
         type="body"
-        className="mt-6 px-0 text-center text-[16px] font-normal text-white">
+        className="mt-6 px-0 text-center text-[16px] font-normal text-white"
+      >
         Version 1.0.0 | Hak Cipta 2025 - <br className="block lg:hidden" />
         PT Aku Rela Kamu Bahagia
       </Typography>
