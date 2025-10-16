@@ -127,7 +127,7 @@ const LoginForm = () => {
           />
 
           <Button id="btn_li_login" type="submit">
-            Log In
+            Get In
           </Button>
 
           {error && (
