@@ -31,7 +31,7 @@ export const SEO_CONFIG = {
       description: (eventName: string) =>
         `${eventName} - Wukong tempat beli semua jenis tiket dari tiket event dan tiket konser kesayangan kamu`,
       keywords: (eventName: string) =>
-        `wukong event, event, tiket, beli tikit, tiket event, ${eventName}`,
+        `wukong event, event, tiket, beli tiket, tiket event, ${eventName}`,
     },
   },
 
@@ -58,5 +58,16 @@ export function generateEventMetadata(eventName?: string): Metadata {
     title: SEO_CONFIG.event_detail.event.title(eventName),
     description: SEO_CONFIG.event_detail.event.description(eventName),
     keywords: SEO_CONFIG.event_detail.event.keywords(eventName),
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
+      title: SEO_CONFIG.event_detail.event.title(eventName),
+      description: SEO_CONFIG.event_detail.event.description(eventName),
+      url: `${SEO_CONFIG.default.baseUrl}/event/${eventName.toLowerCase().replace(/\s+/g, '-')}`,
+      siteName: SEO_CONFIG.default.siteName,
+      type: 'website',
+    },
   };
 }
