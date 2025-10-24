@@ -115,7 +115,7 @@ export default function Header() {
 
           {!loading && !isLoggedIn && (
             <Link id="btn_login" href="/login" className="ml-6">
-              <Button>Log In</Button>
+              <Button>Get In</Button>
             </Link>
           )}
 
@@ -232,7 +232,7 @@ export default function Header() {
             </Box>
           ) : (
             <Link href="/login" className="mb-40 flex justify-center">
-              <Button id="btn_login" className="px-[18px] py-[8px]">Log In</Button>
+              <Button id="btn_login" className="px-[18px] py-[8px]">Get In</Button>
             </Link>
           )}
         </Box>

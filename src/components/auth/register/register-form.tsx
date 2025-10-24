@@ -182,7 +182,7 @@ const RegisterForm = () => {
                 type="button"
                 onClick={handleContinue}
                 disabled={checkLoad}>
-                {checkLoad ? 'Verifying...' : 'Continue'}
+                {checkLoad ? 'Verifying...' : 'Go Ahead'}
               </Button>
             </>
           )}
