@@ -15,6 +15,12 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
   const maxChar = 300;
   const isLong = termAndConditions.length > maxChar;
 
+  const formatTermsAndConditions = (text: string) => {
+    return text
+      .replace(/\n\n/g, '<br/><br/>')
+      .replace(/\n/g, '<br/>')
+  };
+
   return (
     <>
       <Typography
@@ -27,11 +33,9 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
       <Typography
         type="body"
         size={12}
-        className="my-3 max-h-[120px] overflow-hidden text-white"
+        className={`my-3 text-white ${!showFull ? 'max-h-[125px] overflow-hidden' : ''}`}
         dangerouslySetInnerHTML={{
-          __html: showFull
-            ? termAndConditions
-            : termAndConditions.slice(0, maxChar) + (isLong ? '...' : ''),
+          __html: formatTermsAndConditions(termAndConditions),
         }}
       />
       {isLong && (
