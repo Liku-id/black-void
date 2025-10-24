@@ -94,7 +94,7 @@ export default function Header() {
 
           <Link
             id="btn_become_creator"
-            href="https://form.typeform.com/to/kHYsLPnZ"
+            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ""}?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-green"
@@ -204,7 +204,7 @@ export default function Header() {
           </Link>
           <Link
             id="btn_become_creator"
-            href="https://form.typeform.com/to/kHYsLPnZ"
+            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ""}register?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-green"
