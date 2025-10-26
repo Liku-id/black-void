@@ -1,7 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { Box, Button, Typography } from '@/components';
-import { formatRupiah, getTodayWIBString } from '@/utils/formatter';
+import {
+  formatRupiah,
+  formatStrToHTML,
+  getTodayWIBString,
+} from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
 
@@ -67,20 +71,30 @@ const TicketCard: React.FC<TicketCardProps> = ({
           type="body"
           color="text-black"
           size={18}
-          className="font-bold">
-          {ticket.price === 0 ? "Free" : formatRupiah(ticket.price)}
+          className="font-bold"
+        >
+          {ticket.price === 0 ? 'Free' : formatRupiah(ticket.price)}
         </Typography>
       </Box>
-      <Typography type="body" size={14} color="text-muted">
-        {displayDesc}
-      </Typography>
-      {isTruncated && !showFull && (
+      <Typography
+        type="body"
+        size={14}
+        className={`my-3 ${!showFull ? 'max-h-[125px] overflow-hidden' : ''}`}
+        dangerouslySetInnerHTML={{
+          __html: formatStrToHTML(displayDesc),
+        }}
+      />
+
+      {isTruncated && (
         <Typography
           type="body"
           size={14}
           color="text-black"
-          className="mt-2 cursor-pointer underline">
-          <span onClick={() => setShowFull(true)}>See detail</span>
+          className="mt-2 cursor-pointer underline"
+        >
+          <span onClick={() => setShowFull(!showFull)}>
+            {showFull ? 'Show less' : 'See detail'}
+          </span>
         </Typography>
       )}
 
@@ -105,7 +119,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
           className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"
           disabled
           aria-disabled="true"
-          type="button">
+          type="button"
+        >
           SOLD
         </Button>
       ) : (
@@ -129,7 +144,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
               className={`flex h-8 w-8 items-center justify-center text-lg ${minusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
               onClick={() => onChange(ticket.id, -1)}
               disabled={minusDisabled}
-              type="button">
+              type="button"
+            >
               -
             </Button>
             <span className="w-6 text-center">{count}</span>
@@ -138,7 +154,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
               className={`flex h-8 w-8 items-center justify-center text-lg ${plusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
               onClick={() => onChange(ticket.id, 1)}
               disabled={plusDisabled}
-              type="button">
+              type="button"
+            >
               +
             </Button>
           </Box>
