@@ -13,8 +13,10 @@ export function formatTime(date: string | Date): string {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-    timeZone: 'Asia/Jakarta'
-  }).format(new Date(date)).replace(':', '.');
+    timeZone: 'Asia/Jakarta',
+  })
+    .format(new Date(date))
+    .replace(':', '.');
 }
 
 export function formatCountdownTime(seconds: number): string {
@@ -67,11 +69,11 @@ export function formatDate(
   variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
 ): string {
   const d = new Date(date);
-  
+
   if (isNaN(d.getTime())) return '-';
-  
+
   const options: Intl.DateTimeFormatOptions = {
-    timeZone: 'Asia/Jakarta'
+    timeZone: 'Asia/Jakarta',
   };
 
   switch (variant) {
@@ -101,4 +103,8 @@ export function formatDate(
   }
 
   return new Intl.DateTimeFormat('en-US', options).format(d);
+}
+
+export function formatStrToHTML(str: string): string {
+  return str.replace(/\n\n/g, '<br/><br/>').replace(/\n/g, '<br/>');
 }
