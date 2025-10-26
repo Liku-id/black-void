@@ -8,7 +8,12 @@ import locationIcon from '@/assets/icons/location.svg';
 import calendarIcon from '@/assets/icons/calendar.svg';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import clockIcon from '@/assets/icons/clock.svg';
-import { formatRupiah, formatDate, formatTime } from '@/utils/formatter';
+import {
+  formatRupiah,
+  formatDate,
+  formatTime,
+  formatStrToHTML,
+} from '@/utils/formatter';
 
 interface EventDetailProps {
   data: EventData;
@@ -25,7 +30,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
           autoScroll={false}
           className="h-[240px] w-full"
           itemWidth={375}
-          pagination>
+          pagination
+        >
           {items.map((item: any, i: number) => (
             <Image
               key={i}
@@ -58,7 +64,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
           <Typography
             type="heading"
             color="text-white"
-            className="mb-2 text-[26px] lg:mb-4 lg:text-[30px]">
+            className="mb-2 text-[26px] lg:mb-4 lg:text-[30px]"
+          >
             {data.name}
           </Typography>
           <Box className="grid gap-2 lg:grid-cols-2 lg:gap-16">
@@ -72,7 +79,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="text-[12px] lg:text-[14px]">
+                  className="text-[12px] lg:text-[14px]"
+                >
                   {data.address}
                 </Typography>
               </Box>
@@ -86,23 +94,28 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                   <Typography
                     type="body"
                     color="text-white"
-                    className="text-[12px] lg:text-[14px]">
+                    className="text-[12px] lg:text-[14px]"
+                  >
                     {formatDate(data.startDate)}
                   </Typography>
                   {(() => {
                     const startDate = new Date(data.startDate);
                     const endDate = new Date(data.endDate);
-                    const isSameDate = startDate.getUTCDate() === endDate.getUTCDate() && 
-                                      startDate.getUTCMonth() === endDate.getUTCMonth() && 
-                                      startDate.getUTCFullYear() === endDate.getUTCFullYear();
-                    
-                    return !isSameDate && (
-                      <Typography
-                        type="body"
-                        color="text-white"
-                        className="text-[12px] lg:text-[14px]">
-                        {formatDate(data.endDate)}
-                      </Typography>
+                    const isSameDate =
+                      startDate.getUTCDate() === endDate.getUTCDate() &&
+                      startDate.getUTCMonth() === endDate.getUTCMonth() &&
+                      startDate.getUTCFullYear() === endDate.getUTCFullYear();
+
+                    return (
+                      !isSameDate && (
+                        <Typography
+                          type="body"
+                          color="text-white"
+                          className="text-[12px] lg:text-[14px]"
+                        >
+                          {formatDate(data.endDate)}
+                        </Typography>
+                      )
                     );
                   })()}
                 </Box>
@@ -119,7 +132,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="text-[12px] lg:text-[14px]">
+                  className="text-[12px] lg:text-[14px]"
+                >
                   {data.ticketTypes && data.ticketTypes.length > 0
                     ? `Start from ${formatRupiah(data.ticketTypes[0].price)}`
                     : 'No tickets available'}
@@ -134,7 +148,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="text-[12px] lg:text-[14px]">
+                  className="text-[12px] lg:text-[14px]"
+                >
                   {formatTime(data.startDate)} - {formatTime(data.endDate)}
                 </Typography>
               </Box>
@@ -151,15 +166,18 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
             type="heading"
             size={22}
             color="text-white"
-            className="mb-4">
+            className="mb-4"
+          >
             Event Details
           </Typography>
           <Typography
             type="body"
             color="text-white"
-            className="text-[12px] lg:text-[14px]">
-            {data.description}
-          </Typography>
+            className="text-[12px] lg:text-[14px]"
+            dangerouslySetInnerHTML={{
+              __html: formatStrToHTML(data.description),
+            }}
+          />
         </Box>
       </Box>
     </section>

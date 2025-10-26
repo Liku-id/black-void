@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Box, Typography } from '@/components';
+import { formatStrToHTML } from '@/utils/formatter';
 
 interface OwnerSectionProps {
   eventOrganizer: any;
@@ -15,19 +16,14 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
   const maxChar = 300;
   const isLong = termAndConditions.length > maxChar;
 
-  const formatTermsAndConditions = (text: string) => {
-    return text
-      .replace(/\n\n/g, '<br/><br/>')
-      .replace(/\n/g, '<br/>')
-  };
-
   return (
     <>
       <Typography
         type="heading"
         size={22}
         color="text-white"
-        className="leading-none">
+        className="leading-none"
+      >
         Terms & Conditions
       </Typography>
       <Typography
@@ -35,14 +31,15 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         size={12}
         className={`my-3 text-white ${!showFull ? 'max-h-[125px] overflow-hidden' : ''}`}
         dangerouslySetInnerHTML={{
-          __html: formatTermsAndConditions(termAndConditions),
+          __html: formatStrToHTML(termAndConditions),
         }}
       />
       {isLong && (
         <button
           className="mt-1 text-xs text-white underline"
           onClick={() => setShowFull(!showFull)}
-          type="button">
+          type="button"
+        >
           {!showFull ? 'See details' : 'Show less'}
         </button>
       )}
@@ -51,7 +48,8 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
         type="heading"
         size={22}
         color="text-white"
-        className="mt-8 mb-3 lg:mt-10">
+        className="mt-8 mb-3 lg:mt-10"
+      >
         Promotor Info
       </Typography>
       <Box className="flex items-center gap-3">
@@ -73,7 +71,8 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
           type="body"
           size={14}
           color="text-white"
-          className="font-bold">
+          className="font-bold"
+        >
           {eventOrganizer.name}
         </Typography>
       </Box>
