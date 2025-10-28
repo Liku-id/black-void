@@ -109,6 +109,15 @@ const Footer = () => {
               >
                 Cookie Policy
               </Link>
+              <Link
+                id="btn_blog_post"
+                href="https://blog.wukong.co.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-green font-onest text-[14px] text-white"
+              >
+                Blog Post
+              </Link>
             </Box>
           </Box>
           {/* Part 4 */}
