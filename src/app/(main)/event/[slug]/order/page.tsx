@@ -169,25 +169,20 @@ const OrderPage = () => {
         paymentMethodId: selectedPayment?.id,
         attendee: visitorData?.visitors?.map(v => {
           const attendeeData: any[] = [];
-          
           // Process each additional form field
           if (orderData?.ticketType?.additional_forms) {
             orderData.ticketType.additional_forms.forEach((form: any) => {
               const fieldValue = (v as any)[form.field];
-              
-              if (fieldValue !== undefined && fieldValue !== null && fieldValue !== '') {
-                let value = fieldValue;
-                
-                // For checkbox, join array values with comma
-                if (form.type === 'CHECKBOX' && Array.isArray(fieldValue)) {
-                  value = fieldValue.join(', ');
+                if (fieldValue !== undefined && fieldValue !== null && fieldValue !== '') {
+                  let value = fieldValue;
+                  if (!Array.isArray(value)) {
+                    value = [String(value)];
+                  }
+                  attendeeData.push({
+                    additionalFormId: form.id,
+                    value: value
+                  });
                 }
-                
-                attendeeData.push({
-                  additionalFormId: form.id,
-                  value: String(value)
-                });
-              }
             });
           }
           
@@ -230,7 +225,6 @@ const OrderPage = () => {
 
   // Redirect
   useEffect(() => {
-    console.log(secondsLeft);
     if (
       !eventLoading &&
       !orderLoading &&
