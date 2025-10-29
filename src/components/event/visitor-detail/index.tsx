@@ -107,7 +107,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                         form={visitorMethods}
                         additionalForm={form}
                         visitorIndex={idx}
-                        disabled={isVisitorDetailChecked && form.order === 1}
+                        disabled={isVisitorDetailChecked && idx === 0 && form.order === 1}
                       />
                     ))}
                   </Box>
