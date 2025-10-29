@@ -1,10 +1,18 @@
+export interface AdditionalForm {
+  id: string;
+  ticketTypeId: string;
+  field: string;
+  type: 'TEXT' | 'NUMBER' | 'DROPDOWN' | 'CHECKBOX' | 'PARAGRAPH' | 'DATE';
+  options: string[];
+  isRequired: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
 export interface Visitor {
-  fullName: string;
-  // Tambahkan field lain jika sudah di phase 2
-  // phoneNumber?: string;
-  // email?: string;
-  // countryCode?: string;
-  // idType?: string;
+  [key: string]: any; // Dynamic fields based on additional_forms
 }
 
 export interface FormDataVisitor {

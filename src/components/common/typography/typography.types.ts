@@ -11,7 +11,8 @@ export type TypographyColor =
   | 'text-red'
   | 'text-green'
   | 'text-gray'
-  | 'text-muted';
+  | 'text-muted'
+  | 'text-dark';
 
 export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   as?: React.ElementType;
