@@ -4,6 +4,8 @@ export { Box } from './common/box';
 export { Button } from './common/button';
 export { Container } from './common/container';
 export { TextField } from './common/text-field';
+export { TextArea } from './common/text-area';
+export { DateField } from './common/date-field';
 export { Carousel } from './common/carousel';
 export { Slider } from './common/slider';
 export { Modal } from './common/modal';
