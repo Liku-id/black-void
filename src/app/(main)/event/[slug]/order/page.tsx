@@ -27,12 +27,7 @@ interface FormDataContact {
 
 interface FormDataVisitor {
   visitors: {
-    fullName: string;
-    // TODO: PHASE 2
-    // phoneNumber: string;
-    // email: string;
-    // countryCode: string;
-    // idType: string;
+    [key: string]: any;
   }[];
 }
 
@@ -89,11 +84,11 @@ const OrderPage = () => {
   });
 
   const onContactSubmit = (data: FormDataContact) => {
-    if (isVisitorDetailChecked) {
-      visitorMethods.setValue(
-        'visitors.0.fullName',
-        contactMethods.getValues().fullName
-      );
+    if (isVisitorDetailChecked && orderData?.ticketType?.additional_forms?.length > 0) {
+      // Copy nama ke field pertama additional_forms (yang pasti nama)
+      const firstField = orderData.ticketType.additional_forms[0];
+      visitorMethods.setValue(`visitors.0.${firstField.field}`, data.fullName);
+      visitorMethods.trigger(`visitors.0.${firstField.field}`);
     }
     setContactDetail(prev => ({
       ...prev,
@@ -109,14 +104,22 @@ const OrderPage = () => {
     mode: 'onChange',
     defaultValues: {
       visitors: orderData
-        ? Array.from({ length: orderData.quantity }, () => ({
-            fullName: '',
-            // TODO: PHASE 2
-            // phoneNumber: '',
-            // email: '',
-            // countryCode: '+62',
-            // idType: '',
-          }))
+        ? Array.from({ length: orderData.quantity }, () => {
+            const visitor: any = {};
+            if (orderData.ticketType?.additional_forms) {
+              orderData.ticketType.additional_forms.forEach((form: any) => {
+                if (form.type === 'CHECKBOX') {
+                  visitor[form.field] = [];
+                } else {
+                  visitor[form.field] = '';
+                }
+              });
+            }
+            if (!orderData.ticketType?.additional_forms?.length) {
+              visitor.fullName = '';
+            }
+            return visitor;
+          })
         : [],
     },
   });
@@ -164,14 +167,29 @@ const OrderPage = () => {
       const payload = {
         orderId: order.orderId,
         paymentMethodId: selectedPayment?.id,
-        attendee: visitorData?.visitors?.map(v => ({
-          attendeeData: [
-            {
-              additionalFormId: orderData?.additionalForms[0]?.id,
-              value: v.fullName,
-            },
-          ],
-        })),
+        attendee: visitorData?.visitors?.map(v => {
+          const attendeeData: any[] = [];
+          // Process each additional form field
+          if (orderData?.ticketType?.additional_forms) {
+            orderData.ticketType.additional_forms.forEach((form: any) => {
+              const fieldValue = (v as any)[form.field];
+                if (fieldValue !== undefined && fieldValue !== null && fieldValue !== '') {
+                  let value = fieldValue;
+                  if (!Array.isArray(value)) {
+                    value = [String(value)];
+                  }
+                  attendeeData.push({
+                    additionalFormId: form.id,
+                    value: value
+                  });
+                }
+            });
+          }
+          
+          return {
+            attendeeData
+          };
+        }),
 
         contactDetails: {
           name: contactData.fullName,
@@ -312,6 +330,7 @@ const OrderPage = () => {
                   visitorMethods={visitorMethods}
                   contactMethods={contactMethods}
                   tickets={orderData.tickets}
+                  ticketType={orderData.ticketType}
                 />
               </Box>
             </Box>

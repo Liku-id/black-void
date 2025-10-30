@@ -24,7 +24,7 @@ export const Radio: React.FC<RadioProps> = ({
 }) => {
   return (
     <label
-      className={cn('inline-flex cursor-pointer items-center gap-2', className)}
+      className={cn('inline-flex cursor-pointer items-center', className)}
       htmlFor={id}>
       <span className="relative mr-3 flex items-center">
         <input
@@ -34,14 +34,14 @@ export const Radio: React.FC<RadioProps> = ({
           id={id}
           name={name}
           disabled={disabled}
-          className="peer border-gray checked:border-blue h-4 w-4 cursor-pointer appearance-none rounded-full border bg-white transition-colors focus:outline-none"
+          className="peer border-black h-4 w-4 cursor-pointer appearance-none rounded-full border bg-white transition-colors focus:outline-none"
           {...rest}
         />
         {/* Custom radio indicator */}
         <span
           className={cn(
             'pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center',
-            checked ? 'bg-blue h-2.5 w-2.5 rounded-full' : 'hidden'
+            checked ? 'bg-black h-2.5 w-2.5 rounded-full' : 'hidden'
           )}
         />
       </span>
