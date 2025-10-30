@@ -48,7 +48,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
     setIsVisitorDetailChecked(checked);
 
     if (checked) {
-      // Copy nama ke field pertama additional_forms (yang pasti nama)
+      // Copy first field (name)
       const additionalForms = getAdditionalForms();
       const firstField = additionalForms[0];
       visitorMethods.setValue(`visitors.0.${firstField.field}`, contactMethods.getValues().fullName);

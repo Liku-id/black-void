@@ -85,7 +85,7 @@ const OrderPage = () => {
 
   const onContactSubmit = (data: FormDataContact) => {
     if (isVisitorDetailChecked && orderData?.ticketType?.additional_forms?.length > 0) {
-      // Copy nama ke field pertama additional_forms (yang pasti nama)
+      // Copy first field (name)
       const firstField = orderData.ticketType.additional_forms[0];
       visitorMethods.setValue(`visitors.0.${firstField.field}`, data.fullName);
       visitorMethods.trigger(`visitors.0.${firstField.field}`);
