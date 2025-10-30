@@ -60,9 +60,19 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
+  const metaId = process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION || '';
 
   return (
     <html lang="en">
+      <head>
+        {/* Facebook Domain Verification */}
+        {metaId && (
+          <meta
+            name="facebook-domain-verification"
+            content={metaId}
+          />
+        )}
+      </head>
       <body className={`antialiased ${bebasNeue.variable} ${onest.variable}`}>
         {/* Google Tag Manager */}
         <Script
