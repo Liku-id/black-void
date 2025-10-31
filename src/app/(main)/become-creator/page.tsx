@@ -340,7 +340,7 @@ export default function BecomeCreatorPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 px-3 md:px-0 md:py-16 lg:py-24">
+      <section className="py-12 px-3 md:px-0 md:py-16 lg:pb-24 lg:pt-0">
         <Container>
           <Box className="text-center mb-12">
             <Typography
