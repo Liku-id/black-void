@@ -94,9 +94,7 @@ export default function Header() {
 
           <Link
             id="btn_become_creator"
-            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ""}?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/become-creator"
             className="hover:text-green"
           >
             <Typography
@@ -204,9 +202,7 @@ export default function Header() {
           </Link>
           <Link
             id="btn_become_creator"
-            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ""}register?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/become-creator"
             className="hover:text-green"
           >
             <Typography type="body" size={16} color="text-white">
