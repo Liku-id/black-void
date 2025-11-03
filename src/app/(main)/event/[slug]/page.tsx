@@ -1,6 +1,11 @@
 'use client';
 import useSWR from 'swr';
-import { useParams, useRouter } from 'next/navigation';
+import {
+  useParams,
+  useRouter,
+  usePathname,
+  useSearchParams,
+} from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import axios from 'axios';
@@ -15,11 +20,15 @@ import Loading from '@/components/layout/loading';
 import useStickyObserver from '@/utils/sticky-observer';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
+import { setSessionStorage } from '@/lib/browser-storage';
 
 export default function Event() {
   const params = useParams();
   const slug = params?.slug as string;
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   // Fetch event data
   const {
     data: eventData,
@@ -48,11 +57,11 @@ export default function Event() {
 
   const handleChangeCount = (id: string, delta: number) => {
     setTickets((prev: any[]) => {
-      const target = prev.find(t => t.id === id);
+      const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
-      // Check if user is trying to add a ticket (delta > 0) and is not logged in and ticket price is 0
-      if (delta > 0 && !isLoggedIn && target.price === 0) {
+      // Check if event required login while trying to add a ticket
+      if (delta > 0 && !isLoggedIn && eventData.login_required) {
         setShowLoginModal(true);
         return prev;
       }
@@ -73,7 +82,7 @@ export default function Event() {
 
       const shouldResetOthers = nextCount > 0;
 
-      return prev.map(t => {
+      return prev.map((t) => {
         if (t.id === id) return { ...t, count: nextCount };
         if (shouldResetOthers && (t.count ?? 0) !== 0)
           return { ...t, count: 0 };
@@ -115,7 +124,11 @@ export default function Event() {
   };
 
   const handleLoginClick = () => {
+    const queryString = searchParams.toString();
+    const currentPath = queryString ? `${pathname}?${queryString}` : pathname;
+
     setShowLoginModal(false);
+    setSessionStorage('destination', currentPath);
     router.push('/login');
   };
 
@@ -199,7 +212,8 @@ export default function Event() {
             ' z-1 hidden lg:block'
           }
           // Only apply absolute top when not sticky and ready
-          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}
+        >
           <SummarySection
             eventData={eventData}
             tickets={selectedTickets}
@@ -244,17 +258,20 @@ export default function Event() {
             <Button
               type="button"
               onClick={handleLoginClick}
-              className="border border-white bg-transparent px-6 py-3 text-white">
+              className="border border-white bg-transparent px-6 py-3 text-white"
+            >
               Get In
             </Button>
             <Button
               type="button"
               onClick={handleRegisterClick}
-              className="border border-green bg-green px-6 py-3 text-white">
+              className="border border-green bg-green px-6 py-3 text-white"
+            >
               Register Account
             </Button>
           </Box>
-        }>
+        }
+      >
         <Box className="mb-6">
           <Typography type="body" size={14} color="text-white">
             You can get this ticket by register/sign up an account first.
