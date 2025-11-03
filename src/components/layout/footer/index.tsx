@@ -116,7 +116,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="hover:text-green font-onest text-[14px] text-white"
               >
-                Blog Post
+                Blog
               </Link>
             </Box>
           </Box>
