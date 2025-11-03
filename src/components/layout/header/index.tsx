@@ -77,7 +77,7 @@ export default function Header() {
         /> */}
         <Box className="ml-auto flex items-center">
           <Link
-            id="btn_blog_post"
+            id="btn_blog"
             href="https://blog.wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
@@ -88,7 +88,7 @@ export default function Header() {
               color="text-black"
               className="hover:text-green ml-6 cursor-pointer"
             >
-              Blog Post
+              Blog
             </Typography>
           </Link>
           <Link
@@ -201,14 +201,14 @@ export default function Header() {
 
         <Box className="mt-[44px] flex flex-1 flex-col">
           <Link
-            id="btn_blog_post"
+            id="btn_blog"
             href="https://blog.wukong.co.id"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-green mb-6"
           >
             <Typography type="body" size={16} color="text-white">
-              Blog Post
+              Blog
             </Typography>
           </Link>
           <Link
