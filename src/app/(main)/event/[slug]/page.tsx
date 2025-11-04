@@ -60,8 +60,12 @@ export default function Event() {
       const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
-      // Check if event required login while trying to add a ticket
-      if (delta > 0 && !isLoggedIn && eventData.login_required) {
+      // Check if event required login or free ticket while trying to add a ticket
+      if (
+        delta > 0 &&
+        !isLoggedIn &&
+        (target.price === 0 || eventData.login_required)
+      ) {
         setShowLoginModal(true);
         return prev;
       }
