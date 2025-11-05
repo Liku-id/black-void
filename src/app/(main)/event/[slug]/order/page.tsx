@@ -16,6 +16,7 @@ import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import useStickyObserver from '@/utils/sticky-observer';
 import EventPageSkeleton from '@/components/event/skeletons';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 // Contact form data type
 interface FormDataContact {
@@ -84,13 +85,16 @@ const OrderPage = () => {
   });
 
   const onContactSubmit = (data: FormDataContact) => {
-    if (isVisitorDetailChecked && orderData?.ticketType?.additional_forms?.length > 0) {
+    if (
+      isVisitorDetailChecked &&
+      orderData?.ticketType?.additional_forms?.length > 0
+    ) {
       // Copy nama ke field pertama additional_forms (yang pasti nama)
       const firstField = orderData.ticketType.additional_forms[0];
       visitorMethods.setValue(`visitors.0.${firstField.field}`, data.fullName);
       visitorMethods.trigger(`visitors.0.${firstField.field}`);
     }
-    setContactDetail(prev => ({
+    setContactDetail((prev) => ({
       ...prev,
       full_name: data.fullName,
       country_code: data.countryCode,
@@ -139,10 +143,11 @@ const OrderPage = () => {
   );
 
   // Calculate totalPrice to determine if payment method is required
-  const totalPrice = orderData?.tickets?.reduce(
-    (sum: number, t: any) => sum + t.count * Number(t.price),
-    0
-  ) || 0;
+  const totalPrice =
+    orderData?.tickets?.reduce(
+      (sum: number, t: any) => sum + t.count * Number(t.price),
+      0
+    ) || 0;
 
   const isDisabled =
     !contactMethods.formState.isValid ||
@@ -167,27 +172,31 @@ const OrderPage = () => {
       const payload = {
         orderId: order.orderId,
         paymentMethodId: selectedPayment?.id,
-        attendee: visitorData?.visitors?.map(v => {
+        attendee: visitorData?.visitors?.map((v) => {
           const attendeeData: any[] = [];
           // Process each additional form field
           if (orderData?.ticketType?.additional_forms) {
             orderData.ticketType.additional_forms.forEach((form: any) => {
               const fieldValue = (v as any)[form.field];
-                if (fieldValue !== undefined && fieldValue !== null && fieldValue !== '') {
-                  let value = fieldValue;
-                  if (!Array.isArray(value)) {
-                    value = [String(value)];
-                  }
-                  attendeeData.push({
-                    additionalFormId: form.id,
-                    value: value
-                  });
+              if (
+                fieldValue !== undefined &&
+                fieldValue !== null &&
+                fieldValue !== ''
+              ) {
+                let value = fieldValue;
+                if (!Array.isArray(value)) {
+                  value = [String(value)];
                 }
+                attendeeData.push({
+                  additionalFormId: form.id,
+                  value: value,
+                });
+              }
             });
           }
-          
+
           return {
-            attendeeData
+            attendeeData,
           };
         }),
 
@@ -208,7 +217,7 @@ const OrderPage = () => {
       }
     } catch (error: any) {
       setLoading(false);
-      setError(error?.response?.data?.error || 'Failed to create transaction');
+      setError(getErrorMessage(error) || 'Failed to create transaction');
     }
   };
 
@@ -283,12 +292,13 @@ const OrderPage = () => {
         (sum: number, t: any) => sum + t.count * Number(t.price),
         0
       );
-      
+
       if (totalPrice === 0 && !selectedPayment) {
         const freePaymentMethod = eventData?.paymentMethods?.find(
-          (method: any) => method.name.toLowerCase().includes('free') || method.type === 'FREE'
+          (method: any) =>
+            method.name.toLowerCase().includes('free') || method.type === 'FREE'
         );
-        
+
         if (freePaymentMethod) {
           setSelectedPayment({
             id: freePaymentMethod.id,
@@ -349,7 +359,8 @@ const OrderPage = () => {
                 'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
             ' z-1 hidden lg:block'
           }
-          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}
+        >
           <SummarySection
             eventData={eventData}
             tickets={orderData.tickets}
