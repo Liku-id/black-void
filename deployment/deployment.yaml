@@ -20,6 +20,8 @@ spec:
       labels:
         app: black-void
     spec:
+      imagePullSecrets:
+      - name: private-repository
       containers:
       - name: black-void
         image: registry-prem.eku.id/wukong/black-void:latest
