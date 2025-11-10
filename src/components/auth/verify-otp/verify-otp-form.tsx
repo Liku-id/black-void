@@ -254,13 +254,6 @@ const VerifyOtpForm = () => {
     }
   }, [otp, isFormValid, loading, isSuccess]);
 
-  // Redirect if no phone number or email
-  useEffect(() => {
-    if (!phoneNumber && !email) {
-      router.replace(isFromLogin ? '/login' : '/register');
-    }
-  }, [phoneNumber, email, router, isFromLogin]);
-
   // Auto-focus first input on mount
   useEffect(() => {
     if (!loading && !isSuccess && otp.every(d => d === '')) {
@@ -272,6 +265,8 @@ const VerifyOtpForm = () => {
 
   // Handle continue after otp verification
   const handleContinue = () => {
+    router.replace('/login');
+    
     // Clear auth userData after successful verification from login
     if (isFromLogin) {
       setAuthUser({
@@ -281,7 +276,6 @@ const VerifyOtpForm = () => {
       });
     }
 
-    router.replace('/login');
   };
 
   if (!phoneNumber && !email) return null;
