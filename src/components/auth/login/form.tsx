@@ -1,20 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import axios from '@/lib/api/axios-client';
-import { FormProvider, useForm } from 'react-hook-form';
-import { email } from '@/utils/form-validation';
-import { getErrorMessage } from '@/lib/api/error-handler';
-import { useAuth } from '@/lib/session/use-auth';
-import { Button, TextField, Typography } from '@/components';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
-import Loading from '@/components/layout/loading';
-import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
-import { useSnackBar } from '@/utils/use-snack-bar';
+import { Button, TextField, Typography } from '@/components';
 import SnackBar from '@/components/common/snack-bar';
-import { trackLogin, trackEvent } from '@/lib/posthog';
+import Loading from '@/components/layout/loading';
+import axios from '@/lib/api/axios-client';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
+import { trackEvent, trackLogin } from '@/lib/posthog';
+import { useAuth } from '@/lib/session/use-auth';
+import { authAtom } from '@/store';
+import { email } from '@/utils/form-validation';
+import { useSnackBar } from '@/utils/use-snack-bar';
+import { AxiosError } from 'axios';
+import { useAtom } from 'jotai';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import UnverifiedModal from './unverified-modal';
 
 interface FormDataLogin {
   email: string;
@@ -24,6 +28,7 @@ interface FormDataLogin {
 const LoginForm = () => {
   const router = useRouter();
   const { setAuthUser } = useAuth();
+  const [, setAuth] = useAtom(authAtom);
   const pathname = usePathname();
   const destination: string = getSessionStorage('destination') ?? '';
   const { snackState, hideSnack, showError } = useSnackBar();
@@ -32,6 +37,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
 
   const methods = useForm<FormDataLogin>({});
 
@@ -66,13 +72,34 @@ const LoginForm = () => {
         }
       }
     } catch (error) {
+      const axiosError = error as AxiosError<any>;
+      const status = axiosError?.response?.status;
+      const responseData = axiosError?.response?.data?.data;
+      
+      // Check if user is not verified (403 status)
+      if (status === 403 && responseData) {
+        // Store unverified user data in authAtom for use in verification flow
+        setAuth({
+          isLoggedIn: false,
+          userData: {
+            email: responseData.email,
+            phoneNumber: responseData.phone_number,
+            isVerified: false,
+          } as any,
+          loading: false,
+        });
+        
+        setShowUnverifiedModal(true);
+        return; // Exit early to avoid showing error message
+      }
+
       console.error(error);
       setError(getErrorMessage(error));
-      
+
       // Track failed login attempt
-      trackEvent('login_failed', { 
+      trackEvent('login_failed', {
         error: getErrorMessage(error),
-        email: formData.email 
+        email: formData.email,
       });
     } finally {
       setLoading(false);
@@ -87,10 +114,20 @@ const LoginForm = () => {
     }
   }, [showError]);
 
+  const handleVerifyAccount = () => {
+    router.push('/login/choose-verification');
+  };
+
   return (
     <>
       {/* Loading */}
       {loading && <Loading />}
+
+      {/* Unverified Account Modal */}
+      <UnverifiedModal
+        open={showUnverifiedModal}
+        onVerify={handleVerifyAccount}
+      />
 
       {/* Expiry message */}
       <SnackBar
