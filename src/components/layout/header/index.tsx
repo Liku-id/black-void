@@ -77,6 +77,21 @@ export default function Header() {
         /> */}
         <Box className="ml-auto flex items-center">
           <Link
+            id="btn_blog"
+            href="https://blog.wukong.co.id"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Typography
+              type="body"
+              size={16}
+              color="text-black"
+              className="hover:text-green ml-6 cursor-pointer"
+            >
+              Blog
+            </Typography>
+          </Link>
+          <Link
             id="btn_contact"
             href="mailto:support@wukong.co.id"
             target="_blank"
@@ -91,10 +106,11 @@ export default function Header() {
               Contact Us
             </Typography>
           </Link>
-
           <Link
             id="btn_become_creator"
-            href="/become-creator"
+            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ''}?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-green"
           >
             <Typography
@@ -106,17 +122,14 @@ export default function Header() {
               Become Creator?
             </Typography>
           </Link>
-
           {loading && (
             <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
-
           {!loading && !isLoggedIn && (
             <Link id="btn_login" href="/login" className="ml-6">
               <Button>Get In</Button>
             </Link>
           )}
-
           {!loading && isLoggedIn && userData && (
             <ProfileMenu
               userData={userData}
@@ -190,6 +203,17 @@ export default function Header() {
 
         <Box className="mt-[44px] flex flex-1 flex-col">
           <Link
+            id="btn_blog"
+            href="https://blog.wukong.co.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-green mb-6"
+          >
+            <Typography type="body" size={16} color="text-white">
+              Blog
+            </Typography>
+          </Link>
+          <Link
             id="btn_contact"
             href="mailto:support@wukong.co.id"
             target="_blank"
@@ -202,7 +226,9 @@ export default function Header() {
           </Link>
           <Link
             id="btn_become_creator"
-            href="/become-creator"
+            href={`${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ''}register?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-green"
           >
             <Typography type="body" size={16} color="text-white">
@@ -210,7 +236,6 @@ export default function Header() {
             </Typography>
           </Link>
           <Box className="flex-1" />
-
           {isLoggedIn ? (
             <Box
               className="group text-danger mb-40 flex cursor-pointer items-center justify-center gap-2 transition-all duration-300 hover:gap-3 hover:text-red-500"
@@ -228,7 +253,9 @@ export default function Header() {
             </Box>
           ) : (
             <Link href="/login" className="mb-40 flex justify-center">
-              <Button id="btn_login" className="px-[18px] py-[8px]">Get In</Button>
+              <Button id="btn_login" className="px-[18px] py-[8px]">
+                Get In
+              </Button>
             </Link>
           )}
         </Box>
