@@ -1,9 +1,9 @@
 'use client';
+import calendarIcon from '@/assets/icons/calendar.svg';
+import locationIcon from '@/assets/icons/location.svg';
+import { Box, Button, Typography } from '@/components';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Box, Typography, Button } from '@/components';
-import locationIcon from '@/assets/icons/location.svg';
-import calendarIcon from '@/assets/icons/calendar.svg';
 
 interface EventCardProps {
   metaUrl?: string;
@@ -51,8 +51,17 @@ export default function EventCard({
       </Box>
     );
   }
+  const handleCardClick = () => {
+    if (metaUrl && status !== 'on_going') {
+      router.push(`/event/${metaUrl}`);
+    }
+  };
+
   return (
-    <Box className="h-auto w-[270px] border border-black bg-white p-0 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[6px_6px_0px_0px_#FFF]">
+    <Box 
+      className={`h-auto w-[270px] border border-black bg-white p-0 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[6px_6px_0px_0px_#FFF] ${status !== 'on_going' ? 'cursor-pointer' : ''}`}
+      onClick={handleCardClick}
+    >
       {image ? (
         <Image
           src={
