@@ -52,7 +52,7 @@ export default function EventCard({
     );
   }
   const handleCardClick = () => {
-    if (metaUrl && status !== 'on_going') {
+    if (metaUrl) {
       router.push(`/event/${metaUrl}`);
     }
   };
@@ -132,8 +132,7 @@ export default function EventCard({
           {status === 'on_going' && (
             <Button
               id={`btn_buy_ticket_${metaUrl}`}
-              className="bg-green px-2 py-1 text-white"
-              onClick={() => router.push(`/event/${metaUrl}`)}>
+              className="bg-green px-2 py-1 text-white">
               Buy Ticket
             </Button>
           )}
