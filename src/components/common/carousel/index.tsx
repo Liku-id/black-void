@@ -96,11 +96,10 @@ export function Carousel({
               />
             )}
             {pages.length > 0 ? (
-              <Link 
+              <Link
                 id={linkIds[currentIndex] || undefined}
-                href={pages[currentIndex]} 
-                passHref
-              >
+                href={pages[currentIndex]}
+                passHref>
                 <Image
                   src={images[currentIndex]}
                   alt=""
@@ -126,11 +125,10 @@ export function Carousel({
             )}
           </>
         ) : (
-          <Link 
-            href={pages[currentIndex] || '#'} 
+          <Link
+            href={pages[currentIndex] || '#'}
             passHref
-            id={linkIds[currentIndex] || undefined}
-          >
+            id={linkIds[currentIndex] || undefined}>
             <Image
               src={images[currentIndex]}
               alt=""
@@ -176,7 +174,7 @@ export function Carousel({
       </Box>
 
       {/* Pagination Bar/Strip */}
-      <Box className="mt-10 flex justify-center gap-2">
+      <Box className="mt-4 flex justify-center gap-2">
         {images.map((_, index) => (
           <button
             key={index}
