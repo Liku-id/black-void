@@ -7,6 +7,7 @@ export interface RegisterFormData {
   confirmPassword: string;
   fullName: string;
   phoneNumber: string;
+  channel?: 'email' | 'phoneNumber';
 }
 
 interface UserData {
@@ -15,6 +16,7 @@ interface UserData {
   email: string;
   phoneNumber: string;
   role?: string;
+  isVerified: boolean;
 }
 
 // Register form atom for multi-step registration
@@ -39,3 +41,8 @@ export const authAtom = atom<{
 
 // ExpiredAt atom for OTP expiration tracking
 export const otpExpiresAtAtom = atom<number | null>(null);
+
+// Verification channel atom for OTP delivery method
+export const verificationChannelAtom = atom<'email' | 'phoneNumber' | null>(
+  null
+);

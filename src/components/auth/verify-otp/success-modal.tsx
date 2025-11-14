@@ -1,15 +1,15 @@
+import { Button, Modal, Typography } from '@/components';
 import React from 'react';
-import { Modal, Button, Typography } from '@/components';
 
 interface SuccessModalProps {
   open: boolean;
-  onLogin: () => void;
+  onContinue: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ open, onLogin }) => (
+const SuccessModal: React.FC<SuccessModalProps> = ({ open, onContinue }) => (
   <Modal
     open={open}
-    onClose={onLogin}
+    onClose={onContinue}
     title="Wu-hoo!"
     children={
       <>
@@ -19,7 +19,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ open, onLogin }) => (
       </>
     }
     footer={
-      <Button id="register_button" onClick={onLogin}>
+      <Button id="register_button" onClick={onContinue}>
         Get In
       </Button>
     }

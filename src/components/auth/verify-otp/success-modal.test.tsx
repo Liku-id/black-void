@@ -1,43 +1,38 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import SuccessModal from './success-modal';
 import '@testing-library/jest-dom';
+import { fireEvent, render, screen } from '@testing-library/react';
+import SuccessModal from './success-modal';
 
 describe('SuccessModal', () => {
-  const mockOnClose = jest.fn();
-  const mockOnLogin = jest.fn();
+  const mockOnContinue = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should render correctly when open is true', () => {
-    render(
-      <SuccessModal open={true} onClose={mockOnClose} onLogin={mockOnLogin} />
-    );
+    render(<SuccessModal open={true} onContinue={mockOnContinue} />);
 
-    expect(screen.getByText('Registration successful')).toBeInTheDocument();
+    expect(screen.getByText('Wu-hoo!')).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'Congratulation, your account has been successfully created.'
-      )
+      screen.getByText('you are now The Chosen Wu!')
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /get in/i })
+    ).toBeInTheDocument();
   });
 
   it('should not render when open is false', () => {
     const { queryByText } = render(
-      <SuccessModal open={false} onClose={mockOnClose} onLogin={mockOnLogin} />
+      <SuccessModal open={false} onContinue={mockOnContinue} />
     );
 
-    expect(queryByText('Registration successful')).not.toBeInTheDocument();
+    expect(queryByText('Wu-hoo!')).not.toBeInTheDocument();
   });
 
-  it('should call onLogin when Login button is clicked', () => {
-    render(
-      <SuccessModal open={true} onClose={mockOnClose} onLogin={mockOnLogin} />
-    );
+  it('should call onContinue when Get In button is clicked', () => {
+    render(<SuccessModal open={true} onContinue={mockOnContinue} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
-    expect(mockOnLogin).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    expect(mockOnContinue).toHaveBeenCalled();
   });
 });

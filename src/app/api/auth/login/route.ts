@@ -1,7 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 import { setAuthCookies } from '@/lib/session';
+import { NextRequest, NextResponse } from 'next/server';
+
+type LoginErrorResponse = {
+  response: {
+    data: {
+      details: [{ value: { email?: string; phoneNumber?: string } }];
+      message: string;
+    };
+  };
+  status?: number;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,6 +54,18 @@ export async function POST(request: NextRequest) {
       data: body.user,
     });
   } catch (e) {
-    return handleErrorAPI(e as AxiosErrorResponse);
+    const body = e as LoginErrorResponse;
+    const status = body.status || 500;
+    const data = body.response?.data.details[0].value || null;
+    const message = body.response?.data.message || 'An error occurred';
+
+    return NextResponse.json(
+      {
+        message,
+        data,
+        success: false,
+      },
+      { status }
+    );
   }
 }

@@ -1,19 +1,25 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { useAtom } from 'jotai';
-import { otpExpiresAtAtom, registerFormAtom } from '@/store';
-import { getErrorMessage } from '@/lib/api/error-handler';
 import { Box, Typography } from '@/components';
 import Loading from '@/components/layout/loading';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { useAuth } from '@/lib/session/use-auth';
+import {
+  otpExpiresAtAtom,
+  registerFormAtom,
+  verificationChannelAtom
+} from '@/store';
 import debounce from '@/utils/debounce';
 import { formatCountdownTime } from '@/utils/formatter';
+import axios from 'axios';
+import { useAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SuccessModal from './success-modal';
 
 const VerifyOtpForm = () => {
   const router = useRouter();
+  const { userData, setAuthUser } = useAuth();
 
   // Initialize state
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -27,6 +33,16 @@ const VerifyOtpForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [payload] = useAtom(registerFormAtom);
   const [expiresAt, setExpiresAt] = useAtom(otpExpiresAtAtom);
+  const [channel] = useAtom(verificationChannelAtom);
+
+  // Check if from login (userData exists) or from register (registerPayload exists)
+  const isFromLogin = !!(userData?.email || userData?.phoneNumber);
+
+  // Get email and phone from appropriate source
+  const email = isFromLogin ? userData.email || '' : payload.email;
+  const phoneNumber = isFromLogin
+    ? userData.phoneNumber || ''
+    : payload.phoneNumber;
 
   // Validate if form is complete
   const isFormValid = otp.every(digit => digit !== '' && /^\d$/.test(digit));
@@ -100,9 +116,20 @@ const VerifyOtpForm = () => {
     setError('');
 
     try {
-      const response = await axios.post('/api/auth/request-otp', {
-        phoneNumber: payload.phoneNumber,
-      });
+      const requestPayload =
+        channel === 'email'
+          ? {
+              email,
+              channel: 'email',
+            }
+          : {
+              phoneNumber,
+            };
+
+      const response = await axios.post(
+        '/api/auth/request-otp',
+        requestPayload
+      );
 
       if (response.status === 200) {
         setIsResentSuccess(true);
@@ -143,14 +170,33 @@ const VerifyOtpForm = () => {
       setError('');
 
       try {
-        const response = await axios.post('/api/auth/verify-otp', {
-          phoneNumber: payload.phoneNumber,
-          code,
-        });
+        const verifyPayload =
+          channel === 'email'
+            ? {
+                email,
+                code,
+                channel: 'email',
+              }
+            : {
+                phoneNumber,
+                code,
+              };
+
+        const response = await axios.post(
+          '/api/auth/verify-otp',
+          verifyPayload
+        );
 
         if (response.status === 200) {
           setIsSuccess(true);
-          await submitRegister();
+
+          // For login flow: just show success modal
+          if (isFromLogin) {
+            setModalOpen(true);
+          } else {
+            // For register flow: call register API then show modal
+            await submitRegister();
+          }
         }
       } catch (error) {
         setError(getErrorMessage(error));
@@ -161,7 +207,15 @@ const VerifyOtpForm = () => {
         setLoading(false);
       }
     },
-    [payload.phoneNumber, loading, isSuccess, submitRegister]
+    [
+      email,
+      phoneNumber,
+      channel,
+      loading,
+      isSuccess,
+      isFromLogin,
+      submitRegister,
+    ]
   );
 
   // Debounced submit function
@@ -200,13 +254,6 @@ const VerifyOtpForm = () => {
     }
   }, [otp, isFormValid, loading, isSuccess]);
 
-  // Redirect if no phone number
-  useEffect(() => {
-    if (!payload.phoneNumber) {
-      router.replace('/register');
-    }
-  }, [payload.phoneNumber, router]);
-
   // Auto-focus first input on mount
   useEffect(() => {
     if (!loading && !isSuccess && otp.every(d => d === '')) {
@@ -216,18 +263,38 @@ const VerifyOtpForm = () => {
     }
   }, [loading, isSuccess, otp]);
 
-  if (!payload.phoneNumber) return null;
+  // Handle continue after otp verification
+  const handleContinue = () => {
+    router.replace('/login');
+    
+    // Clear auth userData after successful verification from login
+    if (isFromLogin) {
+      setAuthUser({
+        isLoggedIn: false,
+        userData: null,
+        loading: false,
+      });
+    }
+
+  };
+
+  if (!phoneNumber && !email) return null;
 
   return (
     <Box className="flex flex-col items-center">
       {loading && <Loading />}
-      <Typography size={41} type="heading">
-        Let's get wu verified
-      </Typography>
 
       <Typography className="my-4 text-center">
-        We've sent Wu an OTP code to your Whatsapp number{' '}
-        {payload.phoneNumber}
+        We've sent Wu an OTP code to your{' '}
+        {channel === 'email' ? 'email' : 'phone number'}{' '}
+        {channel === 'email'
+          ? email.replace(/(.*)(.{3})(@.*)/, (_, before, last3, domain) => {
+              return '*'.repeat(before.length) + last3 + domain;
+            })
+          : phoneNumber.replace(
+              /.*(\d{3})$/,
+              (match, last3) => '*'.repeat(match.length - 3) + last3
+            )}
       </Typography>
 
       {!modalOpen && (
@@ -290,7 +357,7 @@ const VerifyOtpForm = () => {
                     reSendOtp();
                   }
                 }}>
-                Resend OTP
+                {channel === 'phoneNumber' ? 'Resend OTP' : 'Resend Email'}
               </span>
             )}
           </Typography>
@@ -298,7 +365,7 @@ const VerifyOtpForm = () => {
       </Box>
 
       {/* Success Modal */}
-      <SuccessModal open={modalOpen} onLogin={() => router.replace('/login')} />
+      <SuccessModal open={modalOpen} onContinue={handleContinue} />
     </Box>
   );
 };

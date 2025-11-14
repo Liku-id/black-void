@@ -1,30 +1,26 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import axios from '@/lib/api/axios-client';
-import { FormProvider, useForm } from 'react-hook-form';
-import {
-  email,
-  usePasswordValidation,
-  fullName,
-  phoneNumber,
-} from '@/utils/form-validation';
-import { getErrorMessage } from '@/lib/api/error-handler';
-import { useAtom } from 'jotai';
-import {
-  otpExpiresAtAtom,
-  registerFormAtom,
-  RegisterFormData,
-} from '@/store/atoms/auth';
-import { Box, Button, TextField, Typography, Checkbox } from '@/components';
+import errorIcon from '@/assets/icons/error.svg';
 import eyeClosed from '@/assets/icons/eye-closed.svg';
 import eyeOpened from '@/assets/icons/eye-open.svg';
-import Loading from '@/components/layout/loading';
-import errorIcon from '@/assets/icons/error.svg';
 import SuccessIcon from '@/assets/icons/success.svg';
+import { Box, Button, Checkbox, TextField, Typography } from '@/components';
+import Loading from '@/components/layout/loading';
+import axios from '@/lib/api/axios-client';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { registerFormAtom, RegisterFormData } from '@/store/atoms/auth';
+import {
+  email,
+  fullName,
+  phoneNumber,
+  usePasswordValidation,
+} from '@/utils/form-validation';
+import { useAtom } from 'jotai';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import SuccessModal from '../verify-otp/success-modal';
 
 const RegisterForm = () => {
@@ -39,8 +35,7 @@ const RegisterForm = () => {
   const [step, setStep] = useState(1);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [, setPaylod] = useAtom(registerFormAtom);
-  const [, setExpiresAt] = useAtom(otpExpiresAtAtom);
+  const [, setPayload] = useAtom(registerFormAtom);
   const [modalOpen, setModalOpen] = useState(false);
 
   const methods = useForm<RegisterFormData>({
@@ -68,26 +63,8 @@ const RegisterForm = () => {
       };
 
       // Set payload to global state
-      setPaylod(payload);
-      const response = await axios.post('/api/auth/request-otp', {
-        phoneNumber: payload.phoneNumber,
-      });
-
-      if (response.status === 200) {
-        const verifyResponse = await axios.post('/api/auth/verify-otp', {
-          phoneNumber: payload.phoneNumber,
-          code: "000000"
-        });
-
-      if (verifyResponse.status === 200) {
-        const submitResponse = await axios.post('/api/auth/register', payload);
-        if (submitResponse.status === 200) {
-          setModalOpen(true);
-        }
-      }
-        // setExpiresAt(response.data.expiresAt || null);
-        // router.replace('/register/verify-otp');
-      }
+      setPayload(payload);
+      router.replace('/register/choose-verification');
     } catch (error) {
       console.error(error);
       setError(getErrorMessage(error));
@@ -301,7 +278,10 @@ const RegisterForm = () => {
         </form>
       </FormProvider>
 
-      <SuccessModal open={modalOpen} onLogin={() => router.replace('/login')} />
+      <SuccessModal
+        open={modalOpen}
+        onContinue={() => router.replace('/login')}
+      />
     </>
   );
 };
