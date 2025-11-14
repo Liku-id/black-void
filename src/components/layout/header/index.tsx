@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import axios from '@/lib/api/axios-client';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
@@ -20,6 +20,7 @@ import LogOutModal from './logout-modal';
 export default function Header() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const { isLoggedIn, userData, checkAuth, loading } = useAuth();
 
   // Initialize state
@@ -27,6 +28,8 @@ export default function Header() {
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
+
+  const isOrderPage = pathname?.includes('/order') || pathname?.endsWith('/order');
 
   // Logout
   const onLogout = async () => {
@@ -51,6 +54,10 @@ export default function Header() {
       setOpenMenu(true);
     }
   }, [searchParams]);
+
+  if (isOrderPage) {
+    return null;
+  }
 
   return (
     <header className="fixed top-6 right-0 left-0 z-50 flex justify-center px-4">
