@@ -1,17 +1,26 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Box, Button, Modal, Typography } from '@/components';
+import TicketInfoCard from '@/components/scanner/info-card';
+import QRCodeScanner from '@/components/scanner/qr-scanner';
 import axios from '@/lib/api/axios-client';
 import {
-  QrCode,
-  RotateCcw,
   AlertCircle,
   CheckCircle,
+  QrCode,
+  RotateCcw,
   XCircle,
 } from 'lucide-react';
-import { Box, Typography, Button } from '@/components';
-import QRCodeScanner from '@/components/scanner/qr-scanner';
-import TicketInfoCard from '@/components/scanner/info-card';
+import { useEffect, useRef, useState } from 'react';
+
+interface TicketDetail {
+  visitor_name: string;
+  ticket_name: string;
+  ticket_id: string;
+  redeemed_at?: string;
+  email?: string;
+  phone_number?: string;
+}
 
 interface ScannedData {
   status: 'success' | 'already_redeemed' | 'failed' | 'invalid_ticket';
@@ -30,6 +39,12 @@ export default function ScannerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scanCount, setScanCount] = useState(0);
+
+  // Confirmation modal states
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [ticketDetail, setTicketDetail] = useState<TicketDetail | null>(null);
+  const [currentTicketId, setCurrentTicketId] = useState<string>('');
+  const [isConfirming, setIsConfirming] = useState(false);
 
   // Add scanning state to prevent multiple scans
   const [isScanning, setIsScanning] = useState(false);
@@ -56,7 +71,6 @@ export default function ScannerPage() {
     setIsScanning(true);
     setLoading(true);
     setError(null);
-    setShowResult(true); // Set this IMMEDIATELY to stop scanner
     setScanCount(prev => prev + 1);
 
     // Stop camera immediately to prevent further scans
@@ -69,21 +83,10 @@ export default function ScannerPage() {
         const ticketData = data.data;
 
         if (ticketData.ticket_status === 'issued') {
-          // Update ticket status to redeemed
-          await axios.put(`/api/tickets/${ticketId}`, {
-            status: 'redeemed',
-          });
-
-          setScannedData({
-            status: 'success',
-            visitorName: ticketData.visitor_name,
-            ticketName: ticketData.ticket_name,
-            eventDate: ticketData.redeemed_at,
-            ticketId: ticketData.ticket_id || ticketId,
-            message: 'Ticket successfully redeemed!',
-          });
-
-          successSound.current?.play();
+          // Show confirmation modal instead of directly redeeming
+          setTicketDetail(ticketData);
+          setCurrentTicketId(ticketId);
+          setShowConfirmModal(true);
         } else if (ticketData.ticket_status === 'redeemed') {
           setScannedData({
             status: 'already_redeemed',
@@ -94,6 +97,7 @@ export default function ScannerPage() {
             message: 'This ticket has already been redeemed',
           });
 
+          setShowResult(true);
           errorSound.current?.play();
         } else {
           const message =
@@ -106,6 +110,7 @@ export default function ScannerPage() {
             message,
           });
 
+          setShowResult(true);
           errorSound.current?.play();
         }
       } else {
@@ -115,10 +120,9 @@ export default function ScannerPage() {
           message: 'Failed to retrieve ticket information',
         });
 
+        setShowResult(true);
         errorSound.current?.play();
       }
-
-      setShowResult(true);
     } catch (error: any) {
       let errorMessage = 'Failed to process ticket';
 
@@ -143,17 +147,78 @@ export default function ScannerPage() {
         message: errorMessage,
       });
 
+      setShowResult(true);
       setError(errorMessage);
       errorSound.current?.play();
-      // showResult already set to true at the beginning
     } finally {
       setLoading(false);
 
       // Reset scanning state after a longer delay
       scanTimeoutRef.current = setTimeout(() => {
         setIsScanning(false);
-      }, 5000); // Increased to 5 seconds
+      }, 5000);
     }
+  };
+
+  const handleConfirmRedeem = async () => {
+    if (!currentTicketId || !ticketDetail) return;
+
+    setIsConfirming(true);
+
+    try {
+      // Update ticket status to redeemed
+      await axios.put(`/api/tickets/${currentTicketId}`, {
+        status: 'redeemed',
+      });
+
+      setScannedData({
+        status: 'success',
+        visitorName: ticketDetail.visitor_name,
+        ticketName: ticketDetail.ticket_name,
+        eventDate: ticketDetail.redeemed_at,
+        ticketId: ticketDetail.ticket_id || currentTicketId,
+        message: 'Ticket successfully redeemed!',
+      });
+
+      successSound.current?.play();
+      setShowConfirmModal(false);
+      setShowResult(true);
+    } catch (error: any) {
+      let errorMessage = 'Failed to redeem ticket';
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      setScannedData({
+        status: 'failed',
+        ticketId: currentTicketId,
+        message: errorMessage,
+      });
+
+      setError(errorMessage);
+      errorSound.current?.play();
+      setShowConfirmModal(false);
+      setShowResult(true);
+    } finally {
+      setIsConfirming(false);
+      setTicketDetail(null);
+      setCurrentTicketId('');
+    }
+  };
+
+  const handleCancelRedeem = () => {
+    setShowConfirmModal(false);
+    setTicketDetail(null);
+    setCurrentTicketId('');
+    setIsScanning(false);
+    
+    // Restart camera for next scan
+    setTimeout(() => {
+      setCameraStarted(true);
+    }, 500);
   };
 
   const resetScanner = () => {
@@ -167,6 +232,9 @@ export default function ScannerPage() {
     setError(null);
     setIsScanning(false);
     setCameraInitialized(false);
+    setShowConfirmModal(false);
+    setTicketDetail(null);
+    setCurrentTicketId('');
 
     setTimeout(() => {
       setCameraStarted(true);
@@ -314,6 +382,78 @@ export default function ScannerPage() {
           </Box>
         </Box>
       )}
+
+      {/* Confirmation Modal */}
+      <Modal
+        open={showConfirmModal}
+        onClose={handleCancelRedeem}
+        title="Confirm Ticket Redemption"
+        className="max-w-md">
+        {ticketDetail && (
+          <Box className="space-y-4 pb-6">
+            <Box className="rounded-lg bg-gray-50 p-4">
+              <Box className="mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
+                <Typography size={12} className="text-gray-500">
+                  User Name:
+                </Typography>
+                <Typography size={16} className="font-semibold text-gray-900">
+                  {ticketDetail.visitor_name}
+                </Typography>
+              </Box>
+
+              <Box className="mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
+                <Typography size={12} className="text-gray-500">
+                  Ticket Type:
+                </Typography>
+                <Typography size={16} className="font-semibold text-gray-900">
+                  {ticketDetail.ticket_name}
+                </Typography>
+              </Box>
+
+              {ticketDetail.phone_number && (
+                <Box className="mb-3 flex items-center justify-between border-b border-gray-200 pb-2">
+                  <Typography size={12} className="text-gray-500">
+                    Phone Number:
+                  </Typography>
+                  <Typography size={14} className="text-gray-900">
+                    {ticketDetail.phone_number}
+                  </Typography>
+                </Box>
+              )}
+
+              {ticketDetail.email && (
+                <Box className="flex items-center justify-between">
+                  <Typography size={12} className="text-gray-500">
+                    Email:
+                  </Typography>
+                  <Typography size={14} className="text-gray-900">
+                    {ticketDetail.email}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+
+            <Typography size={14} className="text-center text-gray-600">
+              Would you like to proceed with redeeming this ticket?
+            </Typography>
+
+            <Box className="flex gap-3">
+              <Button
+                onClick={handleCancelRedeem}
+                disabled={isConfirming}
+                className="flex-1 border border-gray-300 bg-white py-3 text-gray-700 hover:bg-gray-50">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmRedeem}
+                disabled={isConfirming}
+                className="flex-1 bg-green-600 py-3 text-white hover:bg-green-700">
+                {isConfirming ? 'Processing...' : 'Confirm'}
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </Modal>
 
       {/* Slide-Up Result */}
       <Box
