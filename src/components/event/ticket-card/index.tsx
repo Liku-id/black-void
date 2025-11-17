@@ -4,7 +4,9 @@ import { Box, Button, Typography } from '@/components';
 import {
   formatRupiah,
   formatStrToHTML,
-  getTodayWIBString,
+  formatDate,
+  getTodayWIB,
+  convertToWIB,
 } from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
@@ -42,8 +44,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
     count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
   // Check if sales period has ended
-  const today = getTodayWIBString();
-  const isSalesEnded = ticket.sales_end_date && today > ticket.sales_end_date;
+  const now = getTodayWIB();
+  const isSalesEnded = ticket.sales_end_date && now > convertToWIB(ticket.sales_end_date);
+  const isSalesNotStarted = ticket.sales_start_date && convertToWIB(ticket.sales_start_date) > now;
 
   // Card shadow logic
   const cardClass = [
@@ -113,7 +116,17 @@ const TicketCard: React.FC<TicketCardProps> = ({
 
       <hr className="border-muted my-3" />
 
-      {available <= 0 || isSalesEnded ? (
+      {isSalesNotStarted ? (
+        <Button
+          id={`${ticket.name}_not_started`}
+          className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"
+          disabled
+          aria-disabled="true"
+          type="button"
+        >
+          Available at {ticket.sales_start_date ? formatDate(ticket.sales_start_date, 'datetime') : '-'}
+        </Button>
+      ) : available <= 0 || isSalesEnded ? (
         <Button
           id={`${ticket.name}_sold`}
           className="bg-gray font-bebas w-full cursor-not-allowed text-[22px] font-light text-black uppercase disabled:opacity-100"
