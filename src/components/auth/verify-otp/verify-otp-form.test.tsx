@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import VerifyOtpForm from './verify-otp-form';
-import { useAtom } from 'jotai';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import axios from 'axios';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
+import VerifyOtpForm from './verify-otp-form';
 
 jest.mock('axios');
 jest.mock('jotai', () => ({
@@ -56,7 +56,7 @@ describe('VerifyOtpForm', () => {
   it('triggers resend OTP api', async () => {
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
 
-    render(<VerifyOtpForm initialSeconds={0} />);
+    render(<VerifyOtpForm />);
 
     const resendButton = screen.getByText('Resend OTP');
     fireEvent.click(resendButton);
