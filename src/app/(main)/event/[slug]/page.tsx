@@ -17,7 +17,6 @@ import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import OwnerSection from '@/components/event/owner-section';
 import Loading from '@/components/layout/loading';
-import useStickyObserver from '@/utils/sticky-observer';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
@@ -46,18 +45,9 @@ export default function Event() {
   const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
   const { isLoggedIn } = useAuth();
 
-  // Sticky observer logic using custom hook
-  const stickyRef = useRef<HTMLDivElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const { isSticky, absoluteTop, isReady } = useStickyObserver(
-    stickyRef as React.RefObject<HTMLDivElement>,
-    sentinelRef as React.RefObject<HTMLDivElement>,
-    eventData ? 215 : 0
-  );
-
   const handleChangeCount = (id: string, delta: number) => {
     setTickets((prev: any[]) => {
-      const target = prev.find((t) => t.id === id);
+      const target = prev.find(t => t.id === id);
       if (!target) return prev;
 
       // Check if event required login or free ticket while trying to add a ticket
@@ -86,7 +76,7 @@ export default function Event() {
 
       const shouldResetOthers = nextCount > 0;
 
-      return prev.map((t) => {
+      return prev.map(t => {
         if (t.id === id) return { ...t, count: nextCount };
         if (shouldResetOthers && (t.count ?? 0) !== 0)
           return { ...t, count: 0 };
@@ -179,52 +169,36 @@ export default function Event() {
       {loading && <Loading />}
       <Container className="relative mx-auto flex max-w-[1440px]">
         {/* Left: Main event content, responsive width */}
-        <Box className="flex-1 overflow-hidden">
-          <Container className="flex gap-20 px-4 lg:px-8 xl:gap-16 xl:px-0">
-            <Box className="w-full lg:w-5/10 lg:max-w-5/10 xl:w-6/10 xl:max-w-6/10">
-              <EventDetailSection
-                data={eventData}
-                onChooseTicket={scrollToTickets}
-              />
-            </Box>
-            <Box className="hidden lg:block lg:w-5/10 lg:max-w-5/10 xl:w-4/10 xl:max-w-4/10" />
+        <Box className="flex-1">
+          <Container className="flex">
+            <EventDetailSection
+              data={eventData}
+              onChooseTicket={scrollToTickets}
+            />
           </Container>
 
           {/* Ticket list section, same responsive layout */}
-          <Box className="bg-light-gray relative">
+          <Box className="relative bg-light-gray">
             <Box className="absolute -top-24" ref={ticketSectionRef} />
-            <Container className="flex gap-20 px-4 lg:px-8 xl:gap-16 xl:px-0">
-              <Box className="w-full max-w-full py-8 lg:w-5/10 lg:max-w-5/10 lg:py-14 xl:w-6/10 xl:max-w-6/10">
+            <Container className="flex flex-col gap-10 px-4 py-8 md:flex-row md:items-start md:gap-12 md:px-6 md:py-10 lg:px-8 lg:py-14 xl:gap-16 xl:px-0 xl:py-16">
+              <Box className="w-full md:w-7/12 xl:w-7/12">
                 <TicketListSection
                   data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
                 />
               </Box>
-              <Box className="hidden w-5/10 max-w-5/10 lg:block xl:w-4/10 xl:max-w-4/10" />
+              <Box className="hidden w-full md:block md:w-5/12 md:self-start md:sticky md:top-[120px] xl:w-5/12">
+                <SummarySection
+                  eventData={eventData}
+                  tickets={selectedTickets}
+                  onContinue={handleContinue}
+                  disabled={isDisabled}
+                  error={error}
+                />
+              </Box>
             </Container>
           </Box>
-        </Box>
-
-        {/* DESKTOP: Sticky summary section (right column) */}
-        <Box
-          ref={stickyRef}
-          className={
-            (isSticky
-              ? 'sticky top-30 right-8 bottom-10 -ml-[455px] w-[455px] self-start xl:right-37.5 xl:w-[455px] 2xl:right-[708px]'
-              : 'absolute right-8 w-[455px] xl:right-37.5 xl:w-[455px]') +
-            ' z-1 hidden lg:block'
-          }
-          // Only apply absolute top when not sticky and ready
-          style={!isSticky && isReady ? { top: absoluteTop } : {}}
-        >
-          <SummarySection
-            eventData={eventData}
-            tickets={selectedTickets}
-            onContinue={handleContinue}
-            disabled={isDisabled}
-            error={error}
-          />
         </Box>
 
         {/* MOBILE: Sticky summary section (right column) */}
@@ -238,9 +212,6 @@ export default function Event() {
           />
         </Box>
       </Container>
-
-      {/* invisible box to trigger sticky/absolute switch */}
-      <Box ref={sentinelRef} className="absolute" />
 
       <Container className="relative mx-auto flex">
         <Box className="flex-1 px-4 pt-12 lg:pt-15">

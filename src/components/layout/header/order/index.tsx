@@ -6,7 +6,7 @@ import { Container } from '@/components';
 
 export default function Header() {
   return (
-    <header className="fixed top-6 right-0 left-0 z-50 flex justify-center px-4">
+    <header className="w-full -mt-[96px] lg:-mt-[136px] px-4">
       <Container className="flex h-16 items-center border border-black bg-white px-4 py-4 shadow-[4px_4px_0px_0px_#FFF] md:h-20 lg:px-6 lg:py-6">
         <Link href="/" aria-label="Home">
           <Image

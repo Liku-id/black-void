@@ -321,7 +321,7 @@ const OrderPage = () => {
   return (
     <>
       {loading && <Loading />}
-      <Container className="relative mx-auto flex max-w-[1140px]">
+      <Container className="relative mx-auto flex max-w-[1140px] mt-8 lg:mt-14">
         <Box className="flex-1">
           <Container className="flex gap-16 px-4">
             <Box className="w-full lg:w-5/10 lg:max-w-5/10 xl:w-6/10 xl:max-w-6/10">

@@ -1,5 +1,6 @@
 import OrderHeader from '@/components/layout/header/order';
 import { Suspense } from 'react';
+import { Box } from '@/components';
 
 export default function PaymentLayout({
   children,
@@ -7,11 +8,13 @@ export default function PaymentLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="px-0 pt-35 lg:pt-40">
+    <main className="px-0 pt-30 lg:pt-40">
       <Suspense>
         <OrderHeader />
       </Suspense>
-      {children}
+      <Box className="mt-13">
+        {children}
+      </Box>
     </main>
   );
 }
