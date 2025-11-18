@@ -33,10 +33,7 @@ export function convertToWIB(date: string | Date): Date {
   if (typeof date === 'string') {
     // Handle various date formats
     if (date.includes('Z') || date.includes('UTC')) {
-      // ISO string with Z or UTC - parse as UTC and convert to WIB
       d = new Date(date);
-      // Add 7 hours to convert UTC to WIB
-      d = new Date(d.getTime() + 7 * 60 * 60 * 1000);
     } else if (date.includes('+07:00') || date.includes('+0700')) {
       // Already in WIB timezone - parse directly
       d = new Date(date);
@@ -55,8 +52,7 @@ export function convertToWIB(date: string | Date): Date {
 }
 
 export function getTodayWIB(): Date {
-  const now = new Date();
-  return convertToWIB(now);
+  return new Date();
 }
 
 export function getTodayWIBString(): string {
