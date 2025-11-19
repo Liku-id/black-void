@@ -80,7 +80,6 @@ export default function CarouselSection() {
               linkIds={items.map(
                 (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
               )}
-              clickableItems={clickableItems}
               width={800}
               height={456}
               sizes="(min-width: 1024px) 800px, (min-width: 768px) 550px"
