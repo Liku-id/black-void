@@ -10,6 +10,7 @@ interface CarouselProps {
   images: string[];
   pages?: string[];
   linkIds?: string[];
+  clickableItems?: boolean[];
   width: number;
   height: number;
   sizes: string;
@@ -24,6 +25,7 @@ export function Carousel({
   images,
   pages = [],
   linkIds = [],
+  clickableItems = [],
   width,
   height,
   sizes,
@@ -77,6 +79,10 @@ export function Carousel({
     startAnimation(index > currentIndex ? 'next' : 'prev', index);
   };
 
+  const currentItemClickable = clickableItems.length > 0 
+    ? clickableItems[currentIndex] !== false 
+    : true;
+
   return (
     <Box className={`flex flex-col items-center ${className}`}>
       <Box className="relative h-full w-full">
@@ -95,7 +101,7 @@ export function Carousel({
                 unoptimized
               />
             )}
-            {pages.length > 0 ? (
+            {pages.length > 0 && currentItemClickable ? (
               <Link
                 id={linkIds[currentIndex] || undefined}
                 href={pages[currentIndex]}
@@ -125,21 +131,34 @@ export function Carousel({
             )}
           </>
         ) : (
-          <Link
-            href={pages[currentIndex] || '#'}
-            passHref
-            id={linkIds[currentIndex] || undefined}>
+          currentItemClickable && pages.length > 0 ? (
+            <Link
+              href={pages[currentIndex] || '#'}
+              passHref
+              id={linkIds[currentIndex] || undefined}>
+              <Image
+                src={images[currentIndex]}
+                alt=""
+                className="absolute h-full w-full cursor-pointer object-cover"
+                width={width}
+                height={height}
+                sizes={sizes}
+                draggable={false}
+                unoptimized
+              />
+            </Link>
+          ) : (
             <Image
               src={images[currentIndex]}
               alt=""
-              className="absolute h-full w-full cursor-pointer object-cover"
+              className="absolute h-full w-full object-cover"
               width={width}
               height={height}
               sizes={sizes}
               draggable={false}
               unoptimized
             />
-          </Link>
+          )
         )}
 
         {/* Left Arrow */}
