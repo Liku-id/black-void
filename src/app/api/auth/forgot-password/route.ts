@@ -5,7 +5,11 @@ import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    const { data } = await axios.post('/v1/auth/password/request', formData);
+    const origin = request.headers.get('origin');
+
+    const { data } = await axios.post('/v1/auth/password/request', formData, {
+      headers: { 'X-Frontend-Origin': origin, Origin: origin },
+    });
 
     let token = '';
     if (process.env.STAGING === 'true') {
