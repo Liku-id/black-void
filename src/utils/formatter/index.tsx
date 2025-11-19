@@ -91,11 +91,22 @@ export function formatDate(
       break;
     case 'full':
     default:
-      options.weekday = 'long';
-      options.day = 'numeric';
-      options.month = 'long';
-      options.year = 'numeric';
-      break;
+      const weekday = new Intl.DateTimeFormat('en-US', {
+        weekday: 'long',
+        timeZone: 'Asia/Jakarta',
+      }).format(d);
+      const datePart = new Intl.DateTimeFormat('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Jakarta',
+      }).format(d);
+      const [day, , year] = datePart.split(' ');
+      const monthEnglish = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        timeZone: 'Asia/Jakarta',
+      }).format(d);
+      return `${weekday}, ${day} ${monthEnglish} ${year}`;
   }
 
   return new Intl.DateTimeFormat('en-US', options).format(d);

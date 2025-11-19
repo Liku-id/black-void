@@ -1,6 +1,6 @@
+import { Suspense } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import { Suspense } from 'react';
 
 export default function AuthSegmentLayout({
   children,
@@ -9,7 +9,7 @@ export default function AuthSegmentLayout({
 }) {
   return (
     <main className="px-0 pt-30 xl:pt-40">
-      <Suspense>
+      <Suspense fallback={null}>
         <Header />
       </Suspense>
       {children}

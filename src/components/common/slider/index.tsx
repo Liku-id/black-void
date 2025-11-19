@@ -170,9 +170,8 @@ export function Slider({
             <Box
               key={index}
               id={itemIds[index] || undefined}
-              className="flex-shrink-0 select-none"
-              style={{ width: itemWidth }}
-            >
+              className="flex-shrink-0 select-none mx-auto"
+              style={{ width: itemWidth }}>
               {child}
             </Box>
           ))}
