@@ -30,8 +30,8 @@ export default function Event() {
 
   // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
-  const apiUrl = slug 
-    ? partnerCode 
+  const apiUrl = slug
+    ? partnerCode
       ? `/api/events/${slug}?partner_code=${partnerCode}`
       : `/api/events/${slug}`
     : null;
@@ -63,7 +63,7 @@ export default function Event() {
 
   const handleChangeCount = (id: string, delta: number) => {
     setTickets((prev: any[]) => {
-      const target = prev.find(t => t.id === id);
+      const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
       // Check if event required login or free ticket while trying to add a ticket
@@ -76,14 +76,33 @@ export default function Event() {
         return prev;
       }
 
-      const available = Math.max(
-        0,
-        (target.quantity ?? 0) - (target.purchased_amount ?? 0)
-      );
+      // Use partnership_info values if partner_code exists
+      const partnershipInfo = target.partnership_info;
+      const usePartnership = partnerCode && partnershipInfo;
+
+      // Determine available quota and max order quantity
+      const available =
+        usePartnership && partnershipInfo.available_quota !== undefined
+          ? partnershipInfo.available_quota
+          : Math.max(
+              0,
+              (target.quantity ?? 0) - (target.purchased_amount ?? 0)
+            );
+
+      const maxOrderQuantity =
+        usePartnership && partnershipInfo.max_order_quantity !== undefined
+          ? partnershipInfo.max_order_quantity
+          : (target.max_order_quantity ?? Infinity);
+
+      // Prevent purchase if available_quota is 0 or less when using partnership
+      if (usePartnership && available <= 0) {
+        return prev;
+      }
+
       const nextCount = Math.max(
         0,
         Math.min(
-          target.max_order_quantity ?? Infinity,
+          maxOrderQuantity,
           Math.min(available, (target.count ?? 0) + delta)
         )
       );
@@ -92,7 +111,7 @@ export default function Event() {
 
       const shouldResetOthers = nextCount > 0;
 
-      return prev.map(t => {
+      return prev.map((t) => {
         if (t.id === id) return { ...t, count: nextCount };
         if (shouldResetOthers && (t.count ?? 0) !== 0)
           return { ...t, count: 0 };
@@ -151,23 +170,34 @@ export default function Event() {
   useEffect(() => {
     if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
       setTickets(
-        eventData.ticketTypes.map((t: any) => ({
-          id: t.id,
-          name: t.name,
-          price: t.price,
-          count: 0,
-          max_order_quantity: t.max_order_quantity,
-          description: t.description,
-          sales_start_date: t.sales_start_date,
-          sales_end_date: t.sales_end_date,
-          ticket_start_date: t.ticketStartDate,
-          quantity: t.quantity,
-          purchased_amount: t.purchased_amount,
-          partnership_info: t.partnership_info || null,
-        }))
+        eventData.ticketTypes.map((t: any) => {
+          const partnershipInfo = t.partnership_info;
+          const usePartnership = partnerCode && partnershipInfo;
+
+          // Use partnership_info.max_order_quantity if partner_code exists
+          const maxOrderQuantity =
+            usePartnership && partnershipInfo?.max_order_quantity !== undefined
+              ? partnershipInfo.max_order_quantity
+              : t.max_order_quantity;
+
+          return {
+            id: t.id,
+            name: t.name,
+            price: t.price,
+            count: 0,
+            max_order_quantity: maxOrderQuantity,
+            description: t.description,
+            sales_start_date: t.sales_start_date,
+            sales_end_date: t.sales_end_date,
+            ticket_start_date: t.ticketStartDate,
+            quantity: t.quantity,
+            purchased_amount: t.purchased_amount,
+            partnership_info: partnershipInfo || null,
+          };
+        })
       );
     }
-  }, [eventData?.ticketTypes]);
+  }, [eventData?.ticketTypes, partnerCode]);
 
   // Skeleton/loading
   if (eventLoading) {
