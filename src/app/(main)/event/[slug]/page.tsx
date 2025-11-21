@@ -28,12 +28,20 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  // Get partner_code from query params if available
+  const partnerCode = searchParams.get('partner_code');
+  const apiUrl = slug 
+    ? partnerCode 
+      ? `/api/events/${slug}?partner_code=${partnerCode}`
+      : `/api/events/${slug}`
+    : null;
+
   // Fetch event data
   const {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR(slug ? `/api/events/${slug}` : null);
+  } = useSWR(apiUrl);
 
   // Initialize state
   const [, setOrderBooking] = useAtom(orderBookingAtom);
@@ -41,7 +49,15 @@ export default function Event() {
   const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const selectedTickets = tickets.filter((t: any) => t.count > 0);
+  const selectedTickets = tickets
+    .filter((t: any) => t.count > 0)
+    .map((t: any) => ({
+      id: t.id,
+      name: t.name,
+      price: String(t.price),
+      count: t.count,
+      partnership_info: t.partnership_info || null,
+    }));
   const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
   const { isLoggedIn } = useAuth();
 
@@ -93,11 +109,12 @@ export default function Event() {
   const handleContinue = async () => {
     try {
       const ticket = selectedTickets[0];
-      const payload = {
+      const payload: any = {
         tickets: [
           {
             id: ticket.id,
             quantity: ticket.count,
+            partnerCode: partnerCode ?? null,
           },
         ],
       };
@@ -146,6 +163,7 @@ export default function Event() {
           ticket_start_date: t.ticketStartDate,
           quantity: t.quantity,
           purchased_amount: t.purchased_amount,
+          partnership_info: t.partnership_info || null,
         }))
       );
     }

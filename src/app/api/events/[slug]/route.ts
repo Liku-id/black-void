@@ -8,7 +8,21 @@ export async function GET(
 ) {
   try {
     const { slug } = await context.params;
-    const res = await axios.get(`/v1/events/${slug}`);
+    const { searchParams } = new URL(req.url);
+    const partnerCode = searchParams.get('partner_code');
+
+    // Build query string for backend API
+    const queryParams = new URLSearchParams();
+    if (partnerCode) {
+      queryParams.append('partner_code', partnerCode);
+    }
+
+    const queryString = queryParams.toString();
+    const url = queryString 
+      ? `/v1/events/${slug}?${queryString}`
+      : `/v1/events/${slug}`;
+
+    const res = await axios.get(url);
     const data = res.data;
 
     if (res.status !== 200) {
