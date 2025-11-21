@@ -13,6 +13,7 @@ import {
   formatTime,
   formatStrToHTML,
   formatDate,
+  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 
 interface EventDetailProps {
@@ -126,7 +127,15 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                   color="text-white"
                   className="text-[12px] lg:text-[14px]">
                   {data.ticketTypes && data.ticketTypes.length > 0
-                    ? `Start from ${formatRupiah(data.ticketTypes[0].price)}`
+                    ? (() => {
+                        const firstTicket = data.ticketTypes[0];
+                        const basePrice = Number(firstTicket.price);
+                        const finalPrice = calculatePriceWithPartnership(
+                          basePrice,
+                          firstTicket.partnership_info
+                        );
+                        return `Start from ${formatRupiah(finalPrice)}`;
+                      })()
                     : 'No tickets available'}
                 </Typography>
               </Box>

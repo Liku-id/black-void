@@ -2,7 +2,7 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useCountdown } from '@/utils/timer';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
@@ -16,6 +16,8 @@ import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import useStickyObserver from '@/utils/sticky-observer';
 import EventPageSkeleton from '@/components/event/skeletons';
+import { getErrorMessage } from '@/lib/api/error-handler';
+import { calculatePriceWithPartnership } from '@/utils/formatter';
 
 // Contact form data type
 interface FormDataContact {
@@ -34,6 +36,7 @@ interface FormDataVisitor {
 const OrderPage = () => {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const slug = params.slug;
   const { isLoggedIn, userData } = useAuth();
 
@@ -52,12 +55,20 @@ const OrderPage = () => {
     paymentMethodFee: number;
   } | null>(null);
 
+  // Get partner_code from query params if available
+  const partnerCode = searchParams.get('partner_code');
+  const eventApiUrl = slug
+    ? partnerCode
+      ? `/api/events/${slug}?partner_code=${partnerCode}`
+      : `/api/events/${slug}`
+    : null;
+
   // Fetch Data
   const {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR(slug ? `/api/events/${slug}` : null);
+  } = useSWR(eventApiUrl);
 
   const {
     data: orderData,
@@ -84,13 +95,16 @@ const OrderPage = () => {
   });
 
   const onContactSubmit = (data: FormDataContact) => {
-    if (isVisitorDetailChecked && orderData?.ticketType?.additional_forms?.length > 0) {
+    if (
+      isVisitorDetailChecked &&
+      orderData?.ticketType?.additional_forms?.length > 0
+    ) {
       // Copy nama ke field pertama additional_forms (yang pasti nama)
       const firstField = orderData.ticketType.additional_forms[0];
       visitorMethods.setValue(`visitors.0.${firstField.field}`, data.fullName);
       visitorMethods.trigger(`visitors.0.${firstField.field}`);
     }
-    setContactDetail(prev => ({
+    setContactDetail((prev) => ({
       ...prev,
       full_name: data.fullName,
       country_code: data.countryCode,
@@ -139,10 +153,15 @@ const OrderPage = () => {
   );
 
   // Calculate totalPrice to determine if payment method is required
-  const totalPrice = orderData?.tickets?.reduce(
-    (sum: number, t: any) => sum + t.count * Number(t.price),
-    0
-  ) || 0;
+  const totalPrice =
+    orderData?.tickets?.reduce((sum: number, t: any) => {
+      const basePrice = Number(t.price);
+      const finalPrice = calculatePriceWithPartnership(
+        basePrice,
+        t.partnership_info
+      );
+      return sum + t.count * finalPrice;
+    }, 0) || 0;
 
   const isDisabled =
     !contactMethods.formState.isValid ||
@@ -167,27 +186,31 @@ const OrderPage = () => {
       const payload = {
         orderId: order.orderId,
         paymentMethodId: selectedPayment?.id,
-        attendee: visitorData?.visitors?.map(v => {
+        attendee: visitorData?.visitors?.map((v) => {
           const attendeeData: any[] = [];
           // Process each additional form field
           if (orderData?.ticketType?.additional_forms) {
             orderData.ticketType.additional_forms.forEach((form: any) => {
               const fieldValue = (v as any)[form.field];
-                if (fieldValue !== undefined && fieldValue !== null && fieldValue !== '') {
-                  let value = fieldValue;
-                  if (!Array.isArray(value)) {
-                    value = [String(value)];
-                  }
-                  attendeeData.push({
-                    additionalFormId: form.id,
-                    value: value
-                  });
+              if (
+                fieldValue !== undefined &&
+                fieldValue !== null &&
+                fieldValue !== ''
+              ) {
+                let value = fieldValue;
+                if (!Array.isArray(value)) {
+                  value = [String(value)];
                 }
+                attendeeData.push({
+                  additionalFormId: form.id,
+                  value: value,
+                });
+              }
             });
           }
-          
+
           return {
-            attendeeData
+            attendeeData,
           };
         }),
 
@@ -279,16 +302,21 @@ const OrderPage = () => {
   // Auto-select "Free" payment method when totalPrice = 0
   useEffect(() => {
     if (orderData?.tickets) {
-      const totalPrice = orderData.tickets.reduce(
-        (sum: number, t: any) => sum + t.count * Number(t.price),
-        0
-      );
-      
+      const totalPrice = orderData.tickets.reduce((sum: number, t: any) => {
+        const basePrice = Number(t.price);
+        const finalPrice = calculatePriceWithPartnership(
+          basePrice,
+          t.partnership_info
+        );
+        return sum + t.count * finalPrice;
+      }, 0);
+
       if (totalPrice === 0 && !selectedPayment) {
         const freePaymentMethod = eventData?.paymentMethods?.find(
-          (method: any) => method.name.toLowerCase().includes('free') || method.type === 'FREE'
+          (method: any) =>
+            method.name.toLowerCase().includes('free') || method.type === 'FREE'
         );
-        
+
         if (freePaymentMethod) {
           setSelectedPayment({
             id: freePaymentMethod.id,
@@ -349,10 +377,17 @@ const OrderPage = () => {
                 'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
             ' z-1 hidden lg:block'
           }
-          style={!isSticky && isReady ? { top: absoluteTop } : {}}>
+          style={!isSticky && isReady ? { top: absoluteTop } : {}}
+        >
           <SummarySection
             eventData={eventData}
-            tickets={orderData.tickets}
+            tickets={orderData.tickets.map((t: any) => ({
+              id: t.id,
+              name: t.name,
+              price: String(t.price),
+              count: t.count,
+              partnership_info: t.partnership_info || null,
+            }))}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
             onContinue={handleContinue}
@@ -364,7 +399,13 @@ const OrderPage = () => {
         <Box className="fixed bottom-0 left-0 z-50 block w-full lg:hidden">
           <SummarySectionMobile
             eventData={eventData}
-            tickets={orderData.tickets}
+            tickets={orderData.tickets.map((t: any) => ({
+              id: t.id,
+              name: t.name,
+              price: String(t.price),
+              count: t.count,
+              partnership_info: t.partnership_info || null,
+            }))}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
             onContinue={handleContinue}
