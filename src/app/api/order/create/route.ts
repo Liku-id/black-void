@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const ticket = body.tickets[0];
-    const payload = {
+    const payload: any = {
       ticketTypeId: ticket.id || ticket.ticketTypeId,
       quantity: ticket.quantity,
       partner_code: ticket.partnerCode,
