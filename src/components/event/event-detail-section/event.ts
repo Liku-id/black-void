@@ -1,3 +1,5 @@
+import { PartnershipInfo } from '../types';
+
 export interface TicketType {
   id: string;
   name: string;
@@ -12,6 +14,7 @@ export interface TicketType {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
+  partnership_info?: PartnershipInfo | null;
 }
 
 export interface PaymentMethod {

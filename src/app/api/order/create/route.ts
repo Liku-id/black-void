@@ -7,16 +7,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const ticket = body.tickets[0];
-    const payload: any = {
+    const payload = {
       ticketTypeId: ticket.id || ticket.ticketTypeId,
       quantity: ticket.quantity,
       partner_code: ticket.partnerCode,
     };
-    console.log(payload);
-    // // Add partner_code if exists
-    // if (body.partner_code) {
-    //   payload.partner_code = body.partner_code;
-    // }
 
     const { data } = await axios.post('/v1/orders', payload);
     return NextResponse.json({
