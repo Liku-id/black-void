@@ -51,14 +51,14 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
       // Copy nama ke field pertama additional_forms (yang pasti nama)
       const additionalForms = getAdditionalForms();
       const firstField = additionalForms[0];
-      visitorMethods.setValue(`visitors.0.${firstField.field}`, contactMethods.getValues().fullName);
-      visitorMethods.trigger(`visitors.0.${firstField.field}`);
+      visitorMethods.setValue(`visitors.0.${firstField?.field}`, contactMethods.getValues().fullName);
+      visitorMethods.trigger(`visitors.0.${firstField?.field}`);
     } else {
       // Clear first visitor data
       const additionalForms = getAdditionalForms();
       additionalForms.forEach(form => {
-        visitorMethods.setValue(`visitors.0.${form.field}`, '');
-        visitorMethods.trigger(`visitors.0.${form.field}`);
+        visitorMethods.setValue(`visitors.0.${form?.field}`, '');
+        visitorMethods.trigger(`visitors.0.${form?.field}`);
       });
     }
   };

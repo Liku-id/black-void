@@ -7,6 +7,7 @@ import {
   formatDate,
   getTodayWIB,
   convertToWIB,
+  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
@@ -43,6 +44,12 @@ const TicketCard: React.FC<TicketCardProps> = ({
   const plusDisabled =
     count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
 
+  // Calculate price with partnership discount if available
+  const displayPrice = calculatePriceWithPartnership(
+    ticket.price,
+    ticket.partnership_info
+  );
+
   // Check if sales period has ended
   const now = getTodayWIB();
   const isSalesEnded = ticket.sales_end_date && now > convertToWIB(ticket.sales_end_date);
@@ -76,7 +83,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
           size={18}
           className="font-bold"
         >
-          {ticket.price === 0 ? 'Free' : formatRupiah(ticket.price)}
+          {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
         </Typography>
       </Box>
       <Typography

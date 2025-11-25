@@ -26,6 +26,17 @@ export interface FormDataContact {
   countryCode: string;
 }
 
+export interface PartnershipInfo {
+  discount?: number;
+  quota?: number;
+  sold_count?: number;
+  pending_count?: number;
+  available_quota?: number;
+  max_order_quantity?: number;
+  partner_name?: string;
+  partner_code?: string;
+}
+
 export interface Ticket {
   id: string;
   name: string;
@@ -38,6 +49,7 @@ export interface Ticket {
   ticket_start_date?: string;
   quantity: number;
   purchased_amount: number;
+  partnership_info?: PartnershipInfo | null;
 }
 
 export interface TicketSummary {
@@ -45,6 +57,7 @@ export interface TicketSummary {
   name: string;
   price: string;
   count: number;
+  partnership_info?: PartnershipInfo | null;
 }
 
 export interface ContactDetails {

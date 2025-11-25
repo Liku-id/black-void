@@ -30,6 +30,7 @@ export async function GET(
         name: order.ticketType.name,
         price: order.ticketType.price,
         count: order.quantity,
+        partnership_info: order.ticketType.partnership_info || null,
       },
     ];
     return NextResponse.json({

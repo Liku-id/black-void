@@ -5,7 +5,7 @@ import { Box, Button, Typography } from '@/components';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
-import { formatRupiah } from '@/utils/formatter';
+import { formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import type { TicketSummary } from '../types';
 
@@ -43,10 +43,14 @@ const SummarySection: React.FC<SummarySectionProps> = ({
   // Initialize State
   const [showDetail, setShowDetail] = useState(false);
   const ticketCount = tickets.reduce((a, t) => a + t.count, 0);
-  const totalPrice = tickets.reduce(
-    (sum, t) => sum + t.count * Number(t.price),
-    0
-  );
+  const totalPrice = tickets.reduce((sum, t) => {
+    const basePrice = Number(t.price);
+    const finalPrice = calculatePriceWithPartnership(
+      basePrice,
+      t.partnership_info
+    );
+    return sum + t.count * finalPrice;
+  }, 0);
   const adminFee = ticketCount === 0 || totalPrice === 0
     ? 0 
     : eventData.adminFee <= 100
