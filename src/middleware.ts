@@ -70,7 +70,7 @@ export function middleware(req: NextRequest) {
   const isProtectedRoute = isRouteMatch(protectedRoutes);
   const isStaffPage = isRouteMatch(staffOnlyRoutes);
   const isBuyerPage = isRouteMatch(buyerOnlyRoutes);
-  const userIsStaff = userRole === 'ground_staff';
+  const userIsStaff = userRole === 'ground_staff' || userRole === 'event_organizer_pic';
   const userIsAdmin = userRole === 'admin';
 
   if (accessToken && isRestrictedWhenLoggedIn) {
