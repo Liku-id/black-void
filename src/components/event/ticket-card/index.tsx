@@ -63,6 +63,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
     ticket.partnership_info
   );
 
+  // Check if partner_code exists and price is discounted
+  const hasPartnerCode = partnershipInfo?.partner_code;
+  const isDiscounted = hasPartnerCode && displayPrice < ticket.price;
+  const originalPrice = ticket.price;
+
   // Check if sales period has ended
   const now = getTodayWIB();
   const isSalesEnded =
@@ -92,14 +97,37 @@ const TicketCard: React.FC<TicketCardProps> = ({
             {ticket.name}
           </Typography>
         </Box>
-        <Typography
-          type="body"
-          color="text-black"
-          size={18}
-          className="font-bold"
-        >
-          {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
-        </Typography>
+        <Box className="flex items-center gap-2">
+          {isDiscounted ? (
+            <>
+              <Typography
+                type="body"
+                color="text-muted"
+                size={18}
+                className="font-light line-through"
+              >
+                {formatRupiah(originalPrice)}
+              </Typography>
+              <Typography
+                type="body"
+                color="text-black"
+                size={18}
+                className="font-bold"
+              >
+                {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
+              </Typography>
+            </>
+          ) : (
+            <Typography
+              type="body"
+              color="text-black"
+              size={18}
+              className="font-bold"
+            >
+              {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
+            </Typography>
+          )}
+        </Box>
       </Box>
       <Typography
         type="body"
