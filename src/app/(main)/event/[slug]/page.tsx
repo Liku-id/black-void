@@ -27,14 +27,26 @@ export default function Event() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
-  const apiUrl = slug
-    ? partnerCode
-      ? `/api/events/${slug}?partner_code=${partnerCode}`
-      : `/api/events/${slug}`
-    : null;
+  const previewToken = searchParams.get('preview_token');
+  
+  // Build API URL with query params (preview_token will be decrypted in API route)
+  const buildApiUrl = () => {
+    if (!slug) return null;
+    
+    const params = new URLSearchParams();
+    if (partnerCode) {
+      params.append('partner_code', partnerCode);
+    }
+    if (previewToken) {
+      params.append('preview_token', previewToken);
+    }
+    
+    const queryString = params.toString();
+    return queryString ? `/api/events/${slug}?${queryString}` : `/api/events/${slug}`;
+  };
+  
+  const apiUrl = buildApiUrl();
 
   // Fetch event data
   const {
