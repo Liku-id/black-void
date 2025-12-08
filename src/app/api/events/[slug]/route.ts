@@ -11,7 +11,7 @@ export async function GET(
     const { slug } = await context.params;
     const { searchParams } = new URL(req.url);
     const partnerCode = searchParams.get('partner_code');
-    const previewToken = searchParams.get('preview_token');
+    const previewToken = req.cookies.get('preview_token')?.value;
 
     // Build query string for backend API
     const queryParams = new URLSearchParams();

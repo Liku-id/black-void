@@ -23,6 +23,7 @@ interface EventDetailProps {
 
 const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
   const items = (data && data.eventAssets) || [];
+  const hasAssets = items.length > 0;
   const descriptionWrapperRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
@@ -52,36 +53,52 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
       <Box className="pb-[100px] lg:grid lg:grid-cols-[55%_45%] lg:gap-2">
         <Box className="w-full">
           <Box className="block md:hidden">
-            <Slider
-              autoScroll={false}
-              className="h-[240px] w-full"
-              itemWidth={375}
-              pagination>
-              {items.map((item: any, i: number) => (
-                <Image
-                  key={i}
-                  src={item.asset.url}
-                  alt={`Image ${i + 1}`}
-                  width={375}
-                  height={240}
-                  className="object-cover"
-                  draggable={false}
-                  unoptimized
-                />
-              ))}
-            </Slider>
+            {hasAssets ? (
+              <Slider
+                autoScroll={false}
+                className="h-[240px] w-full"
+                itemWidth={375}
+                pagination>
+                {items.map((item: any, i: number) => (
+                  <Image
+                    key={i}
+                    src={item.asset.url}
+                    alt={`Image ${i + 1}`}
+                    width={375}
+                    height={240}
+                    className="object-cover"
+                    draggable={false}
+                    unoptimized
+                  />
+                ))}
+              </Slider>
+            ) : (
+              <Box className="flex items-center justify-center rounded-lg px-4 py-16">
+                <Typography type="body" size={14} color="text-white">
+                  No images available
+                </Typography>
+              </Box>
+            )}
           </Box>
           <Box className="mb-8 hidden md:mb-0 md:block">
-            <Carousel
-              images={items.map(
-                (item: { asset: { url: string } }) => item.asset.url
-              )}
-              width={613}
-              height={309}
-              sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
-              className="h-[353px] px-4"
-              arrowPosition="inside"
-            />
+            {hasAssets ? (
+              <Carousel
+                images={items.map(
+                  (item: { asset: { url: string } }) => item.asset.url
+                )}
+                width={613}
+                height={309}
+                sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
+                className="h-[353px] px-4"
+                arrowPosition="inside"
+              />
+            ) : (
+              <Box className="flex items-center justify-center rounded-lg px-4 py-16">
+                <Typography type="body" size={14} color='text-white'>
+                  No images available
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
 

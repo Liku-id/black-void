@@ -28,18 +28,14 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const partnerCode = searchParams.get('partner_code');
-  const previewToken = searchParams.get('preview_token');
   
-  // Build API URL with query params (preview_token will be decrypted in API route)
+  // Build API URL with query params (preview_token is handled via cookie in middleware)
   const buildApiUrl = () => {
     if (!slug) return null;
     
     const params = new URLSearchParams();
     if (partnerCode) {
       params.append('partner_code', partnerCode);
-    }
-    if (previewToken) {
-      params.append('preview_token', previewToken);
     }
     
     const queryString = params.toString();
@@ -70,7 +66,7 @@ export default function Event() {
       count: t.count,
       partnership_info: t.partnership_info || null,
     }));
-  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
+  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0 || eventData?.eventStatus === 'draft';
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
@@ -211,17 +207,31 @@ export default function Event() {
     }
   }, [eventData?.ticketTypes, partnerCode]);
 
+  // Handle 403 error - redirect to /event with message
+  useEffect(() => {
+    if (!eventLoading && eventData) {
+      if (eventData.success === false) {
+        router.replace('/');
+      }
+    }
+  }, [eventData, eventLoading, router]);
+
   // Skeleton/loading
   if (eventLoading) {
     return <EventPageSkeleton />;
   }
 
-  if (eventError || !eventData) {
+  if (eventError || (!eventLoading && !eventData)) {
     return (
       <Container className="py-16">
         <Box className="text-red-500">Failed to load event data</Box>
       </Container>
     );
+  }
+
+  // Don't render if eventData is error response (redirect will happen)
+  if (eventData && typeof eventData === 'object' && 'success' in eventData && eventData.success === false) {
+    return null;
   }
 
   return (
