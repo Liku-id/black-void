@@ -29,8 +29,6 @@ export default function Event() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
 
   // Build API URL with query params (preview_token is handled via cookie in middleware)
@@ -47,7 +45,6 @@ export default function Event() {
       ? `/api/events/${slug}?${queryString}`
       : `/api/events/${slug}`;
   };
-
   const apiUrl = buildApiUrl();
 
   // Fetch event data
@@ -275,7 +272,6 @@ export default function Event() {
       if (hasExpiredPartnerCode) {
         setShowExpiredModal(true);
       }
-    } else {
     }
   }, [eventData, eventLoading, partnerCode]);
 
@@ -299,7 +295,7 @@ export default function Event() {
     return <EventPageSkeleton />;
   }
 
-  if (eventError || !eventData) {
+  if (eventError || (!eventLoading && !eventData)) {
     return (
       <Container className="py-16">
         <Box className="text-red-500">Failed to load event data</Box>
