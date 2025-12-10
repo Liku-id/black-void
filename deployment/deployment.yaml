@@ -56,6 +56,8 @@ spec:
         envFrom:
         - configMapRef:
             name: black-void-config
+        - secretRef:
+            name: black-void-secret
         ports:
         - containerPort: 3000
           name: http
