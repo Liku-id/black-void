@@ -39,18 +39,16 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
     setShouldShowToggle(shouldTruncate);
   }, [data.description]);
 
-  const startDate = new Date(data.startDate);
-  const endDate = new Date(data.endDate);
+  const startDateWIB = formatDate(data.startDate, 'date');
+  const endDateWIB = formatDate(data.endDate, 'date');
   const dateText =
-    startDate.getUTCDate() === endDate.getUTCDate() &&
-      startDate.getUTCMonth() === endDate.getUTCMonth() &&
-      startDate.getUTCFullYear() === endDate.getUTCFullYear()
+    startDateWIB === endDateWIB
       ? formatDate(data.startDate, 'full')
       : `${formatDate(data.startDate, 'full')} - ${formatDate(data.endDate, 'full')}`;
 
   return (
     <section>
-      <Box className="pb-[100px] lg:grid lg:grid-cols-[55%_45%] lg:gap-2">
+      <Box className="pb-[100px] lg:grid lg:grid-cols-[55fr_45fr] lg:gap-2">
         <Box className="w-full">
           <Box className="block md:hidden">
             {hasAssets ? (
