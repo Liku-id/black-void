@@ -3,12 +3,12 @@ import axios from 'axios';
 import { generateEventMetadata } from '@/config/seo';
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
   children: React.ReactNode;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
 
   try {
     // Fetch event data untuk metadata menggunakan axios
@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function EventLayout({ children }: Props) {
+export default async function EventLayout({ params, children }: Props) {
+  await params;
   return <>{children}</>;
 }
