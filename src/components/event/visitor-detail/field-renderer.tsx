@@ -30,8 +30,10 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
     if (additionalForm.type === 'NUMBER') {
       rules.validate = (value: string) => {
         if (!value && !isRequired) return true;
-        const numValue = Number(value);
-        return !isNaN(numValue) || `${additionalForm.field} must be a valid number`;
+        const trimmedValue = value?.trim() || '';
+        if (!trimmedValue && !isRequired) return true;
+        const numValue = Number(trimmedValue);
+        return (!isNaN(numValue) && isFinite(numValue)) || `${additionalForm.field} must be a valid number`;
       };
     }
 
@@ -41,13 +43,33 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   const renderField = () => {
     switch (additionalForm.type) {
       case 'TEXT':
-      case 'NUMBER':
         return (
           <TextField
             name={fieldName}
             placeholder=""
             rules={getValidationRules()}
             disabled={disabled}
+          />
+        );
+
+      case 'NUMBER':
+        return (
+          <Controller
+            name={fieldName}
+            control={form.control}
+            rules={getValidationRules()}
+            render={({ field }) => (
+              <TextField
+                placeholder=""
+                disabled={disabled}
+                type="text"
+                value={field.value ?? ''}
+                onChange={(value) => {
+                  const cleanedValue = value.replace(/[^\d.]/g, '').trim();
+                  field.onChange(cleanedValue);
+                }}
+              />
+            )}
           />
         );
 
