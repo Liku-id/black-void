@@ -192,7 +192,7 @@ const Footer = () => {
         type="body"
         className="mt-6 px-0 text-center text-[16px] font-normal text-white"
       >
-        Version 1.0.0 | Hak Cipta 2025 - <br className="block lg:hidden" />
+        Version 2.8.0 | Hak Cipta 2025 - <br className="block lg:hidden" />
         PT Aku Rela Kamu Bahagia
       </Typography>
     </footer>
