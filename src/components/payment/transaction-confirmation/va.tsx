@@ -8,6 +8,7 @@ import {
   formatCountdownTime,
   formatDate,
   formatRupiah,
+  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 import copyIcon from '@/assets/icons/copy.svg';
 import accordionArrow from '@/assets/icons/accordion-arrow.svg';
@@ -42,7 +43,17 @@ export default function PaymentConfirmationVA({
 
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const subtotal = ticketType.price * data.transaction.orderQuantity;
+    const partnershipInfo = ticketType.partnership_info;
+    
+    // Calculate subtotal with partnership discount
+    const originalSubtotal = ticketType.price * data.transaction.orderQuantity;
+    const finalPricePerTicket = calculatePriceWithPartnership(
+      ticketType.price,
+      partnershipInfo
+    );
+    const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
+    const discount = originalSubtotal - subtotal;
+    
     const adminFee =
       (data.transaction.event.adminFee ?? 0) <= 100
         ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
@@ -55,8 +66,8 @@ export default function PaymentConfirmationVA({
         : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
-    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment };
-    return { totals };
+    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
+    return { totals, partnershipInfo };
   };
 
   const handleCopy = async (text: string) => {
@@ -227,6 +238,64 @@ export default function PaymentConfirmationVA({
                 'mb-2 overflow-hidden transition-all duration-300 ' +
                 (showDetail ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0')
               }>
+              {getTransactionAndTotals().partnershipInfo && getTransactionAndTotals().totals.discount > 0 && (
+                <Box className="my-2 rounded-[14px] border-[0.5px] border-green bg-green/10 p-[14px]">
+                  <Typography type="body" size={12} className="mb-2 font-bold text-green">
+                    Partnership Discount
+                  </Typography>
+                  {getTransactionAndTotals().partnershipInfo?.partner_name && (
+                    <Box className="mb-1 flex justify-between">
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-light"
+                        color="text-muted">
+                        Partner
+                      </Typography>
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-bold"
+                        color="text-muted">
+                        {getTransactionAndTotals().partnershipInfo?.partner_name}
+                      </Typography>
+                    </Box>
+                  )}
+                  {getTransactionAndTotals().partnershipInfo?.partner_code && (
+                    <Box className="mb-1 flex justify-between">
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-light"
+                        color="text-muted">
+                        Partner Code
+                      </Typography>
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-bold"
+                        color="text-muted">
+                        {getTransactionAndTotals().partnershipInfo?.partner_code}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Box className="flex justify-between">
+                    <Typography
+                      type="body"
+                      size={12}
+                      className="font-light"
+                      color="text-muted">
+                      Discount
+                    </Typography>
+                    <Typography
+                      type="body"
+                      size={12}
+                      className="font-bold text-green">
+                      -{formatRupiah(getTransactionAndTotals().totals.discount)}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
               <Box className="my-2 flex justify-between">
                 <Typography
                   type="body"

@@ -16,10 +16,12 @@ import TicketListSection from '@/components/event/ticket-list-section';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import OwnerSection from '@/components/event/owner-section';
+import EventModals from '@/components/event/event-modals';
 import Loading from '@/components/layout/loading';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
+import { getTodayWIB, convertToWIB } from '@/utils/formatter';
 
 export default function Event() {
   const params = useParams();
@@ -27,13 +29,30 @@ export default function Event() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const partnerCode = searchParams.get('partner_code');
+
+  // Build API URL with query params (preview_token is handled via cookie in middleware)
+  const buildApiUrl = () => {
+    if (!slug) return null;
+
+    const params = new URLSearchParams();
+    if (partnerCode) {
+      params.append('partner_code', partnerCode);
+    }
+
+    const queryString = params.toString();
+    return queryString
+      ? `/api/events/${slug}?${queryString}`
+      : `/api/events/${slug}`;
+  };
+  const apiUrl = buildApiUrl();
 
   // Fetch event data
   const {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR(slug ? `/api/events/${slug}` : null);
+  } = useSWR(apiUrl);
 
   // Initialize state
   const [, setOrderBooking] = useAtom(orderBookingAtom);
@@ -41,13 +60,25 @@ export default function Event() {
   const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const selectedTickets = tickets.filter((t: any) => t.count > 0);
-  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
+  const [showEventEndedModal, setShowEventEndedModal] = useState(false);
+  const selectedTickets = tickets
+    .filter((t: any) => t.count > 0)
+    .map((t: any) => ({
+      id: t.id,
+      name: t.name,
+      price: String(t.price),
+      count: t.count,
+      partnership_info: t.partnership_info || null,
+    }));
+  const isDisabled =
+    selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
+    eventData?.eventStatus === 'draft';
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
     setTickets((prev: any[]) => {
-      const target = prev.find(t => t.id === id);
+      const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
       // Check if event required login or free ticket while trying to add a ticket
@@ -60,14 +91,33 @@ export default function Event() {
         return prev;
       }
 
-      const available = Math.max(
-        0,
-        (target.quantity ?? 0) - (target.purchased_amount ?? 0)
-      );
+      // Use partnership_info values if partner_code exists
+      const partnershipInfo = target.partnership_info;
+      const usePartnership = partnerCode && partnershipInfo;
+
+      // Determine available quota and max order quantity
+      const available =
+        usePartnership && partnershipInfo.available_quota !== undefined
+          ? partnershipInfo.available_quota
+          : Math.max(
+              0,
+              (target.quantity ?? 0) - (target.purchased_amount ?? 0)
+            );
+
+      const maxOrderQuantity =
+        usePartnership && partnershipInfo.max_order_quantity !== undefined
+          ? partnershipInfo.max_order_quantity
+          : (target.max_order_quantity ?? Infinity);
+
+      // Prevent purchase if available_quota is 0 or less when using partnership
+      if (usePartnership && available <= 0) {
+        return prev;
+      }
+
       const nextCount = Math.max(
         0,
         Math.min(
-          target.max_order_quantity ?? Infinity,
+          maxOrderQuantity,
           Math.min(available, (target.count ?? 0) + delta)
         )
       );
@@ -76,7 +126,7 @@ export default function Event() {
 
       const shouldResetOthers = nextCount > 0;
 
-      return prev.map(t => {
+      return prev.map((t) => {
         if (t.id === id) return { ...t, count: nextCount };
         if (shouldResetOthers && (t.count ?? 0) !== 0)
           return { ...t, count: 0 };
@@ -93,11 +143,12 @@ export default function Event() {
   const handleContinue = async () => {
     try {
       const ticket = selectedTickets[0];
-      const payload = {
+      const payload: any = {
         tickets: [
           {
             id: ticket.id,
             quantity: ticket.count,
+            partnerCode: partnerCode ?? null,
           },
         ],
       };
@@ -131,37 +182,136 @@ export default function Event() {
     router.push('/register');
   };
 
+  const handleExpiredBuyTicket = () => {
+    setShowExpiredModal(false);
+    // Remove partner_code from URL
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('partner_code');
+    const newQueryString = newParams.toString();
+    const newPath = newQueryString ? `${pathname}?${newQueryString}` : pathname;
+    router.replace(newPath);
+  };
+
+  const handleGoToHomepage = () => {
+    setShowEventEndedModal(false);
+    router.push('/');
+  };
+
   useEffect(() => {
     if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
       setTickets(
-        eventData.ticketTypes.map((t: any) => ({
-          id: t.id,
-          name: t.name,
-          price: t.price,
-          count: 0,
-          max_order_quantity: t.max_order_quantity,
-          description: t.description,
-          sales_start_date: t.sales_start_date,
-          sales_end_date: t.sales_end_date,
-          ticket_start_date: t.ticketStartDate,
-          quantity: t.quantity,
-          purchased_amount: t.purchased_amount,
-        }))
+        eventData.ticketTypes.map((t: any) => {
+          const partnershipInfo = t.partnership_info;
+          const usePartnership = partnerCode && partnershipInfo;
+
+          // Use partnership_info.max_order_quantity if partner_code exists
+          const maxOrderQuantity =
+            usePartnership && partnershipInfo?.max_order_quantity !== undefined
+              ? partnershipInfo.max_order_quantity
+              : t.max_order_quantity;
+
+          return {
+            id: t.id,
+            name: t.name,
+            price: t.price,
+            count: 0,
+            max_order_quantity: maxOrderQuantity,
+            description: t.description,
+            sales_start_date: t.sales_start_date,
+            sales_end_date: t.sales_end_date,
+            ticket_start_date: t.ticketStartDate,
+            quantity: t.quantity,
+            purchased_amount: t.purchased_amount,
+            partnership_info: partnershipInfo || null,
+          };
+        })
       );
     }
-  }, [eventData?.ticketTypes]);
+  }, [eventData?.ticketTypes, partnerCode]);
+
+  // Handle 403 error - redirect to /event with message
+  useEffect(() => {
+    if (!eventLoading && eventData) {
+      if (eventData.success === false) {
+        router.replace('/');
+      }
+    }
+  }, [eventData, eventLoading, router]);
+
+  // Check if partner code is expired (only if event hasn't ended)
+  useEffect(() => {
+    if (!eventLoading && eventData && partnerCode && eventData.ticketTypes) {
+      // First check if event has ended - if so, don't show expired partner code modal
+      if (eventData.endDate) {
+        const endDate = convertToWIB(eventData.endDate);
+        const now = getTodayWIB();
+        const isEventEnded = now > endDate;
+
+        if (isEventEnded) {
+          // Event has ended, don't show expired partner code modal
+          return;
+        }
+      }
+
+      // Check if any ticket has partnership_info with expired_at
+      const hasExpiredPartnerCode = eventData.ticketTypes.some(
+        (ticket: any) => {
+          const partnershipInfo = ticket.partnership_info;
+
+          if (partnershipInfo && partnershipInfo.expired_at) {
+            const expiredAt = convertToWIB(partnershipInfo.expired_at);
+            const now = getTodayWIB();
+            const isExpired = now > expiredAt;
+
+            return isExpired;
+          }
+          return false;
+        }
+      );
+
+      if (hasExpiredPartnerCode) {
+        setShowExpiredModal(true);
+      }
+    } else {
+    }
+  }, [eventData, eventLoading, partnerCode]);
+
+  // Check if event has ended (only when partner_code is present)
+  useEffect(() => {
+    if (!eventLoading && eventData && eventData.endDate && partnerCode) {
+      const endDate = convertToWIB(eventData.endDate);
+      const now = getTodayWIB();
+      const isEventEnded = now > endDate;
+
+      if (isEventEnded) {
+        setShowEventEndedModal(true);
+        // Close expired modal if event has ended (priority)
+        setShowExpiredModal(false);
+      }
+    }
+  }, [eventData, eventLoading, partnerCode]);
 
   // Skeleton/loading
   if (eventLoading) {
     return <EventPageSkeleton />;
   }
 
-  if (eventError || !eventData) {
+  if (eventError || (!eventLoading && !eventData)) {
     return (
       <Container className="py-16">
         <Box className="text-red-500">Failed to load event data</Box>
       </Container>
     );
+  }
+
+  // Don't render if eventData is error response (redirect will happen)
+  if (
+    eventData &&
+    typeof eventData === 'object' &&
+    'success' in eventData &&
+    eventData.success === false
+  ) {
+    return null;
   }
 
   return (
@@ -186,6 +336,7 @@ export default function Event() {
                   data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
+                  partnerCode={partnerCode}
                 />
               </Box>
               <Box className="hidden w-full md:block md:w-5/12 md:self-start md:sticky md:top-[120px] xl:w-5/12">
@@ -253,6 +404,16 @@ export default function Event() {
           </Typography>
         </Box>
       </Modal>
+
+      {/* Event Modals */}
+      <EventModals
+        showExpiredModal={showExpiredModal}
+        showEventEndedModal={showEventEndedModal}
+        onCloseExpiredModal={() => setShowExpiredModal(false)}
+        onCloseEventEndedModal={() => setShowEventEndedModal(false)}
+        onExpiredBuyTicket={handleExpiredBuyTicket}
+        onGoToHomepage={handleGoToHomepage}
+      />
     </main>
   );
 }

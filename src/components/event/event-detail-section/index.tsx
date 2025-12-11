@@ -13,6 +13,7 @@ import {
   formatTime,
   formatStrToHTML,
   formatDate,
+  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 
 interface EventDetailProps {
@@ -22,6 +23,7 @@ interface EventDetailProps {
 
 const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
   const items = (data && data.eventAssets) || [];
+  const hasAssets = items.length > 0;
   const descriptionWrapperRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
@@ -37,50 +39,64 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
     setShouldShowToggle(shouldTruncate);
   }, [data.description]);
 
-  const startDate = new Date(data.startDate);
-  const endDate = new Date(data.endDate);
+  const startDateWIB = formatDate(data.startDate, 'date');
+  const endDateWIB = formatDate(data.endDate, 'date');
   const dateText =
-    startDate.getUTCDate() === endDate.getUTCDate() &&
-      startDate.getUTCMonth() === endDate.getUTCMonth() &&
-      startDate.getUTCFullYear() === endDate.getUTCFullYear()
+    startDateWIB === endDateWIB
       ? formatDate(data.startDate, 'full')
       : `${formatDate(data.startDate, 'full')} - ${formatDate(data.endDate, 'full')}`;
 
   return (
     <section>
-      <Box className="pb-[100px] lg:grid lg:grid-cols-[55%_45%] lg:gap-2">
+      <Box className="pb-[100px] lg:grid lg:grid-cols-[55fr_45fr] lg:gap-2">
         <Box className="w-full">
           <Box className="block md:hidden">
-            <Slider
-              autoScroll={false}
-              className="h-[240px] w-full"
-              itemWidth={375}
-              pagination>
-              {items.map((item: any, i: number) => (
-                <Image
-                  key={i}
-                  src={item.asset.url}
-                  alt={`Image ${i + 1}`}
-                  width={375}
-                  height={240}
-                  className="object-cover"
-                  draggable={false}
-                  unoptimized
-                />
-              ))}
-            </Slider>
+            {hasAssets ? (
+              <Slider
+                autoScroll={false}
+                className="h-[240px] w-full"
+                itemWidth={375}
+                pagination>
+                {items.map((item: any, i: number) => (
+                  <Image
+                    key={i}
+                    src={item.asset.url}
+                    alt={`Image ${i + 1}`}
+                    width={375}
+                    height={240}
+                    className="object-cover"
+                    draggable={false}
+                    unoptimized
+                  />
+                ))}
+              </Slider>
+            ) : (
+              <Box className="flex items-center justify-center rounded-lg px-4 py-16">
+                <Typography type="body" size={14} color="text-white">
+                  No images available
+                </Typography>
+              </Box>
+            )}
           </Box>
           <Box className="mb-8 hidden md:mb-0 md:block">
-            <Carousel
-              images={items.map(
-                (item: { asset: { url: string } }) => item.asset.url
-              )}
-              width={613}
-              height={309}
-              sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
-              className="h-[353px] px-4"
-              arrowPosition="inside"
-            />
+            {hasAssets ? (
+              <Carousel
+                images={items.map(
+                  (item: { asset: { url: string } }) => item.asset.url
+                )}
+                width={613}
+                height={309}
+                sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
+                className="h-[353px] px-4"
+                arrowPosition="inside"
+              />
+            ) : (
+              <Box className="flex items-center justify-center rounded-lg px-4 py-16">
+                <Typography type="body" size={14} color='text-white'>
+                  No images available
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
 
@@ -89,11 +105,11 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
             <Typography
               type="heading"
               color="text-white"
-              className="mb-2 truncate text-[26px] lg:text-[30px]">
+              className="mb-2 text-[26px] lg:text-[30px]">
               {data.name}
             </Typography>
             <Box className="grid gap-2 lg:grid-cols-2 lg:gap-[18px]">
-              <Box className="group relative flex min-w-0 items-start gap-2">
+              <Box className="flex items-start gap-2">
                 <Image
                   src={locationIcon}
                   alt="location"
@@ -102,17 +118,9 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="max-w-full truncate text-[12px] lg:text-[14px]">
+                  className="max-w-full text-[12px] lg:text-[14px]">
                   {data.address}
                 </Typography>
-                <Box className="pointer-events-none absolute top-full left-0 z-10 mt-1 hidden max-w-[320px] bg-black/90 px-2 py-1 opacity-0 transition-opacity group-hover:opacity-100 lg:block">
-                  <Typography
-                    type="body"
-                    color="text-white"
-                    className="text-[12px]">
-                    {data.address}
-                  </Typography>
-                </Box>
               </Box>
 
               <Box className="flex items-start gap-2">
@@ -126,12 +134,20 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                   color="text-white"
                   className="text-[12px] lg:text-[14px]">
                   {data.ticketTypes && data.ticketTypes.length > 0
-                    ? `Start from ${formatRupiah(data.ticketTypes[0].price)}`
+                    ? (() => {
+                        const firstTicket = data.ticketTypes[0];
+                        const basePrice = Number(firstTicket.price);
+                        const finalPrice = calculatePriceWithPartnership(
+                          basePrice,
+                          firstTicket.partnership_info
+                        );
+                        return `Start from ${formatRupiah(finalPrice)}`;
+                      })()
                     : 'No tickets available'}
                 </Typography>
               </Box>
 
-              <Box className="group relative flex min-w-0 items-start gap-2">
+              <Box className="flex items-start gap-2">
                 <Image
                   src={calendarIcon}
                   alt="calendar"
@@ -140,17 +156,9 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="max-w-full truncate text-[12px] lg:text-[14px]">
+                  className="max-w-full text-[12px] lg:text-[14px]">
                   {dateText}
                 </Typography>
-                <Box className="pointer-events-none absolute top-full left-0 z-10 mt-1 hidden max-w-[320px] bg-black/90 px-2 py-1 opacity-0 transition-opacity group-hover:opacity-100 lg:block">
-                  <Typography
-                    type="body"
-                    color="text-white"
-                    className="text-[12px]">
-                    {dateText}
-                  </Typography>
-                </Box>
               </Box>
 
               <Box className="flex items-start gap-2">

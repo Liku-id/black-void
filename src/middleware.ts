@@ -65,6 +65,29 @@ export function middleware(req: NextRequest) {
     return redirect('/login');
   }
 
+  // Special handling for /event/[slug] - save preview_token to cookie and remove from URL
+  if (pathname.startsWith('/event/') && pathname !== '/event') {
+    const previewToken = searchParams.get('preview_token');
+
+    if (previewToken) {
+      // Remove preview_token from URL
+      const newUrl = new URL(req.url);
+      newUrl.searchParams.delete('preview_token');
+      const response = NextResponse.redirect(newUrl);
+
+      // Save preview_token to httpOnly cookie
+      const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 5, // 5 minutes
+        sameSite: 'lax' as const,
+      };
+
+      response.cookies.set('preview_token', previewToken, options);
+      return response;
+    }
+  }
+
   // Redirect logged-in users from auth pages
   const isRestrictedWhenLoggedIn = restrictedWhenLoggedIn.includes(pathname);
   const isProtectedRoute = isRouteMatch(protectedRoutes);

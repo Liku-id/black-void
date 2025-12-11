@@ -115,3 +115,37 @@ export function formatDate(
 export function formatStrToHTML(str: string): string {
   return str.replace(/\n\n/g, '<br/><br/>').replace(/\n/g, '<br/>');
 }
+
+/**
+ * Calculate price with partnership discount
+ * @param originalPrice - Original ticket price
+ * @param partnershipInfo - Partnership info object with discount
+ * @returns Final price after applying discount
+ */
+export function calculatePriceWithPartnership(
+  originalPrice: number,
+  partnershipInfo?: {
+    discount?: number;
+    quota?: number;
+    sold_count?: number;
+    pending_count?: number;
+    available_quota?: number;
+    max_order_quantity?: number;
+    partner_name?: string;
+    partner_code?: string;
+  } | null
+): number {
+  if (!partnershipInfo || !partnershipInfo.discount) {
+    return originalPrice;
+  }
+
+  const discount = partnershipInfo.discount;
+
+  // If discount is between 1-100, use as percentage
+  if (discount >= 1 && discount <= 100) {
+    return Math.round(originalPrice * ((100 - discount )/ 100));
+  }
+
+  // If discount > 100, use as direct subtraction
+  return Math.max(0, originalPrice - discount);
+}

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Typography, Container, Box, Button } from '@/components';
 import { useParams, useRouter } from 'next/navigation';
-import { formatDate, formatRupiah } from '@/utils/formatter';
+import { formatDate, formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
 import Image from 'next/image';
 import successStatus from '@/assets/icons/success-status.svg';
 import failedStatus from '@/assets/icons/failed-status.svg';
@@ -21,7 +21,17 @@ export default function PaymentStatus() {
 
   const getTransactionAndTotals = () => {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const subtotal = ticketType.price * data.transaction.orderQuantity;
+    const partnershipInfo = ticketType.partnership_info;
+    
+    // Calculate subtotal with partnership discount
+    const originalSubtotal = ticketType.price * data.transaction.orderQuantity;
+    const finalPricePerTicket = calculatePriceWithPartnership(
+      ticketType.price,
+      partnershipInfo
+    );
+    const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
+    const discount = originalSubtotal - subtotal;
+    
     const adminFee = subtotal === 0
       ? 0
       : (data.transaction.event.adminFee ?? 0) <= 100
@@ -35,8 +45,8 @@ export default function PaymentStatus() {
         : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
-    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment };
-    return { totals };
+    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
+    return { totals, partnershipInfo };
   };
 
   const handleButtonClick = () => {
@@ -206,6 +216,65 @@ export default function PaymentStatus() {
           </Box>
 
           <hr className="border-muted my-4 border-[0.5px]" />
+
+          {getTransactionAndTotals().partnershipInfo && getTransactionAndTotals().totals.discount > 0 && (
+            <Box className="mb-4 rounded-[14px] border-[0.5px] border-green bg-green/10 p-[14px]">
+              <Typography type="body" size={12} className="mb-2 font-bold text-green">
+                Partnership Discount
+              </Typography>
+              {getTransactionAndTotals().partnershipInfo?.partner_name && (
+                <Box className="mb-1 flex justify-between">
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-light"
+                    color="text-muted">
+                    Partner
+                  </Typography>
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-bold"
+                    color="text-muted">
+                    {getTransactionAndTotals().partnershipInfo?.partner_name}
+                  </Typography>
+                </Box>
+              )}
+              {getTransactionAndTotals().partnershipInfo?.partner_code && (
+                <Box className="mb-1 flex justify-between">
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-light"
+                    color="text-muted">
+                    Partner Code
+                  </Typography>
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-bold"
+                    color="text-muted">
+                    {getTransactionAndTotals().partnershipInfo?.partner_code}
+                  </Typography>
+                </Box>
+              )}
+              <Box className="flex justify-between">
+                <Typography
+                  type="body"
+                  size={12}
+                  className="font-light"
+                  color="text-muted">
+                  Discount
+                </Typography>
+                <Typography
+                  type="body"
+                  size={12}
+                  className="font-bold text-green">
+                  -{formatRupiah(getTransactionAndTotals().totals.discount)}
+                </Typography>
+              </Box>
+            </Box>
+          )}
 
           <Box className="mb-2 flex justify-between">
             <Typography

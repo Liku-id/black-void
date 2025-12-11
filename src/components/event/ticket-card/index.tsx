@@ -7,6 +7,7 @@ import {
   formatDate,
   getTodayWIB,
   convertToWIB,
+  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
@@ -36,17 +37,43 @@ const TicketCard: React.FC<TicketCardProps> = ({
       ? (ticket.description ?? '')
       : (ticket.description ?? '').slice(0, MAX_DESC_LENGTH) + '...';
   const minusDisabled = count === 0;
-  const available = Math.max(
-    0,
-    (ticket.quantity ?? 0) - (ticket.purchased_amount ?? 0)
-  );
+
+  // Use partnership_info values if partner_code exists (checking if partnership_info has available_quota)
+  const partnershipInfo = ticket.partnership_info;
+  const usePartnership =
+    partnershipInfo && partnershipInfo.available_quota !== undefined;
+
+  const available = usePartnership
+    ? (partnershipInfo.available_quota ?? 0)
+    : Math.max(0, (ticket.quantity ?? 0) - (ticket.purchased_amount ?? 0));
+
+  const maxOrderQuantity =
+    usePartnership && partnershipInfo?.max_order_quantity !== undefined
+      ? partnershipInfo.max_order_quantity
+      : (ticket.max_order_quantity ?? Infinity);
+
   const plusDisabled =
-    count >= (ticket.max_order_quantity ?? Infinity) || count >= available;
+    count >= maxOrderQuantity ||
+    count >= available ||
+    (usePartnership && available <= 0);
+
+  // Calculate price with partnership discount if available
+  const displayPrice = calculatePriceWithPartnership(
+    ticket.price,
+    ticket.partnership_info
+  );
+
+  // Check if partner_code exists and price is discounted
+  const hasPartnerCode = partnershipInfo?.partner_code;
+  const isDiscounted = hasPartnerCode && displayPrice < ticket.price;
+  const originalPrice = ticket.price;
 
   // Check if sales period has ended
   const now = getTodayWIB();
-  const isSalesEnded = ticket.sales_end_date && now > convertToWIB(ticket.sales_end_date);
-  const isSalesNotStarted = ticket.sales_start_date && convertToWIB(ticket.sales_start_date) > now;
+  const isSalesEnded =
+    ticket.sales_end_date && now > convertToWIB(ticket.sales_end_date);
+  const isSalesNotStarted =
+    ticket.sales_start_date && convertToWIB(ticket.sales_start_date) > now;
 
   // Card shadow logic
   const cardClass = [
@@ -70,14 +97,37 @@ const TicketCard: React.FC<TicketCardProps> = ({
             {ticket.name}
           </Typography>
         </Box>
-        <Typography
-          type="body"
-          color="text-black"
-          size={18}
-          className="font-bold"
-        >
-          {ticket.price === 0 ? 'Free' : formatRupiah(ticket.price)}
-        </Typography>
+        <Box className="flex items-center gap-2">
+          {isDiscounted ? (
+            <>
+              <Typography
+                type="body"
+                color="text-muted"
+                size={18}
+                className="font-light line-through"
+              >
+                {formatRupiah(originalPrice)}
+              </Typography>
+              <Typography
+                type="body"
+                color="text-black"
+                size={18}
+                className="font-bold"
+              >
+                {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
+              </Typography>
+            </>
+          ) : (
+            <Typography
+              type="body"
+              color="text-black"
+              size={18}
+              className="font-bold"
+            >
+              {displayPrice === 0 ? 'Free' : formatRupiah(displayPrice)}
+            </Typography>
+          )}
+        </Box>
       </Box>
       <Typography
         type="body"
@@ -124,7 +174,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
           aria-disabled="true"
           type="button"
         >
-          Available at {ticket.sales_start_date ? formatDate(ticket.sales_start_date, 'datetime') : '-'}
+          Available at{' '}
+          {ticket.sales_start_date
+            ? formatDate(ticket.sales_start_date, 'datetime')
+            : '-'}
         </Button>
       ) : available <= 0 || isSalesEnded ? (
         <Button
@@ -142,9 +195,11 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Typography type="heading" size={20}>
               TOTAL TICKETS
             </Typography>
-            {(count >= (ticket.max_order_quantity ?? Infinity) ||
-              (ticket.quantity ?? 0) <=
-                (ticket.purchased_amount ?? 0) + count) && (
+            {(count >= maxOrderQuantity ||
+              (usePartnership
+                ? available <= count
+                : (ticket.quantity ?? 0) <=
+                  (ticket.purchased_amount ?? 0) + count)) && (
               <Typography type="body" size={10} color="text-red">
                 Maximum purchase limit reached
               </Typography>
@@ -166,7 +221,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               id={`${ticket.name}_ticket_plus_icon`}
               className={`flex h-8 w-8 items-center justify-center text-lg ${plusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
               onClick={() => onChange(ticket.id, 1)}
-              disabled={plusDisabled}
+              disabled={!!plusDisabled}
               type="button"
             >
               +

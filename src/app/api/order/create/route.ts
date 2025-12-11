@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     const payload = {
       ticketTypeId: ticket.id || ticket.ticketTypeId,
       quantity: ticket.quantity,
+      partner_code: ticket.partnerCode,
     };
 
     const { data } = await axios.post('/v1/orders', payload);
