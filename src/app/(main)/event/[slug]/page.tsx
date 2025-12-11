@@ -16,10 +16,12 @@ import TicketListSection from '@/components/event/ticket-list-section';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import OwnerSection from '@/components/event/owner-section';
+import EventModals from '@/components/event/event-modals';
 import Loading from '@/components/layout/loading';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
+import { getTodayWIB, convertToWIB } from '@/utils/formatter';
 
 export default function Event() {
   const params = useParams();
@@ -30,11 +32,23 @@ export default function Event() {
 
   // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
-  const apiUrl = slug
-    ? partnerCode
-      ? `/api/events/${slug}?partner_code=${partnerCode}`
-      : `/api/events/${slug}`
-    : null;
+
+  // Build API URL with query params (preview_token is handled via cookie in middleware)
+  const buildApiUrl = () => {
+    if (!slug) return null;
+
+    const params = new URLSearchParams();
+    if (partnerCode) {
+      params.append('partner_code', partnerCode);
+    }
+
+    const queryString = params.toString();
+    return queryString
+      ? `/api/events/${slug}?${queryString}`
+      : `/api/events/${slug}`;
+  };
+
+  const apiUrl = buildApiUrl();
 
   // Fetch event data
   const {
@@ -49,6 +63,8 @@ export default function Event() {
   const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
+  const [showEventEndedModal, setShowEventEndedModal] = useState(false);
   const selectedTickets = tickets
     .filter((t: any) => t.count > 0)
     .map((t: any) => ({
@@ -58,7 +74,9 @@ export default function Event() {
       count: t.count,
       partnership_info: t.partnership_info || null,
     }));
-  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0;
+  const isDisabled =
+    selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
+    eventData?.eventStatus === 'draft';
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
@@ -167,6 +185,21 @@ export default function Event() {
     router.push('/register');
   };
 
+  const handleExpiredBuyTicket = () => {
+    setShowExpiredModal(false);
+    // Remove partner_code from URL
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('partner_code');
+    const newQueryString = newParams.toString();
+    const newPath = newQueryString ? `${pathname}?${newQueryString}` : pathname;
+    router.replace(newPath);
+  };
+
+  const handleGoToHomepage = () => {
+    setShowEventEndedModal(false);
+    router.push('/');
+  };
+
   useEffect(() => {
     if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
       setTickets(
@@ -199,6 +232,68 @@ export default function Event() {
     }
   }, [eventData?.ticketTypes, partnerCode]);
 
+  // Handle 403 error - redirect to /event with message
+  useEffect(() => {
+    if (!eventLoading && eventData) {
+      if (eventData.success === false) {
+        router.replace('/');
+      }
+    }
+  }, [eventData, eventLoading, router]);
+
+  // Check if partner code is expired (only if event hasn't ended)
+  useEffect(() => {
+    if (!eventLoading && eventData && partnerCode && eventData.ticketTypes) {
+      // First check if event has ended - if so, don't show expired partner code modal
+      if (eventData.endDate) {
+        const endDate = convertToWIB(eventData.endDate);
+        const now = getTodayWIB();
+        const isEventEnded = now > endDate;
+
+        if (isEventEnded) {
+          // Event has ended, don't show expired partner code modal
+          return;
+        }
+      }
+
+      // Check if any ticket has partnership_info with expired_at
+      const hasExpiredPartnerCode = eventData.ticketTypes.some(
+        (ticket: any) => {
+          const partnershipInfo = ticket.partnership_info;
+
+          if (partnershipInfo && partnershipInfo.expired_at) {
+            const expiredAt = convertToWIB(partnershipInfo.expired_at);
+            const now = getTodayWIB();
+            const isExpired = now > expiredAt;
+
+            return isExpired;
+          }
+          return false;
+        }
+      );
+
+      if (hasExpiredPartnerCode) {
+        setShowExpiredModal(true);
+      }
+    } else {
+    }
+  }, [eventData, eventLoading, partnerCode]);
+
+  // Check if event has ended (only when partner_code is present)
+  useEffect(() => {
+    if (!eventLoading && eventData && eventData.endDate && partnerCode) {
+      const endDate = convertToWIB(eventData.endDate);
+      const now = getTodayWIB();
+      const isEventEnded = now > endDate;
+
+      if (isEventEnded) {
+        setShowEventEndedModal(true);
+        // Close expired modal if event has ended (priority)
+        setShowExpiredModal(false);
+      }
+    }
+  }, [eventData, eventLoading, partnerCode]);
+
   // Skeleton/loading
   if (eventLoading) {
     return <EventPageSkeleton />;
@@ -210,6 +305,16 @@ export default function Event() {
         <Box className="text-red-500">Failed to load event data</Box>
       </Container>
     );
+  }
+
+  // Don't render if eventData is error response (redirect will happen)
+  if (
+    eventData &&
+    typeof eventData === 'object' &&
+    'success' in eventData &&
+    eventData.success === false
+  ) {
+    return null;
   }
 
   return (
@@ -301,6 +406,16 @@ export default function Event() {
           </Typography>
         </Box>
       </Modal>
+
+      {/* Event Modals */}
+      <EventModals
+        showExpiredModal={showExpiredModal}
+        showEventEndedModal={showEventEndedModal}
+        onCloseExpiredModal={() => setShowExpiredModal(false)}
+        onCloseEventEndedModal={() => setShowEventEndedModal(false)}
+        onExpiredBuyTicket={handleExpiredBuyTicket}
+        onGoToHomepage={handleGoToHomepage}
+      />
     </main>
   );
 }

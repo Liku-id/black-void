@@ -35,6 +35,7 @@ export interface PartnershipInfo {
   max_order_quantity?: number;
   partner_name?: string;
   partner_code?: string;
+  expired_at?: string;
 }
 
 export interface Ticket {
