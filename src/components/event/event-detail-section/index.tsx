@@ -105,11 +105,11 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
             <Typography
               type="heading"
               color="text-white"
-              className="mb-2 truncate text-[26px] lg:text-[30px]">
+              className="mb-2 text-[26px] lg:text-[30px]">
               {data.name}
             </Typography>
             <Box className="grid gap-2 lg:grid-cols-2 lg:gap-[18px]">
-              <Box className="group relative flex min-w-0 items-start gap-2">
+              <Box className="flex items-start gap-2">
                 <Image
                   src={locationIcon}
                   alt="location"
@@ -118,17 +118,9 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="max-w-full truncate text-[12px] lg:text-[14px]">
+                  className="max-w-full text-[12px] lg:text-[14px]">
                   {data.address}
                 </Typography>
-                <Box className="pointer-events-none absolute top-full left-0 z-10 mt-1 hidden max-w-[320px] bg-black/90 px-2 py-1 opacity-0 transition-opacity group-hover:opacity-100 lg:block">
-                  <Typography
-                    type="body"
-                    color="text-white"
-                    className="text-[12px]">
-                    {data.address}
-                  </Typography>
-                </Box>
               </Box>
 
               <Box className="flex items-start gap-2">
@@ -155,7 +147,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 </Typography>
               </Box>
 
-              <Box className="group relative flex min-w-0 items-start gap-2">
+              <Box className="flex items-start gap-2">
                 <Image
                   src={calendarIcon}
                   alt="calendar"
@@ -164,17 +156,9 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 <Typography
                   type="body"
                   color="text-white"
-                  className="max-w-full truncate text-[12px] lg:text-[14px]">
+                  className="max-w-full text-[12px] lg:text-[14px]">
                   {dateText}
                 </Typography>
-                <Box className="pointer-events-none absolute top-full left-0 z-10 mt-1 hidden max-w-[320px] bg-black/90 px-2 py-1 opacity-0 transition-opacity group-hover:opacity-100 lg:block">
-                  <Typography
-                    type="body"
-                    color="text-white"
-                    className="text-[12px]">
-                    {dateText}
-                  </Typography>
-                </Box>
               </Box>
 
               <Box className="flex items-start gap-2">
