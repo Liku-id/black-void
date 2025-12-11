@@ -16,6 +16,7 @@ import TicketListSection from '@/components/event/ticket-list-section';
 import SummarySection from '@/components/event/summary-section';
 import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import OwnerSection from '@/components/event/owner-section';
+import EventModals from '@/components/event/event-modals';
 import Loading from '@/components/layout/loading';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
@@ -240,11 +241,6 @@ export default function Event() {
 
   // Check if partner code is expired (only if event hasn't ended)
   useEffect(() => {
-    console.log('Expired check - eventLoading:', eventLoading);
-    console.log('Expired check - eventData:', eventData);
-    console.log('Expired check - partnerCode:', partnerCode);
-    console.log('Expired check - ticketTypes:', eventData?.ticketTypes);
-
     if (!eventLoading && eventData && partnerCode && eventData.ticketTypes) {
       // First check if event has ended - if so, don't show expired partner code modal
       if (eventData.endDate) {
@@ -258,41 +254,26 @@ export default function Event() {
         }
       }
 
-      console.log('Checking expired status for tickets...');
-
       // Check if any ticket has partnership_info with expired_at
       const hasExpiredPartnerCode = eventData.ticketTypes.some(
         (ticket: any) => {
           const partnershipInfo = ticket.partnership_info;
-          console.log(
-            'Ticket:',
-            ticket.name,
-            'PartnershipInfo:',
-            partnershipInfo
-          );
 
           if (partnershipInfo && partnershipInfo.expired_at) {
             const expiredAt = convertToWIB(partnershipInfo.expired_at);
             const now = getTodayWIB();
             const isExpired = now > expiredAt;
-            console.log('Expired check:', {
-              ticketName: ticket.name,
-              expiredAt: partnershipInfo.expired_at,
-              now: now.toISOString(),
-              isExpired,
-            });
+
             return isExpired;
           }
           return false;
         }
       );
 
-      console.log('hasExpiredPartnerCode', hasExpiredPartnerCode);
       if (hasExpiredPartnerCode) {
         setShowExpiredModal(true);
       }
     } else {
-      console.log('Conditions not met for expired check');
     }
   }, [eventData, eventLoading, partnerCode]);
 
@@ -424,57 +405,15 @@ export default function Event() {
         </Box>
       </Modal>
 
-      {/* Expired Partner Code Modal */}
-      <Modal
-        open={showExpiredModal}
-        onClose={() => setShowExpiredModal(false)}
-        title="THIS LINK ALREADY EXPIRED!"
-        className="md:w-[454px]"
-        footer={
-          <Box className="flex justify-end">
-            <Button
-              type="button"
-              onClick={handleExpiredBuyTicket}
-              className="bg-green px-6 py-3 text-white font-bebas text-[22px] uppercase"
-            >
-              Buy Ticket
-            </Button>
-          </Box>
-        }
-      >
-        <Box className="mb-6">
-          <Typography type="body" size={14} color="text-white">
-            This link already expired, but you still can buy ticket with normal
-            price
-          </Typography>
-        </Box>
-      </Modal>
-
-      {/* Event Ended Modal */}
-      <Modal
-        open={showEventEndedModal}
-        onClose={() => setShowEventEndedModal(false)}
-        title="THIS LINK ALREADY EXPIRED!"
-        className="md:w-[454px]"
-        footer={
-          <Box className="flex justify-end">
-            <Button
-              type="button"
-              onClick={handleGoToHomepage}
-              className="bg-green px-6 py-3 text-white font-bebas text-[22px] uppercase"
-            >
-              Go to Homepage
-            </Button>
-          </Box>
-        }
-      >
-        <Box className="mb-6">
-          <Typography type="body" size={14} color="text-white">
-            This event has been ended. Find another exciting event to attend on
-            Wukong
-          </Typography>
-        </Box>
-      </Modal>
+      {/* Event Modals */}
+      <EventModals
+        showExpiredModal={showExpiredModal}
+        showEventEndedModal={showEventEndedModal}
+        onCloseExpiredModal={() => setShowExpiredModal(false)}
+        onCloseEventEndedModal={() => setShowEventEndedModal(false)}
+        onExpiredBuyTicket={handleExpiredBuyTicket}
+        onGoToHomepage={handleGoToHomepage}
+      />
     </main>
   );
 }
