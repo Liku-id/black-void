@@ -336,6 +336,7 @@ export default function Event() {
                   data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
+                  partnerCode={partnerCode}
                 />
               </Box>
               <Box className="hidden w-full md:block md:w-5/12 md:self-start md:sticky md:top-[120px] xl:w-5/12">

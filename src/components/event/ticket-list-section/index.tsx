@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Box, Typography } from '@/components';
 import { EventData } from '../event-detail-section/event';
 import { formatDate } from '@/utils/formatter';
@@ -10,24 +10,33 @@ interface TicketListSectionProps {
   data: EventData;
   tickets: Ticket[];
   handleChangeCount: (id: string, delta: number) => void;
+  partnerCode?: string | null;
 }
 
 const TicketListSection: React.FC<TicketListSectionProps> = ({
   data,
   tickets,
   handleChangeCount,
+  partnerCode,
 }) => {
   // Collect all ticket_start_date
   const dates = useMemo(() => {
     if (!data.ticketTypes) return [];
-    const rawDates = data.ticketTypes
+    let ticketTypesToUse = data.ticketTypes;
+    if (partnerCode) {
+      ticketTypesToUse = data.ticketTypes.filter((t: any) => 
+        t.partnership_info && t.partnership_info !== null
+      );
+    }
+    
+    const rawDates = ticketTypesToUse
       .map((t: any) => t.ticketStartDate || t.ticket_start_date)
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();
 
     return unique;
-  }, [data.ticketTypes]);
+  }, [data.ticketTypes, partnerCode]);
 
   const [selectedDate, setSelectedDate] = useState(dates[0] || '');
   const activeTicketId = tickets.find(t => t.count > 0)?.id;
@@ -36,10 +45,13 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   // Filter tickets based on date and sales period
   const filteredTickets = useMemo(() => {
     return tickets.filter(ticket => {
+      if (partnerCode && (!ticket.partnership_info || ticket.partnership_info === null)) {
+        return false;
+      }
       if (ticket.ticket_start_date !== selectedDate) return false;
       return true;
     });
-  }, [tickets, selectedDate]);
+  }, [tickets, selectedDate, partnerCode]);
 
   // Render Ticket Card
   function renderTicketCard(ticket: Ticket) {
@@ -58,6 +70,12 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
       />
     );
   }
+
+  useEffect(() => {
+    if (dates.length > 0 && !dates.includes(selectedDate)) {
+      setSelectedDate(dates[0]);
+    }
+  }, [dates, selectedDate]);
 
   return (
     <section>
