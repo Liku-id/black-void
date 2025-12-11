@@ -272,6 +272,7 @@ export default function Event() {
       if (hasExpiredPartnerCode) {
         setShowExpiredModal(true);
       }
+    } else {
     }
   }, [eventData, eventLoading, partnerCode]);
 
