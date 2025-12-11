@@ -20,6 +20,7 @@ import Loading from '@/components/layout/loading';
 import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
+import { getTodayWIB, convertToWIB } from '@/utils/formatter';
 
 export default function Event() {
   const params = useParams();
@@ -28,20 +29,22 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const partnerCode = searchParams.get('partner_code');
-  
+
   // Build API URL with query params (preview_token is handled via cookie in middleware)
   const buildApiUrl = () => {
     if (!slug) return null;
-    
+
     const params = new URLSearchParams();
     if (partnerCode) {
       params.append('partner_code', partnerCode);
     }
-    
+
     const queryString = params.toString();
-    return queryString ? `/api/events/${slug}?${queryString}` : `/api/events/${slug}`;
+    return queryString
+      ? `/api/events/${slug}?${queryString}`
+      : `/api/events/${slug}`;
   };
-  
+
   const apiUrl = buildApiUrl();
 
   // Fetch event data
@@ -57,6 +60,8 @@ export default function Event() {
   const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
+  const [showEventEndedModal, setShowEventEndedModal] = useState(false);
   const selectedTickets = tickets
     .filter((t: any) => t.count > 0)
     .map((t: any) => ({
@@ -66,7 +71,9 @@ export default function Event() {
       count: t.count,
       partnership_info: t.partnership_info || null,
     }));
-  const isDisabled = selectedTickets.reduce((a, t) => a + t.count, 0) === 0 || eventData?.eventStatus === 'draft';
+  const isDisabled =
+    selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
+    eventData?.eventStatus === 'draft';
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
@@ -175,6 +182,21 @@ export default function Event() {
     router.push('/register');
   };
 
+  const handleExpiredBuyTicket = () => {
+    setShowExpiredModal(false);
+    // Remove partner_code from URL
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.delete('partner_code');
+    const newQueryString = newParams.toString();
+    const newPath = newQueryString ? `${pathname}?${newQueryString}` : pathname;
+    router.replace(newPath);
+  };
+
+  const handleGoToHomepage = () => {
+    setShowEventEndedModal(false);
+    router.push('/');
+  };
+
   useEffect(() => {
     if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
       setTickets(
@@ -216,6 +238,79 @@ export default function Event() {
     }
   }, [eventData, eventLoading, router]);
 
+  // Check if partner code is expired (only if event hasn't ended)
+  useEffect(() => {
+    console.log('Expired check - eventLoading:', eventLoading);
+    console.log('Expired check - eventData:', eventData);
+    console.log('Expired check - partnerCode:', partnerCode);
+    console.log('Expired check - ticketTypes:', eventData?.ticketTypes);
+
+    if (!eventLoading && eventData && partnerCode && eventData.ticketTypes) {
+      // First check if event has ended - if so, don't show expired partner code modal
+      if (eventData.endDate) {
+        const endDate = convertToWIB(eventData.endDate);
+        const now = getTodayWIB();
+        const isEventEnded = now > endDate;
+
+        if (isEventEnded) {
+          // Event has ended, don't show expired partner code modal
+          return;
+        }
+      }
+
+      console.log('Checking expired status for tickets...');
+
+      // Check if any ticket has partnership_info with expired_at
+      const hasExpiredPartnerCode = eventData.ticketTypes.some(
+        (ticket: any) => {
+          const partnershipInfo = ticket.partnership_info;
+          console.log(
+            'Ticket:',
+            ticket.name,
+            'PartnershipInfo:',
+            partnershipInfo
+          );
+
+          if (partnershipInfo && partnershipInfo.expired_at) {
+            const expiredAt = convertToWIB(partnershipInfo.expired_at);
+            const now = getTodayWIB();
+            const isExpired = now > expiredAt;
+            console.log('Expired check:', {
+              ticketName: ticket.name,
+              expiredAt: partnershipInfo.expired_at,
+              now: now.toISOString(),
+              isExpired,
+            });
+            return isExpired;
+          }
+          return false;
+        }
+      );
+
+      console.log('hasExpiredPartnerCode', hasExpiredPartnerCode);
+      if (hasExpiredPartnerCode) {
+        setShowExpiredModal(true);
+      }
+    } else {
+      console.log('Conditions not met for expired check');
+    }
+  }, [eventData, eventLoading, partnerCode]);
+
+  // Check if event has ended (only when partner_code is present)
+  useEffect(() => {
+    if (!eventLoading && eventData && eventData.endDate && partnerCode) {
+      const endDate = convertToWIB(eventData.endDate);
+      const now = getTodayWIB();
+      const isEventEnded = now > endDate;
+
+      if (isEventEnded) {
+        setShowEventEndedModal(true);
+        // Close expired modal if event has ended (priority)
+        setShowExpiredModal(false);
+      }
+    }
+  }, [eventData, eventLoading, partnerCode]);
+
   // Skeleton/loading
   if (eventLoading) {
     return <EventPageSkeleton />;
@@ -230,7 +325,12 @@ export default function Event() {
   }
 
   // Don't render if eventData is error response (redirect will happen)
-  if (eventData && typeof eventData === 'object' && 'success' in eventData && eventData.success === false) {
+  if (
+    eventData &&
+    typeof eventData === 'object' &&
+    'success' in eventData &&
+    eventData.success === false
+  ) {
     return null;
   }
 
@@ -320,6 +420,58 @@ export default function Event() {
         <Box className="mb-6">
           <Typography type="body" size={14} color="text-white">
             You can get this ticket by register/sign up an account first.
+          </Typography>
+        </Box>
+      </Modal>
+
+      {/* Expired Partner Code Modal */}
+      <Modal
+        open={showExpiredModal}
+        onClose={() => setShowExpiredModal(false)}
+        title="THIS LINK ALREADY EXPIRED!"
+        className="md:w-[454px]"
+        footer={
+          <Box className="flex justify-end">
+            <Button
+              type="button"
+              onClick={handleExpiredBuyTicket}
+              className="bg-green px-6 py-3 text-white font-bebas text-[22px] uppercase"
+            >
+              Buy Ticket
+            </Button>
+          </Box>
+        }
+      >
+        <Box className="mb-6">
+          <Typography type="body" size={14} color="text-white">
+            This link already expired, but you still can buy ticket with normal
+            price
+          </Typography>
+        </Box>
+      </Modal>
+
+      {/* Event Ended Modal */}
+      <Modal
+        open={showEventEndedModal}
+        onClose={() => setShowEventEndedModal(false)}
+        title="THIS LINK ALREADY EXPIRED!"
+        className="md:w-[454px]"
+        footer={
+          <Box className="flex justify-end">
+            <Button
+              type="button"
+              onClick={handleGoToHomepage}
+              className="bg-green px-6 py-3 text-white font-bebas text-[22px] uppercase"
+            >
+              Go to Homepage
+            </Button>
+          </Box>
+        }
+      >
+        <Box className="mb-6">
+          <Typography type="body" size={14} color="text-white">
+            This event has been ended. Find another exciting event to attend on
+            Wukong
           </Typography>
         </Box>
       </Modal>
