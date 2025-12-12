@@ -5,6 +5,10 @@ import posthog from 'posthog-js';
 
 // Initialize PostHog
 export const initPostHog = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return;
+  }
+
   if (typeof window !== 'undefined') {
     const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
     const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
