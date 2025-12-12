@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function EventLayout({ children }: Props) {
+export default async function EventLayout({ params, children }: Props) {
+  await params;
   return <>{children}</>;
 }
