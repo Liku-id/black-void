@@ -35,7 +35,7 @@ const sizeClassMap: Record<number, string> = {
 };
 
 export function Typography({
-  as: Tag = 'p',
+  as,
   type = 'body',
   size = 16,
   color,
@@ -44,6 +44,14 @@ export function Typography({
   dangerouslySetInnerHTML,
   ...props
 }: TypographyProps) {
+
+  let Tag: React.ElementType;
+  if (as) {
+    Tag = as;
+  } else {
+    Tag = 'p';
+  }
+
   const font = type === 'heading' ? 'font-bebas' : 'font-onest';
 
   const textSize = sizeClassMap[size] ?? 'text-[16px]';
