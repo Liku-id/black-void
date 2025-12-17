@@ -103,6 +103,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
         <Box className="px-4 lg:px-0 mt-8 lg:mt-0">
           <Box className="mb-6">
             <Typography
+              as="h1"
               type="heading"
               color="text-white"
               className="mb-2 text-[26px] lg:text-[30px]">
@@ -181,6 +182,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
           </Box>
 
           <Typography
+            as="h2"
             type="heading"
             size={22}
             color="text-white"

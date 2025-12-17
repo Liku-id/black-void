@@ -81,6 +81,7 @@ export default function EventCard({
       )}
       <Box className="p-4">
         <Typography
+          as="h2"
           type="heading"
           size={26}
           color="text-black"
