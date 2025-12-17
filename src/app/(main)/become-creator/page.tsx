@@ -223,7 +223,7 @@ export default function BecomeCreatorPage() {
                       <Box className="flex-1">
                         <Typography
                           type="heading"
-                          as="h3"
+                          as="h2"
                           size={32}
                           className="mb-2 lg:mb-2 font-bold uppercase text-white"
                         >
@@ -345,7 +345,7 @@ export default function BecomeCreatorPage() {
           <Box className="text-center mb-12">
             <Typography
               type="heading"
-              as="h2"
+              as="h3"
               size={26}
               className="mb-8 uppercase text-white md:text-[26px]"
             >
@@ -367,7 +367,7 @@ export default function BecomeCreatorPage() {
                 />
                 <Typography
                   type="heading"
-                  as="h3"
+                  as="h4"
                   size={18}
                   className="mb-4 uppercase text-white"
                 >
@@ -400,7 +400,7 @@ export default function BecomeCreatorPage() {
               <Box>
                 <Typography
                   type="heading"
-                  as="h2"
+                  as="h3"
                   size={26}
                   className="mb-6 text-left font-bold uppercase text-white md:text-[26px]"
                 >

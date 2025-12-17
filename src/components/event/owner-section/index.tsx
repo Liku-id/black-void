@@ -19,6 +19,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
   return (
     <>
       <Typography
+        as="h2"
         type="heading"
         size={22}
         color="text-white"
@@ -45,6 +46,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({
       )}
 
       <Typography
+        as="h2"
         type="heading"
         size={22}
         color="text-white"

@@ -79,7 +79,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
 
   return (
     <section>
-      <Typography type="heading" size={22} className="mb-6">
+      <Typography as="h2" type="heading" size={22} className="mb-6">
         Ticket and Category
       </Typography>
       {hasDates ? (
