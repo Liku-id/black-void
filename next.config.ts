@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import packageJson from './package.json';
 
 const nextConfig: NextConfig = {
   // Tailwind CSS v4 optimization
@@ -67,6 +68,10 @@ const nextConfig: NextConfig = {
   // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
+    // Otomatis mengambil versi dari package.json
+    // Bisa di-override dengan NEXT_PUBLIC_APP_VERSION di .env jika diperlukan
+    NEXT_PUBLIC_APP_VERSION:
+      process.env.NEXT_PUBLIC_APP_VERSION || packageJson.version,
   },
 
   // Output configuration for static export (if needed)
