@@ -8,6 +8,12 @@ import instagramIcon from '@/assets/icons/Instagram.svg';
 import smsIcon from '@/assets/icons/sms.svg';
 
 const Footer = () => {
+  // Ambil versi dari environment variable (set di .env atau .env.production)
+  // Contoh: NEXT_PUBLIC_APP_VERSION=2.8.0
+  const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0';
+
+  // Ambil tahun saat ini untuk hak cipta (dinamis)
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="w-full bg-black pb-[24px]">
       <Container className="pt-14 lg:pt-[96px]">
@@ -192,7 +198,8 @@ const Footer = () => {
         type="body"
         className="mt-6 px-0 text-center text-[16px] font-normal text-white"
       >
-        Version 2.8.0 | Hak Cipta 2025 - <br className="block lg:hidden" />
+        Version {appVersion} | Hak Cipta {currentYear} -{' '}
+        <br className="block lg:hidden" />
         PT Aku Rela Kamu Bahagia
       </Typography>
     </footer>

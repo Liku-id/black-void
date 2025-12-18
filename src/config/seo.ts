@@ -15,12 +15,53 @@ export const SEO_CONFIG = {
   // Static pages metadata
   pages: {
     home: {
-      title:
-        'Wukong - Official ticketing partner mudah dan terpercaya di Indonesia',
+      title: 'Official ticketing partner mudah dan terpercaya di Indonesia',
       description:
         'Buat event serumu sekarang gak perlu pusing karena semua lebih mudah di Wukong, platform official ticketing partner mudah dan terpercaya di Indonesia.',
       keywords:
         'ticket partner, ticketing partner, online ticketing partner, official ticketing partner, ticketing partner indonesia, platform jual tiket, jual tiket, tiket event, tiket konser, platform tiket online, jual tiket konser, jual tiket event, buat event seru',
+      robots: {
+        index: true,
+        follow: true,
+      },
+      openGraph: {
+        title: 'Official ticketing partner mudah dan terpercaya di Indonesia',
+        description:
+          'Buat event serumu sekarang gak perlu pusing karena semua lebih mudah di Wukong, platform official ticketing partner mudah dan terpercaya di Indonesia.',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Official ticketing partner mudah dan terpercaya di Indonesia',
+        description:
+          'Buat event serumu sekarang gak perlu pusing karena semua lebih mudah di Wukong, platform official ticketing partner mudah dan terpercaya di Indonesia.',
+      },
+    } as Metadata,
+    becomeCreator: {
+      title:
+        'Wukong official ticketing platform untuk semua Kreator konser dan juga event di Indonesia',
+      description:
+        'Wukong adalah platform official ticketing partner nomor satu dan terpercaya untuk semua event/konser kreator di Indonesia',
+      keywords:
+        'wukong event, event, tiket, beli tiket, tiket event, official ticketing partner, ticketing partner, ticketing',
+      robots: {
+        index: true,
+        follow: true,
+      },
+      openGraph: {
+        title:
+          'Wukong official ticketing platform untuk semua Kreator konser dan juga event di Indonesia',
+        description:
+          'Wukong adalah platform official ticketing partner nomor satu dan terpercaya untuk semua event/konser kreator di Indonesia',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title:
+          'Wukong official ticketing platform untuk semua Kreator konser dan juga event di Indonesia',
+        description:
+          'Wukong adalah platform official ticketing partner nomor satu dan terpercaya untuk semua event/konser kreator di Indonesia',
+      },
     } as Metadata,
   },
 

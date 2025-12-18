@@ -30,8 +30,8 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const partnerCode = searchParams.get('partner_code');
-
-  // Build API URL with query params (preview_token is handled via cookie in middleware)
+  
+  // Build API URL with query params (preview_token is handled via cookie in proxy)
   const buildApiUrl = () => {
     if (!slug) return null;
 

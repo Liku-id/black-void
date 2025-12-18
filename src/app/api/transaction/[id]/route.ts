@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
-export async function GET(request: NextRequest, context: any) {
-  const { id } = context.params;
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
 
   try {
     const { data } = await axios.get(`/v1/transactions/${id}`);
