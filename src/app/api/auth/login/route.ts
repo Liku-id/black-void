@@ -2,16 +2,6 @@ import axios from '@/lib/api/axios-server';
 import { setAuthCookies } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
 
-type LoginErrorResponse = {
-  response: {
-    data: {
-      details: [{ value: { email?: string; phoneNumber?: string } }];
-      message: string;
-    };
-  };
-  status?: number;
-};
-
 export async function POST(request: NextRequest) {
   try {
     const payload = await request.json();
