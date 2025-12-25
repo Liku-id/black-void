@@ -53,11 +53,10 @@ export async function POST(request: NextRequest) {
       success: true,
       data: body.user,
     });
-  } catch (e) {
-    const body = e as LoginErrorResponse;
-    const status = body.status || 500;
-    const data = body.response?.data.details[0].value || null;
-    const message = body.response?.data.message || 'An error occurred';
+  } catch (e: any) {
+    const status = e?.response?.status || 500;
+    const data = e?.response?.data?.details?.[0]?.value || null;
+    const message = e?.response?.data?.message || 'An error occurred';
 
     return NextResponse.json(
       {
