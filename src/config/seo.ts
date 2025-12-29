@@ -9,7 +9,7 @@ export const SEO_CONFIG = {
   // Default config
   default: {
     siteName: 'Wukong',
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://wukong.id',
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://wukong.co.id',
   },
 
   // Static pages metadata
