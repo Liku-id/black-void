@@ -38,7 +38,7 @@ describe('Footer', () => {
 
   it('renders contact info', () => {
     render(<Footer />);
-    expect(screen.getByText(/\+62 813-8811-9390/i)).toBeInTheDocument();
+    expect(screen.getByText(/\+62 851-2132-8284/i)).toBeInTheDocument();
     expect(screen.getByText(/support@wukong.co.id/i)).toBeInTheDocument();
   });
 });

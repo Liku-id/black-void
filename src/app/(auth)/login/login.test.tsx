@@ -14,8 +14,7 @@ describe('LoginPage', () => {
   it('renders the welcome message and heading', () => {
     render(<LoginPage />);
 
-    expect(screen.getByText('Welcome to Wukong,')).toBeInTheDocument();
-    expect(screen.getByText('L')).toBeInTheDocument();
+    expect(screen.getByText('It takes a little more to find the chosen Wu!')).toBeInTheDocument();
   });
 
   it('renders the mocked LoginForm', () => {

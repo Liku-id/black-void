@@ -43,9 +43,9 @@ describe('AuthSegmentLayout', () => {
 
   it('contains correct metadata information', () => {
     expect(metadata.title).toBe(
-      'Login | Wukong - Buy Concert Tickets, Events, and Entertainment'
+      'Get in | Wukong - Buy Concert Tickets, Events, and Entertainment'
     );
-    expect(metadata.description).toMatch(/Log in to your Wukong account/i);
-    expect(metadata.keywords).toContain('login');
+    expect(metadata.description).toMatch(/Get in to your Wukong account/i);
+    expect(metadata.keywords).toContain('Get in');
   });
 });

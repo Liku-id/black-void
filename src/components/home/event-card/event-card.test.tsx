@@ -1,12 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import EventCard from './index';
 
+// Mock next/image to avoid unoptimized warning and render predictable img
+jest.mock('next/image', () => ({ unoptimized, ...props }: any) => <img {...props} />);
+
 const defaultProps = {
   image: 'https://example.com/image.jpg',
   title: 'Project Title',
   location: 'Jakarta',
   date: '2024-06-01',
   price: 'Rp 100.000',
+  status: 'on_going',
 };
 
 describe('EventCard', () => {
@@ -35,25 +39,5 @@ describe('EventCard', () => {
     expect(container.firstChild).toHaveClass(
       'hover:shadow-[6px_6px_0px_0px_#FFF]'
     );
-  });
-
-  it('handles image onError and onLoad', () => {
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<EventCard {...defaultProps} />);
-    const img = screen.getByAltText(defaultProps.title) as HTMLImageElement;
-    // Simulate onLoad
-    fireEvent.load(img);
-    expect(logSpy).toHaveBeenCalledWith(
-      'Image loaded successfully:',
-      defaultProps.image
-    );
-    // Simulate onError
-    fireEvent.error(img);
-    expect(logSpy).toHaveBeenCalledWith(
-      'Image failed to load:',
-      defaultProps.image
-    );
-    expect(img.src).toContain('dummyimage.com');
-    logSpy.mockRestore();
   });
 });

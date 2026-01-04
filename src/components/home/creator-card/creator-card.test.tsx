@@ -11,7 +11,7 @@ describe('CreatorCard', () => {
     expect(img).toHaveClass('w-32 h-32 rounded-full object-contain bg-white');
     // Wrapper class
     expect(img.parentElement).toHaveClass(
-      'flex-shrink-0 w-40 h-40 bg-white rounded-full flex items-center justify-center cursor-pointer'
+      'mx-2 flex h-40 w-40 flex-shrink-0 items-center justify-center rounded-full bg-white'
     );
   });
 });
