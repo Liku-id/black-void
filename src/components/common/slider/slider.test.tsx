@@ -83,9 +83,11 @@ describe('Slider', () => {
     });
 
     await waitFor(() => {
-      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-124px)' }); // 100 + (6*4) = 124px per item
+      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-106px)' }); // 100 + 6 = 106px
     });
   });
+
+
 
   it('does not auto-scroll when autoScroll is false', () => {
     render(<Slider autoScroll={false}>{mockChildren}</Slider>);
@@ -101,6 +103,7 @@ describe('Slider', () => {
   });
 
   it('wraps around when auto-scrolling reaches end', async () => {
+    // render(<Slider>...</Slider>);
     render(
       <Slider autoScroll={true} scrollInterval={1000}>
         {mockChildren}
@@ -116,7 +119,7 @@ describe('Slider', () => {
     });
 
     await waitFor(() => {
-      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-248px)' }); // 2 * 124
+      expect(sliderContainer).toHaveStyle({ transform: 'translateX(-212px)' }); // 2 * 106
     });
 
     // Advance to next (should wrap to first)
@@ -237,7 +240,7 @@ describe('Slider', () => {
       fireEvent.click(paginationButtons[1]);
 
       // Should move to second slide
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-124px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-106px)' });
 
       // Second button should be active
       expect(paginationButtons[0]).toHaveClass('w-2 bg-gray');
@@ -257,7 +260,7 @@ describe('Slider', () => {
       fireEvent.click(paginationButtons[2]);
 
       // Should move to last slide
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
 
       // Last button should be active
       expect(paginationButtons[0]).toHaveClass('w-2 bg-gray');
@@ -396,7 +399,7 @@ describe('Slider', () => {
     if (sliderContainer && sliderContent) {
       // Start drag
       fireEvent.mouseDown(sliderContainer, { pageX: 100 });
-      // Geser jauh ke kanan (harusnya tetap di index 0)
+      // Geser jauh ke kanan (harus tetap di index 0)
       fireEvent.mouseMove(sliderContainer, { pageX: 300 });
       fireEvent.mouseUp(sliderContainer);
       expect(sliderContent).toHaveStyle({ transform: 'translateX(-0px)' });
@@ -419,7 +422,7 @@ describe('Slider', () => {
       fireEvent.mouseDown(sliderContainer, { pageX: 100 });
       fireEvent.mouseMove(sliderContainer, { pageX: -300 });
       fireEvent.mouseUp(sliderContainer);
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
     }
   });
 
@@ -430,10 +433,10 @@ describe('Slider', () => {
       </Slider>
     );
     const sliderContent = screen.getByTestId('slide-1').closest('.flex');
-    // itemWidth + (gap*4) = 200 + 40 = 240
+    // itemWidth + gap = 200 + 10 = 210
     expect(sliderContent).toHaveStyle({
       transform: 'translateX(-0px)',
-      gap: '40px',
+      gap: '10px',
     });
   });
 
@@ -466,7 +469,7 @@ describe('Slider', () => {
       fireEvent.mouseMove(sliderContainer, { pageX: -5000 });
       fireEvent.mouseUp(sliderContainer);
       // Harus tetap di index terakhir
-      expect(sliderContent).toHaveStyle({ transform: 'translateX(-248px)' });
+      expect(sliderContent).toHaveStyle({ transform: 'translateX(-212px)' });
     }
   });
 });

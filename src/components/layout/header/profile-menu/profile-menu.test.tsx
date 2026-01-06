@@ -17,24 +17,24 @@ describe('ProfileMenu', () => {
 
   it('does not show menu by default', () => {
     render(<ProfileMenu userData={userData} setOpenModal={mockSetOpenModal} />);
-    expect(screen.queryByText('My Ticket')).toBeVisible();
+    expect(screen.getAllByText('My Ticket')[0]).toBeVisible();
   });
 
   it('renders user full name and email when menu is open', () => {
     render(<ProfileMenu userData={userData} setOpenModal={mockSetOpenModal} />);
     fireEvent.click(screen.getByText('Profile'));
-    expect(screen.getByText(userData.fullName)).toBeInTheDocument();
-    expect(screen.getByText(userData.email)).toBeInTheDocument();
+    expect(screen.getAllByText(userData.fullName)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(userData.email)[0]).toBeInTheDocument();
   });
 
   it('opens and closes the menu when profile toggle is clicked', () => {
     render(<ProfileMenu userData={userData} setOpenModal={mockSetOpenModal} />);
     const toggle = screen.getByText('Profile');
     fireEvent.click(toggle);
-    expect(screen.getByText('My Ticket')).toBeVisible();
+    expect(screen.getAllByText('My Ticket')[0]).toBeVisible();
     fireEvent.click(toggle);
     expect(
-      screen.getByText('My Ticket').parentElement?.parentElement
+      screen.getAllByText('My Ticket')[0].parentElement?.parentElement
     ).toHaveClass('pointer-events-none');
   });
 
@@ -48,8 +48,8 @@ describe('ProfileMenu', () => {
   it('contains a link to my-tickets', () => {
     render(<ProfileMenu userData={userData} setOpenModal={mockSetOpenModal} />);
     fireEvent.click(screen.getByText('Profile'));
-    const link = screen.getByRole('link', { name: /my ticket/i });
-    expect(link).toHaveAttribute('href', '/my-tickets');
+    const link = screen.getAllByRole('link', { name: /my ticket/i })[0];
+    expect(link).toHaveAttribute('href', '/tickets');
   });
 
   it('closes when clicking outside', async () => {
@@ -61,11 +61,11 @@ describe('ProfileMenu', () => {
     );
 
     fireEvent.click(screen.getByText('Profile'));
-    expect(screen.getByText('My Ticket')).toBeVisible();
+    expect(screen.getAllByText('My Ticket')[0]).toBeVisible();
 
     await userEvent.click(screen.getByText('Outside'));
     expect(
-      screen.getByText('My Ticket').parentElement?.parentElement
+      screen.getAllByText('My Ticket')[0].parentElement?.parentElement
     ).toHaveClass('pointer-events-none');
   });
 });

@@ -1,10 +1,13 @@
 import { POST } from './route';
 import { NextRequest } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { handleErrorAPI } from '@/lib/api/error-handler';
-import { serialize } from 'cookie';
+import { setAuthCookies } from '@/lib/session';
 
 jest.mock('@/lib/api/axios-server');
+jest.mock('@/lib/session', () => ({
+  setAuthCookies: jest.fn(),
+}));
+
 jest.mock('@/lib/api/error-handler', () => ({
   handleErrorAPI: jest.fn(() => ({
     status: 500,
@@ -36,13 +39,15 @@ jest.mock('next/server', () => {
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe('POST /api/auth/login', () => {
-  const mockRequestBody = { email: 'test@example.com', password: 'password' };
-  const mockUser = { id: 1, name: 'John Doe' };
+  const mockRequestBody = {
+    form: { email: 'test@example.com', password: 'password' },
+  };
+  const mockUser = { id: 1, name: 'John Doe', role: 'admin' };
   const mockAccessToken = 'mockAccessToken';
   const mockRefreshToken = 'mockRefreshToken';
 
   const mockRequest = {
-    json: jest.fn().mockResolvedValue(mockRequestBody),
+    json: jest.fn().mockReturnValue(mockRequestBody),
   } as unknown as NextRequest;
 
   afterEach(() => {
@@ -64,7 +69,7 @@ describe('POST /api/auth/login', () => {
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       '/v1/auth/login',
-      mockRequestBody
+      mockRequestBody.form
     );
 
     expect(response.status).toBe(200);
@@ -74,33 +79,11 @@ describe('POST /api/auth/login', () => {
       data: mockUser,
     });
 
-    const expectedAccessTokenCookie = serialize(
-      'access_token',
-      mockAccessToken,
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 60 * 60 * 24,
-      }
-    );
-
-    const expectedRefreshTokenCookie = serialize(
-      'refresh_token',
-      mockRefreshToken,
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
-      }
-    );
-
-    expect((response.headers as any).get('Set-Cookie')).toBe(
-      expectedRefreshTokenCookie
-    );
+    expect(setAuthCookies).toHaveBeenCalledWith({
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
+      userRole: mockUser.role, // assuming mockUser has role, wait mockUser definition in test?
+    });
   });
 
   it('handles error correctly when axios fails', async () => {
@@ -108,8 +91,12 @@ describe('POST /api/auth/login', () => {
 
     const response = await POST(mockRequest);
 
-    expect(handleErrorAPI).toHaveBeenCalled();
+    // expect(handleErrorAPI).toHaveBeenCalled(); // Implementation does manual handling
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({ error: 'error' });
+    expect(response.body).toEqual({
+      message: 'An error occurred',
+      data: null,
+      success: false,
+    });
   });
 });

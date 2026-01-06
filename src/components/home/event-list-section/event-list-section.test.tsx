@@ -3,10 +3,14 @@ import EventListSection from '.';
 import '@testing-library/jest-dom';
 import useSWR from 'swr';
 
-// Mock EventCard dan TextField agar mudah dicek
-jest.mock('../event-card', () => (props: any) => (
-  <div data-testid="event-card" {...props}>
-    {props.title}
+// Mock EventCard and TextField to check without invalid DOM attributes
+jest.mock('../event-card', () => ({ skeleton, metaUrl, title, ...rest }: any) => (
+  <div
+    data-testid={skeleton ? 'event-card-skeleton' : 'event-card'}
+    className={skeleton ? 'animate-pulse' : ''}
+    {...rest}
+  >
+    {title}
   </div>
 ));
 jest.mock('@/components', () => ({
@@ -28,7 +32,7 @@ describe('EventListSection', () => {
     mockedUseSWR.mockReturnValue({ isLoading: true });
     render(<EventListSection />);
     expect(
-      screen.getAllByText('', { selector: '.animate-pulse' })
+      screen.getAllByTestId('event-card-skeleton')
     ).toHaveLength(4);
   });
 

@@ -3,12 +3,19 @@ import CarouselSection from './';
 import '@testing-library/jest-dom';
 
 // Mock Next.js Image
-jest.mock('next/image', () => (props: any) => <img {...props} />);
+jest.mock('next/image', () => ({ unoptimized, ...props }: any) => <img {...props} />);
 
 // Mock useResponsive
 jest.mock('@/lib/use-responsive', () => ({
   useResponsive: jest.fn(),
 }));
+
+// Mock useSWR
+jest.mock('swr', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+import useSWR from 'swr';
 
 const images = [
   'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1',
@@ -22,6 +29,14 @@ describe('CarouselSection', () => {
   });
 
   it('renders Slider (mobile) with correct images and classes', () => {
+    (useSWR as jest.Mock).mockReturnValue({
+      data: [
+        { url: 'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1', metaUrl: 'event-1' },
+        { url: 'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2', metaUrl: 'event-2' },
+        { url: 'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3', metaUrl: 'event-3' },
+      ],
+      isLoading: false,
+    });
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: false }); // isMobile
     render(<CarouselSection />);
@@ -49,6 +64,14 @@ describe('CarouselSection', () => {
   });
 
   it('renders Carousel (desktop) with correct props', () => {
+    (useSWR as jest.Mock).mockReturnValue({
+      data: [
+        { url: 'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1', metaUrl: 'event-1' },
+        { url: 'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2', metaUrl: 'event-2' },
+        { url: 'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3', metaUrl: 'event-3' },
+      ],
+      isLoading: false,
+    });
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: true, md: true, lg: true, xl: true }); // isDesktop
     render(<CarouselSection />);

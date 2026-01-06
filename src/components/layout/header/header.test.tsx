@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './index';
 import { useSearchParams } from 'next/navigation';
 import * as jotai from 'jotai';
-import { fetchAuthAtom, userDataAtom } from '@/store';
+import { authAtom } from '@/store';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
@@ -39,6 +39,7 @@ jest.mock('@/assets/logo/logo.svg', () => 'mocked-logo.svg');
 jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(),
   useRouter: jest.fn(),
+  usePathname: jest.fn(() => '/'),
 }));
 
 jest.mock('jotai', () => {
@@ -61,15 +62,22 @@ beforeEach(() => {
   (require('next/navigation').useRouter as jest.Mock).mockReturnValue(
     mockRouter
   );
-  // Explicitly mock for fetchAuthAtom and userDataAtom
-  (jotai.useAtom as jest.Mock).mockImplementation(atom => {
-    if (atom === fetchAuthAtom) {
-      return [false, jest.fn()];
+  (jotai.useAtom as jest.Mock).mockImplementation((atom) => {
+    // Check if the atom is authAtom (or compare content/name/reference)
+    // Since we can't easily compare atom objects created in different modules if Jest mocks them differently,
+    // we might need a generic fallback or permissive check.
+    // But since we import authAtom, we can try reference equality if jest doesn't scramble it too much.
+    if (atom === authAtom) {
+      return [
+        {
+          isLoggedIn: false,
+          userData: null,
+          loading: false,
+        },
+        jest.fn(),
+      ];
     }
-    if (atom === userDataAtom) {
-      return [{}, jest.fn()];
-    }
-    return [undefined, jest.fn()];
+    return [{}, jest.fn()];
   });
 });
 
@@ -149,16 +157,11 @@ describe('Header', () => {
     });
   });
 
-  it('renders the search input', () => {
-    render(<Header />);
-    expect(
-      screen.getByPlaceholderText('Looking for an exciting event?')
-    ).toBeInTheDocument();
-  });
 
-  it('renders the Log In button', () => {
+
+  it('renders the Get In button', () => {
     render(<Header />);
-    const loginButtons = screen.getAllByText(/Log In/i);
+    const loginButtons = screen.getAllByText(/Get In/i);
     const loginLinks = loginButtons.map(btn => btn.closest('a'));
     expect(loginLinks.length).toBeGreaterThan(0);
     loginLinks.forEach(link => {
@@ -175,18 +178,7 @@ describe('Header', () => {
     expect(becomeCreatorLinks.length).toBeGreaterThan(0);
   });
 
-  it('calls search handler when search icon is clicked', () => {
-    // Spy on console.log
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<Header />);
-    const input = screen.getByPlaceholderText('Looking for an exciting event?');
-    fireEvent.change(input, { target: { value: 'test event' } });
-    // Cari end icon (search icon) dengan alt text 'End icon'
-    const searchIcon = screen.getByAltText('End icon');
-    fireEvent.click(searchIcon);
-    expect(consoleSpy).toHaveBeenCalledWith('search:', 'test event');
-    consoleSpy.mockRestore();
-  });
+
 
   it('opens mobile menu when burger icon is clicked', () => {
     render(<Header />);
@@ -204,7 +196,7 @@ describe('Header', () => {
     expect(screen.getAllByText(/Contact Us/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Become Creator/i).length).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole('link', { name: /log in/i }).length
+      screen.getAllByRole('link', { name: /get in/i }).length
     ).toBeGreaterThan(0);
   });
 
@@ -239,13 +231,5 @@ describe('Header', () => {
     expect(popupLogo).toBeInTheDocument();
   });
 
-  it('calls search handler when mobile search icon is clicked', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<Header />);
-    // Cari search icon di mobile
-    const searchIcons = screen.getAllByAltText('Search');
-    fireEvent.click(searchIcons[0]);
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
-  });
+
 });

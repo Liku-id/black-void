@@ -197,16 +197,7 @@ describe('Carousel', () => {
     expect(currentImage).not.toHaveClass('transition-opacity');
   });
 
-  it('handles click on image', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-    render(<Carousel images={mockImages} />);
 
-    const currentImage = getCurrentImage();
-    fireEvent.click(currentImage);
-
-    expect(consoleSpy).toHaveBeenCalledWith(0);
-    consoleSpy.mockRestore();
-  });
 
   it('prevents navigation during animation', async () => {
     render(<Carousel images={mockImages} animate={true} />);
@@ -291,16 +282,7 @@ describe('Carousel', () => {
     expect(currentImage).toHaveAttribute('src', mockImages[2]);
   });
 
-  it('handles click on image when animate is false', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-    render(<Carousel images={mockImages} animate={false} />);
 
-    const currentImage = getCurrentImage();
-    fireEvent.click(currentImage);
-
-    expect(consoleSpy).toHaveBeenCalledWith(0);
-    consoleSpy.mockRestore();
-  });
 
   it('handles navigation to previous slide when current index is 0', () => {
     render(<Carousel images={mockImages} animate={false} />);

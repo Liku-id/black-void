@@ -10,12 +10,17 @@ jest.mock('@/lib/api/error-handler', () => ({
 jest.mock('axios');
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(),
 }));
 
-jest.spyOn(console, 'error').mockImplementation(() => {});
+jest.spyOn(console, 'error').mockImplementation(() => { });
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockReplace = jest.fn();
+export const mockUsePathname = jest.fn();
+(require('next/navigation').usePathname as jest.Mock).mockImplementation(
+  mockUsePathname
+);
 (useRouter as jest.Mock).mockReturnValue({ replace: mockReplace });
 
 describe('LoginForm', () => {
@@ -28,21 +33,30 @@ describe('LoginForm', () => {
 
     expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /get in/i })).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {
     render(<LoginForm />);
 
-    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+      expect(screen.getByText(/Email is required/i)).toBeInTheDocument();
     });
   });
 
   it('submits form and redirects on success', async () => {
-    mockedAxios.post.mockResolvedValueOnce({ status: 200 });
+    mockedAxios.post.mockResolvedValueOnce({
+      status: 200,
+      data: {
+        data: {
+          id: 'user-123',
+          name: 'Test User',
+          email: 'test@mail.com',
+        },
+      },
+    });
 
     render(<LoginForm />);
 
@@ -54,12 +68,15 @@ describe('LoginForm', () => {
       target: { value: 'secret123' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith('/api/auth/login', {
-        email: 'test@mail.com',
-        password: 'secret123',
+        origin: undefined,
+        form: {
+          email: 'test@mail.com',
+          password: 'secret123',
+        },
       });
 
       expect(mockReplace).toHaveBeenCalledWith('/');
@@ -79,7 +96,7 @@ describe('LoginForm', () => {
       target: { value: 'wrongpass' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalled();
@@ -103,7 +120,7 @@ describe('LoginForm', () => {
   });
 
   it('shows loading component when submitting form', async () => {
-    mockedAxios.post.mockImplementation(() => new Promise(() => {}));
+    mockedAxios.post.mockImplementation(() => new Promise(() => { }));
 
     render(<LoginForm />);
     fireEvent.input(screen.getByPlaceholderText(/email address/i), {
@@ -113,7 +130,7 @@ describe('LoginForm', () => {
       target: { value: 'secret123' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
 
     expect(await screen.findByTestId('loading')).toBeInTheDocument();
   });
@@ -129,7 +146,7 @@ describe('LoginForm', () => {
       target: { value: 'notgood' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalled();

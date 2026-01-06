@@ -13,7 +13,7 @@ jest.mock('@/components', () => ({
 describe('RegisterPage', () => {
   it('renders the heading text correctly', () => {
     render(<RegisterPage />);
-    expect(screen.getByText(/Get Started/i)).toBeInTheDocument();
+    expect(screen.getByText(/Lets get Wu in!/i)).toBeInTheDocument();
     // ('enter your personal data');
   });
 

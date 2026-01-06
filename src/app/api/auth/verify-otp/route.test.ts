@@ -27,7 +27,7 @@ jest.mock('next/server', () => {
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe('POST /api/otp/verification', () => {
-  const mockRequestBody = { phoneNumber: '+628123456789', otp: '123456' };
+  const mockRequestBody = { phoneNumber: '+628123456789', code: '123456' };
 
   const mockRequest = {
     json: jest.fn().mockResolvedValue(mockRequestBody),

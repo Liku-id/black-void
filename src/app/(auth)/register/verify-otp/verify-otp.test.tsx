@@ -13,7 +13,15 @@ jest.mock('@/components', () => ({
 describe('VerifyOtpPage', () => {
   it('renders the heading text correctly', () => {
     render(<VerifyOtpPage />);
-    expect(screen.getByText(/p/i)).toBeInTheDocument();
+    // Use a custom function to match text split across multiple elements
+    expect(screen.getByText((content, element) => {
+      const hasText = (node: Element) => node.textContent === "let's get wu verified" || node.textContent === "LET'S GET WU VERIFIED";
+      const nodeHasText = hasText(element!);
+      const childrenDontHaveText = Array.from(element?.children || []).every(
+        child => !hasText(child)
+      );
+      return nodeHasText && childrenDontHaveText || content.toLowerCase().includes("let's get wu verified");
+    })).toBeInTheDocument();
   });
 
   it('renders the mocked VerifyOtpForm', () => {
