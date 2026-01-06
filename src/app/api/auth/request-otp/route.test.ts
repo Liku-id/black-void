@@ -38,7 +38,9 @@ describe('POST /api/otp/request', () => {
   });
 
   it('returns 200 response with success message when OTP is sent successfully', async () => {
-    mockAxios.post.mockResolvedValueOnce({});
+    mockAxios.post.mockResolvedValueOnce({
+      data: { expiredAt: new Date().toISOString() },
+    });
 
     const response = await POST(mockRequest);
 
@@ -51,6 +53,7 @@ describe('POST /api/otp/request', () => {
     expect(response.body).toEqual({
       message: 'OTP sent successfully',
       success: true,
+      expiresAt: expect.any(Number),
     });
   });
 

@@ -26,13 +26,14 @@ describe('SuccessModal', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('redirects to login when close button is clicked', async () => {
     const onClose = jest.fn();
     render(<SuccessModal open={true} onClose={onClose} />);
-    // Find close button by role or alt text
+    // Find close button by role or alt text (Modal close icon)
     const closeBtn = screen.getByRole('img', { name: /close/i }).parentElement;
-    fireEvent.click(closeBtn!);
-    expect(onClose).toHaveBeenCalled();
+    await fireEvent.click(closeBtn!);
+    // Component implementation overrides onClose with handleLogin -> router.push('/login')
+    expect(mockPush).toHaveBeenCalledWith('/login');
   });
 
   it('redirects to /login when login button is clicked', () => {

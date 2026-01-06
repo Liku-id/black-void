@@ -16,7 +16,7 @@ describe('AuthSegmentLayout', () => {
       </AuthSegmentLayout>
     );
     const main = screen.getByRole('main');
-    expect(main).toHaveClass('px-0 pt-36 xl:pt-40');
+    expect(main).toHaveClass('px-0 pt-30 xl:pt-40');
     expect(screen.getByTestId('header')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
     expect(screen.getByTestId('child')).toBeInTheDocument();

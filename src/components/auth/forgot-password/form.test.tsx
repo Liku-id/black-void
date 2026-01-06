@@ -16,6 +16,9 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
+const mockReplace = jest.fn();
+const mockPush = jest.fn();
+
 jest.mock('@/lib/api/error-handler', () => ({
   __esModule: true,
   getErrorMessage: jest.fn(() => 'An unexpected error occurred'),
@@ -25,7 +28,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 const pushMock = jest.fn();
 
 beforeEach(() => {
-  (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
+  (useRouter as jest.Mock).mockReturnValue({ push: pushMock, replace: mockReplace });
   jest.clearAllMocks();
 });
 
@@ -59,7 +62,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('shows loading indicator when submitting', async () => {
-    mockedAxios.post.mockImplementation(() => new Promise(() => {})); // never resolves
+    mockedAxios.post.mockImplementation(() => new Promise(() => { })); // never resolves
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
@@ -102,7 +105,10 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('shows modal and saves email on successful submit', async () => {
-    mockedAxios.post.mockResolvedValue({ status: 200 });
+    mockedAxios.post
+      .mockResolvedValueOnce({ data: { isValid: false } }) // check-availability: registered
+      .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } }); // forgot-password: success
+
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
@@ -113,7 +119,10 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('closes modal when close button is clicked', async () => {
-    mockedAxios.post.mockResolvedValue({ status: 200 });
+    mockedAxios.post
+      .mockResolvedValueOnce({ data: { isValid: false } })
+      .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } });
+
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
@@ -128,7 +137,11 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('calls axios again when resend link is clicked in modal', async () => {
-    mockedAxios.post.mockResolvedValue({ status: 200 });
+    mockedAxios.post
+      .mockResolvedValueOnce({ data: { isValid: false } })
+      .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } })
+      .mockResolvedValueOnce({ status: 200 });
+
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
@@ -138,7 +151,7 @@ describe('ForgotPasswordForm', () => {
       name: /resend link/i,
     });
     fireEvent.click(resendBtn);
-    expect(mockedAxios.post).toHaveBeenCalledTimes(2);
+    expect(mockedAxios.post).toHaveBeenCalledTimes(3);
     expect(mockedAxios.post).toHaveBeenLastCalledWith(
       '/api/auth/forgot-password',
       { email: 'test@example.com' }
@@ -171,8 +184,11 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('shows loading spinner when resend is clicked', async () => {
-    mockedAxios.post.mockResolvedValueOnce({ status: 200 });
-    mockedAxios.post.mockImplementationOnce(() => new Promise(() => {})); // loading pada resend
+    mockedAxios.post
+      .mockResolvedValueOnce({ data: { isValid: false } })
+      .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } })
+      .mockImplementationOnce(() => new Promise(() => { })); // loading pada resend
+
     render(<ForgotPasswordForm />);
     fireEvent.change(screen.getByPlaceholderText('Email Address'), {
       target: { value: 'test@example.com' },
