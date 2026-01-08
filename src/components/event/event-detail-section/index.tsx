@@ -9,11 +9,9 @@ import calendarIcon from '@/assets/icons/calendar.svg';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import clockIcon from '@/assets/icons/clock.svg';
 import {
-  formatRupiah,
   formatTime,
   formatStrToHTML,
   formatDate,
-  calculatePriceWithPartnership,
 } from '@/utils/formatter';
 
 interface EventDetailProps {
@@ -134,17 +132,8 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                   type="body"
                   color="text-white"
                   className="text-[12px] lg:text-[14px]">
-                  {data.ticketTypes && data.ticketTypes.length > 0
-                    ? (() => {
-                        const firstTicket = data.ticketTypes[0];
-                        const basePrice = Number(firstTicket.price);
-                        const finalPrice = calculatePriceWithPartnership(
-                          basePrice,
-                          firstTicket.partnership_info
-                        );
-                        return `Start from ${formatRupiah(finalPrice)}`;
-                      })()
-                    : 'No tickets available'}
+                  {data.lowestTicketPrice ?
+                    `Start from ${data.lowestTicketPrice}` : 'No tickets available'}
                 </Typography>
               </Box>
 

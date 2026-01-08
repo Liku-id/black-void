@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { handleErrorAPI } from '@/lib/api/error-handler';
 import axios from '@/lib/api/axios-server';
 import { encryptUtils } from '@/lib/utils/encryptUtils';
+import { calculatePriceWithPartnership, formatRupiah } from '@/utils/formatter';
 
 export async function GET(
   req: NextRequest,
@@ -20,7 +21,7 @@ export async function GET(
     }
 
     const queryString = queryParams.toString();
-    const url = queryString 
+    const url = queryString
       ? `/v1/events/${slug}?${queryString}`
       : `/v1/events/${slug}`;
 
@@ -57,6 +58,21 @@ export async function GET(
         status: 500,
       });
     }
+    const minPrice = (() => {
+      if (!data.body.ticketTypes || data.body.ticketTypes.length === 0) {
+        return null;
+      }
+      const prices = data.body.ticketTypes.map((ticket: any) => {
+        const basePrice = Number(ticket.price);
+        return calculatePriceWithPartnership(basePrice, ticket.partnership_info);
+      });
+      return Math.min(...prices);
+    })();
+
+    data.body.lowestTicketPrice = minPrice !== null
+      ? formatRupiah(minPrice)
+      : null;
+
     return NextResponse.json(data.body);
   } catch (error: any) {
     return handleErrorAPI(error);
