@@ -12,6 +12,12 @@ jest.mock('@/lib/api/error-handler', () => ({
   })),
 }));
 
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(),
+}));
+
+import { cookies } from 'next/headers';
+
 jest.mock('next/server', () => {
   const actualNext = jest.requireActual('next/server');
   return {
@@ -38,7 +44,7 @@ describe('POST /api/logout', () => {
   const mockRequestBody = { device_id: 'mock-device' };
 
   const mockRequest = {
-    json: jest.fn().mockResolvedValue(mockRequestBody),
+    json: jest.fn().mockReturnValue(mockRequestBody),
     headers: {
       get: jest.fn().mockImplementation((key: string) => {
         if (key.toLowerCase() === 'authorization') {
@@ -48,6 +54,17 @@ describe('POST /api/logout', () => {
       }),
     },
   } as unknown as NextRequest;
+
+  beforeEach(() => {
+    (cookies as jest.Mock).mockReturnValue({
+      getAll: jest.fn().mockReturnValue([
+        { name: 'access_token', value: 'token' },
+        { name: 'refresh_token', value: 'token' },
+        { name: 'user_data', value: 'data' },
+      ]),
+      delete: jest.fn(),
+    });
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -60,32 +77,16 @@ describe('POST /api/logout', () => {
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       '/v1/auth/logout',
-      mockRequestBody,
+      null,
       { headers: { Authorization: 'Bearer mock-token' } }
     );
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'Logout successful' });
+    expect(response.body).toEqual({ message: 'Logout successful', success: true });
 
-    const expectedAccessTokenClear = serialize('access_token', '', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 0,
-    });
-
-    const expectedRefreshTokenClear = serialize('refresh_token', '', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 0,
-    });
-
-    expect((response.headers as any).get('Set-Cookie')).toBe(
-      expectedRefreshTokenClear
-    );
+    expect(cookies().delete).toHaveBeenCalledWith('access_token');
+    expect(cookies().delete).toHaveBeenCalledWith('refresh_token');
+    expect(cookies().delete).toHaveBeenCalledWith('user_role');
   });
 
   it('handles error correctly when axios fails', async () => {
@@ -93,8 +94,8 @@ describe('POST /api/logout', () => {
 
     const response = await POST(mockRequest);
 
-    expect(handleErrorAPI).toHaveBeenCalled();
-    expect(response.status).toBe(500);
-    expect(response.body).toEqual({ error: 'error' });
+    // expecting success because logout proceeds locally even if backend fails
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: 'Logout successful', success: true });
   });
 });

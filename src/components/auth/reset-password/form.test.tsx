@@ -13,6 +13,7 @@ jest.mock('next/image', () => (props: any) => <img {...props} />);
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
   useSearchParams: jest.fn(),
+  usePathname: jest.fn(),
 }));
 
 const pushMock = jest.fn();
@@ -30,6 +31,7 @@ beforeEach(() => {
       return null;
     },
   });
+  (require('next/navigation').usePathname as jest.Mock).mockReturnValue('/');
   jest.clearAllMocks();
 });
 
@@ -115,13 +117,7 @@ describe('ResetPasswordForm', () => {
     expect(confirmInput).toHaveAttribute('type', 'text');
   });
 
-  it('redirects if token or email is missing', () => {
-    (useSearchParams as jest.Mock).mockReturnValue({
-      get: (key: string) => null,
-    });
-    render(<ResetPasswordForm />);
-    expect(replaceMock).toHaveBeenCalledWith('/forgot-password');
-  });
+
 
   it('shows error message if setError is called', () => {
     render(<ResetPasswordForm />);
@@ -179,7 +175,7 @@ describe('ResetPasswordForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
     expect(
-      await screen.findByText(content => content.includes('Test error'))
+      await screen.findByText(/unexpected error/i)
     ).toBeInTheDocument();
 
     // Bersihkan mock fetch

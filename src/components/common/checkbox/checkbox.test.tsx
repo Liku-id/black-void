@@ -1,21 +1,34 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Checkbox } from './index';
 
 describe('Checkbox', () => {
   it('renders children', () => {
-    render(<Checkbox checked={false}>Label Text</Checkbox>);
+    render(
+      <Checkbox checked={false} readOnly>
+        Label Text
+      </Checkbox>
+    );
     expect(screen.getByText('Label Text')).toBeInTheDocument();
   });
 
   it('renders as checked when checked=true', () => {
-    render(<Checkbox checked={true}>Checked</Checkbox>);
+    render(
+      <Checkbox checked={true} readOnly>
+        Checked
+      </Checkbox>
+    );
     const input = screen.getByRole('checkbox');
     expect(input).toBeChecked();
   });
 
   it('renders as unchecked when checked=false', () => {
-    render(<Checkbox checked={false}>Unchecked</Checkbox>);
+    render(
+      <Checkbox checked={false} readOnly>
+        Unchecked
+      </Checkbox>
+    );
     const input = screen.getByRole('checkbox');
     expect(input).not.toBeChecked();
   });
@@ -44,7 +57,8 @@ describe('Checkbox', () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
-  it('does not call onChange if disabled', () => {
+  it('does not call onChange if disabled', async () => {
+    const user = userEvent.setup();
     const handleChange = jest.fn();
     render(
       <Checkbox checked={false} disabled onChange={handleChange}>
@@ -52,26 +66,28 @@ describe('Checkbox', () => {
       </Checkbox>
     );
     const input = screen.getByRole('checkbox');
-    fireEvent.click(input);
+    await user.click(input);
     expect(handleChange).not.toHaveBeenCalled();
   });
 
-  it('renders SVG checkmark when checked and variant is style1', () => {
+  it('renders SVG checkmark when checked', () => {
     render(
-      <Checkbox checked={true} variant="style1">
+      <Checkbox checked={true} variant="black">
         Checkmark visible
       </Checkbox>
     );
     expect(screen.getByRole('checkbox')).toBeChecked();
-    expect(screen.getByRole('checkbox').nextSibling).toBeTruthy();
+    // The checkmark is an image in a span, we can check for the alt text
+    expect(screen.getByAltText('checked')).toBeInTheDocument();
   });
 
-  it('renders style2 variant', () => {
+  it('renders white variant', () => {
     render(
-      <Checkbox checked={true} variant="style2">
-        Style2
+      <Checkbox checked={true} variant="white">
+        White Variant
       </Checkbox>
     );
     expect(screen.getByRole('checkbox')).toBeChecked();
+    expect(screen.getByRole('checkbox')).toHaveClass('bg-white');
   });
 });

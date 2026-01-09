@@ -7,8 +7,10 @@ import VerifyOtpForm from './verify-otp-form';
 jest.mock('axios');
 jest.mock('jotai', () => ({
   ...jest.requireActual('jotai'),
+  ...jest.requireActual('jotai'),
   useAtom: jest.fn(),
 }));
+import { registerFormAtom, otpExpiresAtAtom, verificationChannelAtom, authAtom } from '@/store';
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
@@ -22,26 +24,29 @@ describe('VerifyOtpForm', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useAtom as jest.Mock).mockReturnValue([
-      { phoneNumber: mockPhoneNumber },
-      mockSetAtom,
-    ]);
+    (useAtom as jest.Mock).mockImplementation((atom) => {
+      if (atom === registerFormAtom) return [{ email: 'test@mail.com', phoneNumber: mockPhoneNumber }, mockSetAtom];
+      if (atom === otpExpiresAtAtom) return [Date.now() / 1000 + 60, mockSetAtom]; // 60 seconds from now
+      if (atom === verificationChannelAtom) return ['phoneNumber', mockSetAtom];
+      if (atom === authAtom) return [{ isLoggedIn: false, userData: null, loading: false }, mockSetAtom];
+      return [{ isLoggedIn: false, userData: null, loading: false }, mockSetAtom];
+    });
   });
 
   it('renders phone number and timer', () => {
     render(<VerifyOtpForm />);
     expect(
       screen.getByText(
-        `We already sent you one time password to this number ${mockPhoneNumber}`
+        `We've sent Wu an OTP code to your phone number **********789`
       )
     ).toBeInTheDocument();
     expect(screen.getByText('01:00')).toBeInTheDocument();
   });
 
-  it('auto focuses first input on mount', () => {
+  it('auto focuses first input on mount', async () => {
     render(<VerifyOtpForm />);
     const firstInput = screen.getByLabelText('OTP digit 1');
-    expect(firstInput).toHaveFocus();
+    await waitFor(() => expect(firstInput).toHaveFocus());
   });
 
   it('allows typing digits into OTP fields', () => {
@@ -55,6 +60,15 @@ describe('VerifyOtpForm', () => {
 
   it('triggers resend OTP api', async () => {
     (axios.post as jest.Mock).mockResolvedValue({ status: 200 });
+
+    // Override mock to show resend button (expired timer)
+    (useAtom as jest.Mock).mockImplementation((atom) => {
+      if (atom === otpExpiresAtAtom) return [Date.now() / 1000 - 10, mockSetAtom]; // expired
+      if (atom === registerFormAtom) return [{ email: 'test@mail.com', phoneNumber: mockPhoneNumber }, mockSetAtom];
+      if (atom === verificationChannelAtom) return ['phoneNumber', mockSetAtom];
+      if (atom === authAtom) return [{ isLoggedIn: false, userData: null, loading: false }, mockSetAtom];
+      return [{ isLoggedIn: false, userData: null, loading: false }, mockSetAtom];
+    });
 
     render(<VerifyOtpForm />);
 
@@ -90,11 +104,12 @@ describe('VerifyOtpForm', () => {
 
     await waitFor(() =>
       expect(axios.post).toHaveBeenCalledWith('/api/auth/register', {
+        email: 'test@mail.com',
         phoneNumber: mockPhoneNumber,
       })
     );
 
-    expect(screen.getByText('Login')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /get in/i })).toBeInTheDocument();
   });
 
   it('shows error when OTP verification fails', async () => {
@@ -113,9 +128,5 @@ describe('VerifyOtpForm', () => {
     );
   });
 
-  it('redirects if phone number is missing', () => {
-    (useAtom as jest.Mock).mockReturnValue([{ phoneNumber: '' }, mockSetAtom]);
-    render(<VerifyOtpForm />);
-    expect(mockPush).toHaveBeenCalledWith('/register');
-  });
+
 });

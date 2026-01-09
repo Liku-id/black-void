@@ -6,7 +6,11 @@ jest.mock('@/lib/api/axios-server');
 const mockJson = jest.fn();
 const mockReturn = (data: any) => ({ json: () => data });
 
-const createRequest = (body: any) => ({ json: async () => body }) as any;
+const createRequest = (body: any) =>
+  ({
+    json: async () => body,
+    headers: { get: jest.fn().mockReturnValue('http://localhost:3000') },
+  }) as any;
 
 // Mock NextResponse.json to avoid cookies error in test environment
 jest.mock('next/server', () => ({
@@ -30,10 +34,20 @@ describe('/api/auth/forgot-password POST', () => {
     expect(json).toEqual({
       message: 'Forgot password email sent',
       success: true,
+      token: '',
     });
-    expect(axios.post).toHaveBeenCalledWith('/v1/forgot-password', {
-      email: 'test@example.com',
-    });
+    expect(axios.post).toHaveBeenCalledWith(
+      '/v1/auth/password/request',
+      {
+        email: 'test@example.com',
+      },
+      {
+        headers: {
+          'X-Frontend-Origin': 'http://localhost:3000',
+          Origin: 'http://localhost:3000',
+        },
+      }
+    );
   });
 
   it('returns error response when axios rejects', async () => {

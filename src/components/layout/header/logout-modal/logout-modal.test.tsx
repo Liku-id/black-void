@@ -26,7 +26,7 @@ describe('LogOutModal', () => {
       screen.getByRole('button', { name: /No, Back to Home/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Yes, Continue/i })
+      screen.getByRole('button', { name: /Yes, Go ahead/i })
     ).toBeInTheDocument();
   });
 
@@ -67,7 +67,7 @@ describe('LogOutModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /Yes, Continue/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Yes, Go ahead/i }));
     expect(onLogoutMock).toHaveBeenCalled();
   });
 

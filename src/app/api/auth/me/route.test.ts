@@ -40,8 +40,11 @@ describe('GET /api/check-login', () => {
     const request = createMockRequest({});
     const response = await GET(request);
 
-    expect(NextResponse.json).toHaveBeenCalledWith({ loggedIn: false });
+    expect(NextResponse.json).toHaveBeenCalledWith({
+      loggedIn: false,
+      user: null,
+    });
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ loggedIn: false });
+    expect(response.body).toEqual({ loggedIn: false, user: null });
   });
 });

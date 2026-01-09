@@ -71,7 +71,7 @@ jest.mock('next/image', () => ({
 }));
 
 if (typeof global.Request === 'undefined') {
-  global.Request = class {};
+  global.Request = class { };
 }
 if (typeof global.NextResponse === 'undefined') {
   global.NextResponse = {
@@ -85,3 +85,35 @@ if (typeof global.Response === 'undefined') {
     }
   };
 }
+
+// Global Environment Mocks
+process.env.API_BASE_URL = 'https://api.example.com';
+
+// Mock Axios globally to preventing "interceptors of undefined" error
+jest.mock('axios', () => {
+  const actualAxios = jest.requireActual('axios');
+  const mockAxiosInstance = {
+    get: jest.fn(() => Promise.resolve({ data: {} })),
+    post: jest.fn(() => Promise.resolve({ data: {} })),
+    put: jest.fn(() => Promise.resolve({ data: {} })),
+    delete: jest.fn(() => Promise.resolve({ data: {} })),
+    defaults: {
+      headers: { common: {} },
+      baseURL: '',
+    },
+    interceptors: {
+      request: { use: jest.fn(), eject: jest.fn() },
+      response: { use: jest.fn(), eject: jest.fn() },
+    },
+  };
+
+  return {
+    ...actualAxios,
+    create: jest.fn(() => mockAxiosInstance),
+    get: jest.fn(() => Promise.resolve({ data: {} })),
+    post: jest.fn(() => Promise.resolve({ data: {} })),
+    put: jest.fn(() => Promise.resolve({ data: {} })),
+    delete: jest.fn(() => Promise.resolve({ data: {} })),
+    ...mockAxiosInstance,
+  };
+});
