@@ -68,8 +68,9 @@ export const TextField: React.FC<TextFieldProps> = ({
           id="phone_number_code_select"
           className="h-full appearance-none bg-transparent pr-2 pl-6 text-black outline-none"
           value={selectedCountryCode}
-          onChange={e => onCountryCodeChange?.(e.target.value)}>
-          {countryCodes.map(item => (
+          onChange={(e) => onCountryCodeChange?.(e.target.value)}
+        >
+          {countryCodes.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
@@ -105,12 +106,14 @@ export const TextField: React.FC<TextFieldProps> = ({
                 isFocused
                   ? `translate-x-[-2px] translate-y-[-2px] border shadow-[4px_4px_0px_0px_#FFFF] ${fieldState.error ? 'border-danger' : 'border-black'}`
                   : `border ${fieldState.error ? 'border-danger' : 'border-black'}`
-              }`}>
+              }`}
+            >
               {renderCountrySelect()}
               {startIcon && (
                 <Box
                   className="mr-2 flex cursor-pointer items-center"
-                  onClick={onStartIconClick}>
+                  onClick={onStartIconClick}
+                >
                   <Image
                     src={startIcon}
                     alt="Start icon"
@@ -132,6 +135,13 @@ export const TextField: React.FC<TextFieldProps> = ({
                 )}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                onChange={(e) => {
+                  let val = e.target.value;
+                  if (type === 'email' || name === 'email') {
+                    val = val.toLowerCase();
+                  }
+                  field.onChange(val);
+                }}
                 {...props}
                 disabled={disabled}
               />
@@ -139,7 +149,8 @@ export const TextField: React.FC<TextFieldProps> = ({
                 <Box
                   data-testid="endAdornment"
                   className="ml-2 flex cursor-pointer items-center"
-                  onClick={onEndIconClick}>
+                  onClick={onEndIconClick}
+                >
                   <Image src={endIcon} alt="End icon" width={20} height={20} />
                 </Box>
               )}
@@ -175,7 +186,13 @@ export const TextField: React.FC<TextFieldProps> = ({
         data-slot="input"
         placeholder={placeholder}
         value={value}
-        onChange={e => onChange?.(e.target.value)}
+        onChange={(e) => {
+          let val = e.target.value;
+          if (type === 'email' || name === 'email') {
+            val = val.toLowerCase();
+          }
+          onChange?.(val);
+        }}
         className={inputClass(disabled)}
         {...props}
         disabled={disabled}
@@ -183,7 +200,8 @@ export const TextField: React.FC<TextFieldProps> = ({
       {endIcon && (
         <Box
           className="ml-2 flex cursor-pointer items-center"
-          onClick={onEndIconClick}>
+          onClick={onEndIconClick}
+        >
           <Image
             src={endIcon}
             alt="End icon"
