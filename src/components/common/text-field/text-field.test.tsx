@@ -133,6 +133,34 @@ describe('TextField', () => {
         'flex-1 border-0 bg-transparent text-black placeholder:text-muted h-full p-0 focus:outline-none w-full border-danger'
       );
     });
+
+    it('forces lowercase input for email fields', () => {
+      const TestComponent = () => {
+        const methods = useForm({ defaultValues: { email: '' } });
+        return (
+          <FormProvider {...methods}>
+            <TextField name="email" placeholder="Email" />
+          </FormProvider>
+        );
+      };
+
+      render(<TestComponent />);
+
+      const input = screen.getByPlaceholderText('Email');
+      fireEvent.change(input, { target: { value: 'User@Example.COM' } });
+
+      expect(input).toHaveValue('user@example.com');
+    });
+  });
+
+  describe('Lowercase Enforcement', () => {
+    it('forces lowercase in controlled mode for type="email"', () => {
+      const mockOnChange = jest.fn();
+      render(<TextField type="email" value="" onChange={mockOnChange} placeholder="Email" />);
+      const input = screen.getByPlaceholderText('Email');
+      fireEvent.change(input, { target: { value: 'User@Example.COM' } });
+      expect(mockOnChange).toHaveBeenCalledWith('user@example.com');
+    });
   });
 
   describe('Accessibility', () => {
