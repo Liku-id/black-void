@@ -45,6 +45,7 @@ export interface EventData {
   deletedAt: string | null;
   images: string[];
   ticketTypes: TicketType[];
+  lowestTicketPrice?: string | null;
   tickets: any[]; // bisa di-type detail jika perlu
   city: {
     id: string;
