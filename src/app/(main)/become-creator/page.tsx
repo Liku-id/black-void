@@ -118,7 +118,7 @@ export default function BecomeCreatorPage() {
     if (
       url &&
       url !==
-        '?utm_source=wukong&utm_medium=website&utm_campaign=become-creator'
+      '?utm_source=wukong&utm_medium=website&utm_campaign=become-creator'
     ) {
       window.open(url, '_blank', 'noopener,noreferrer');
     }
@@ -132,7 +132,7 @@ export default function BecomeCreatorPage() {
     <main className="bg-black text-white">
       {/* Hero Section */}
       <section className="relative w-full">
-        <Box className="relative h-[146px] md:h-[552px] w-full max-w-[1232px] mx-auto md:h-[1232px] lg:h-[552px]">
+        <Box className="relative h-[420px] md:h-[552px] w-full max-w-[1232px] mx-auto lg:h-[552px]">
           <Image
             src={creatorMain}
             alt="People creating together"
@@ -246,11 +246,10 @@ export default function BecomeCreatorPage() {
                     <button
                       key={index}
                       onClick={() => setActiveStep(index)}
-                      className={`h-1 transition-all ${
-                        activeStep === index
+                      className={`h-1 transition-all ${activeStep === index
                           ? 'w-11 bg-white'
                           : 'w-2 bg-white/40'
-                      }`}
+                        }`}
                       aria-label={`Go to step ${index + 1}`}
                     />
                   ))}

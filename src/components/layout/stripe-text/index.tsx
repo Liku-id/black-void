@@ -7,10 +7,10 @@ import { cn } from '@/utils/utils';
 interface StripeTextProps {
   direction?: 'vertical' | 'horizontal';
   scrollDirection?:
-    | 'top-to-bottom'
-    | 'bottom-to-top'
-    | 'left-to-right'
-    | 'right-to-left';
+  | 'top-to-bottom'
+  | 'bottom-to-top'
+  | 'left-to-right'
+  | 'right-to-left';
   texts?: string[];
   className?: string;
 }
@@ -77,6 +77,7 @@ export default function StripeText({
                 <Typography
                   size={40}
                   type="heading"
+                  color="text-black"
                   className={cn(
                     'font-normal',
                     isVertical
