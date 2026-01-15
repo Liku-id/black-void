@@ -4,7 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
   // Use provided URL or fallback
-  uri: process.env.NEXT_PUBLIC_RESTURL_API_SERVER || 'https://api-staging.eku.id/graphql',
+  uri: process.env.API_EKUID_URL,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -14,7 +14,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       "x-client-version": "1.0.0",
-      origin: process.env.NEXT_PUBLIC_RESTURL_CORS || typeof window !== 'undefined' ? window.location.origin : '',
+      origin: process.env.RESTURL_CORS,
       "accept-language": "id",
     },
   };
