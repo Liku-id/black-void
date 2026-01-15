@@ -79,7 +79,7 @@ export const Select: React.FC<SelectProps> = ({
               </span>
             </button>
             {open && !disabled && (
-              <Box className="absolute z-10 mt-1 w-full border bg-white">
+              <Box className="absolute z-10 mt-1 w-full border bg-white text-black max-h-[250px] overflow-y-auto">
                 {options.map(opt => (
                   <Box
                     key={opt.value}
@@ -128,7 +128,7 @@ export const Select: React.FC<SelectProps> = ({
         </span>
       </button>
       {open && !disabled && (
-        <Box className="absolute z-10 mt-1 w-full border bg-white">
+        <Box className="absolute z-10 mt-1 w-full border bg-white text-black max-h-[250px] overflow-y-auto">
           {options.map(opt => (
             <Box
               key={opt.value}
