@@ -47,11 +47,14 @@ export const InputFile: React.FC<InputFileProps> = ({
       rules={rules}
       render={({ field: { onChange, value, onBlur, ...field }, fieldState }) => {
         // value is expected to be a FileList or File object, or null/undefined
-        const fileName = value instanceof FileList && value.length > 0
-          ? value[0].name
-          : value instanceof File
-            ? value.name
-            : '';
+        const getFileName = (val: any): string => {
+          if (typeof window === 'undefined') return '';
+          if (val instanceof FileList && val.length > 0) return val[0].name;
+          if (val instanceof File) return val.name;
+          return '';
+        };
+
+        const fileName = getFileName(value);
 
         const isError = !!fieldState.error;
 
