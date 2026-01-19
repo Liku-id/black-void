@@ -38,7 +38,7 @@ const CollaborationSection = () => {
             size={14}
             className="max-w-3xl mx-auto text-white opacity-80"
             dangerouslySetInnerHTML={{
-              __html: `<strong>Wukong collaborated with EKUID</strong> to helps event organizers access funding while managing ticket sales seamlessly. From planning to post-event settlement, everything is connected`
+              __html: `<strong>Wukong collaborated with EKUID</strong> to help event organizers access funding while managing ticket sales seamlessly. From planning to post-event settlement, everything is connected`
             }}
           />
         </Box>

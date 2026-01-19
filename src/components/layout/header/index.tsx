@@ -131,7 +131,7 @@ export default function Header() {
             <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
           {!loading && !isLoggedIn && (
-            <Link id="btn_login" href="/login" className="ml-6">
+            <Link id="login_page_button" href="/login" className="ml-6">
               <Button>Get In</Button>
             </Link>
           )}

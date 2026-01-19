@@ -82,7 +82,7 @@ const EventTypesSection = () => {
                 Whether you run small community events or large-scale productions, our funding model adapts to your event goals
               </Typography>
 
-              <Button type="button" onClick={handleScrollToForm}>
+              <Button id="cta2_funding" type="button" onClick={handleScrollToForm}>
                 Start Funding
               </Button>
             </Box>
