@@ -22,6 +22,7 @@ import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
 import { getTodayWIB, convertToWIB } from '@/utils/formatter';
+import posthog from 'posthog-js';
 
 export default function Event() {
   const params = useParams();
@@ -30,7 +31,7 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const partnerCode = searchParams.get('partner_code');
-  
+
   // Build API URL with query params (preview_token is handled via cookie in proxy)
   const buildApiUrl = () => {
     if (!slug) return null;
@@ -100,9 +101,9 @@ export default function Event() {
         usePartnership && partnershipInfo.available_quota !== undefined
           ? partnershipInfo.available_quota
           : Math.max(
-              0,
-              (target.quantity ?? 0) - (target.purchased_amount ?? 0)
-            );
+            0,
+            (target.quantity ?? 0) - (target.purchased_amount ?? 0)
+          );
 
       const maxOrderQuantity =
         usePartnership && partnershipInfo.max_order_quantity !== undefined
@@ -123,6 +124,18 @@ export default function Event() {
       );
 
       if (nextCount === target.count) return prev;
+
+      // Track ticket selection change
+      if (nextCount > 0 && nextCount !== target.count) {
+        posthog.capture('ticket_selected', {
+          event_id: eventData?.id,
+          event_name: eventData?.name,
+          event_slug: slug,
+          ticket_type_id: id,
+          ticket_name: target.name,
+        });
+      }
+
 
       const shouldResetOthers = nextCount > 0;
 
@@ -153,6 +166,15 @@ export default function Event() {
         ],
       };
 
+      // Track order started event
+      posthog.capture('order_started', {
+        event_id: eventData?.id,
+        event_name: eventData?.name,
+        event_slug: slug,
+        ticket_type_id: ticket.id,
+        ticket_name: ticket.name,
+      });
+
       const { data: response } = await axios.post('/api/order/create', payload);
 
       if (response.success) {
@@ -165,6 +187,13 @@ export default function Event() {
     } catch (error: any) {
       setLoading(false);
       setError(error?.response?.data?.error || 'Failed to create order');
+
+      // Track order start failure
+      posthog.capture('order_start_failed', {
+        event_id: eventData?.id,
+        event_name: eventData?.name,
+        error: error?.response?.data?.error || 'Failed to create order',
+      });
     }
   };
 

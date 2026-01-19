@@ -29,6 +29,7 @@
     "lucide-react": "^0.523.0",
     "next": "16.0.10",
     "posthog-js": "1.270.1",
+    "posthog-node": "5.21.1",
     "qrcode": "1.5.4",
     "react": "19.2.1",
     "react-dom": "19.2.1",
