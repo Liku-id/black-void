@@ -15,6 +15,25 @@ export interface TicketType {
   updated_at: string;
   deleted_at: string | null;
   partnership_info?: PartnershipInfo | null;
+  is_public?: boolean;
+}
+
+export interface GroupTicket {
+  id: string;
+  ticket_type_id: string;
+  bundle_quantity: number;
+  description: string;
+  name: string;
+  price: number;
+  quantity: number;
+  max_order_quantity: number;
+  sales_start_date: string;
+  sales_end_date: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  ticket_type?: TicketType;
+  purchased_amount: number;
 }
 
 export interface PaymentMethod {
@@ -45,8 +64,10 @@ export interface EventData {
   deletedAt: string | null;
   images: string[];
   ticketTypes: TicketType[];
+  group_tickets: GroupTicket[];
   lowestTicketPrice?: string | null;
-  tickets: any[]; // bisa di-type detail jika perlu
+
+  available_tickets?: any[];
   city: {
     id: string;
     name: string;
@@ -54,7 +75,7 @@ export interface EventData {
     updatedAt: string;
     deletedAt: string | null;
   };
-  eventOrganizer: any; // bisa di-type detail jika perlu
+  eventOrganizer: any;
   paymentMethods: PaymentMethod[];
   eventAssets: { asset: { url: string } }[];
 }

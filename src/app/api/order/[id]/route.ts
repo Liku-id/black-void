@@ -28,9 +28,11 @@ export async function GET(
       {
         id: order.ticketType.id,
         name: order.ticketType.name,
-        price: order.ticketType.price,
+        price: order.group_ticket?.price || order.ticketType.price || 0,
         count: order.quantity,
         partnership_info: order.ticketType.partnership_info || null,
+        group_ticket_id: order.group_ticket_id,
+        ticket_type_id: order.ticket_type_id,
       },
     ];
     return NextResponse.json({

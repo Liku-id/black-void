@@ -38,22 +38,24 @@ export default function PaymentConfirmationVA({
 
   const instruction =
     paymentInstructions[
-      data && data.transaction && data.transaction.paymentMethod.name
+    data && data.transaction && data.transaction.paymentMethod.name
     ];
 
   const getTransactionAndTotals = () => {
+    const groupTicket = data.transaction.group_ticket;
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const partnershipInfo = ticketType.partnership_info;
-    
+    const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
+    const price = groupTicket ? groupTicket.price : ticketType.price;
+
     // Calculate subtotal with partnership discount
-    const originalSubtotal = ticketType.price * data.transaction.orderQuantity;
+    const originalSubtotal = price * data.transaction.orderQuantity;
     const finalPricePerTicket = calculatePriceWithPartnership(
-      ticketType.price,
+      price,
       partnershipInfo
     );
     const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
     const discount = originalSubtotal - subtotal;
-    
+
     const adminFee =
       (data.transaction.event.adminFee ?? 0) <= 100
         ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
@@ -61,8 +63,8 @@ export default function PaymentConfirmationVA({
     const paymentMethodFee =
       data.transaction.paymentMethod.paymentMethodFee < 1
         ? Math.round(
-            (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
-          )
+          (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
+        )
         : data.transaction.paymentMethod.paymentMethodFee;
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
@@ -180,10 +182,10 @@ export default function PaymentConfirmationVA({
                 <Image src={copyIcon} alt="copy" width={24} height={24} />
                 {copiedText ===
                   data.transaction.paymentDetails.va.accountNumber && (
-                  <Box className="absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white">
-                    Copied!
-                  </Box>
-                )}
+                    <Box className="absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white">
+                      Copied!
+                    </Box>
+                  )}
               </Box>
             </Box>
 
@@ -204,10 +206,10 @@ export default function PaymentConfirmationVA({
                 <Image src={copyIcon} alt="copy" width={24} height={24} />
                 {copiedText ===
                   getTransactionAndTotals().totals.totalPayment.toString() && (
-                  <Box className="absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white">
-                    Copied!
-                  </Box>
-                )}
+                    <Box className="absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-black px-2 py-1 text-xs whitespace-nowrap text-white">
+                      Copied!
+                    </Box>
+                  )}
               </Box>
             </Box>
 

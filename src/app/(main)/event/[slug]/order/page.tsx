@@ -57,8 +57,8 @@ const OrderPage = () => {
 
   // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
-  const eventApiUrl = slug 
-    ? partnerCode 
+  const eventApiUrl = slug
+    ? partnerCode
       ? `/api/events/${slug}?partner_code=${partnerCode}`
       : `/api/events/${slug}`
     : null;
@@ -118,7 +118,14 @@ const OrderPage = () => {
     mode: 'onChange',
     defaultValues: {
       visitors: orderData
-        ? Array.from({ length: orderData.quantity }, () => {
+        ? Array.from(
+          {
+            length:
+              orderData.group_ticket
+                ? orderData.quantity * orderData.group_ticket.bundle_quantity
+                : orderData.quantity,
+          },
+          () => {
             const visitor: any = {};
             if (orderData.ticketType?.additional_forms) {
               orderData.ticketType.additional_forms.forEach((form: any) => {
@@ -359,6 +366,7 @@ const OrderPage = () => {
                   contactMethods={contactMethods}
                   tickets={orderData.tickets}
                   ticketType={orderData.ticketType}
+                  groupTicket={orderData.group_ticket}
                 />
               </Box>
             </Box>
@@ -372,9 +380,9 @@ const OrderPage = () => {
           className={
             (isSticky
               ? // Sticky mode
-                'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
+              'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
               : // Absolute mode
-                'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
+              'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
             ' z-1 hidden lg:block'
           }
           style={!isSticky && isReady ? { top: absoluteTop } : {}}

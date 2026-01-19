@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
 
     const ticket = body.tickets[0];
     const payload: any = {
-      ticketTypeId: ticket.id || ticket.ticketTypeId,
+      ticketTypeId: ticket.ticketTypeId,
+      groupTicketId: ticket.groupTicketId,
       quantity: ticket.quantity,
       partner_code: ticket.partnerCode,
     };

@@ -30,7 +30,7 @@ export default function Event() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const partnerCode = searchParams.get('partner_code');
-  
+
   // Build API URL with query params (preview_token is handled via cookie in proxy)
   const buildApiUrl = () => {
     if (!slug) return null;
@@ -71,6 +71,8 @@ export default function Event() {
       price: String(t.price),
       count: t.count,
       partnership_info: t.partnership_info || null,
+      group_ticket_id: t.group_ticket_id,
+      ticket_type_id: t.ticket_type_id,
     }));
   const isDisabled =
     selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
@@ -101,9 +103,9 @@ export default function Event() {
         usePartnership && partnershipInfo.available_quota !== undefined
           ? partnershipInfo.available_quota
           : Math.max(
-              0,
-              (target.quantity ?? 0) - (target.purchased_amount ?? 0)
-            );
+            0,
+            (target.quantity ?? 0) - (target.purchased_amount ?? 0)
+          );
 
       const maxOrderQuantity =
         usePartnership && partnershipInfo.max_order_quantity !== undefined
@@ -143,13 +145,20 @@ export default function Event() {
 
   const handleContinue = async () => {
     try {
-      const ticket = selectedTickets[0];
+      const ticket = selectedTickets[0] as any;
       const payload: any = {
         tickets: [
           {
-            id: ticket.id,
             quantity: ticket.count,
             partnerCode: partnerCode ?? null,
+            ...(ticket.group_ticket_id
+              ? {
+                groupTicketId: ticket.group_ticket_id,
+                ticketTypeId: ticket.ticket_type_id,
+              }
+              : {
+                ticketTypeId: ticket.id,
+              }),
           },
         ],
       };
@@ -199,36 +208,66 @@ export default function Event() {
   };
 
   useEffect(() => {
-    if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
-      setTickets(
-        eventData.ticketTypes.map((t: any) => {
-          const partnershipInfo = t.partnership_info;
-          const usePartnership = partnerCode && partnershipInfo;
+    if (eventData) {
+      if (eventData.available_tickets) {
+        setTickets(eventData.available_tickets);
+      } else if (eventData.ticketTypes) {
+        const standardTickets = (eventData.ticketTypes || [])
+          .filter((t: any) => t.is_public !== false)
+          .map((t: any) => {
+            const partnershipInfo = t.partnership_info;
+            const usePartnership = partnerCode && partnershipInfo;
 
-          // Use partnership_info.max_order_quantity if partner_code exists
-          const maxOrderQuantity =
-            usePartnership && partnershipInfo?.max_order_quantity !== undefined
-              ? partnershipInfo.max_order_quantity
-              : t.max_order_quantity;
+            // Use partnership_info.max_order_quantity if partner_code exists
+            const maxOrderQuantity =
+              usePartnership && partnershipInfo?.max_order_quantity !== undefined
+                ? partnershipInfo.max_order_quantity
+                : t.max_order_quantity;
+
+            return {
+              id: t.id,
+              name: t.name,
+              price: t.price,
+              count: 0,
+              max_order_quantity: maxOrderQuantity,
+              description: t.description,
+              sales_start_date: t.sales_start_date,
+              sales_end_date: t.sales_end_date,
+              ticket_start_date: t.ticketStartDate,
+              quantity: t.quantity,
+              purchased_amount: t.purchased_amount,
+              partnership_info: partnershipInfo || null,
+            };
+          });
+
+        const groupTickets = (eventData.group_tickets || []).map((gt: any) => {
+          const ticketType = gt.ticket_type;
+          const ticketStartDate = ticketType
+            ? ticketType.ticketStartDate || ticketType.ticket_start_date
+            : undefined;
 
           return {
-            id: t.id,
-            name: t.name,
-            price: t.price,
+            id: gt.id,
+            name: gt.name,
+            price: gt.price,
             count: 0,
-            max_order_quantity: maxOrderQuantity,
-            description: t.description,
-            sales_start_date: t.sales_start_date,
-            sales_end_date: t.sales_end_date,
-            ticket_start_date: t.ticketStartDate,
-            quantity: t.quantity,
-            purchased_amount: t.purchased_amount,
-            partnership_info: partnershipInfo || null,
+            max_order_quantity: gt.max_order_quantity,
+            description: gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
+            sales_start_date: gt.sales_start_date,
+            sales_end_date: gt.sales_end_date,
+            ticket_start_date: ticketStartDate,
+            quantity: gt.quantity,
+            purchased_amount: gt.purchased_amount || 0,
+            partnership_info: null,
+            group_ticket_id: gt.id,
+            ticket_type_id: gt.ticket_type_id,
           };
-        })
-      );
+        });
+
+        setTickets([...standardTickets, ...groupTickets]);
+      }
     }
-  }, [eventData?.ticketTypes, partnerCode]);
+  }, [eventData?.ticketTypes, eventData?.available_tickets, partnerCode]);
 
   // Handle 403 error - redirect to /event with message
   useEffect(() => {
@@ -334,7 +373,6 @@ export default function Event() {
             <Container className="flex flex-col gap-10 px-4 py-8 md:flex-row md:items-start md:gap-12 md:px-6 md:py-10 lg:px-8 lg:py-14 xl:gap-16 xl:px-0 xl:py-16">
               <Box className="w-full md:w-7/12 xl:w-7/12">
                 <TicketListSection
-                  data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
                   partnerCode={partnerCode}
