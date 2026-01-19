@@ -50,3 +50,25 @@ export const getErrorMessage = (error: unknown): string => {
   }
   return 'An unexpected error occurred';
 };
+// Error handler for GraphQL
+export function handleGraphQLErrorAPI(error: any) {
+  if (error.graphQLErrors && error.graphQLErrors.length) {
+    const extensions = error.graphQLErrors[0].extensions || {};
+    const status = extensions.status_code || 500;
+    return NextResponse.json(extensions, { status });
+  } else if (
+    error.networkError &&
+    error.networkError.result &&
+    error.networkError.result.errors &&
+    error.networkError.result.errors.length
+  ) {
+    const extensions = error.networkError.result.errors[0].extensions || {};
+    const status = extensions.status_code || 500;
+    return NextResponse.json(extensions, { status });
+  } else {
+    return NextResponse.json(
+      { message: error.message || 'An unexpected error occurred.' },
+      { status: 400 }
+    );
+  }
+}

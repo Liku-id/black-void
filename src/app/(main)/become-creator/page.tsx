@@ -177,7 +177,7 @@ export default function BecomeCreatorPage() {
       {/* How It Works Section */}
       <section className="py-12 md:py-16 px-4 md:px-0 lg:py-24 pt-24">
         <Container>
-          <Box className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+          <Box className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-28">
             {/* Left Column: Steps */}
             <Box className="flex flex-col gap-4">
               {/* Mobile: Slider - Show only active step */}
@@ -208,14 +208,14 @@ export default function BecomeCreatorPage() {
                   >
                     {null}
                   </Box>
-                  <Box className="relative cursor-pointer border border-white bg-black p-6 transition-all duration-300 touch-pan-x">
-                    <Box className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-4">
+                  <Box className="relative cursor-pointer border border-white bg-black p-4 transition-all duration-300 touch-pan-x">
+                    <Box className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-4">
                       <Box className="flex h-12 w-12 shrink-0 items-center justify-center bg-white text-black">
                         <Typography
                           type="heading"
                           as="span"
                           size={24}
-                          className="font-bold"
+                          className=""
                         >
                           {steps[activeStep].number}
                         </Typography>
@@ -225,7 +225,7 @@ export default function BecomeCreatorPage() {
                           type="heading"
                           as="h2"
                           size={32}
-                          className="mb-2 lg:mb-2 font-bold uppercase text-white"
+                          className="mb-2 lg:mb-2 uppercase text-white"
                         >
                           {steps[activeStep].title}
                         </Typography>
@@ -247,8 +247,8 @@ export default function BecomeCreatorPage() {
                       key={index}
                       onClick={() => setActiveStep(index)}
                       className={`h-1 transition-all ${activeStep === index
-                          ? 'w-11 bg-white'
-                          : 'w-2 bg-white/40'
+                        ? 'w-11 bg-white'
+                        : 'w-2 bg-white/40'
                         }`}
                       aria-label={`Go to step ${index + 1}`}
                     />
@@ -257,7 +257,7 @@ export default function BecomeCreatorPage() {
               </Box>
 
               {/* Desktop: Show all steps */}
-              <Box className="hidden lg:flex flex-col gap-4">
+              <Box className="hidden lg:flex flex-col gap-10">
                 {steps.map((step, index) => (
                   <Box key={step.number} className="group relative z-10">
                     {/* Offset Layer */}
@@ -285,15 +285,15 @@ export default function BecomeCreatorPage() {
                     </Box>
                     <Box
                       onClick={() => setActiveStep(index)}
-                      className="relative cursor-pointer border border-white bg-black p-6 transition-all duration-300"
+                      className="relative cursor-pointer border border-white bg-black p-4 transition-all duration-300"
                     >
-                      <Box className="flex items-start gap-4">
+                      <Box className="flex items-start gap-10">
                         <Box className="flex h-12 w-12 shrink-0 items-center justify-center bg-white text-black">
                           <Typography
                             type="heading"
                             as="span"
                             size={24}
-                            className="font-bold"
+                            className=""
                           >
                             {step.number}
                           </Typography>
@@ -303,7 +303,7 @@ export default function BecomeCreatorPage() {
                             type="heading"
                             as="h3"
                             size={32}
-                            className="mb-2 font-bold uppercase text-white"
+                            className="mb-2 uppercase text-white"
                           >
                             {step.title}
                           </Typography>
@@ -323,8 +323,8 @@ export default function BecomeCreatorPage() {
             </Box>
 
             {/* Right Column: Dynamic Image */}
-            <Box className="flex items-center justify-center">
-              <Box className="relative h-[426px] md:h-[690px] w-full md:h-[690px] lg:h-[690px]">
+            <Box className="flex items-center justify-center h-full">
+              <Box className="relative w-full h-[426px] md:h-[690px] lg:h-full min-h-[426px]">
                 <Image
                   src={steps[activeStep].image}
                   alt={`Step ${steps[activeStep].number}`}
