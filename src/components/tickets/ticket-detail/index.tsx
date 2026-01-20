@@ -13,20 +13,6 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ticketTemplate } from '../template';
 
-import { EventData, GroupTicket, TicketType } from '@/components/event/types';
-
-interface TicketItem {
-  id: string;
-  visitor_name: string;
-}
-
-interface TicketData {
-  event: EventData;
-  ticketType: TicketType;
-  group_ticket?: GroupTicket;
-  tickets: TicketItem[];
-}
-
 const Ticket = () => {
   const params = useParams();
   const transactionId = params.id;
@@ -35,7 +21,7 @@ const Ticket = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const { data, isLoading } = useSWR<TicketData>(
+  const { data, isLoading } = useSWR(
     transactionId ? `/api/transaction/${transactionId}/tickets` : null
   );
 
@@ -43,17 +29,15 @@ const Ticket = () => {
     setLoading(true);
     setError(null);
 
-    if (!data) return;
-
     try {
       // Prepare ticket data
-      const tickets = (data.tickets || []).map((ticket: TicketItem) => ({
+      const tickets = (data.tickets || []).map((ticket: any) => ({
         eventName: data.event?.name,
         eventOrganizerName: data.event?.eventOrganizer?.name,
         type: data.group_ticket?.name || data.ticketType?.name,
         attendee: ticket.visitor_name,
         qrValue: ticket.id,
-        date: formatDate(data.ticketType?.ticketStartDate ?? '', 'datetime'),
+        date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
         address: data.event?.address,
         mapLocation: data.event?.mapLocationUrl,
         ticketType: data.ticketType,
@@ -182,7 +166,7 @@ const Ticket = () => {
             </Typography>
 
             <Box className="border-gray my-6 rounded-[14px] border-[0.5px] p-[14px]">
-              {data.tickets.map((t: TicketItem, idx: number) => (
+              {data.tickets.map((t: any, idx: number) => (
                 <Fragment key={idx}>
                   <Box className="border-green flex h-[42px] items-center border-l-[2px]">
                     <Typography
@@ -227,7 +211,7 @@ const Ticket = () => {
                           className="font-light"
                         >
                           {formatDate(
-                            data.ticketType.ticketStartDate ?? '',
+                            data.ticketType.ticketStartDate,
                             'datetime'
                           )}
                         </Typography>

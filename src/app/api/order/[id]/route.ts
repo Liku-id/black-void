@@ -1,21 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleErrorAPI } from '@/lib/api/error-handler';
 import axios from '@/lib/api/axios-server';
-import { PartnershipInfo, GroupTicket } from '@/components/event/types';
-
-interface Order {
-  id: string;
-  quantity: number;
-  ticket_type_id: string;
-  group_ticket_id?: string;
-  ticketType: {
-    id: string;
-    name: string;
-    price: number;
-    partnership_info?: PartnershipInfo;
-  };
-  group_ticket?: GroupTicket;
-}
 
 export async function GET(
   req: NextRequest,
@@ -38,7 +23,7 @@ export async function GET(
         status: 500,
       });
     }
-    const order: Order = data.order;
+    const order = data.order;
     const tickets = [
       {
         id: order.ticketType.id,
@@ -54,7 +39,7 @@ export async function GET(
       ...order,
       tickets,
     });
-  } catch (error: unknown) {
-    return handleErrorAPI(error as any);
+  } catch (error: any) {
+    return handleErrorAPI(error);
   }
 }

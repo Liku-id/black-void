@@ -10,37 +10,49 @@ import dashedDivider from '@/assets/images/dashed-divider.svg';
 import useSWR from 'swr';
 import Loading from '@/components/layout/loading';
 
-import { PartnershipInfo, GroupTicket, TicketType, EventData, EventOrganizer, PaymentMethod } from '@/components/event/types';
-
-interface Transaction {
-  id: string;
-  transactionNumber: string;
-  orderQuantity: number;
-  createdAt: string;
-  status: string;
-  paymentMethod: PaymentMethod;
-  event: EventData;
-  ticketType: TicketType;
-  group_ticket?: GroupTicket;
-}
-
-interface TransactionData {
-  transaction: Transaction;
-}
-
 export default function PaymentStatus() {
   const router = useRouter();
   const params = useParams();
   const transactionId = params.id;
 
-  const { data, isLoading } = useSWR<TransactionData>(
+  const { data, isLoading } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null
   );
 
+  const getTransactionAndTotals = () => {
+    const groupTicket = data.transaction.group_ticket;
+    const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
+    const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
+    const price = groupTicket ? groupTicket.price : ticketType.price;
 
+    // Calculate subtotal with partnership discount
+    const originalSubtotal = price * data.transaction.orderQuantity;
+    const finalPricePerTicket = calculatePriceWithPartnership(
+      price,
+      partnershipInfo
+    );
+    const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
+    const discount = originalSubtotal - subtotal;
+
+    const adminFee = subtotal === 0
+      ? 0
+      : (data.transaction.event.adminFee ?? 0) <= 100
+        ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
+        : Math.round(data.transaction.event.adminFee ?? 0);
+    const paymentMethodFee =
+      data.transaction.paymentMethod.paymentMethodFee < 1
+        ? Math.round(
+          (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
+        )
+        : data.transaction.paymentMethod.paymentMethodFee;
+    const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
+    const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
+    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
+    return { totals, partnershipInfo };
+  };
 
   const handleButtonClick = () => {
-    if (data?.transaction?.status === 'paid') {
+    if (data.transaction.status === 'paid') {
       router.push(`/transaction/${data.transaction.id}/tickets`);
     } else {
       router.push('/');
@@ -59,9 +71,7 @@ export default function PaymentStatus() {
   }, [data, router]);
 
   if (isLoading) return <Loading />;
-  if (isLoading) return <Loading />;
-
-  if (!data)
+  if (!isLoading && !data)
     return (
       <Container>
         <Box className="text-muted flex h-[200px] items-center justify-center">
@@ -70,41 +80,7 @@ export default function PaymentStatus() {
       </Container>
     );
 
-  const { transaction } = data;
-
-  const getTransactionAndTotals = () => {
-    const groupTicket = transaction.group_ticket;
-    const ticketType = transaction.ticketType ?? { price: 0, quantity: 0 };
-    const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
-    const price = groupTicket ? groupTicket.price : ticketType.price;
-
-    // Calculate subtotal with partnership discount
-    const originalSubtotal = price * transaction.orderQuantity;
-    const finalPricePerTicket = calculatePriceWithPartnership(
-      price,
-      partnershipInfo
-    );
-    const subtotal = finalPricePerTicket * transaction.orderQuantity;
-    const discount = originalSubtotal - subtotal;
-
-    const adminFee = subtotal === 0
-      ? 0
-      : (transaction.event.adminFee ?? 0) <= 100
-        ? Math.round(subtotal * ((transaction.event.adminFee ?? 0) / 100))
-        : Math.round(transaction.event.adminFee ?? 0);
-    const paymentMethodFee =
-      (transaction.paymentMethod.paymentMethodFee ?? 0) < 1
-        ? Math.round(
-          (subtotal * (transaction.paymentMethod.paymentMethodFee ?? 0)) / 100
-        )
-        : (transaction.paymentMethod.paymentMethodFee ?? 0);
-    const pb1 = Math.round(subtotal * ((transaction.event.tax ?? 0) / 100));
-    const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
-    const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
-    return { totals, partnershipInfo };
-  };
-
-  if (transaction.status === 'pending') {
+  if (data.transaction.status === 'pending') {
     return (
       <Container className="flex justify-center">
         <Box className="min-w-full px-4 sm:min-w-[485px] sm:px-0">
@@ -122,11 +98,11 @@ export default function PaymentStatus() {
           size={30}
           color="text-white"
           className="mb-2">
-          {transaction.status === 'paid' ? 'Youre All Set!' : 'Oopsie...'}
+          {data.transaction.status === 'paid' ? 'Youre All Set!' : 'Oopsie...'}
         </Typography>
 
         <Box className="border bg-white p-6 shadow-[4px_4px_0px_0px_#fff]">
-          {transaction.status === 'paid' ? (
+          {data.transaction.status === 'paid' ? (
             <Box className="flex flex-col items-center justify-center">
               <Image src={successStatus} alt="status" width={64} height={64} />
               <Typography type="heading" size={24} className="mt-4">
@@ -141,9 +117,9 @@ export default function PaymentStatus() {
 
           <Box className="border-gray my-6 rounded-[14px] border-[0.5px] p-[14px]">
             <Box className="flex items-center gap-2">
-              {transaction.event.eventOrganizer?.asset?.url ? (
+              {data.transaction.event.eventOrganizer?.asset?.url ? (
                 <Image
-                  src={transaction.event.eventOrganizer?.asset?.url}
+                  src={data.transaction.event.eventOrganizer?.asset?.url}
                   alt="logo"
                   width={48}
                   height={48}
@@ -154,13 +130,13 @@ export default function PaymentStatus() {
               )}
               <Box>
                 <Typography type="heading" size={22}>
-                  {transaction.event.eventOrganizer?.name} |{' '}
-                  {transaction.event.name}
+                  {data.transaction.event.eventOrganizer?.name} |{' '}
+                  {data.transaction.event.name}
                 </Typography>
                 <Typography type="body" size={12} className="font-light">
                   Transaction Number:{' '}
                   <span className="font-bold">
-                    {transaction.transactionNumber}
+                    {data.transaction.transactionNumber}
                   </span>
                 </Typography>
               </Box>
@@ -172,18 +148,18 @@ export default function PaymentStatus() {
               className="my-2 w-full"
             />
 
-            {/* {transaction.ticketType.map((t: any, idx: number) => ( */}
+            {/* {data.transaction.ticketType.map((t: any, idx: number) => ( */}
             {/* <Box key={t.id} className="mt-3 border-l-2 border-black pl-2"> */}
             <Box className="mt-3 border-l-2 border-black pl-2">
               <Typography type="body" size={12} className="mb-1 font-bold">
-                {transaction.group_ticket?.name || transaction.ticketType.name}
+                {data.transaction.group_ticket?.name || data.transaction.ticketType.name}
               </Typography>
               <Typography
                 type="body"
                 size={12}
                 color="text-muted"
                 className="font-light">
-                Total: {transaction.orderQuantity} Ticket
+                Total: {data.transaction.orderQuantity} Ticket
               </Typography>
             </Box>
             {/* ))} */}
@@ -205,7 +181,7 @@ export default function PaymentStatus() {
               size={12}
               className="font-bold"
               color="text-muted">
-              {formatDate(transaction.createdAt, 'date')}
+              {formatDate(data.transaction.createdAt, 'date')}
             </Typography>
           </Box>
           <Box className="mb-2 flex justify-between">
@@ -221,7 +197,7 @@ export default function PaymentStatus() {
               size={12}
               className="font-bold"
               color="text-muted">
-              {transaction.transactionNumber}
+              {data.transaction.transactionNumber}
             </Typography>
           </Box>
           <Box className="flex justify-between">
@@ -237,7 +213,7 @@ export default function PaymentStatus() {
               size={12}
               className="font-bold"
               color="text-muted">
-              {transaction.paymentMethod.name}
+              {data.transaction.paymentMethod.name}
             </Typography>
           </Box>
 
@@ -390,7 +366,7 @@ export default function PaymentStatus() {
             id="view_tickets_button"
             onClick={handleButtonClick}
             className="mx-auto mt-6 block">
-            {transaction.status === 'paid'
+            {data.transaction.status === 'paid'
               ? 'View Tickets'
               : 'Back to Home'}
           </Button>

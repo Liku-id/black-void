@@ -2,26 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
 import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
 
-interface TicketBody {
-  ticketTypeId: string;
-  groupTicketId?: string;
-  quantity: number;
-  partnerCode?: string;
-}
-
-interface OrderPayload {
-  ticketTypeId: string;
-  groupTicketId?: string;
-  quantity: number;
-  partner_code?: string;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const ticket: TicketBody = body.tickets[0];
-    const payload: OrderPayload = {
+    const ticket = body.tickets[0];
+    const payload: any = {
       ticketTypeId: ticket.ticketTypeId,
       groupTicketId: ticket.groupTicketId,
       quantity: ticket.quantity,
@@ -34,7 +20,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: data.order,
     });
-  } catch (e: any) {
+  } catch (e) {
     return handleErrorAPI(e as AxiosErrorResponse);
   }
 }

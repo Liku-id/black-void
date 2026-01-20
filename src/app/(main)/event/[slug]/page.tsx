@@ -10,6 +10,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import axios from 'axios';
 import { Box, Container, Button, Typography, Modal } from '@/components';
+import { Ticket, TicketSummary } from '@/components/event/types';
+import {
+  EventData,
+  TicketType,
+  GroupTicket,
+} from '@/components/event/event-detail-section/event';
 import EventDetailSection from '@/components/event/event-detail-section';
 import EventPageSkeleton from '@/components/event/skeletons';
 import TicketListSection from '@/components/event/ticket-list-section';
@@ -22,14 +28,16 @@ import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
 import { getTodayWIB, convertToWIB } from '@/utils/formatter';
-import {
-  Ticket,
-  EventData,
-  TicketType,
-  GroupTicket,
-} from '@/components/event/types';
 
 interface SelectedTicket extends Ticket {
+  ticket_type_id?: string;
+  group_ticket_id?: string;
+  count: number;
+  partnership_info?: any;
+}
+
+interface OrderItem extends TicketSummary {
+  group_ticket_id?: string;
   ticket_type_id?: string;
 }
 
@@ -73,7 +81,7 @@ export default function Event() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [showEventEndedModal, setShowEventEndedModal] = useState(false);
-  const selectedTickets = tickets
+  const selectedTickets: OrderItem[] = tickets
     .filter((t: SelectedTicket) => t.count > 0)
     .map((t: SelectedTicket) => ({
       id: t.id,
@@ -155,8 +163,8 @@ export default function Event() {
 
   const handleContinue = async () => {
     try {
-      const ticket = selectedTickets[0] as any;
-      const payload: any = {
+      const ticket = selectedTickets[0];
+      const payload = {
         tickets: [
           {
             quantity: ticket.count,
@@ -222,9 +230,9 @@ export default function Event() {
       if (eventData.available_tickets) {
         setTickets(eventData.available_tickets);
       } else if (eventData.ticketTypes) {
-        const standardTickets: SelectedTicket[] = (eventData.ticketTypes || [])
-          .filter((t: TicketType) => t.is_public !== false)
-          .map((t: TicketType) => {
+        const standardTickets = (eventData.ticketTypes || [])
+          .filter((t: any) => t.is_public !== false)
+          .map((t: any) => {
             const partnershipInfo = t.partnership_info;
             const usePartnership = partnerCode && partnershipInfo;
 
@@ -244,16 +252,16 @@ export default function Event() {
               sales_start_date: t.sales_start_date,
               sales_end_date: t.sales_end_date,
               ticket_start_date: t.ticketStartDate,
-              quantity: t.quantity || 0,
-              purchased_amount: t.purchased_amount || 0,
+              quantity: t.quantity,
+              purchased_amount: t.purchased_amount,
               partnership_info: partnershipInfo || null,
             };
           });
 
-        const groupTickets: SelectedTicket[] = (eventData.group_tickets || []).map((gt: GroupTicket) => {
+        const groupTickets = (eventData.group_tickets || []).map((gt: any) => {
           const ticketType = gt.ticket_type;
           const ticketStartDate = ticketType
-            ? ticketType.ticketStartDate
+            ? ticketType.ticketStartDate || ticketType.ticket_start_date
             : undefined;
 
           return {
@@ -266,7 +274,7 @@ export default function Event() {
             sales_start_date: gt.sales_start_date,
             sales_end_date: gt.sales_end_date,
             ticket_start_date: ticketStartDate,
-            quantity: gt.quantity || 0,
+            quantity: gt.quantity,
             purchased_amount: gt.purchased_amount || 0,
             partnership_info: null,
             group_ticket_id: gt.id,
@@ -305,7 +313,7 @@ export default function Event() {
 
       // Check if any ticket has partnership_info with expired_at
       const hasExpiredPartnerCode = eventData.ticketTypes.some(
-        (ticket: TicketType) => {
+        (ticket: any) => {
           const partnershipInfo = ticket.partnership_info;
 
           if (partnershipInfo && partnershipInfo.expired_at) {
@@ -390,7 +398,7 @@ export default function Event() {
               </Box>
               <Box className="hidden w-full md:block md:w-5/12 md:self-start md:sticky md:top-[120px] xl:w-5/12">
                 <SummarySection
-                  eventData={eventData!}
+                  eventData={eventData}
                   tickets={selectedTickets}
                   onContinue={handleContinue}
                   disabled={isDisabled}
@@ -404,7 +412,7 @@ export default function Event() {
         {/* MOBILE: Sticky summary section (right column) */}
         <Box className="fixed bottom-0 left-0 z-1 block w-full lg:hidden">
           <SummarySectionMobile
-            eventData={eventData!}
+            eventData={eventData}
             tickets={selectedTickets}
             onContinue={handleContinue}
             disabled={isDisabled}
