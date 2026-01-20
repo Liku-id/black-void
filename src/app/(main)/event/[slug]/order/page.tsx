@@ -18,6 +18,7 @@ import useStickyObserver from '@/utils/sticky-observer';
 import EventPageSkeleton from '@/components/event/skeletons';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { calculatePriceWithPartnership } from '@/utils/formatter';
+import posthog from 'posthog-js';
 
 // Contact form data type
 interface FormDataContact {
@@ -111,6 +112,16 @@ const OrderPage = () => {
       phone_number: data.phoneNumber,
       email: data.email,
     }));
+
+    // Track checkout started event
+    posthog.capture('checkout_started', {
+      order_id: order.orderId,
+      event_id: eventData?.id,
+      event_name: eventData?.name,
+      event_slug: slug,
+      total_price: totalPrice,
+    });
+
     scrollToVisitorDetail();
   };
 
@@ -228,6 +239,15 @@ const OrderPage = () => {
         },
       };
 
+      // Track payment initiated event
+      posthog.capture('payment_initiated', {
+        order_id: order.orderId,
+        event_id: eventData?.id,
+        event_name: eventData?.name,
+        event_slug: slug,
+        payment_method: selectedPayment?.name,
+      });
+
       const { data: response } = await axios.post(
         '/api/transaction/create',
         payload
@@ -239,6 +259,13 @@ const OrderPage = () => {
     } catch (error: any) {
       setLoading(false);
       setError(getErrorMessage(error) || 'Failed to create transaction');
+
+      // Track payment initiation failure
+      posthog.capture('payment_initiation_failed', {
+        order_id: order.orderId,
+        event_id: eventData?.id,
+        error: getErrorMessage(error) || 'Failed to create transaction',
+      });
     }
   };
 
