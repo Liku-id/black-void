@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import { Box, Container, Typography, Button } from '@/components';
-import sunflowerIcon from '@/assets/icons/sunflower.svg';
+import builtIcon from '@/assets/icons/built.svg';
 import eventType1 from '@/assets/images/tambahan-modal-usaha-event-1.webp';
 import eventType2 from '@/assets/images/tambahan-modal-usaha-event-2.webp';
 import eventType3 from '@/assets/images/tambahan-modal-usaha-event-3.webp';
@@ -59,8 +61,8 @@ const EventTypesSection = () => {
             <Box className="relative z-10 w-full h-full flex flex-col items-start justify-center text-left px-[28px]">
               <Box className="mb-6 relative w-[80px] h-[80px] shrink-0">
                 <Image
-                  src={sunflowerIcon}
-                  alt="Sunflower Icon"
+                  src={builtIcon}
+                  alt="Built Icon"
                   fill
                   className="object-contain"
                 />
@@ -82,7 +84,7 @@ const EventTypesSection = () => {
                 Whether you run small community events or large-scale productions, our funding model adapts to your event goals
               </Typography>
 
-              <Button type="button" onClick={handleScrollToForm}>
+              <Button id="cta2_funding" type="button" onClick={handleScrollToForm}>
                 Start Funding
               </Button>
             </Box>
