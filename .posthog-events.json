@@ -1,0 +1,72 @@
+[
+  {
+    "event_name": "order_started",
+    "description": "User started the order process by clicking continue from ticket selection",
+    "file_path": "src/app/(main)/event/[slug]/page.tsx"
+  },
+  {
+    "event_name": "checkout_started",
+    "description": "User submitted contact details and proceeded to checkout",
+    "file_path": "src/app/(main)/event/[slug]/order/page.tsx"
+  },
+  {
+    "event_name": "payment_initiated",
+    "description": "User submitted order with payment method and started transaction",
+    "file_path": "src/app/(main)/event/[slug]/order/page.tsx"
+  },
+  {
+    "event_name": "payment_completed",
+    "description": "Transaction was marked as paid successfully",
+    "file_path": "src/components/payment/transaction-status/index.tsx"
+  },
+  {
+    "event_name": "payment_failed",
+    "description": "Transaction failed or was cancelled",
+    "file_path": "src/components/payment/transaction-status/index.tsx"
+  },
+  {
+    "event_name": "ticket_selected",
+    "description": "User selected a ticket type/quantity on event page",
+    "file_path": "src/app/(main)/event/[slug]/page.tsx"
+  },
+  {
+    "event_name": "registration_started",
+    "description": "User started registration by filling in initial details",
+    "file_path": "src/components/auth/register/register-form.tsx"
+  },
+  {
+    "event_name": "registration_completed",
+    "description": "User successfully completed registration",
+    "file_path": "src/components/auth/verify-otp/choose-verification-form.tsx"
+  },
+  {
+    "event_name": "become_creator_clicked",
+    "description": "User clicked Create My Event button on become creator page",
+    "file_path": "src/app/(main)/become-creator/page.tsx"
+  },
+  {
+    "event_name": "forgot_password_requested",
+    "description": "User requested password reset",
+    "file_path": "src/app/(auth)/forgot-password/page.tsx"
+  },
+  {
+    "event_name": "ticket_viewed",
+    "description": "User viewed their purchased tickets after successful payment",
+    "file_path": "src/components/payment/transaction-status/index.tsx"
+  },
+  {
+    "event_name": "order_created",
+    "description": "Server-side: Order successfully created in backend",
+    "file_path": "src/app/api/order/create/route.ts"
+  },
+  {
+    "event_name": "transaction_created",
+    "description": "Server-side: Transaction successfully created in backend",
+    "file_path": "src/app/api/transaction/create/route.ts"
+  },
+  {
+    "event_name": "user_logged_in",
+    "description": "Server-side: User successfully authenticated",
+    "file_path": "src/app/api/auth/login/route.ts"
+  }
+]

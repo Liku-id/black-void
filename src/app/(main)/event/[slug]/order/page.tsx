@@ -18,6 +18,7 @@ import useStickyObserver from '@/utils/sticky-observer';
 import EventPageSkeleton from '@/components/event/skeletons';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { calculatePriceWithPartnership } from '@/utils/formatter';
+import posthog from 'posthog-js';
 
 // Contact form data type
 interface FormDataContact {
@@ -57,8 +58,8 @@ const OrderPage = () => {
 
   // Get partner_code from query params if available
   const partnerCode = searchParams.get('partner_code');
-  const eventApiUrl = slug 
-    ? partnerCode 
+  const eventApiUrl = slug
+    ? partnerCode
       ? `/api/events/${slug}?partner_code=${partnerCode}`
       : `/api/events/${slug}`
     : null;
@@ -111,6 +112,16 @@ const OrderPage = () => {
       phone_number: data.phoneNumber,
       email: data.email,
     }));
+
+    // Track checkout started event
+    posthog.capture('checkout_started', {
+      order_id: order.orderId,
+      event_id: eventData?.id,
+      event_name: eventData?.name,
+      event_slug: slug,
+      total_price: totalPrice,
+    });
+
     scrollToVisitorDetail();
   };
 
@@ -119,21 +130,21 @@ const OrderPage = () => {
     defaultValues: {
       visitors: orderData
         ? Array.from({ length: orderData.quantity }, () => {
-            const visitor: any = {};
-            if (orderData.ticketType?.additional_forms) {
-              orderData.ticketType.additional_forms.forEach((form: any) => {
-                if (form.type === 'CHECKBOX') {
-                  visitor[form.field] = [];
-                } else {
-                  visitor[form.field] = '';
-                }
-              });
-            }
-            if (!orderData.ticketType?.additional_forms?.length) {
-              visitor.fullName = '';
-            }
-            return visitor;
-          })
+          const visitor: any = {};
+          if (orderData.ticketType?.additional_forms) {
+            orderData.ticketType.additional_forms.forEach((form: any) => {
+              if (form.type === 'CHECKBOX') {
+                visitor[form.field] = [];
+              } else {
+                visitor[form.field] = '';
+              }
+            });
+          }
+          if (!orderData.ticketType?.additional_forms?.length) {
+            visitor.fullName = '';
+          }
+          return visitor;
+        })
         : [],
     },
   });
@@ -221,6 +232,15 @@ const OrderPage = () => {
         },
       };
 
+      // Track payment initiated event
+      posthog.capture('payment_initiated', {
+        order_id: order.orderId,
+        event_id: eventData?.id,
+        event_name: eventData?.name,
+        event_slug: slug,
+        payment_method: selectedPayment?.name,
+      });
+
       const { data: response } = await axios.post(
         '/api/transaction/create',
         payload
@@ -232,6 +252,13 @@ const OrderPage = () => {
     } catch (error: any) {
       setLoading(false);
       setError(getErrorMessage(error) || 'Failed to create transaction');
+
+      // Track payment initiation failure
+      posthog.capture('payment_initiation_failed', {
+        order_id: order.orderId,
+        event_id: eventData?.id,
+        error: getErrorMessage(error) || 'Failed to create transaction',
+      });
     }
   };
 
@@ -372,9 +399,9 @@ const OrderPage = () => {
           className={
             (isSticky
               ? // Sticky mode
-                'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
+              'sticky top-30 right-8 -ml-[455px] w-[455px] self-start xl:right-0 xl:w-[455px] 2xl:right-[708px]'
               : // Absolute mode
-                'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
+              'absolute right-8 w-[455px] xl:right-0 xl:w-[455px]') +
             ' z-1 hidden lg:block'
           }
           style={!isSticky && isReady ? { top: absoluteTop } : {}}
