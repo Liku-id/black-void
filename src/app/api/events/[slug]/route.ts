@@ -3,6 +3,7 @@ import { handleErrorAPI } from '@/lib/api/error-handler';
 import axios from '@/lib/api/axios-server';
 import { encryptUtils } from '@/lib/utils/encryptUtils';
 import { calculatePriceWithPartnership, formatRupiah } from '@/utils/formatter';
+import { TicketType, GroupTicket, PartnershipInfo } from '@/components/event/types';
 
 export async function GET(
   req: NextRequest,
@@ -62,9 +63,9 @@ export async function GET(
       if (!data.body.ticketTypes || data.body.ticketTypes.length === 0) {
         return null;
       }
-      const prices = data.body.ticketTypes.map((ticket: any) => {
+      const prices = data.body.ticketTypes.map((ticket: TicketType) => {
         const basePrice = Number(ticket.price);
-        return calculatePriceWithPartnership(basePrice, ticket.partnership_info);
+        return calculatePriceWithPartnership(basePrice, ticket.partnership_info as PartnershipInfo);
       });
       return Math.min(...prices);
     })();
@@ -75,8 +76,8 @@ export async function GET(
 
     // Merging Tickets
     const singleTickets = (data.body.ticketTypes || [])
-      .filter((t: any) => t.is_public !== false)
-      .map((t: any) => ({
+      .filter((t: TicketType) => t.is_public !== false)
+      .map((t: TicketType) => ({
         id: t.id,
         name: t.name,
         price: t.price,
@@ -91,7 +92,7 @@ export async function GET(
         partnership_info: t.partnership_info || null,
       }));
 
-    const groupTickets = (data.body.group_tickets || []).map((gt: any) => {
+    const groupTickets = (data.body.group_tickets || []).map((gt: GroupTicket) => {
       const ticketType = gt.ticket_type;
       const ticketStartDate = ticketType
         ? ticketType.ticketStartDate || ticketType.ticket_start_date
@@ -119,6 +120,6 @@ export async function GET(
 
     return NextResponse.json(data.body);
   } catch (error: any) {
-    return handleErrorAPI(error);
+    return handleErrorAPI(error as any);
   }
 }

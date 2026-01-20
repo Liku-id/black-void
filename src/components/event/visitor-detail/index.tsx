@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@/components';
 import FieldRenderer from './field-renderer';
-import type { FormDataVisitor, Ticket, FormDataContact, AdditionalForm } from '../types';
+import type { FormDataVisitor, Ticket, FormDataContact, AdditionalForm, TicketType, GroupTicket } from '../types';
 
 interface VisitorDetailSectionProps {
   isVisitorDetailChecked: boolean;
@@ -15,8 +15,8 @@ interface VisitorDetailSectionProps {
   contactMethods: UseFormReturn<FormDataContact>;
   visitorMethods: UseFormReturn<FormDataVisitor>;
   tickets: Ticket[];
-  ticketType: any; // The ticketType object with additional_forms
-  groupTicket?: any;
+  ticketType?: TicketType;
+  groupTicket?: GroupTicket;
 }
 
 const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({

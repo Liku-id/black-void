@@ -19,6 +19,27 @@ const PaymentInstructionModal = dynamic(
   { ssr: false }
 );
 
+import { PartnershipInfo, GroupTicket, TicketType, EventData, PaymentMethod } from '@/components/event/types';
+
+interface Transaction {
+  transactionNumber: string;
+  orderQuantity: number;
+  createdAt: string;
+  paymentMethod: PaymentMethod;
+  paymentDetails: {
+    va: {
+      accountNumber: string;
+    };
+  };
+  event: EventData;
+  ticketType?: TicketType;
+  group_ticket?: GroupTicket;
+}
+
+interface TransactionData {
+  transaction: Transaction;
+}
+
 const paymentInstructions: Record<string, { name: string; steps: string[] }> =
   paymentInstructionsRaw;
 
@@ -27,8 +48,8 @@ export default function PaymentConfirmationVA({
   mutate,
   secondsLeft,
 }: {
-  data: any;
-  mutate: any;
+  data: TransactionData;
+  mutate: () => void;
   secondsLeft: number;
 }) {
   // Initialize State
@@ -43,9 +64,9 @@ export default function PaymentConfirmationVA({
 
   const getTransactionAndTotals = () => {
     const groupTicket = data.transaction.group_ticket;
-    const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
-    const price = groupTicket ? groupTicket.price : ticketType.price;
+    const ticketType = data.transaction.ticketType;
+    const partnershipInfo = groupTicket ? null : ticketType?.partnership_info;
+    const price = groupTicket ? groupTicket.price : (ticketType?.price ?? 0);
 
     // Calculate subtotal with partnership discount
     const originalSubtotal = price * data.transaction.orderQuantity;
@@ -61,12 +82,12 @@ export default function PaymentConfirmationVA({
         ? Math.round(subtotal * ((data.transaction.event.adminFee ?? 0) / 100))
         : Math.round(data.transaction.event.adminFee ?? 0);
     const paymentMethodFee =
-      data.transaction.paymentMethod.paymentMethodFee < 1
+      (data.transaction.paymentMethod.paymentMethodFee ?? 0) < 1
         ? Math.round(
-          (subtotal * data.transaction.paymentMethod.paymentMethodFee) / 100
+          (subtotal * (data.transaction.paymentMethod.paymentMethodFee ?? 0)) / 100
         )
-        : data.transaction.paymentMethod.paymentMethodFee;
-    const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
+        : (data.transaction.paymentMethod.paymentMethodFee ?? 0);
+    const pb1 = Math.round(subtotal * ((data.transaction.event.tax ?? 0) / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
     const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
     return { totals, partnershipInfo };

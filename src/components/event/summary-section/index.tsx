@@ -7,10 +7,10 @@ import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
 import { formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
-import type { TicketSummary } from '../types';
+import type { TicketSummary, EventData } from '../types';
 
 interface SummarySectionProps {
-  eventData?: any;
+  eventData?: EventData;
   tickets: TicketSummary[];
   selectedPayment?: {
     id: string;
@@ -51,12 +51,17 @@ const SummarySection: React.FC<SummarySectionProps> = ({
     );
     return sum + t.count * finalPrice;
   }, 0);
+
+  const adminFeeValue = eventData?.adminFee ?? 0;
+  const taxValue = eventData?.tax ?? 0;
+
   const adminFee = ticketCount === 0 || totalPrice === 0
-    ? 0 
-    : eventData.adminFee <= 100
-      ? Math.round((totalPrice * eventData.adminFee) / 100)
-      : Math.round(eventData.adminFee);
-  const pb1Rate = eventData.tax / 100;
+    ? 0
+    : adminFeeValue <= 100
+      ? Math.round((totalPrice * adminFeeValue) / 100)
+      : Math.round(adminFeeValue);
+
+  const pb1Rate = taxValue / 100;
   const tax = Math.round(totalPrice * pb1Rate);
   const paymentMethodFee = selectedPayment?.paymentMethodFee
     ? selectedPayment?.paymentMethodFee < 1
@@ -145,7 +150,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
               methods={eventData?.paymentMethods || []}
               filterKey="VIRTUAL ACCOUNT"
               selectedPayment={selectedPayment || null}
-              setSelectedPayment={setSelectedPayment || (() => {})}
+              setSelectedPayment={setSelectedPayment || (() => { })}
             />
             <PaymentMethodAccordion
               id="qris_payment_dropdown"
@@ -153,7 +158,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
               methods={eventData?.paymentMethods || []}
               filterKey="QRIS"
               selectedPayment={selectedPayment || null}
-              setSelectedPayment={setSelectedPayment || (() => {})}
+              setSelectedPayment={setSelectedPayment || (() => { })}
             />
           </Box>
         )}
@@ -170,9 +175,9 @@ const SummarySection: React.FC<SummarySectionProps> = ({
 
         {/* <Box className={`flex justify-center ${error ? 'mt-1' : 'mt-6'}`}> */}
         <Box className={`mt-6 flex justify-center`}>
-          <Button 
-            id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"} 
-            onClick={onContinue} 
+          <Button
+            id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"}
+            onClick={onContinue}
             disabled={disabled}
           >
             Continue

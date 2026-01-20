@@ -1,7 +1,7 @@
 'use client';
 import React, { useMemo, useState, useEffect } from 'react';
 import { Box, Typography } from '@/components';
-import { EventData } from '../event-detail-section/event';
+
 import { formatDate } from '@/utils/formatter';
 import TicketCard from '../ticket-card';
 import type { Ticket } from '../types';
@@ -22,7 +22,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   const dates = useMemo(() => {
     const rawDates = allDisplayTickets
       .map(t => t.ticket_start_date)
-      .filter(Boolean);
+      .filter(Boolean) as string[];
     const unique = Array.from(new Set(rawDates));
     unique.sort();
 
@@ -82,7 +82,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
       {hasDates ? (
         <>
           <Box className="scrollbar-hide mb-6 flex gap-4 overflow-x-auto">
-            {dates.map((date: any) => (
+            {dates.map((date: string) => (
               <Box
                 key={date}
                 id={`event_date_${date}_tab`}

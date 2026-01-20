@@ -22,6 +22,16 @@ import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
 import { getTodayWIB, convertToWIB } from '@/utils/formatter';
+import {
+  Ticket,
+  EventData,
+  TicketType,
+  GroupTicket,
+} from '@/components/event/types';
+
+interface SelectedTicket extends Ticket {
+  ticket_type_id?: string;
+}
 
 export default function Event() {
   const params = useParams();
@@ -53,19 +63,19 @@ export default function Event() {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR(apiUrl);
+  } = useSWR<EventData>(apiUrl);
 
   // Initialize state
   const [, setOrderBooking] = useAtom(orderBookingAtom);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [tickets, setTickets] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<SelectedTicket[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [showEventEndedModal, setShowEventEndedModal] = useState(false);
   const selectedTickets = tickets
-    .filter((t: any) => t.count > 0)
-    .map((t: any) => ({
+    .filter((t: SelectedTicket) => t.count > 0)
+    .map((t: SelectedTicket) => ({
       id: t.id,
       name: t.name,
       price: String(t.price),
@@ -80,7 +90,7 @@ export default function Event() {
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
-    setTickets((prev: any[]) => {
+    setTickets((prev: SelectedTicket[]) => {
       const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
@@ -88,7 +98,7 @@ export default function Event() {
       if (
         delta > 0 &&
         !isLoggedIn &&
-        (target.price === 0 || eventData.login_required)
+        (target.price === 0 || eventData?.login_required)
       ) {
         setShowLoginModal(true);
         return prev;
@@ -212,9 +222,9 @@ export default function Event() {
       if (eventData.available_tickets) {
         setTickets(eventData.available_tickets);
       } else if (eventData.ticketTypes) {
-        const standardTickets = (eventData.ticketTypes || [])
-          .filter((t: any) => t.is_public !== false)
-          .map((t: any) => {
+        const standardTickets: SelectedTicket[] = (eventData.ticketTypes || [])
+          .filter((t: TicketType) => t.is_public !== false)
+          .map((t: TicketType) => {
             const partnershipInfo = t.partnership_info;
             const usePartnership = partnerCode && partnershipInfo;
 
@@ -234,16 +244,16 @@ export default function Event() {
               sales_start_date: t.sales_start_date,
               sales_end_date: t.sales_end_date,
               ticket_start_date: t.ticketStartDate,
-              quantity: t.quantity,
-              purchased_amount: t.purchased_amount,
+              quantity: t.quantity || 0,
+              purchased_amount: t.purchased_amount || 0,
               partnership_info: partnershipInfo || null,
             };
           });
 
-        const groupTickets = (eventData.group_tickets || []).map((gt: any) => {
+        const groupTickets: SelectedTicket[] = (eventData.group_tickets || []).map((gt: GroupTicket) => {
           const ticketType = gt.ticket_type;
           const ticketStartDate = ticketType
-            ? ticketType.ticketStartDate || ticketType.ticket_start_date
+            ? ticketType.ticketStartDate
             : undefined;
 
           return {
@@ -256,7 +266,7 @@ export default function Event() {
             sales_start_date: gt.sales_start_date,
             sales_end_date: gt.sales_end_date,
             ticket_start_date: ticketStartDate,
-            quantity: gt.quantity,
+            quantity: gt.quantity || 0,
             purchased_amount: gt.purchased_amount || 0,
             partnership_info: null,
             group_ticket_id: gt.id,
@@ -295,7 +305,7 @@ export default function Event() {
 
       // Check if any ticket has partnership_info with expired_at
       const hasExpiredPartnerCode = eventData.ticketTypes.some(
-        (ticket: any) => {
+        (ticket: TicketType) => {
           const partnershipInfo = ticket.partnership_info;
 
           if (partnershipInfo && partnershipInfo.expired_at) {
@@ -362,7 +372,7 @@ export default function Event() {
         <Box className="flex-1">
           <Container className="flex">
             <EventDetailSection
-              data={eventData}
+              data={eventData!}
               onChooseTicket={scrollToTickets}
             />
           </Container>
@@ -380,7 +390,7 @@ export default function Event() {
               </Box>
               <Box className="hidden w-full md:block md:w-5/12 md:self-start md:sticky md:top-[120px] xl:w-5/12">
                 <SummarySection
-                  eventData={eventData}
+                  eventData={eventData!}
                   tickets={selectedTickets}
                   onContinue={handleContinue}
                   disabled={isDisabled}
@@ -394,7 +404,7 @@ export default function Event() {
         {/* MOBILE: Sticky summary section (right column) */}
         <Box className="fixed bottom-0 left-0 z-1 block w-full lg:hidden">
           <SummarySectionMobile
-            eventData={eventData}
+            eventData={eventData!}
             tickets={selectedTickets}
             onContinue={handleContinue}
             disabled={isDisabled}
@@ -406,8 +416,8 @@ export default function Event() {
       <Container className="relative mx-auto flex">
         <Box className="flex-1 px-4 pt-12 lg:pt-15">
           <OwnerSection
-            eventOrganizer={eventData.eventOrganizer}
-            termAndConditions={eventData.termAndConditions}
+            eventOrganizer={eventData?.eventOrganizer}
+            termAndConditions={eventData?.termAndConditions || ''}
           />
         </Box>
       </Container>

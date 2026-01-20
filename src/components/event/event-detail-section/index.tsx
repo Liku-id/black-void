@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Carousel } from '@/components/common/carousel';
 import { Box, Button, Slider, Typography } from '@/components';
-import { EventData } from './event';
+import { EventData } from '../types';
 import Image from 'next/image';
 import locationIcon from '@/assets/icons/location.svg';
 import calendarIcon from '@/assets/icons/calendar.svg';
