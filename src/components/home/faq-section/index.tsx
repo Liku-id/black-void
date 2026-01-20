@@ -27,7 +27,7 @@ export default function FAQSection({ data = [] }: FAQSectionProps) {
     "Let's create",
     'Let’s connect',
     'Let’s Play',
-    'Let’s fun',
+    'Have Fun',
     'Let’s learn',
   ];
 

@@ -25,7 +25,23 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(response.data && response.data.industryCategories);
+    const excludedCategories = [
+      'Pertanian',
+      'Energi',
+      'Logistik/Supply Chain',
+      'Properti',
+      'Robotika & Drone',
+      'Software as a Service (SaaS)',
+      'E-Commerce',
+      'Sustainable',
+    ];
+
+    const filteredCategories =
+      response.data?.industryCategories.filter(
+        (category) => !excludedCategories.includes(category.name)
+      ) || [];
+
+    return NextResponse.json(filteredCategories);
   } catch (error: any) {
     return handleGraphQLErrorAPI(error);
   }
