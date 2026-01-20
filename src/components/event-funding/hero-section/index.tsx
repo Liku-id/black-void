@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -36,7 +38,7 @@ const HeroSection = () => {
                 type="body"
                 className="mb-0 md:mb-8 max-w-3xl mx-auto leading-relaxed text-white md:text-[18px] text-[12px]"
               >
-                Access reliable funding collaborate . Built to support professional<br />workflows and long-term event growth
+                Access reliable funding collaboration.<br />We are built to make seamless workflow<br />and long-term growth for your events.
               </Typography>
               <Box className="hidden md:flex flex-col md:flex-row items-center justify-center gap-4">
                 <Link
@@ -46,6 +48,7 @@ const HeroSection = () => {
                   className="w-full md:w-auto"
                 >
                   <Button
+                    id="wa_button"
                     type="button"
                     variant="outline-white"
                     className="w-full text-[14px] md:text-[16px]"
@@ -54,6 +57,7 @@ const HeroSection = () => {
                   </Button>
                 </Link>
                 <Button
+                  id="cta1_funding"
                   type="button"
                   onClick={handleScrollToForm}
                   className="w-full md:w-auto text-[14px] md:text-[16px]"
@@ -75,6 +79,7 @@ const HeroSection = () => {
           className="flex-1"
         >
           <Button
+            id="wa_button-mobile"
             type="button"
             variant="outline-white"
             className="w-full text-[12px] h-[40px] border-white text-white hover:bg-white hover:text-black"
@@ -83,6 +88,7 @@ const HeroSection = () => {
           </Button>
         </Link>
         <Button
+          id="cta1_funding-mobile"
           type="button"
           onClick={handleScrollToForm}
           className="flex-1 text-[12px] h-[40px]"

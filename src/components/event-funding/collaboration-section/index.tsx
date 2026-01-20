@@ -2,20 +2,25 @@ import React from 'react';
 import Image from 'next/image';
 import { Box, Container, Typography } from '@/components';
 import collaborationImage from '@/assets/images/tambahan-modal-usaha-collaboration.webp';
-import sunflowerIcon from '@/assets/icons/sunflower.svg';
+import fundingIcon from '@/assets/icons/funding.svg';
+import moneyIcon from '@/assets/icons/money.svg';
+import safeIcon from '@/assets/icons/safe.svg';
 
 const items = [
   {
     title: 'funding through securities crowdfunding schemes',
     description: 'Together with EKUID, Wukong facilitates your ideas to become reality by helping you with funding that safe and reliable',
+    icon: fundingIcon,
   },
   {
     title: 'funding for your event up to IDR 10 billion*',
     description: 'Securities Crowdfunding schemes designed to match your event scale and operational requirements.',
+    icon: moneyIcon,
   },
   {
     title: 'safe and OJK licensed platform',
     description: 'EKUID is a safe and trusted funding platform that has permission and is licensed by the OJK',
+    icon: safeIcon,
   },
 ];
 
@@ -38,7 +43,7 @@ const CollaborationSection = () => {
             size={14}
             className="max-w-3xl mx-auto text-white opacity-80"
             dangerouslySetInnerHTML={{
-              __html: `<strong>Wukong collaborated with EKUID</strong> to helps event organizers access funding while managing ticket sales seamlessly. From planning to post-event settlement, everything is connected`
+              __html: `<strong>Wukong collaborated with EKUID</strong> to help event organizers access funding while managing ticket sales seamlessly. From planning to post-event settlement, everything is connected`
             }}
           />
         </Box>
@@ -61,7 +66,7 @@ const CollaborationSection = () => {
               <Box key={index} className="flex gap-4 items-start">
                 <Box className="shrink-0 relative w-[60px] h-[60px] md:w-[80px] md:h-[80px]">
                   <Image
-                    src={sunflowerIcon}
+                    src={item.icon}
                     alt="Icon"
                     fill
                     className="object-contain"

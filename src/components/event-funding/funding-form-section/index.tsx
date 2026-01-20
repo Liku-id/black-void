@@ -226,6 +226,7 @@ const FundingFormSection = () => {
             {/* Submit Button */}
             <Box className="flex justify-center">
               <Button
+                id="lead_register"
                 type="submit"
                 className="w-full md:w-auto px-8 py-3 bg-green text-white font-bold text-base"
               // disabled={!isValid} // Optional: disable if invalid
