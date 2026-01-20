@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { Box, Container, Typography, Button, TextField, Select } from '@/components';
 import { InputFile } from '@/components/common/input-file';
 import { email, phoneNumber } from '@/utils/form-validation'; // Reusing validation utils if available
@@ -52,6 +52,18 @@ const FundingFormSection = () => {
 
   const methods = useForm<FormData>({
     mode: 'onChange',
+    defaultValues: {
+      brand_name: '',
+      phoneNumber: '',
+      entity_name: '',
+      email: '',
+      industry_category_id: '',
+      know_from: '',
+      website: '',
+      province_id: '',
+      crowdfunding_amount: '',
+      founder_name: '',
+    },
   });
 
   const { handleSubmit, reset, formState: { isValid } } = methods;
@@ -75,7 +87,9 @@ const FundingFormSection = () => {
         ...data,
         entity_type_id: 1,
         industry_category_id: Number(data.industry_category_id),
-        crowdfunding_amount: Number(data.crowdfunding_amount),
+        crowdfunding_amount: Number(
+          String(data.crowdfunding_amount).replace(/\D/g, '')
+        ),
         phone_number: `${countryCode}${data.phoneNumber}`,
         province_id: data.province_id,
         company_profile: path,
@@ -194,17 +208,37 @@ const FundingFormSection = () => {
               />
 
               {/* Funding Amount */}
-              <TextField
+              <Controller
                 name="crowdfunding_amount"
-                placeholder="Funding Amount*"
-                type="text"
+                control={methods.control}
                 rules={{
                   required: 'Funding Amount is required',
-                  pattern: {
-                    value: /^[0-9]*$/,
-                    message: 'Funding Amount must be a number',
-                  }
+                  validate: (value: string) => {
+                    const number = Number(value.replace(/\D/g, ''));
+                    return number > 0 || 'Funding Amount must be greater than 0';
+                  },
                 }}
+                render={({ field, fieldState }: { field: any; fieldState: any }) => (
+                  <Box>
+                    <TextField
+                      placeholder="Funding Amount*"
+                      value={field.value ?? ''}
+                      onChange={(value: string) => {
+                        const number = value.replace(/\D/g, '');
+                        const formatted = number
+                          ? 'Rp ' + new Intl.NumberFormat('id-ID').format(Number(number))
+                          : '';
+                        field.onChange(formatted);
+                      }}
+                      className={`h-11 bg-white ${fieldState.error ? 'border-danger' : ''}`}
+                    />
+                    {fieldState.error && (
+                      <Typography size={12} className="text-danger mt-1">
+                        {fieldState.error.message}
+                      </Typography>
+                    )}
+                  </Box>
+                )}
               />
 
               {/* Upload Company Profile */}
