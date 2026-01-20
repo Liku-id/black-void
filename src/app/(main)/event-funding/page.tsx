@@ -1,13 +1,13 @@
-'use client';
-
 import React from 'react';
-import HeroSection from '@/components/tambahan-modal-usaha/hero-section';
-import CollaborationSection from '@/components/tambahan-modal-usaha/collaboration-section';
-import WhyChooseSection from '@/components/tambahan-modal-usaha/why-choose-section';
-import HowItWorksSection from '@/components/tambahan-modal-usaha/how-it-works-section';
-import FundingRequirementsSection from '@/components/tambahan-modal-usaha/funding-requirements-section';
-import FundingFormSection from '@/components/tambahan-modal-usaha/funding-form-section';
-import EventTypesSection from '@/components/tambahan-modal-usaha/event-types-section';
+import { Metadata } from 'next';
+import { SEO_CONFIG } from '@/config/seo';
+import HeroSection from '@/components/event-funding/hero-section';
+import CollaborationSection from '@/components/event-funding/collaboration-section';
+import WhyChooseSection from '@/components/event-funding/why-choose-section';
+import HowItWorksSection from '@/components/event-funding/how-it-works-section';
+import FundingRequirementsSection from '@/components/event-funding/funding-requirements-section';
+import FundingFormSection from '@/components/event-funding/funding-form-section';
+import EventTypesSection from '@/components/event-funding/event-types-section';
 import FAQSection from '@/components/home/faq-section';
 
 const faqs = [
@@ -123,7 +123,9 @@ const faqs = [
   },
 ];
 
-export default function TambahanModalUsahaPage() {
+export const metadata: Metadata = SEO_CONFIG.pages.eventFunding;
+
+export default function EventFundingPage() {
   return (
     <main className="bg-black text-white min-h-screen">
       <HeroSection />
