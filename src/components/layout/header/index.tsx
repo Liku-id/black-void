@@ -29,7 +29,8 @@ export default function Header() {
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
 
-  const isOrderPage = pathname?.includes('/order') || pathname?.endsWith('/order');
+  const isOrderPage =
+    pathname?.includes('/order') || pathname?.endsWith('/order');
 
   // Logout
   const onLogout = async () => {
@@ -279,10 +280,12 @@ export default function Header() {
               </Typography>
             </Box>
           ) : (
-            <Link href="/login" className="mb-40 flex justify-center">
-              <Button id="btn_login" className="px-[18px] py-[8px]">
-                Get In
-              </Button>
+            <Link
+              id="login_page_button"
+              href="/login"
+              className="mb-40 flex justify-center"
+            >
+              <Button className="px-[18px] py-[8px]">Get In</Button>
             </Link>
           )}
         </Box>
