@@ -63,6 +63,29 @@ export const SEO_CONFIG = {
           'Wukong adalah platform official ticketing partner nomor satu dan terpercaya untuk semua event/konser kreator di Indonesia',
       },
     } as Metadata,
+    eventFunding: {
+      title: 'Secure Event Funding Platform for Concerts, Sports & Exhibitions | Wukong',
+      description:
+        'Wukong collaborates with EKUID helps professional event organizers access reliable event financing through securities crowdfunding scheme built for concerts, sports, exhibitions, and large-scale events.',
+      keywords:
+        'Event Funding Platform, Event Crowdfunding, Event Financing, Professional Event Organizers, securitites crowdfunding, crowdfunding, event funding, platform for event financing',
+      robots: {
+        index: true,
+        follow: true,
+      },
+      openGraph: {
+        title: 'Secure Event Funding Platform for Concerts, Sports & Exhibitions | Wukong',
+        description:
+          'Wukong collaborates with EKUID helps professional event organizers access reliable event financing through securities crowdfunding scheme built for concerts, sports, exhibitions, and large-scale events.',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Secure Event Funding Platform for Concerts, Sports & Exhibitions | Wukong',
+        description:
+          'Wukong collaborates with EKUID helps professional event organizers access reliable event financing through securities crowdfunding scheme built for concerts, sports, exhibitions, and large-scale events.',
+      },
+    } as Metadata,
   },
 
   // Dynamic event_detail untuk generate metadata

@@ -65,6 +65,23 @@ const nextConfig: NextConfig = {
   // Static optimization
   trailingSlash: false,
 
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
+
+  // PostHog reverse proxy rewrites for improved tracking reliability
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/static/:path*',
+        destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/:path*',
+        destination: 'https://us.i.posthog.com/:path*',
+      },
+    ];
+  },
+
   // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,

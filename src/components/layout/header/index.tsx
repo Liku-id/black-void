@@ -29,7 +29,8 @@ export default function Header() {
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
 
-  const isOrderPage = pathname?.includes('/order') || pathname?.endsWith('/order');
+  const isOrderPage =
+    pathname?.includes('/order') || pathname?.endsWith('/order');
 
   // Logout
   const onLogout = async () => {
@@ -84,6 +85,21 @@ export default function Header() {
         /> */}
         <Box className="ml-auto flex items-center">
           <Link
+            id="btn_event_funding"
+            href="/event-funding"
+            className="hover:text-green"
+          >
+            <Typography
+              type="body"
+              size={16}
+              color="text-black"
+              className="hover:text-green ml-6 cursor-pointer"
+            >
+              Event Funding
+            </Typography>
+          </Link>
+
+          <Link
             id="btn_blog"
             href="https://blog.wukong.co.id"
             target="_blank"
@@ -131,7 +147,7 @@ export default function Header() {
             <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
           {!loading && !isLoggedIn && (
-            <Link id="btn_login" href="/login" className="ml-6">
+            <Link id="login_page_button" href="/login" className="ml-6">
               <Button>Get In</Button>
             </Link>
           )}
@@ -208,6 +224,15 @@ export default function Header() {
 
         <Box className="mt-[44px] flex flex-1 flex-col">
           <Link
+            id="btn_event_funding"
+            href="/event-funding"
+            className="hover:text-green"
+          >
+            <Typography type="body" size={16} color="text-white">
+              Event Funding
+            </Typography>
+          </Link>
+          <Link
             id="btn_blog"
             href="https://blog.wukong.co.id"
             target="_blank"
@@ -255,10 +280,12 @@ export default function Header() {
               </Typography>
             </Box>
           ) : (
-            <Link href="/login" className="mb-40 flex justify-center">
-              <Button id="btn_login" className="px-[18px] py-[8px]">
-                Get In
-              </Button>
+            <Link
+              id="login_page_button"
+              href="/login"
+              className="mb-40 flex justify-center"
+            >
+              <Button className="px-[18px] py-[8px]">Get In</Button>
             </Link>
           )}
         </Box>

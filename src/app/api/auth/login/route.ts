@@ -1,6 +1,7 @@
 import axios from '@/lib/api/axios-server';
 import { setAuthCookies } from '@/lib/session';
 import { NextRequest, NextResponse } from 'next/server';
+import { getPostHogClient } from '@/lib/posthog-server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,6 +37,31 @@ export async function POST(request: NextRequest) {
       accessToken: body.accessToken,
       refreshToken: body.refreshToken,
       userRole: body.user.role,
+    });
+
+    // Track server-side login event and identify user
+    const posthog = getPostHogClient();
+    const distinctId = body.user.id || body.user.email || 'unknown';
+
+    posthog.identify({
+      distinctId,
+      properties: {
+        email: body.user.email,
+        name: body.user.name || body.user.fullName,
+        role: body.user.role,
+      },
+    });
+
+    posthog.capture({
+      distinctId,
+      event: 'user_logged_in',
+      properties: {
+        user_id: body.user.id,
+        email: body.user.email,
+        role: body.user.role,
+        login_origin: payload.origin,
+        source: 'server',
+      },
     });
 
     return NextResponse.json({
