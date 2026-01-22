@@ -60,6 +60,33 @@ export function getTodayWIBString(): string {
   return today.toISOString().split('T')[0]; // YYYY-MM-DD format
 }
 
+export function normalizeToDateOnlyWIB(
+  dateString: string | null | undefined
+): string {
+  if (!dateString) return '';
+  try {
+    // Convert to WIB using existing utility
+    const date = convertToWIB(dateString);
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) return '';
+
+    // Format to YYYY-MM-DD in WIB timezone (Asia/Jakarta, UTC+7)
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Jakarta',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+
+    return formatter.format(date);
+  } catch (error) {
+    // Fallback: try to extract date part directly
+    const datePart = dateString.split('T')[0].split(' ')[0];
+    return datePart;
+  }
+}
+
 export function formatDate(
   date: string | Date,
   variant: 'day' | 'date' | 'full' | 'datetime' = 'full'
@@ -143,7 +170,7 @@ export function calculatePriceWithPartnership(
 
   // If discount is between 1-100, use as percentage
   if (discount >= 1 && discount <= 100) {
-    return Math.round(originalPrice * ((100 - discount )/ 100));
+    return Math.round(originalPrice * ((100 - discount) / 100));
   }
 
   // If discount > 100, use as direct subtraction
