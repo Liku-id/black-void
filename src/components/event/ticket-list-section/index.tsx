@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Box, Typography } from '@/components';
 import { EventData } from '../event-detail-section/event';
-import { formatDate } from '@/utils/formatter';
+import { formatDate, normalizeToDateOnlyWIB } from '@/utils/formatter';
 import TicketCard from '../ticket-card';
 import type { Ticket } from '../types';
 
@@ -19,18 +19,21 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   handleChangeCount,
   partnerCode,
 }) => {
-  // Collect all ticket_start_date
+  // Collect all ticket_start_date, normalized to date-only format
   const dates = useMemo(() => {
     if (!data.ticketTypes) return [];
     let ticketTypesToUse = data.ticketTypes;
     if (partnerCode) {
-      ticketTypesToUse = data.ticketTypes.filter((t: any) => 
-        t.partnership_info && t.partnership_info !== null
+      ticketTypesToUse = data.ticketTypes.filter(
+        (t: any) => t.partnership_info && t.partnership_info !== null
       );
     }
-    
+
     const rawDates = ticketTypesToUse
-      .map((t: any) => t.ticketStartDate || t.ticket_start_date)
+      .map((t: any) => {
+        const dateValue = t.ticketStartDate || t.ticket_start_date;
+        return dateValue ? normalizeToDateOnlyWIB(dateValue) : null;
+      })
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();
@@ -39,16 +42,23 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
   }, [data.ticketTypes, partnerCode]);
 
   const [selectedDate, setSelectedDate] = useState(dates[0] || '');
-  const activeTicketId = tickets.find(t => t.count > 0)?.id;
+  const activeTicketId = tickets.find((t) => t.count > 0)?.id;
   const hasDates = dates.length > 0;
 
   // Filter tickets based on date and sales period
   const filteredTickets = useMemo(() => {
-    return tickets.filter(ticket => {
-      if (partnerCode && (!ticket.partnership_info || ticket.partnership_info === null)) {
+    return tickets.filter((ticket) => {
+      if (
+        partnerCode &&
+        (!ticket.partnership_info || ticket.partnership_info === null)
+      ) {
         return false;
       }
-      if (ticket.ticket_start_date !== selectedDate) return false;
+
+      const ticketDateOnly = ticket.ticket_start_date
+        ? normalizeToDateOnlyWIB(ticket.ticket_start_date)
+        : '';
+      if (ticketDateOnly !== selectedDate) return false;
       return true;
     });
   }, [tickets, selectedDate, partnerCode]);
@@ -73,7 +83,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
 
   useEffect(() => {
     if (dates.length > 0 && !dates.includes(selectedDate)) {
-      setSelectedDate(dates[0]);
+      setSelectedDate(dates[0] || '');
     }
   }, [dates, selectedDate]);
 
@@ -85,20 +95,22 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
       {hasDates ? (
         <>
           <Box className="scrollbar-hide mb-6 flex gap-4 overflow-x-auto">
-            {dates.map(date => (
+            {dates.map((date) => (
               <Box
                 key={date}
                 id={`event_date_${date}_tab`}
-                className={`min-w-max cursor-pointer px-3 py-[6px] text-center transition-shadow ${selectedDate === date
+                className={`min-w-max cursor-pointer px-3 py-[6px] text-center transition-shadow ${
+                  selectedDate === date
                     ? 'border border-white bg-black text-white shadow-[4px_4px_0px_0px_#000]'
                     : 'border border-[var(--color-light-gray-border)] bg-[rgba(0,0,0,0.02)] text-black'
-                  }`}
-                onClick={() => setSelectedDate(date)}>
+                }`}
+                onClick={() => setSelectedDate(date || '')}
+              >
                 <Typography type="body" size={14}>
-                  {formatDate(date, 'day')},
+                  {formatDate(date || '', 'day')},
                 </Typography>
                 <Typography type="body" size={14} className="font-bold">
-                  {formatDate(date, 'date')}
+                  {formatDate(date || '', 'date')}
                 </Typography>
               </Box>
             ))}
