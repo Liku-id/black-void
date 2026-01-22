@@ -147,9 +147,13 @@ export default function Header() {
             <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
           {!loading && !isLoggedIn && (
-            <Link id="login_page_button" href="/login" className="ml-6">
-              <Button>Get In</Button>
-            </Link>
+            <Button
+              id="login_page_button"
+              className="ml-6"
+              onClick={() => router.push('/login')}
+            >
+              Get In
+            </Button>
           )}
           {!loading && isLoggedIn && userData && (
             <ProfileMenu
@@ -280,13 +284,15 @@ export default function Header() {
               </Typography>
             </Box>
           ) : (
-            <Link
-              id="login_page_button"
-              href="/login"
-              className="mb-40 flex justify-center"
-            >
-              <Button className="px-[18px] py-[8px]">Get In</Button>
-            </Link>
+            <Box className="mb-40 flex justify-center">
+              <Button
+                id="login_page_button"
+                onClick={() => router.push('/login')}
+                className="px-[18px] py-[8px]"
+              >
+                Get In
+              </Button>
+            </Box>
           )}
         </Box>
       </Box>
