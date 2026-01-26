@@ -10,6 +10,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import axios from 'axios';
 import { Box, Container, Button, Typography, Modal } from '@/components';
+import { Ticket, TicketSummary } from '@/components/event/types';
+import {
+  EventData,
+  TicketType,
+  GroupTicket,
+} from '@/components/event/event-detail-section/event';
 import EventDetailSection from '@/components/event/event-detail-section';
 import EventPageSkeleton from '@/components/event/skeletons';
 import TicketListSection from '@/components/event/ticket-list-section';
@@ -23,6 +29,18 @@ import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
 import { getTodayWIB, convertToWIB } from '@/utils/formatter';
 import posthog from 'posthog-js';
+
+interface SelectedTicket extends Ticket {
+  ticket_type_id?: string;
+  group_ticket_id?: string;
+  count: number;
+  partnership_info?: any;
+}
+
+interface OrderItem extends TicketSummary {
+  group_ticket_id?: string;
+  ticket_type_id?: string;
+}
 
 export default function Event() {
   const params = useParams();
@@ -54,24 +72,26 @@ export default function Event() {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR(apiUrl);
+  } = useSWR<EventData>(apiUrl);
 
   // Initialize state
   const [, setOrderBooking] = useAtom(orderBookingAtom);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [tickets, setTickets] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<SelectedTicket[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [showEventEndedModal, setShowEventEndedModal] = useState(false);
-  const selectedTickets = tickets
-    .filter((t: any) => t.count > 0)
-    .map((t: any) => ({
+  const selectedTickets: OrderItem[] = tickets
+    .filter((t: SelectedTicket) => t.count > 0)
+    .map((t: SelectedTicket) => ({
       id: t.id,
       name: t.name,
       price: String(t.price),
       count: t.count,
       partnership_info: t.partnership_info || null,
+      group_ticket_id: t.group_ticket_id,
+      ticket_type_id: t.ticket_type_id,
     }));
   const isDisabled =
     selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
@@ -79,7 +99,7 @@ export default function Event() {
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
-    setTickets((prev: any[]) => {
+    setTickets((prev: SelectedTicket[]) => {
       const target = prev.find((t) => t.id === id);
       if (!target) return prev;
 
@@ -87,7 +107,7 @@ export default function Event() {
       if (
         delta > 0 &&
         !isLoggedIn &&
-        (target.price === 0 || eventData.login_required)
+        (target.price === 0 || eventData?.login_required)
       ) {
         setShowLoginModal(true);
         return prev;
@@ -157,12 +177,19 @@ export default function Event() {
   const handleContinue = async () => {
     try {
       const ticket = selectedTickets[0];
-      const payload: any = {
+      const payload = {
         tickets: [
           {
-            id: ticket.id,
             quantity: ticket.count,
             partnerCode: partnerCode ?? null,
+            ...(ticket.group_ticket_id
+              ? {
+                groupTicketId: ticket.group_ticket_id,
+                ticketTypeId: ticket.ticket_type_id,
+              }
+              : {
+                ticketTypeId: ticket.id,
+              }),
           },
         ],
       };
@@ -228,36 +255,66 @@ export default function Event() {
   };
 
   useEffect(() => {
-    if (eventData?.ticketTypes && Array.isArray(eventData.ticketTypes)) {
-      setTickets(
-        eventData.ticketTypes.map((t: any) => {
-          const partnershipInfo = t.partnership_info;
-          const usePartnership = partnerCode && partnershipInfo;
+    if (eventData) {
+      if (eventData.available_tickets) {
+        setTickets(eventData.available_tickets);
+      } else if (eventData.ticketTypes) {
+        const standardTickets = (eventData.ticketTypes || [])
+          .filter((t: any) => t.is_public !== false)
+          .map((t: any) => {
+            const partnershipInfo = t.partnership_info;
+            const usePartnership = partnerCode && partnershipInfo;
 
-          // Use partnership_info.max_order_quantity if partner_code exists
-          const maxOrderQuantity =
-            usePartnership && partnershipInfo?.max_order_quantity !== undefined
-              ? partnershipInfo.max_order_quantity
-              : t.max_order_quantity;
+            // Use partnership_info.max_order_quantity if partner_code exists
+            const maxOrderQuantity =
+              usePartnership && partnershipInfo?.max_order_quantity !== undefined
+                ? partnershipInfo.max_order_quantity
+                : t.max_order_quantity;
+
+            return {
+              id: t.id,
+              name: t.name,
+              price: t.price,
+              count: 0,
+              max_order_quantity: maxOrderQuantity,
+              description: t.description,
+              sales_start_date: t.sales_start_date,
+              sales_end_date: t.sales_end_date,
+              ticket_start_date: t.ticketStartDate,
+              quantity: t.quantity,
+              purchased_amount: t.purchased_amount,
+              partnership_info: partnershipInfo || null,
+            };
+          });
+
+        const groupTickets = (eventData.group_tickets || []).map((gt: any) => {
+          const ticketType = gt.ticket_type;
+          const ticketStartDate = ticketType
+            ? ticketType.ticketStartDate || ticketType.ticket_start_date
+            : undefined;
 
           return {
-            id: t.id,
-            name: t.name,
-            price: t.price,
+            id: gt.id,
+            name: gt.name,
+            price: gt.price,
             count: 0,
-            max_order_quantity: maxOrderQuantity,
-            description: t.description,
-            sales_start_date: t.sales_start_date,
-            sales_end_date: t.sales_end_date,
-            ticket_start_date: t.ticketStartDate,
-            quantity: t.quantity,
-            purchased_amount: t.purchased_amount,
-            partnership_info: partnershipInfo || null,
+            max_order_quantity: gt.max_order_quantity,
+            description: gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
+            sales_start_date: gt.sales_start_date,
+            sales_end_date: gt.sales_end_date,
+            ticket_start_date: ticketStartDate,
+            quantity: gt.quantity,
+            purchased_amount: gt.purchased_amount || 0,
+            partnership_info: null,
+            group_ticket_id: gt.id,
+            ticket_type_id: gt.ticket_type_id,
           };
-        })
-      );
+        });
+
+        setTickets([...standardTickets, ...groupTickets]);
+      }
     }
-  }, [eventData?.ticketTypes, partnerCode]);
+  }, [eventData?.ticketTypes, eventData?.available_tickets, partnerCode]);
 
   // Handle 403 error - redirect to /event with message
   useEffect(() => {
@@ -352,7 +409,7 @@ export default function Event() {
         <Box className="flex-1">
           <Container className="flex">
             <EventDetailSection
-              data={eventData}
+              data={eventData!}
               onChooseTicket={scrollToTickets}
             />
           </Container>
@@ -363,7 +420,6 @@ export default function Event() {
             <Container className="flex flex-col gap-10 px-4 py-8 md:flex-row md:items-start md:gap-12 md:px-6 md:py-10 lg:px-8 lg:py-14 xl:gap-16 xl:px-0 xl:py-16">
               <Box className="w-full md:w-7/12 xl:w-7/12">
                 <TicketListSection
-                  data={eventData}
                   tickets={tickets}
                   handleChangeCount={handleChangeCount}
                   partnerCode={partnerCode}
@@ -397,8 +453,8 @@ export default function Event() {
       <Container className="relative mx-auto flex">
         <Box className="flex-1 px-4 pt-12 lg:pt-15">
           <OwnerSection
-            eventOrganizer={eventData.eventOrganizer}
-            termAndConditions={eventData.termAndConditions}
+            eventOrganizer={eventData?.eventOrganizer}
+            termAndConditions={eventData?.termAndConditions || ''}
           />
         </Box>
       </Container>

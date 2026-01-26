@@ -73,6 +73,50 @@ export async function GET(
       ? formatRupiah(minPrice)
       : null;
 
+    // Merging Tickets
+    const singleTickets = (data.body.ticketTypes || [])
+      .filter((t: any) => t.is_public !== false)
+      .map((t: any) => ({
+        id: t.id,
+        name: t.name,
+        price: t.price,
+        count: 0,
+        max_order_quantity: t.max_order_quantity,
+        description: t.description,
+        sales_start_date: t.sales_start_date,
+        sales_end_date: t.sales_end_date,
+        ticket_start_date: t.ticketStartDate,
+        quantity: t.quantity,
+        purchased_amount: t.purchased_amount,
+        partnership_info: t.partnership_info || null,
+      }));
+
+    const groupTickets = (data.body.group_tickets || []).map((gt: any) => {
+      const ticketType = gt.ticket_type;
+      const ticketStartDate = ticketType
+        ? ticketType.ticketStartDate || ticketType.ticket_start_date
+        : undefined;
+
+      return {
+        id: gt.id,
+        name: gt.name,
+        price: gt.price,
+        count: 0,
+        max_order_quantity: gt.max_order_quantity,
+        description: gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
+        sales_start_date: gt.sales_start_date,
+        sales_end_date: gt.sales_end_date,
+        ticket_start_date: ticketStartDate,
+        quantity: gt.quantity,
+        purchased_amount: gt.purchased_amount || 0,
+        partnership_info: null,
+        group_ticket_id: gt.id,
+        ticket_type_id: gt.ticket_type_id,
+      };
+    });
+
+    data.body.available_tickets = [...singleTickets, ...groupTickets];
+
     return NextResponse.json(data.body);
   } catch (error: any) {
     return handleErrorAPI(error);

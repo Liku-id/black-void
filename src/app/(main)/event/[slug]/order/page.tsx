@@ -129,22 +129,29 @@ const OrderPage = () => {
     mode: 'onChange',
     defaultValues: {
       visitors: orderData
-        ? Array.from({ length: orderData.quantity }, () => {
-          const visitor: any = {};
-          if (orderData.ticketType?.additional_forms) {
-            orderData.ticketType.additional_forms.forEach((form: any) => {
-              if (form.type === 'CHECKBOX') {
-                visitor[form.field] = [];
-              } else {
-                visitor[form.field] = '';
-              }
-            });
-          }
-          if (!orderData.ticketType?.additional_forms?.length) {
-            visitor.fullName = '';
-          }
-          return visitor;
-        })
+        ? Array.from(
+          {
+            length:
+              orderData.group_ticket
+                ? orderData.quantity * orderData.group_ticket.bundle_quantity
+                : orderData.quantity,
+          },
+          () => {
+            const visitor: any = {};
+            if (orderData.ticketType?.additional_forms) {
+              orderData.ticketType.additional_forms.forEach((form: any) => {
+                if (form.type === 'CHECKBOX') {
+                  visitor[form.field] = [];
+                } else {
+                  visitor[form.field] = '';
+                }
+              });
+            }
+            if (!orderData.ticketType?.additional_forms?.length) {
+              visitor.fullName = '';
+            }
+            return visitor;
+          })
         : [],
     },
   });
@@ -386,6 +393,7 @@ const OrderPage = () => {
                   contactMethods={contactMethods}
                   tickets={orderData.tickets}
                   ticketType={orderData.ticketType}
+                  groupTicket={orderData.group_ticket}
                 />
               </Box>
             </Box>

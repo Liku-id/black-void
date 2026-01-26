@@ -34,7 +34,7 @@ const Ticket = () => {
       const tickets = (data.tickets || []).map((ticket: any) => ({
         eventName: data.event?.name,
         eventOrganizerName: data.event?.eventOrganizer?.name,
-        type: data.ticketType?.name,
+        type: data.group_ticket?.name || data.ticketType?.name,
         attendee: ticket.visitor_name,
         qrValue: ticket.id,
         date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
@@ -174,7 +174,7 @@ const Ticket = () => {
                       size={18}
                       className="ml-2 font-bold uppercase"
                     >
-                      {data.ticketType.name} #{idx + 1}
+                      {data.group_ticket?.name || data.ticketType.name} #{idx + 1}
                     </Typography>
                   </Box>
 
