@@ -16,6 +16,7 @@ interface VisitorDetailSectionProps {
   visitorMethods: UseFormReturn<FormDataVisitor>;
   tickets: Ticket[];
   ticketType: any; // The ticketType object with additional_forms
+  groupTicket?: any;
 }
 
 const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
@@ -25,17 +26,26 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
   visitorMethods,
   tickets,
   ticketType,
+  groupTicket,
 }) => {
   const attendees = tickets
-    ? tickets.flatMap(ticket =>
-        Array.from({ length: ticket.count }, () => ticket)
-      )
+    ? tickets.flatMap((ticket) => {
+      // Calculate quantity based on bundle if it's a group ticket
+      const quantity =
+        groupTicket &&
+          (groupTicket.id === ticket.group_ticket_id ||
+            groupTicket.ticket_type_id === ticket.ticket_type_id)
+          ? groupTicket.bundle_quantity
+          : 1;
+
+      return Array.from({ length: ticket.count * quantity }, () => ticket);
+    })
     : [];
 
   const isContactSaved = Boolean(
     contactMethods.getValues().fullName?.trim() &&
-      contactMethods.getValues().phoneNumber?.trim() &&
-      contactMethods.getValues().email?.trim()
+    contactMethods.getValues().phoneNumber?.trim() &&
+    contactMethods.getValues().email?.trim()
   );
 
   // Get additional forms from ticketType
@@ -88,7 +98,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
           <Box className="px-4">
             {attendees.map((ticket, idx) => {
               const additionalForms = getAdditionalForms();
-              
+
               return (
                 <Fragment key={`${ticket.id}-${idx}`}>
                   <Typography
@@ -98,7 +108,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                     className="mb-1 lg:mb-4">
                     Ticket {ticket.name} #{idx + 1}
                   </Typography>
-                  
+
                   {/* Render additional forms */}
                   <Box className="space-y-4">
                     {additionalForms.map((form) => (
@@ -111,7 +121,7 @@ const VisitorDetailSection: React.FC<VisitorDetailSectionProps> = ({
                       />
                     ))}
                   </Box>
-                  
+
                   {idx !== attendees.length - 1 && (
                     <hr className="border-muted my-6 border border-[0.5px]" />
                   )}

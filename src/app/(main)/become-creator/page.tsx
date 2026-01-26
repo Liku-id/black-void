@@ -13,6 +13,8 @@ import windowIcon from '@/assets/icons/window.svg';
 import handshakeIcon from '@/assets/icons/handshake.svg';
 import sunflowerIcon from '@/assets/icons/sunflower.svg';
 
+import posthog from 'posthog-js';
+
 const steps = [
   {
     number: 1,
@@ -114,6 +116,15 @@ export default function BecomeCreatorPage() {
 
   const handleCreateEventClick = (e?: React.MouseEvent) => {
     e?.stopPropagation();
+
+    // Track become creator clicked event
+    posthog.capture('become_creator_clicked', {
+      source: 'become_creator_page',
+      utm_source: 'wukong',
+      utm_medium: 'website',
+      utm_campaign: 'become-creator',
+    });
+
     const url = `${process.env.NEXT_PUBLIC_CREATOR_BASE_URL || ''}?utm_source=wukong&utm_medium=website&utm_campaign=become-creator`;
     if (
       url &&

@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 interface FAQItem {
   question: string;
-  answer: string;
+  answer: React.ReactNode | string;
 }
 
 interface FAQSectionProps {
@@ -27,7 +27,7 @@ export default function FAQSection({ data = [] }: FAQSectionProps) {
     "Let's create",
     'Let’s connect',
     'Let’s Play',
-    'Let’s fun',
+    'Have Fun',
     'Let’s learn',
   ];
 
@@ -70,12 +70,12 @@ export default function FAQSection({ data = [] }: FAQSectionProps) {
           {/* Right column */}
           <Box className="flex flex-1 flex-col gap-6">
             {rightFaqs.map((faq, idx) => {
-              const globalIdx = idx + 5;
+              const globalIdx = idx + midPoint;
               return (
                 <Accordion
-                  key={idx + 5}
-                  id={`btn_faq_${idx + 6}`}
-                  question={`${idx + 6}. ${faq.question}`}
+                  key={globalIdx}
+                  id={`btn_faq_${globalIdx + 1}`}
+                  question={`${globalIdx + 1}. ${faq.question}`}
                   answer={faq.answer}
                   open={openIdx === globalIdx}
                   onClick={() =>

@@ -2,10 +2,12 @@ import { Box, Typography } from '@/components';
 import Image from 'next/image';
 import accordionArrow from '@/assets/icons/accordion-arrow.svg';
 
+import React from 'react';
+
 interface AccordionProps {
   id?: string;
   question: string;
-  answer: string;
+  answer: React.ReactNode | string;
   className?: string;
   open?: boolean;
   onClick?: () => void;
@@ -71,7 +73,7 @@ export default function Accordion({
             'overflow-hidden',
             open ? 'mt-3 ml-3 max-h-40 opacity-100' : 'max-h-0 opacity-0',
           ].join(' ')}>
-          <Typography color="text-muted" size={14}>
+          <Typography as="div" color="text-muted" size={14} className="whitespace-pre-line">
             {answer}
           </Typography>
         </Box>
