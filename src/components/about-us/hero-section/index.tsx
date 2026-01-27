@@ -24,21 +24,21 @@ const HeroSection = () => {
                 size={46}
                 className="mb-6 uppercase leading-tight text-white md:text-[46px] text-[23px]"
               >
-                Creating together, one event at a time
+                All in One Ticketing & Event<br />Management System Platform
               </Typography>
               <Typography
                 type="body"
                 size={18}
                 className="mb-0 md:mb-8 max-w-3xl mx-auto leading-relaxed text-white md:text-[18px] text-[12px]"
               >
-                At Wukong, we believe every gathering is a spark of possibility — a chance to awaken new connections, voices, and experiences. Here’s how you, as an event creator, can bring your vision alive with us:
+                A simple, powerful ticketing system designed for creators. We help<br />clients run events smoothly and efficiently
               </Typography>
               <Link href="https://wukong.co.id" className="hidden md:flex justify-center mt-8 md:mt-0">
                 <Button
                   type="button"
                   className="mx-auto flex relative z-20 cursor-pointer"
                 >
-                  Create My Event
+                  Explore Wukong
                 </Button>
               </Link>
             </Box>

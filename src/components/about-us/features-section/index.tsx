@@ -1,22 +1,27 @@
 import React from 'react';
+import Image from 'next/image';
 import { Box, Container, Typography } from '@/components';
 import { cn } from '@/utils/utils';
+import sunflowerIcon from '@/assets/icons/sunflower.svg';
 
 const features = [
   {
     title: 'Special leads Requirement',
     description: 'Capture valuable attendee data with custom requirements that support smarter targeting and follow-ups',
     align: 'left',
+    icon: sunflowerIcon,
   },
   {
     title: 'Group Ticket',
     description: 'Boost sales by offering group deals that make it easy for teams and communities to buy together',
     align: 'right',
+    icon: sunflowerIcon,
   },
   {
     title: 'Private Link Ticket',
     description: 'Drive exclusivity and conversions with private ticket links for partners, VIPs, or targeted audiences',
     align: 'left',
+    icon: sunflowerIcon,
   },
 ];
 
@@ -25,12 +30,12 @@ const FeaturesSection = () => {
     <section className="pb-16 xl:pb-32 px-4 xl:px-0">
       <Container>
         {/* Header */}
-        <Box className="mb-8 xl:mb-32 text-center">
+        <Box className="mb-8 mb-16 text-center">
           <Typography
             type="heading"
             as="h2"
             size={32}
-            className="mb-4 text-white font-bold text-[23px] xl:text-[32px]"
+            className="mb-4 text-white text-[23px] xl:text-[32px]"
           >
             All in one feature for your event marketing
           </Typography>
@@ -59,11 +64,19 @@ const FeaturesSection = () => {
                   feature.align === 'right' ? 'xl:order-2' : 'xl:order-1'
                 )}
               >
+                <Box className="mb-4 relative w-20 h-20">
+                  <Image
+                    src={feature.icon}
+                    alt={feature.title}
+                    fill
+                    className="object-contain"
+                  />
+                </Box>
                 <Typography
                   type="heading"
                   as="h3"
                   size={24}
-                  className="mb-4 font-bold text-white text-[18px] xl:text-[24px]"
+                  className="mb-4 text-white text-[18px] xl:text-[24px]"
                 >
                   {feature.title}
                 </Typography>
