@@ -12,149 +12,89 @@ import FAQSection from '@/components/home/faq-section';
 
 const faqs = [
   {
-    question: 'What Is Event Funding Platform by Wukong x EKUID ?',
+    question: 'What Is Wukong as an All-in-One Ticketing & Event Management Platform?',
     answer:
-      'Wukong collaborated with EKUID to provide next-generation event funding platform that helps professional event organizers secure capital through structured event crowdfunding and event financing. We enable organizers to fund, manage, and scale events with confidence—from planning to execution.',
+      'Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency.',
   },
   {
-    question: 'Who Is Eligible for held Funding on Wukong X EKUID?',
-    answer: (
-      <>
-        Wukong X EKUID provide event funding designed for{' '}
-        <strong>
-          professional event organizers, production houses, and non-public
-          companies
-        </strong>{' '}
-        planning commercial or large-scale events. Each application is reviewed
-        to ensure quality, feasibility, and sustainability.
-      </>
-    ),
-  },
-  {
-    question: 'How Does Event Crowdfunding Work on Wukong?',
-    answer: (
-      <>
-        Our <strong>event crowdfunding system</strong> allows organizers to raise
-        funds after passing verification and due diligence. Funding is collected
-        transparently and released in stages based on approved milestones—keeping
-        your event financially healthy and trusted by contributors.
-      </>
-    ),
-  },
-  {
-    question: 'What Types of Events Can Use Wukong Event Funding?',
-    answer: (
-      <>
-        Wukong supports a wide range of event categories, including:
-        <ul className="list-disc pl-5 mt-2">
-          <li>Music & Entertainment Events</li>
-          <li>Sports & Running Events</li>
-          <li>Conferences & Exhibitions</li>
-          <li>Community & Creative Events</li>
-        </ul>
-        <br />
-        Each event funding proposal is evaluated based on scale, audience demand,
-        and execution readiness.
-      </>
-    ),
-  },
-  {
-    question: 'How Much Capital Can I Raise Through Event Funding?',
-    answer: (
-      <>
-        Wukong provides{' '}
-        <strong>event financing up to IDR 10 billion</strong>, depending on
-        your event profile, funding structure, and due diligence results. This
-        makes Wukong ideal for both growing and large-scale events.
-      </>
-    ),
-  },
-  {
-    question: 'Why Choose Event Financing Instead of Traditional Loans?',
-    answer: (
-      <>
-        Unlike traditional loans,{' '}
-        <strong>event financing on Wukong X EKUID</strong> reduces upfront
-        financial pressure, improves cash flow, and aligns funding with real
-        event performance—allowing organizers to focus on delivering great
-        experiences.
-      </>
-    ),
-  },
-  {
-    question: 'Is Wukong Event Funding Safe and Regulated?',
+    question: 'How Does the Online Ticketing System Support High-Traffic Events?',
     answer:
-      'Yes. Wukong operates as a licensed and secure event funding platform, applying strict compliance, fund control mechanisms, and transparent reporting to protect both organizers and contributors.',
+      'The online ticketing system is built to handle high transaction volumes and peak ticket sales periods. This ensures a smooth purchasing experience for attendees while maintaining system stability and data accuracy for organizers.',
   },
   {
-    question: 'How Long Does the Event Funding Approval Process Take?',
-    answer: (
-      <>
-        According to OJK regulations,{' '}
-        <strong>
-          crowdfunding campaigns are conducted within 45 days
-        </strong>
-        , excluding registration, due diligence, and Etc. However, It is
-        possible that the process could be faster, depending on how attractive
-        the campaign is to investors.
-      </>
-    ),
-  },
-  {
-    question: 'How Are Event Funds Disbursed to Organizers?',
+    question: 'Is This Event Management Platform Suitable for Organizers Managing Multiple Events?',
     answer:
-      'Event funds are disbursed gradually based on the approved funding plan and event milestones—ensuring responsible use of capital and smoother event execution.',
+      'Yes. Wukong allows organizers to manage multiple events, ticket categories, and schedules from a single dashboard, making it easier to oversee operations and performance across different events.',
   },
   {
-    question: 'Can Event Ticket Sales Be Integrated with Event Funding?',
+    question: 'How Does the Ticketing System Improve Event Operational Control?',
     answer:
-      'Yes. Wukong integrates event ticket sales with funding and reporting, giving organizers real-time insights into ticket performance, funding progress, and overall event financial health.',
+      'The platform provides full visibility into ticket inventory, pricing, sales performance, and attendance data. This helps organizers maintain control, reduce operational risks, and make informed decisions throughout the event lifecycle.',
   },
   {
-    question: 'What Happens If an Event Is Cancelled or Rescheduled?',
+    question: 'How Does Fast & Secure Attendee Check-In Work at Events?',
     answer:
-      'In case of cancellation or rescheduling, Wukong applies predefined event funding risk management and refund mechanisms to ensure fair outcomes for all parties.',
+      'Wukong uses QR code–based check-in to enable fast, secure, and efficient attendee entry. This system reduces queues, prevents ticket duplication, and provides real-time attendance tracking during the event.',
   },
   {
-    question: 'Do I Need Prior Experience to Apply for Event Funding?',
-    answer: (
-      <>
-        Experience helps, but it’s not mandatory. Wukong evaluates{' '}
-        <strong>event funding applications</strong> based on planning quality,
-        team credibility, market demand, and financial feasibility.
-      </>
-    ),
-  },
-  {
-    question: 'What Documents Are Required for Event Funding Application?',
-    answer: (
-      <>
-        Typical requirements include:
-        <ul className="list-disc pl-5 mt-2">
-          <li>Company profile</li>
-          <li>Event proposal & budget plan</li>
-          <li>Legal and business documents</li>
-          <li>Supporting materials relevant to the event</li>
-        </ul>
-        <br />
-        These help us structure the right event funding solution for you.
-      </>
-    ),
-  },
-  {
-    question: 'How Do I Start Event Funding on Wukong?',
-    answer: (
-      <>
-        Simply click <strong>“Start Funding”</strong>, submit your event and
-        company details, and our team will guide you through the verification
-        and funding process.
-      </>
-    ),
-  },
-  {
-    question: 'How Can I Contact Wukong for Event Funding Support?',
+    question: 'What Financial Reporting Features Are Available in the Ticketing Dashboard?',
     answer:
-      'Our team is ready to help. Reach out via the contact form or official channels listed on the website for fast, professional support.',
+      'Organizers can access detailed financial reports including ticket sales summaries, revenue tracking, payout history, and transaction data. These reports support financial transparency and easier reconciliation.',
+  },
+  {
+    question: 'What Is Special Leads Requirement in Event Ticketing?',
+    answer:
+      'Special Leads Requirement allows organizers to collect customized attendee information during ticket purchase. This supports targeted marketing, sponsor reporting, and better audience understanding.',
+  },
+  {
+    question: 'How Does Group Ticketing Help Increase Ticket Sales?',
+    answer:
+      'Group Ticketing enables attendees to purchase multiple tickets in one transaction, often with special pricing. This feature encourages bulk purchases from communities, companies, or groups attending together.',
+  },
+  {
+    question: 'What Are Private Link Tickets and When Should Organizers Use Them?',
+    answer:
+      'Private Link Tickets are exclusive ticket links shared with selected audiences. They are ideal for VIP guests, partners, internal teams, or invite-only events that require controlled access.',
+  },
+  {
+    question: 'Which Payment Methods Are Supported by the Online Ticketing System?',
+    answer:
+      'The platform supports multiple secure payment gateways, allowing attendees to choose from various payment methods. This improves purchase convenience and increases conversion rates.',
+  },
+  {
+    question: 'How Transparent Are the Fees for Event Organizers?',
+    answer:
+      'Wukong offers transparent and competitive pricing with no hidden costs. Organizers can clearly track fees and revenue through the financial dashboard.',
+  },
+  {
+    question: 'How Does Flexible Withdrawal Support Event Financial Management?',
+    answer:
+      'Flexible withdrawal options allow organizers to manage revenue payouts based on event needs and timelines, helping maintain healthy cash flow before, during, and after the event.',
+  },
+  {
+    question: 'Can Organizers Monitor Ticket Sales and Event Performance in Real Time?',
+    answer:
+      'Yes. The real-time dashboard provides up-to-date insights on ticket sales, attendance status, and revenue performance, enabling timely operational adjustments.',
+  },
+  {
+    question: 'How Secure Is the Ticketing & Payment System?',
+    answer:
+      'The platform applies secure payment processing and data protection measures to ensure that all transactions and attendee information are handled safely and reliably.',
+  },
+  {
+    question: 'How Quickly Can Organizers Set Up and Launch an Event?',
+    answer:
+      'Organizers can create, configure, and publish events in a short time using an intuitive onboarding flow—without requiring technical expertise.',
+  },
+  {
+    question: 'What Types of Events Can Be Managed Using This Ticketing Platform?',
+    answer:
+      'Wukong supports concerts, festivals, conferences, exhibitions, community events, corporate gatherings, and private events, both offline and hybrid.',
+  },
+  {
+    question: 'Is Customer Support Available for Event Organizers?',
+    answer:
+      'Yes. Event organizers have access to dedicated support to assist with setup, operations, and technical inquiries throughout the event process.',
   },
 ];
 
