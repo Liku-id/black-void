@@ -1,15 +1,14 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Box, Container, Typography, Button } from '@/components';
-import creatorMain from '@/assets/images/creator-main.webp';
+import hero from '@/assets/images/about-us-hero.webp';
 
 const HeroSection = () => {
   return (
     <section className="relative w-full px-4 md:px-0">
       <Box className="relative h-[200px] w-full md:h-[552px] md:w-full md:max-w-[1232px] mx-auto lg:h-[552px]">
         <Image
-          src={creatorMain}
+          src={hero}
           alt="People creating together"
           fill
           className="object-cover"

@@ -1,27 +1,34 @@
-import React from 'react';
 import Image from 'next/image';
 import { Box, Container, Typography } from '@/components';
 import { cn } from '@/utils/utils';
-import sunflowerIcon from '@/assets/icons/sunflower.svg';
+import singleIcon from '@/assets/icons/single.svg';
+import groupIcon from '@/assets/icons/group.svg';
+import privateIcon from '@/assets/icons/private.svg';
+import additionalFormImg from '@/assets/images/additional-form.webp';
+import groupTicketImg from '@/assets/images/group-ticket.webp';
+import privateLinkImg from '@/assets/images/private-link.webp';
 
 const features = [
   {
     title: 'Special leads Requirement',
     description: 'Capture valuable attendee data with custom requirements that support smarter targeting and follow-ups',
     align: 'left',
-    icon: sunflowerIcon,
+    icon: singleIcon,
+    image: additionalFormImg,
   },
   {
     title: 'Group Ticket',
     description: 'Boost sales by offering group deals that make it easy for teams and communities to buy together',
     align: 'right',
-    icon: sunflowerIcon,
+    icon: groupIcon,
+    image: groupTicketImg,
   },
   {
     title: 'Private Link Ticket',
     description: 'Drive exclusivity and conversions with private ticket links for partners, VIPs, or targeted audiences',
     align: 'left',
-    icon: sunflowerIcon,
+    icon: privateIcon,
+    image: privateLinkImg,
   },
 ];
 
@@ -89,14 +96,22 @@ const FeaturesSection = () => {
                 </Typography>
               </Box>
 
-              {/* Image/Placeholder Block */}
+              {/* Image Block */}
               <Box
                 className={cn(
                   "flex items-center justify-center",
                   feature.align === 'right' ? 'xl:order-1' : 'xl:order-2'
                 )}
               >
-                <Box className="bg-neutral-800 w-full max-w-[490px] h-[230px] rounded-lg animate-pulse" />
+                <Box className="relative w-full max-w-[490px] aspect-[490/230]">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, 490px"
+                  />
+                </Box>
               </Box>
             </Box>
           ))}

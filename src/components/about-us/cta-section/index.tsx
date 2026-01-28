@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Container, Typography, Button } from '@/components';
+import Link from 'next/link';
+import { Box, Container, Typography } from '@/components';
+import { buttonVariants } from '@/components/common/button';
 
 const CTASection = () => {
   return (
@@ -12,7 +14,7 @@ const CTASection = () => {
               type="heading"
               as="h2"
               size={32}
-              className="mb-4 font-bold uppercase text-[23px] xl:text-[32px]"
+              className="mb-4 uppercase text-[23px] xl:text-[32px]"
             >
               START YOUR EVENT HERE!
             </Typography>
@@ -34,18 +36,22 @@ const CTASection = () => {
 
           {/* Right Content (Buttons) */}
           <Box className="flex flex-col md:flex-row gap-4 items-center md:items-start w-auto">
-            <Button
-              type="button"
-              className="w-auto text-[14px] xl:text-[16px]"
+            <Link
+              href="https://bo.wukong.co.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ className: "w-auto text-[14px] xl:text-[16px]" })}
             >
               Create My Event
-            </Button>
-            <Button
-              type="button"
-              className="w-auto text-[14px] xl:text-[16px]"
+            </Link>
+            <Link
+              href="https://wa.me/6285121328284"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ className: "w-auto text-[14px] xl:text-[16px]" })}
             >
               Talk to Our Team
-            </Button>
+            </Link>
           </Box>
         </Box>
       </Container>

@@ -1,20 +1,19 @@
-import React from 'react';
 import Image from 'next/image';
 import { Box, Container, Typography } from '@/components';
-import competitiveFeeIcon from '@/assets/images/competitive-fee.svg';
-import multipaymentIcon from '@/assets/images/multipayment-gateway.svg';
-import withdrawalIcon from '@/assets/images/flexible-withdrawal.svg';
+import moneyIcon from '@/assets/icons/money.svg';
+import windowIcon from '@/assets/icons/window.svg';
+import withdrawalIcon from '@/assets/icons/withdrawal.svg';
 
 const items = [
   {
     title: 'Competitive Fee',
     description: 'Enterprise-ready pricing designed to optimize cost efficiency at scale without compromising service quality',
-    icon: competitiveFeeIcon,
+    icon: moneyIcon,
   },
   {
     title: 'Multi Payment Gateway',
     description: 'Support for multiple secure and trusted payment gateways to ensure reliable transactions and higher success rates',
-    icon: multipaymentIcon,
+    icon: windowIcon,
   },
   {
     title: 'Flexible Withdrawal',
@@ -33,7 +32,7 @@ const FinancialSection = () => {
             type="heading"
             as="h2"
             size={32}
-            className="mb-6 font-bold text-[23px] lg:text-[32px]"
+            className="mb-6 text-[23px] lg:text-[32px]"
           >
             Transparent and Reliable Financial Reporting
           </Typography>
@@ -64,7 +63,7 @@ const FinancialSection = () => {
                 type="heading"
                 as="h3"
                 size={18}
-                className="mb-4 font-bold"
+                className="mb-4"
               >
                 {item.title}
               </Typography>

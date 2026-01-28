@@ -3,35 +3,35 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Box, Container, Typography } from '@/components';
-import howItWork1 from '@/assets/images/tambahan-modal-usaha-how-1.webp';
-import howItWork2 from '@/assets/images/tambahan-modal-usaha-how-2.webp';
-import howItWork3 from '@/assets/images/tambahan-modal-usaha-how-3.webp';
-import howItWork4 from '@/assets/images/tambahan-modal-usaha-how-4.webp';
+import usp1 from '@/assets/images/about-us-usp-1.webp';
+import usp2 from '@/assets/images/about-us-usp-2.webp';
+import usp3 from '@/assets/images/about-us-usp-3.webp';
+import usp4 from '@/assets/images/about-us-usp-4.webp';
 
 const usps = [
   {
     number: 1,
     title: 'fast & easy buyer check-in',
     description: 'Enable quick, smooth attendee entry with a simple and efficient check-in process',
-    image: howItWork1,
+    image: usp1,
   },
   {
     number: 2,
     title: 'comprehensive financial report',
     description: 'Access detailed and accurate financial reports to track sales, revenue, and settlements',
-    image: howItWork2,
+    image: usp2,
   },
   {
     number: 3,
     title: 'seamless & real-time dashboard',
     description: 'Monitor ticket sales, performance, and key metrics in one real-time dashboard',
-    image: howItWork3,
+    image: usp3,
   },
   {
     number: 4,
     title: 'quick onboarding flow',
     description: 'Get started fast with an intuitive setup designed for effortless event creation',
-    image: howItWork4,
+    image: usp4,
   },
 ];
 
