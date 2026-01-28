@@ -16,6 +16,7 @@ interface CarouselProps {
   className?: string;
   animate?: boolean;
   arrowPosition?: 'inside' | 'outside';
+  priority?: boolean;
 }
 
 type Direction = 'next' | 'prev';
@@ -30,6 +31,7 @@ export function Carousel({
   className = '',
   animate = true,
   arrowPosition = 'outside',
+  priority = false,
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -109,6 +111,7 @@ export function Carousel({
                   sizes={sizes}
                   draggable={false}
                   unoptimized
+                  priority={priority}
                 />
               </Link>
             ) : (
@@ -121,6 +124,7 @@ export function Carousel({
                 sizes={sizes}
                 draggable={false}
                 unoptimized
+                priority={priority}
               />
             )}
           </>
@@ -138,6 +142,7 @@ export function Carousel({
               sizes={sizes}
               draggable={false}
               unoptimized
+              priority={priority}
             />
           </Link>
         )}
@@ -179,9 +184,8 @@ export function Carousel({
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`h-1 cursor-pointer transition-colors ${
-              index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
-            }`}
+            className={`h-1 cursor-pointer transition-colors ${index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
+              }`}
             disabled={animate && isAnimating}
           />
         ))}
