@@ -143,7 +143,7 @@ export default function BecomeCreatorPage() {
     <main className="bg-black text-white">
       {/* Hero Section */}
       <section className="relative w-full">
-        <Box className="relative h-[146px] md:h-[552px] w-full max-w-[1232px] mx-auto md:h-[1232px] lg:h-[552px]">
+        <Box className="relative h-[420px] md:h-[552px] w-full max-w-[1232px] mx-auto lg:h-[552px]">
           <Image
             src={creatorMain}
             alt="People creating together"
