@@ -1,6 +1,7 @@
-'use client';
+import { Metadata } from 'next';
+import { SEO_CONFIG } from '@/config/seo';
 
-import React from 'react';
+export const metadata: Metadata = SEO_CONFIG.pages.aboutUs;
 import HeroSection from '@/components/about-us/hero-section';
 import WhoWeAreSection from '@/components/about-us/who-we-are-section';
 import USPSection from '@/components/about-us/usp-section';
