@@ -30,7 +30,7 @@ const HeroSection = () => {
                 size={18}
                 className="mb-0 md:mb-8 max-w-3xl mx-auto leading-relaxed text-white md:text-[18px] text-[12px]"
               >
-                A simple, powerful ticketing system designed for creators. We help<br />clients run events smoothly and efficiently
+                A simple, powerful ticketing system designed for creators.<br />We help clients run events smoothly and efficiently
               </Typography>
               <Link href="https://wukong.co.id" className="hidden md:flex justify-center mt-8 md:mt-0">
                 <Button
