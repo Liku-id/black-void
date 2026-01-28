@@ -86,6 +86,29 @@ export const SEO_CONFIG = {
           'Wukong collaborates with EKUID helps professional event organizers access reliable event financing through securities crowdfunding scheme built for concerts, sports, exhibitions, and large-scale events.',
       },
     } as Metadata,
+    aboutUs: {
+      title: 'All-in-One Ticketing & Event Management Platform for Event Organizers | Wukong',
+      description:
+        'Manage ticket sales, attendee check-in, payments, and financial reports in one ticketing & event management platform. Built for scalable and reliable event operations.',
+      keywords:
+        'ticketing system, event management platform, online ticketing platform, event ticketing system, online ticketing system, event ticketing platform, ticket management system, event platform, event organizer platform',
+      robots: {
+        index: true,
+        follow: true,
+      },
+      openGraph: {
+        title: 'All-in-One Ticketing & Event Management Platform for Event Organizers | Wukong',
+        description:
+          'Manage ticket sales, attendee check-in, payments, and financial reports in one ticketing & event management platform. Built for scalable and reliable event operations.',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'All-in-One Ticketing & Event Management Platform for Event Organizers | Wukong',
+        description:
+          'Manage ticket sales, attendee check-in, payments, and financial reports in one ticketing & event management platform. Built for scalable and reliable event operations.',
+      },
+    } as Metadata,
   },
 
   // Dynamic event_detail untuk generate metadata
