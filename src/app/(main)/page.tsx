@@ -1,8 +1,14 @@
+import dynamic from 'next/dynamic';
 import CarouselSection from '@/components/home/carousel-section';
-import EventListSection from '@/components/home/event-list-section';
-import CreatorListSection from '@/components/home/creator-list-section';
-import FAQSection from '@/components/home/faq-section';
 import { SEO_CONFIG } from '@/config/seo';
+
+const EventListSection = dynamic(
+  () => import('@/components/home/event-list-section')
+);
+const CreatorListSection = dynamic(
+  () => import('@/components/home/creator-list-section')
+);
+const FAQSection = dynamic(() => import('@/components/home/faq-section'));
 
 const faqs = [
   {

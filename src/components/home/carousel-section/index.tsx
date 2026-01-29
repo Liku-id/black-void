@@ -63,7 +63,6 @@ export default function CarouselSection() {
                   height={200}
                   className="h-full w-full object-cover"
                   draggable={false}
-                  unoptimized
                   priority={i === 0}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   // @ts-ignore

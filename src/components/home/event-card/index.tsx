@@ -58,7 +58,7 @@ export default function EventCard({
   };
 
   return (
-    <Box 
+    <Box
       className={`h-auto w-[270px] border border-black bg-white p-0 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[6px_6px_0px_0px_#FFF] ${status !== 'on_going' ? 'cursor-pointer' : ''}`}
       onClick={handleCardClick}
     >
@@ -72,7 +72,6 @@ export default function EventCard({
           width={270}
           height={152}
           className="h-[152px] w-full object-cover"
-          unoptimized
         />
       ) : (
         <Box className="flex h-[152px] w-full items-center justify-center bg-gray-200 text-xs text-gray-500">

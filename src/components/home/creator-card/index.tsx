@@ -1,4 +1,5 @@
 import { Box } from '@/components';
+import Image from 'next/image';
 
 interface CreatorCardProps {
   logo?: string;
@@ -22,11 +23,13 @@ export default function CreatorCard({
   return (
     <Box
       className={`mx-2 flex h-40 w-40 flex-shrink-0 items-center justify-center rounded-full bg-white`}>
-      <img
-        src={logo}
-        alt={name}
+      <Image
+        src={logo || ''}
+        alt={name || 'Creator'}
         className="h-32 w-32 rounded-full bg-white object-contain"
         draggable={false}
+        width={128}
+        height={128}
       />
     </Box>
   );
