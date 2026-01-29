@@ -113,6 +113,9 @@ export function Carousel({
                   draggable={false}
                   unoptimized
                   priority={priority}
+                  loading={priority ? 'eager' : 'lazy'}
+                  // @ts-ignore
+                  fetchPriority={priority ? 'high' : 'auto'}
                 />
               </Link>
             ) : (
@@ -126,6 +129,9 @@ export function Carousel({
                 draggable={false}
                 unoptimized
                 priority={priority}
+                loading={priority ? 'eager' : 'lazy'}
+                // @ts-ignore
+                fetchPriority={priority ? 'high' : 'auto'}
               />
             )}
           </>
@@ -145,6 +151,9 @@ export function Carousel({
               draggable={false}
               unoptimized
               priority={priority}
+              loading={priority ? 'eager' : 'lazy'}
+              // @ts-ignore
+              fetchPriority={priority ? 'high' : 'auto'}
             />
           </Link>
         )}

@@ -65,6 +65,9 @@ export default function CarouselSection() {
                   draggable={false}
                   unoptimized
                   priority={i === 0}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  // @ts-ignore
+                  fetchPriority={i === 0 ? 'high' : 'auto'}
                 />
               ))}
             </Slider>
