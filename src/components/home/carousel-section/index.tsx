@@ -64,6 +64,7 @@ export default function CarouselSection() {
                   className="h-full w-full object-cover"
                   draggable={false}
                   unoptimized
+                  priority={i === 0}
                 />
               ))}
             </Slider>
@@ -84,6 +85,7 @@ export default function CarouselSection() {
               height={456}
               sizes="(min-width: 1024px) 800px, (min-width: 768px) 550px"
               className="h-[200px] w-[350px] max-w-full sm:h-[300px] sm:w-[450px] md:h-[350px] md:w-[550px] lg:h-[450px] lg:w-[800px] xl:h-[500px] xl:max-w-[900px]"
+              priority={true}
             />
           </Box>
         </Box>
