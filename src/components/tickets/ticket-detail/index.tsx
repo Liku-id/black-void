@@ -13,17 +13,21 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ticketTemplate } from '../template';
 
-const Ticket = () => {
+interface TicketDetailProps {
+  type: 'transaction' | 'invitation';
+}
+
+const Ticket = ({ type }: TicketDetailProps) => {
   const params = useParams();
-  const transactionId = params.id;
+  const id = params?.id;
 
   // Initialize state
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const { data, isLoading } = useSWR(
-    transactionId ? `/api/transaction/${transactionId}/tickets` : null
-  );
+  const fetchUrl = id ? `/api/${type}/${id}/tickets` : null;
+
+  const { data, isLoading } = useSWR(fetchUrl);
 
   const handleDownload = async () => {
     setLoading(true);
