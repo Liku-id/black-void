@@ -38,21 +38,18 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <Box className="relative hidden w-1/2 overflow-hidden lg:block">
           {/* Backgrounds stacked on top of each other */}
           {backgrounds.map((bg, index) => (
-            <img
+            <Image
               key={index}
               src={bg}
               alt={`Background ${index + 1}`}
+              fill
+              sizes="50vw"
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
                 opacity: index === currentIndex ? 1 : 0,
                 zIndex: index === currentIndex ? 1 : 0,
               }}
-              className="absolute inset-0"
+              className="object-cover"
+              priority={index === 0}
             />
           ))}
 
