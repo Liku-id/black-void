@@ -69,6 +69,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+      </head>
       <body className={`antialiased ${bebasNeue.variable} ${onest.variable}`}>
         {/* Google Tag Manager */}
         <Script
