@@ -51,6 +51,8 @@ export interface Ticket {
   quantity: number;
   purchased_amount: number;
   partnership_info?: PartnershipInfo | null;
+  group_ticket_id?: string;
+  ticket_type_id?: string;
 }
 
 export interface TicketSummary {

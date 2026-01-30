@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     const ticket = body.tickets[0];
     const payload = {
       ticketTypeId: ticket.id || ticket.ticketTypeId,
+      groupTicketId: ticket.groupTicketId,
       quantity: ticket.quantity,
       partner_code: ticket.partnerCode,
     };

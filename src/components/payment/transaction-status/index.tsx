@@ -20,18 +20,20 @@ export default function PaymentStatus() {
   );
 
   const getTransactionAndTotals = () => {
+    const groupTicket = data.transaction.group_ticket;
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
-    const partnershipInfo = ticketType.partnership_info;
-    
+    const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
+    const price = groupTicket ? groupTicket.price : ticketType.price;
+
     // Calculate subtotal with partnership discount
-    const originalSubtotal = ticketType.price * data.transaction.orderQuantity;
+    const originalSubtotal = price * data.transaction.orderQuantity;
     const finalPricePerTicket = calculatePriceWithPartnership(
-      ticketType.price,
+      price,
       partnershipInfo
     );
     const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
     const discount = originalSubtotal - subtotal;
-    
+
     const adminFee = subtotal === 0
       ? 0
       : (data.transaction.event.adminFee ?? 0) <= 100
@@ -150,7 +152,7 @@ export default function PaymentStatus() {
             {/* <Box key={t.id} className="mt-3 border-l-2 border-black pl-2"> */}
             <Box className="mt-3 border-l-2 border-black pl-2">
               <Typography type="body" size={12} className="mb-1 font-bold">
-                {data.transaction.ticketType.name}
+                {data.transaction.group_ticket?.name || data.transaction.ticketType.name}
               </Typography>
               <Typography
                 type="body"
