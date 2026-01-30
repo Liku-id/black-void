@@ -17,12 +17,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'wukong-staging-private.s3.ap-southeast-3.amazonaws.com',
+        hostname: '*.s3.ap-southeast-3.amazonaws.com',
         pathname: '/**',
       },
     ],
