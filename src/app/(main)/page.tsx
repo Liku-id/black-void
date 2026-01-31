@@ -3,21 +3,13 @@ import CarouselSection from '@/components/home/carousel-section';
 import { SEO_CONFIG } from '@/config/seo';
 import { getCarouselData } from '@/components/home/carousel-section/carousel.data';
 
-const EventListSection = dynamic(
+const HomeEventListSection = dynamic(
   () => import('@/components/home/event-list-section')
 );
-const CreatorListSection = dynamic(
+const HomeCreatorListSection = dynamic(
   () => import('@/components/home/creator-list-section')
 );
-const FAQSection = dynamic(() => import('@/components/home/faq-section'));
-
-const EventListSection = dynamic(
-  () => import('@/components/home/event-list-section')
-);
-const CreatorListSection = dynamic(
-  () => import('@/components/home/creator-list-section')
-);
-const FAQSection = dynamic(() => import('@/components/home/faq-section'));
+const HomeFAQSection = dynamic(() => import('@/components/home/faq-section'));
 
 const faqs = [
   {
@@ -79,9 +71,9 @@ export default async function Home() {
   return (
     <main>
       <CarouselSection items={carouselItems} />
-      <EventListSection />
-      <CreatorListSection />
-      <FAQSection data={faqs} />
+      <HomeEventListSection />
+      <HomeCreatorListSection />
+      <HomeFAQSection data={faqs} />
     </main>
   );
 }
