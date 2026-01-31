@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import CarouselSection from '@/components/home/carousel-section';
 import { SEO_CONFIG } from '@/config/seo';
+import { getCarouselData } from '@/components/home/carousel-section/carousel.data';
 
 const EventListSection = dynamic(
   () => import('@/components/home/event-list-section')
@@ -64,10 +65,12 @@ const faqs = [
 
 export const metadata = SEO_CONFIG.pages.home;
 
-export default function Home() {
+export default async function Home() {
+  const carouselItems = await getCarouselData();
+
   return (
     <main>
-      <CarouselSection />
+      <CarouselSection items={carouselItems} />
       <EventListSection />
       <CreatorListSection />
       <FAQSection data={faqs} />
