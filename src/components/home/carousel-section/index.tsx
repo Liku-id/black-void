@@ -1,24 +1,18 @@
 'use client';
-import useSWR from 'swr';
+
 import { Container, Box, Carousel, Slider } from '@/components';
 import Image from 'next/image';
 
-export default function CarouselSection() {
-  const { data, isLoading } = useSWR('/api/events/thumbnails');
-  const items = data || [];
+interface CarouselItem {
+  url: string;
+  metaUrl: string;
+}
 
-  if (isLoading) {
-    return (
-      <section>
-        <Container>
-          <Box className="flex justify-center">
-            <Box className="h-[200px] w-full max-w-[390px] animate-pulse bg-gray-200 sm:h-[300px] md:h-[350px] md:max-w-[550px] lg:h-[450px] lg:max-w-[800px] xl:h-[500px] xl:max-w-[900px]" />
-          </Box>
-        </Container>
-      </section>
-    );
-  }
+interface CarouselSectionProps {
+  items?: CarouselItem[];
+}
 
+export default function CarouselSection({ items = [] }: CarouselSectionProps) {
   if (!items.length) {
     return (
       <section>
@@ -43,13 +37,11 @@ export default function CarouselSection() {
               itemWidth={350}
               gap={0}
               pagination
-              pages={items.map(
-                (item: { metaUrl: string }) => `/event/${item.metaUrl}`
-              )}
+              pages={items.map((item) => `/event/${item.metaUrl}`)}
               itemIds={items.map(
-                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
+                (item) => `btn_home_banner_${item.metaUrl}`
               )}>
-              {items.map((item: { url: string, metaUrl: string }, i: number) => (
+              {items.map((item, i) => (
                 <Image
                   key={i}
                   src={item.url}
@@ -70,12 +62,10 @@ export default function CarouselSection() {
           {/* Desktop: Carousel */}
           <Box className="hidden md:block">
             <Carousel
-              images={items.map((item: { url: string }) => item.url)}
-              pages={items.map(
-                (item: { metaUrl: string }) => `/event/${item.metaUrl}`
-              )}
+              images={items.map((item) => item.url)}
+              pages={items.map((item) => `/event/${item.metaUrl}`)}
               linkIds={items.map(
-                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
+                (item) => `btn_home_banner_${item.metaUrl}`
               )}
               width={800}
               height={456}
