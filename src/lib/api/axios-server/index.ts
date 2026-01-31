@@ -3,7 +3,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: 'https://api-staging-prem.wukong.co.id',
   headers: {
     'Content-Type': 'application/json',
     'request-id': uuidv4(),
