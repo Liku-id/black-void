@@ -94,7 +94,6 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
-                unoptimized
               />
             )}
             {pages.length > 0 ? (
@@ -111,7 +110,6 @@ export function Carousel({
                   height={height}
                   sizes={sizes}
                   draggable={false}
-                  unoptimized
                   priority={priority}
                   loading={priority ? 'eager' : 'lazy'}
                   // @ts-ignore
@@ -127,7 +125,6 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
-                unoptimized
                 priority={priority}
                 loading={priority ? 'eager' : 'lazy'}
                 // @ts-ignore
@@ -149,7 +146,6 @@ export function Carousel({
               height={height}
               sizes={sizes}
               draggable={false}
-              unoptimized
               priority={priority}
               loading={priority ? 'eager' : 'lazy'}
               // @ts-ignore
