@@ -9,30 +9,10 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: [
-      'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
-      'wukong-staging-private.s3.ap-southeast-3.amazonaws.com',
-      'dummyimage.com',
-    ],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'dummyimage.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.s3.ap-southeast-3.amazonaws.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.s3.ap-southeast-3.amazonaws.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.s3.ap-southeast-3.amazonaws.com',
         pathname: '/**',
       },
       {
