@@ -6,6 +6,7 @@ import Image from 'next/image';
 interface CarouselItem {
   url: string;
   metaUrl: string;
+  status?: string;
 }
 
 interface CarouselSectionProps {
@@ -33,34 +34,36 @@ export default function CarouselSection({ items = [] }: CarouselSectionProps) {
           <Box className="relative block w-[350px] overflow-hidden md:hidden">
             <Slider
               autoScroll={false}
-              className="h-[224px] w-full"
-              itemWidth={350}
+              className="w-full"
+              itemWidth={350} // Fixed width 350
               gap={0}
               pagination
               pages={items.map((item) => `/event/${item.metaUrl}`)}
               itemIds={items.map(
                 (item) => `btn_home_banner_${item.metaUrl}`
-              )}>
+              )}
+              clickableItems={items.map((item) => item.status === 'on_going')}>
               {items.map((item, i) => (
-                <Image
-                  key={i}
-                  src={item.url}
-                  alt={`Image ${i + 1}`}
-                  width={350}
-                  height={200}
-                  className="h-full w-full object-cover"
-                  draggable={false}
-                  priority={i === 0}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  // @ts-ignore
-                  fetchPriority={i === 0 ? 'high' : 'auto'}
-                />
+                <Box key={i} className="relative w-full h-[208px]">
+                  <Image
+                    src={item.url}
+                    alt={`Image ${i + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 350px, 50vw"
+                    className="object-cover"
+                    draggable={false}
+                    priority={i === 0}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    // @ts-ignore
+                    fetchPriority={i === 0 ? 'high' : 'auto'}
+                  />
+                </Box>
               ))}
             </Slider>
           </Box>
 
           {/* Desktop: Carousel */}
-          <Box className="hidden md:block">
+          <Box className="hidden justify-center md:flex">
             <Carousel
               images={items.map((item) => item.url)}
               pages={items.map((item) => `/event/${item.metaUrl}`)}

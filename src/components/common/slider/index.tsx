@@ -25,6 +25,7 @@ interface SliderProps {
   pagination?: boolean;
   pages?: string[];
   itemIds?: string[];
+  clickableItems?: boolean[];
 }
 
 export function clampIndex(
@@ -55,6 +56,7 @@ export function Slider({
   pagination = false,
   pages,
   itemIds = [],
+  clickableItems = [],
 }: SliderProps) {
   const router = useRouter();
   const childrenArray = Array.isArray(children) ? children : [children];
@@ -88,7 +90,7 @@ export function Slider({
   useEffect(() => {
     if (!autoScroll || isDragging) return;
     const id = setInterval(() => {
-      setCurrentIndex(prev =>
+      setCurrentIndex((prev) =>
         prev + 1 >= childrenArray.length ? 0 : prev + 1
       );
     }, scrollInterval);
@@ -135,14 +137,16 @@ export function Slider({
     setHasDragged(false);
   };
 
+  const currentItemClickable = clickableItems[currentIndex] !== false;
+
   return (
     <Box className={className + ' flex flex-col items-center'}>
       <Box
         className={
           `relative w-full touch-pan-y overflow-hidden` +
-          (draggable
+          (draggable && currentItemClickable
             ? ` cursor-grab${isDragging ? ' cursor-grabbing' : ''}`
-            : '')
+            : ' cursor-default')
         }
         {...(draggable
           ? {
@@ -177,7 +181,6 @@ export function Slider({
           {childrenArray.map((_, index) => (
             <button
               key={index}
-              type="button"
               onClick={() => handlePaginationClick(index)}
               className={`h-1 cursor-pointer transition-colors ${index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
                 }`}

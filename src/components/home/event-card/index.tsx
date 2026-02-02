@@ -71,6 +71,7 @@ export default function EventCard({
           alt={title || 'Event image'}
           width={270}
           height={152}
+          sizes="270px"
           className="h-[152px] w-full object-cover"
         />
       ) : (
