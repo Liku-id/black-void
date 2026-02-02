@@ -30,6 +30,7 @@ export default function CreatorCard({
         draggable={false}
         width={128}
         height={128}
+        sizes="128px"
       />
     </Box>
   );
