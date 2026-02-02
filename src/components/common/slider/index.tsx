@@ -182,7 +182,6 @@ export function Slider({
           {childrenArray.map((_, index) => (
             <button
               key={index}
-              type="button"
               onClick={() => handlePaginationClick(index)}
               className={`h-1 cursor-pointer transition-colors ${index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
                 }`}
