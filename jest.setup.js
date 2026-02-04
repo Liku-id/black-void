@@ -87,7 +87,7 @@ if (typeof global.Response === 'undefined') {
 }
 
 // Global Environment Mocks
-process.env.API_BASE_URL = 'https://api.example.com';
+process.env.NEXT_PUBLIC_API_BASE_URL = 'https://api.example.com';
 
 // Mock Axios globally to preventing "interceptors of undefined" error
 jest.mock('axios', () => {
