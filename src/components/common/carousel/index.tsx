@@ -16,6 +16,7 @@ interface CarouselProps {
   className?: string;
   animate?: boolean;
   arrowPosition?: 'inside' | 'outside';
+  priority?: boolean;
 }
 
 type Direction = 'next' | 'prev';
@@ -30,6 +31,7 @@ export function Carousel({
   className = '',
   animate = true,
   arrowPosition = 'outside',
+  priority = false,
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -92,13 +94,13 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
-                unoptimized
               />
             )}
             {pages.length > 0 ? (
               <Link
                 id={linkIds[currentIndex] || undefined}
                 href={pages[currentIndex]}
+                aria-label={`Details for slide ${currentIndex + 1}`}
                 passHref>
                 <Image
                   src={images[currentIndex]}
@@ -108,7 +110,10 @@ export function Carousel({
                   height={height}
                   sizes={sizes}
                   draggable={false}
-                  unoptimized
+                  priority={priority}
+                  loading={priority ? 'eager' : 'lazy'}
+                  // @ts-ignore
+                  fetchPriority={priority ? 'high' : 'auto'}
                 />
               </Link>
             ) : (
@@ -120,7 +125,10 @@ export function Carousel({
                 height={height}
                 sizes={sizes}
                 draggable={false}
-                unoptimized
+                priority={priority}
+                loading={priority ? 'eager' : 'lazy'}
+                // @ts-ignore
+                fetchPriority={priority ? 'high' : 'auto'}
               />
             )}
           </>
@@ -128,6 +136,7 @@ export function Carousel({
           <Link
             href={pages[currentIndex] || '#'}
             passHref
+            aria-label={`View details for slide ${currentIndex + 1}`}
             id={linkIds[currentIndex] || undefined}>
             <Image
               src={images[currentIndex]}
@@ -137,7 +146,10 @@ export function Carousel({
               height={height}
               sizes={sizes}
               draggable={false}
-              unoptimized
+              priority={priority}
+              loading={priority ? 'eager' : 'lazy'}
+              // @ts-ignore
+              fetchPriority={priority ? 'high' : 'auto'}
             />
           </Link>
         )}
@@ -178,10 +190,11 @@ export function Carousel({
         {images.map((_, index) => (
           <button
             key={index}
+            type="button"
+            aria-label={`Go to slide ${index + 1}`}
             onClick={() => goToSlide(index)}
-            className={`h-1 cursor-pointer transition-colors ${
-              index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
-            }`}
+            className={`h-1 cursor-pointer transition-colors ${index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
+              }`}
             disabled={animate && isAnimating}
           />
         ))}

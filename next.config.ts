@@ -17,22 +17,20 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'wukong-staging-public.s3.ap-southeast-3.amazonaws.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'wukong-staging-private.s3.ap-southeast-3.amazonaws.com',
+        hostname: '*.s3.ap-southeast-3.amazonaws.com',
         pathname: '/**',
       },
     ],
     formats: ['image/webp', 'image/avif'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 2592000,
   },
 
   // Security headers
+  poweredByHeader: false,
+  reactStrictMode: true,
+
   async headers() {
     return [
       {
@@ -60,11 +58,9 @@ const nextConfig: NextConfig = {
   },
 
   // Compression and optimization
-  compress: true,
+  output: 'standalone',
 
   // Static optimization
-  trailingSlash: false,
-
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 
@@ -84,21 +80,9 @@ const nextConfig: NextConfig = {
 
   // Environment variables
   env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-    // Otomatis mengambil versi dari package.json
-    // Bisa di-override dengan NEXT_PUBLIC_APP_VERSION di .env jika diperlukan
     NEXT_PUBLIC_APP_VERSION:
       process.env.NEXT_PUBLIC_APP_VERSION || packageJson.version,
   },
-
-  // Output configuration for static export (if needed)
-  // output: 'export', // Uncomment if you want static export
-
-  // Base path (if deploying to subdirectory)
-  // basePath: '',
-
-  // Asset prefix (if using CDN)
-  // assetPrefix: '',
 };
 
 export default nextConfig;

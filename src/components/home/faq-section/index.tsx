@@ -5,6 +5,14 @@ import Accordion from '@/components/common/accordion';
 import { useState } from 'react';
 
 
+const text = [
+  "Let's collaborate",
+  "Let's create",
+  'Let’s connect',
+  'Let’s Play',
+  'Have Fun',
+  'Let’s learn',
+];
 
 interface FAQItem {
   question: string;
@@ -22,14 +30,6 @@ export default function FAQSection({ data = [] }: FAQSectionProps) {
   const midPoint = Math.ceil(data.length / 2);
   const leftFaqs = data.slice(0, midPoint);
   const rightFaqs = data.slice(midPoint);
-  const text = [
-    "Let's collaborate",
-    "Let's create",
-    'Let’s connect',
-    'Let’s Play',
-    'Have Fun',
-    'Let’s learn',
-  ];
 
   return (
     <section className="bg-white">

@@ -13,7 +13,7 @@ export async function GET() {
         status: res.status,
       });
     }
-    if (data.statusCode !== 0 || !data.body) {
+    if (!data.body) {
       return handleErrorAPI({
         message: data.message || 'Invalid response from backend',
         status: 500,

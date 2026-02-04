@@ -1,8 +1,15 @@
+import dynamic from 'next/dynamic';
 import CarouselSection from '@/components/home/carousel-section';
-import EventListSection from '@/components/home/event-list-section';
-import CreatorListSection from '@/components/home/creator-list-section';
-import FAQSection from '@/components/home/faq-section';
 import { SEO_CONFIG } from '@/config/seo';
+import { getCarouselData } from '@/components/home/carousel-section/carousel.data';
+
+const HomeEventListSection = dynamic(
+  () => import('@/components/home/event-list-section')
+);
+const HomeCreatorListSection = dynamic(
+  () => import('@/components/home/creator-list-section')
+);
+const HomeFAQSection = dynamic(() => import('@/components/home/faq-section'));
 
 const faqs = [
   {
@@ -58,13 +65,15 @@ const faqs = [
 
 export const metadata = SEO_CONFIG.pages.home;
 
-export default function Home() {
+export default async function Home() {
+  const carouselItems = await getCarouselData();
+
   return (
     <main>
-      <CarouselSection />
-      <EventListSection />
-      <CreatorListSection />
-      <FAQSection data={faqs} />
+      <CarouselSection items={carouselItems} />
+      <HomeEventListSection />
+      <HomeCreatorListSection />
+      <HomeFAQSection data={faqs} />
     </main>
   );
 }

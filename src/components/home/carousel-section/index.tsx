@@ -1,27 +1,19 @@
 'use client';
-import useSWR from 'swr';
+
 import { Container, Box, Carousel, Slider } from '@/components';
 import Image from 'next/image';
 
-export default function CarouselSection() {
-  const { data, isLoading } = useSWR('/api/events/thumbnails');
-  const items = data || [];
-  
-  // Create array to determine which items are clickable (ongoing events)
-  const clickableItems = items.map((item: { status?: string }) => item.status === 'on_going');
+interface CarouselItem {
+  url: string;
+  metaUrl: string;
+  status?: string;
+}
 
-  if (isLoading) {
-    return (
-      <section>
-        <Container>
-          <Box className="flex justify-center">
-            <Box className="h-[200px] w-full max-w-[390px] animate-pulse bg-gray-200 sm:h-[300px] md:h-[350px] md:max-w-[550px] lg:h-[450px] lg:max-w-[800px] xl:h-[500px] xl:max-w-[900px]" />
-          </Box>
-        </Container>
-      </section>
-    );
-  }
+interface CarouselSectionProps {
+  items?: CarouselItem[];
+}
 
+export default function CarouselSection({ items = [] }: CarouselSectionProps) {
   if (!items.length) {
     return (
       <section>
@@ -42,48 +34,47 @@ export default function CarouselSection() {
           <Box className="relative block w-[350px] overflow-hidden md:hidden">
             <Slider
               autoScroll={false}
-              className="h-[224px] w-full"
-              itemWidth={350}
+              className="w-full"
+              itemWidth={350} // Fixed width 350
               gap={0}
               pagination
-              pages={items.map(
-                (item: { metaUrl: string; status?: string }) => 
-                  item.status === 'on_going' ? `/event/${item.metaUrl}` : '/'
-              )}
+              pages={items.map((item) => `/event/${item.metaUrl}`)}
               itemIds={items.map(
-                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
+                (item) => `btn_home_banner_${item.metaUrl}`
               )}
-              clickableItems={clickableItems}>
-              {items.map((item: { url: string, metaUrl: string }, i: number) => (
-                <Image
-                  key={i}
-                  src={item.url}
-                  alt={`Image ${i + 1}`}
-                  width={350}
-                  height={200}
-                  className="h-full w-full object-cover"
-                  draggable={false}
-                  unoptimized
-                />
+              clickableItems={items.map((item) => item.status === 'on_going')}>
+              {items.map((item, i) => (
+                <Box key={i} className="relative w-full h-[208px]">
+                  <Image
+                    src={item.url}
+                    alt={`Image ${i + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 350px, 50vw"
+                    className="object-cover"
+                    draggable={false}
+                    priority={i === 0}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    // @ts-ignore
+                    fetchPriority={i === 0 ? 'high' : 'auto'}
+                  />
+                </Box>
               ))}
             </Slider>
           </Box>
 
           {/* Desktop: Carousel */}
-          <Box className="hidden md:block">
+          <Box className="hidden justify-center md:flex">
             <Carousel
-              images={items.map((item: { url: string }) => item.url)}
-              pages={items.map(
-                (item: { metaUrl: string; status?: string }) => 
-                  item.status === 'on_going' ? `/event/${item.metaUrl}` : '/'
-              )}
+              images={items.map((item) => item.url)}
+              pages={items.map((item) => `/event/${item.metaUrl}`)}
               linkIds={items.map(
-                (item: { metaUrl: string }) => `btn_home_banner_${item.metaUrl}`
+                (item) => `btn_home_banner_${item.metaUrl}`
               )}
               width={800}
               height={456}
               sizes="(min-width: 1024px) 800px, (min-width: 768px) 550px"
               className="h-[200px] w-[350px] max-w-full sm:h-[300px] sm:w-[450px] md:h-[350px] md:w-[550px] lg:h-[450px] lg:w-[800px] xl:h-[500px] xl:max-w-[900px]"
+              priority={true}
             />
           </Box>
         </Box>

@@ -150,15 +150,14 @@ export function Slider({
         }
         {...(draggable
           ? {
-              onMouseDown: (e: any) => handleStart(e.pageX),
-              onMouseUp: handleEnd,
-              onMouseMove: (e: any) => handleMove(e.pageX),
-              onTouchStart: (e: any) => handleStart(e.touches[0].pageX),
-              onTouchMove: (e: any) => handleMove(e.touches[0].pageX),
-              onTouchEnd: handleEnd,
-            }
-          : {})}
-      >
+            onMouseDown: (e: any) => handleStart(e.pageX),
+            onMouseUp: handleEnd,
+            onMouseMove: (e: any) => handleMove(e.pageX),
+            onTouchStart: (e: any) => handleStart(e.touches[0].pageX),
+            onTouchMove: (e: any) => handleMove(e.touches[0].pageX),
+            onTouchEnd: handleEnd,
+          }
+          : {})}>
         <Box
           className="flex w-full transition-transform duration-300 ease-out"
           style={{
@@ -184,9 +183,8 @@ export function Slider({
             <button
               key={index}
               onClick={() => handlePaginationClick(index)}
-              className={`h-1 cursor-pointer transition-colors ${
-                index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
-              }`}
+              className={`h-1 cursor-pointer transition-colors ${index === currentIndex ? 'w-[44px] bg-white' : 'bg-gray w-2'
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
