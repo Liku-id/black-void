@@ -34,7 +34,7 @@ describe('AboutUsPage', () => {
     // Hero Section
     expect(screen.getByText(/All in One Ticketing & Event/i)).toBeInTheDocument();
     expect(screen.getByText(/Management System Platform/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Start Funding/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Explore Wukong/i })).toBeInTheDocument();
 
     // Who We Are Section
     expect(screen.getByRole('heading', { name: /Who we are\?/i })).toBeInTheDocument();
@@ -57,21 +57,11 @@ describe('AboutUsPage', () => {
 
     // CTA Section
     expect(screen.getByText(/START YOUR EVENT HERE!/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Create My Event/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Talk to Our Team/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: /Create My Event/i }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: /Talk to Our Team/i })).toBeInTheDocument();
 
     // FAQ Section (Mocked)
     expect(screen.getByTestId('faq-section')).toBeInTheDocument();
-  });
-
-  it('handles "Start Funding" click in Hero Section', () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    render(<AboutUsPage />);
-
-    const button = screen.getByRole('button', { name: /Start Funding/i });
-    fireEvent.click(button);
-
-    expect(consoleSpy).toHaveBeenCalledWith('Start Funding Clicked');
   });
 
   it('handles USP Section swipe logic (mobile)', () => {

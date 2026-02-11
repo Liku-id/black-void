@@ -19,16 +19,8 @@ describe('HeroSection', () => {
     expect(screen.getByText(/Management System Platform/i)).toBeInTheDocument();
     expect(screen.getByText(/A simple, powerful ticketing system designed for creators/i)).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: /Start Funding/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Explore Wukong/i })).toBeInTheDocument();
   });
 
-  it('handles button click', () => {
-    const consoleSpy = jest.spyOn(console, 'log');
-    render(<HeroSection />);
 
-    const button = screen.getByRole('button', { name: /Start Funding/i });
-    fireEvent.click(button);
-
-    expect(consoleSpy).toHaveBeenCalledWith('Start Funding Clicked');
-  });
 });
