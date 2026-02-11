@@ -17,10 +17,10 @@ jest.mock('swr', () => ({
 }));
 import useSWR from 'swr';
 
-const images = [
-  'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1',
-  'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2',
-  'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3',
+const mockItems = [
+  { url: 'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1', metaUrl: 'event-1', status: 'on_going' },
+  { url: 'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2', metaUrl: 'event-2', status: 'on_going' },
+  { url: 'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3', metaUrl: 'event-3', status: 'on_going' },
 ];
 
 describe('CarouselSection', () => {
@@ -29,17 +29,9 @@ describe('CarouselSection', () => {
   });
 
   it('renders Slider (mobile) with correct images and classes', () => {
-    (useSWR as jest.Mock).mockReturnValue({
-      data: [
-        { url: 'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1', metaUrl: 'event-1' },
-        { url: 'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2', metaUrl: 'event-2' },
-        { url: 'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3', metaUrl: 'event-3' },
-      ],
-      isLoading: false,
-    });
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: false }); // isMobile
-    render(<CarouselSection />);
+    render(<CarouselSection items={mockItems} />);
 
     // Should render Slider
     const imgs = screen
@@ -49,9 +41,9 @@ describe('CarouselSection', () => {
           (img as HTMLImageElement).alt
         )
       );
-    expect(imgs).toHaveLength(images.length);
-    images.forEach((src, i) => {
-      expect(screen.getByAltText(`Image ${i + 1}`)).toHaveAttribute('src', src);
+    expect(imgs).toHaveLength(mockItems.length);
+    mockItems.forEach((item, i) => {
+      expect(screen.getByAltText(`Image ${i + 1}`)).toHaveAttribute('src', item.url);
     });
     // Should have correct class for width/height on the slider wrapper
     // Cari parent yang punya class w-[350px]
@@ -64,20 +56,14 @@ describe('CarouselSection', () => {
   });
 
   it('renders Carousel (desktop) with correct props', () => {
-    (useSWR as jest.Mock).mockReturnValue({
-      data: [
-        { url: 'https://dummyimage.com/900x505/FF6B6B/FFFFFF.png&text=Event+1', metaUrl: 'event-1' },
-        { url: 'https://dummyimage.com/900x505/4ECDC4/FFFFFF.png&text=Event+2', metaUrl: 'event-2' },
-        { url: 'https://dummyimage.com/900x505/45B7D1/FFFFFF.png&text=Event+3', metaUrl: 'event-3' },
-      ],
-      isLoading: false,
-    });
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: true, md: true, lg: true, xl: true }); // isDesktop
-    render(<CarouselSection />);
+    render(<CarouselSection items={mockItems} />);
 
     // Should render Carousel (not Slider)
     // Carousel renders images as background or via props, so check for class
+    // Note: The previous test might have been checking for a specific structure that might differ slightly based on Carousel implementation
+    // But assuming Carousel uses the className passed to it:
     const candidates = screen.getAllByText((content, element) => {
       return (
         !!element &&
@@ -92,7 +78,7 @@ describe('CarouselSection', () => {
   it('renders correct class for md viewport', () => {
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: true, md: true, lg: false, xl: false });
-    render(<CarouselSection />);
+    render(<CarouselSection items={mockItems} />);
     // md: width 550, height 350
     const candidates = screen.getAllByText((content, element) => {
       return (
@@ -108,7 +94,7 @@ describe('CarouselSection', () => {
   it('renders correct class for lg viewport', () => {
     const { useResponsive } = require('@/lib/use-responsive');
     useResponsive.mockReturnValue({ sm: true, md: true, lg: true, xl: false });
-    render(<CarouselSection />);
+    render(<CarouselSection items={mockItems} />);
     // lg: width 800, height 450
     const candidates = screen.getAllByText((content, element) => {
       return (
@@ -129,7 +115,7 @@ describe('CarouselSection', () => {
       lg: false,
       xl: false,
     });
-    render(<CarouselSection />);
+    render(<CarouselSection items={mockItems} />);
     // sm: width 450, height 300
     const el = screen.getByText((content, element) => {
       return (

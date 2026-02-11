@@ -161,13 +161,12 @@ describe('Header', () => {
 
   it('renders the Get In button', () => {
     render(<Header />);
-    const loginButtons = screen.getAllByText(/Get In/i);
-    const loginLinks = loginButtons.map(btn => btn.closest('a'));
-    expect(loginLinks.length).toBeGreaterThan(0);
-    loginLinks.forEach(link => {
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', '/login');
-    });
+    const loginButtons = screen.getAllByRole('button', { name: /Get In/i });
+    expect(loginButtons.length).toBeGreaterThan(0);
+
+    // Test click on the first one (Desktop)
+    fireEvent.click(loginButtons[0]);
+    expect(require('next/navigation').useRouter().push).toHaveBeenCalledWith('/login');
   });
 
   it('renders Contact Us and Become Creator links', () => {
@@ -196,7 +195,7 @@ describe('Header', () => {
     expect(screen.getAllByText(/Contact Us/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Become Creator/i).length).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole('link', { name: /get in/i }).length
+      screen.getAllByRole('button', { name: /get in/i }).length
     ).toBeGreaterThan(0);
   });
 
