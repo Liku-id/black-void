@@ -123,6 +123,8 @@ const Ticket = ({ type }: TicketDetailProps) => {
     }
   };
 
+  if (isLoading) return <Loading />;
+
   if (!data || !data.tickets || data.tickets.length === 0)
     return (
       <Container>
@@ -131,8 +133,6 @@ const Ticket = ({ type }: TicketDetailProps) => {
         </Box>
       </Container>
     );
-
-  if (isLoading) return <Loading />;
   return (
     <>
       {loading && <Loading />}
