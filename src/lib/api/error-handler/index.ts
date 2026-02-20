@@ -1,5 +1,6 @@
 import { isAxiosError } from 'axios';
 import { NextResponse } from 'next/server';
+import { mapErrorMessage } from './error-message-map';
 
 type ErrorLike = {
   message?: string;
@@ -46,7 +47,15 @@ export function handleErrorAPI(error: ErrorLike) {
 export const getErrorMessage = (error: unknown): string => {
   if (isAxiosError(error)) {
     const apiError = error.response?.data as ApiErrorResponse;
-    return apiError?.message || 'An error occurred. Please try again later';
+
+    const mapped = mapErrorMessage({
+      status: error.response?.status,
+      backendMessage: apiError?.message,
+      url: error.config?.url,
+      responseData: error.response?.data,
+    });
+
+    return mapped || 'An error occurred. Please try again later';
   }
   return 'An unexpected error occurred';
 };
