@@ -10,6 +10,7 @@ import { resetOrderBookingAtom } from '@/store';
 import { Box, Container } from '@/components';
 import Loading from '@/components/layout/loading';
 import axiosClient from '@/lib/api/axios-client';
+import { getErrorMessage } from '@/lib/api/error-handler';
 
 const VAComponent = dynamic(() => import('./va'));
 const QRISComponent = dynamic(() => import('./qris'));
@@ -19,9 +20,11 @@ export default function PaymentConfirmation() {
   const params = useParams();
   const transactionId = params.id;
 
-  const { data, isLoading, mutate } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null
   );
+
+  const errorMessage = error ? getErrorMessage(error) : '';
 
   // Countdown logic
   // const expiredAtStr = data && data.transaction && data.transaction.expiresAt;
@@ -80,13 +83,13 @@ export default function PaymentConfirmation() {
 
   if (data && data.transaction && data.transaction.paymentDetails.va) {
     return (
-      <VAComponent data={data} mutate={mutate} secondsLeft={secondsLeft} />
+      <VAComponent data={data} mutate={mutate} secondsLeft={secondsLeft} error={errorMessage} />
     );
   }
 
   if (data && data.transaction && data.transaction.paymentDetails.qris) {
     return (
-      <QRISComponent data={data} mutate={mutate} secondsLeft={secondsLeft} />
+      <QRISComponent data={data} mutate={mutate} secondsLeft={secondsLeft} error={errorMessage} />
     );
   }
 

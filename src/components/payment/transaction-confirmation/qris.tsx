@@ -7,12 +7,14 @@ interface QRISComponentProps {
   data: any;
   mutate: any;
   secondsLeft: number;
+  error?: string;
 }
 
 const QRISComponent: React.FC<QRISComponentProps> = ({
   data,
   mutate,
   secondsLeft,
+  error,
 }) => {
   const handleDownloadQRCode = async () => {
     const qrElement = document.getElementById('qr-code');
@@ -87,10 +89,15 @@ const QRISComponent: React.FC<QRISComponentProps> = ({
             </Button>
           </Box>
 
-          <Box className="flex justify-center">
+          <Box className="flex flex-col items-center">
             <Button id="btn_ep_confirm_payment" onClick={mutate}>
               Confirm Payment
             </Button>
+            {error && (
+              <Typography size={12} className="text-danger mt-4 font-bold">
+                {error}
+              </Typography>
+            )}
           </Box>
         </Box>
       </Box>
