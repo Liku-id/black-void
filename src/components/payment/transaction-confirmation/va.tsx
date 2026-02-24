@@ -26,10 +26,12 @@ export default function PaymentConfirmationVA({
   data,
   mutate,
   secondsLeft,
+  error,
 }: {
   data: any;
   mutate: any;
   secondsLeft: number;
+  error?: string;
 }) {
   // Initialize State
   const [copiedText, setCopiedText] = useState<string | null>(null);
@@ -397,10 +399,15 @@ export default function PaymentConfirmationVA({
               </Button>
             </Box>
 
-            <Box className="flex justify-center">
+            <Box className="flex flex-col items-center">
               <Button id="btn_ep_confirm_payment" onClick={mutate}>
                 Confirm Payment
               </Button>
+              {error && (
+                <Typography size={12} className="text-danger mt-4 font-bold">
+                  {error}
+                </Typography>
+              )}
             </Box>
 
             <PaymentInstructionModal

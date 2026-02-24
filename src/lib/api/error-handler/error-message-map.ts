@@ -53,8 +53,7 @@ const urlMatchers = {
 
   checkout: (url: string) => /\/api\/transaction\/create/i.test(url),
 
-  payment: (url: string) => /\/api\/transaction\/[^/]+$/i.test(url),
-
+  payment: (url: string) => /\/api\/transaction(\/|$)/i.test(url),
 };
 
 // ---------------------------------------------------------------------------
@@ -91,29 +90,12 @@ const errorMappings: Record<string, ErrorMapping[]> = {
       ],
       userMessage: "Email & password doesn't match",
     },
-    {
-      patterns: [
-        'too many',
-        'rate limit',
-        'failed 3',
-        'locked',
-        'temporarily blocked',
-      ],
-      userMessage:
-        'Too many requests. Please wait for 3 minutes to try again.',
-    },
   ],
 
   forgotPassword: [
     {
-      patterns: [
-        'too many',
-        'rate limit',
-        'request more than',
-        'cooldown',
-      ],
-      userMessage:
-        'Too many requests. Please wait before requesting another link.',
+      patterns: ['too many', 'rate limit', 'request more than', 'cooldown', 'limit', 'exceeded'],
+      userMessage: 'Too many requests. Please wait before requesting another link.',
     },
     {
       patterns: [
@@ -179,14 +161,8 @@ const errorMappings: Record<string, ErrorMapping[]> = {
       userMessage: 'Phone number is already registered. Sign in?',
     },
     {
-      patterns: [
-        'too many',
-        'rate limit',
-        'request more than',
-        'cooldown',
-      ],
-      userMessage:
-        'Too many requests. Please wait before requesting another link.',
+      patterns: ['too many', 'rate limit', 'request more than', 'cooldown', 'limit', 'exceeded'],
+      userMessage: 'Too many requests. Please wait before requesting another link.',
     },
   ],
 
