@@ -1,5 +1,5 @@
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -29,6 +29,6 @@ export async function POST(request: NextRequest) {
       success: true,
     });
   } catch (e) {
-    return handleErrorAPI(e as AxiosErrorResponse);
+    return handleErrorAPI(e);
   }
 }

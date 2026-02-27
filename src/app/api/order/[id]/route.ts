@@ -8,21 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    const res = await axios.get(`/v1/orders/${id}`);
-    const data = res.data;
-
-    if (res.status !== 200) {
-      return handleErrorAPI({
-        message: data.message || 'Order not found',
-        status: res.status,
-      });
-    }
-    if (!data.order) {
-      return handleErrorAPI({
-        message: data.message || 'Invalid response from backend',
-        status: 500,
-      });
-    }
+    const { data } = await axios.get(`/v1/orders/${id}`);
     const order = data.order;
     const tickets = [
       {

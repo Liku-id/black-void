@@ -32,46 +32,35 @@ export async function GET(
         // Decrypt the preview token to get the actual access token
         const decryptedToken = encryptUtils.decrypt(previewToken);
         config.headers = {
-          Authorization: `Bearer ${decryptedToken}`
+          Authorization: `Bearer ${decryptedToken}`,
         };
       } catch (error) {
         console.error('Error decrypting preview_token:', error);
         // If decryption fails, try using it as-is (backward compatibility)
         config.headers = {
-          Authorization: `Bearer ${previewToken}`
+          Authorization: `Bearer ${previewToken}`,
         };
       }
     }
 
-    const res = await axios.get(url, config);
-    const data = res.data;
+    const { data } = await axios.get(url, config);
 
-    if (res.status !== 200) {
-      return handleErrorAPI({
-        message: data.message || 'Event not found',
-        status: res.status,
-      });
-    }
-    if (data.statusCode !== 0 || !data.body) {
-      return handleErrorAPI({
-        message: data.message || 'Invalid response from backend',
-        status: 500,
-      });
-    }
     const minPrice = (() => {
       if (!data.body.ticketTypes || data.body.ticketTypes.length === 0) {
         return null;
       }
       const prices = data.body.ticketTypes.map((ticket: any) => {
         const basePrice = Number(ticket.price);
-        return calculatePriceWithPartnership(basePrice, ticket.partnership_info);
+        return calculatePriceWithPartnership(
+          basePrice,
+          ticket.partnership_info
+        );
       });
       return Math.min(...prices);
     })();
 
-    data.body.lowestTicketPrice = minPrice !== null
-      ? formatRupiah(minPrice)
-      : null;
+    data.body.lowestTicketPrice =
+      minPrice !== null ? formatRupiah(minPrice) : null;
 
     // Merging Tickets
     const singleTickets = (data.body.ticketTypes || [])
@@ -103,7 +92,8 @@ export async function GET(
         price: gt.price,
         count: 0,
         max_order_quantity: gt.max_order_quantity,
-        description: gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
+        description:
+          gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
         sales_start_date: gt.sales_start_date,
         sales_end_date: gt.sales_end_date,
         ticket_start_date: ticketStartDate,

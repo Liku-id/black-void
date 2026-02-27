@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 
 interface UpdateTicketRequest {
   ticketStatus: 'redeemed' | 'checked_in';
@@ -24,7 +24,7 @@ export async function GET(
       data: data?.body,
     });
   } catch (error) {
-    return handleErrorAPI(error as AxiosErrorResponse);
+    return handleErrorAPI(error);
   }
 }
 
@@ -59,6 +59,6 @@ export async function PUT(
       data: data?.body,
     });
   } catch (error) {
-    return handleErrorAPI(error as AxiosErrorResponse);
+    return handleErrorAPI(error);
   }
 }

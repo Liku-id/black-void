@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (e) {
-    const errorResponse = handleErrorAPI(e as AxiosErrorResponse);
+    const errorResponse = handleErrorAPI(e);
 
     if (errorResponse instanceof NextResponse) {
       errorResponse.cookies.delete('reset_token');
