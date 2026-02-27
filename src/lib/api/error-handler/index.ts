@@ -1,65 +1,87 @@
 import { isAxiosError } from 'axios';
 import { NextResponse } from 'next/server';
-import { mapErrorMessage } from './error-message-map';
 
-type ErrorLike = {
-  message?: string;
-  traceId?: string;
-  status?: number;
-  response?: {
-    data?: { message: string; traceId: string };
-    status?: number;
-    message?: string;
-    traceId?: string;
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+/**
+ * Shape of the backend error response body.
+ * { code, message, detail: { error_code } }
+ */
+export type ErrorResponseData = {
+  code?: string | number;
+  message: string;
+  detail?: {
+    error_code?: string;
+    [key: string]: any;
   };
 };
 
-type ApiErrorResponse = {
-  message: string;
-  meta?: {
-    debug_param?: string;
-  };
-};
+// ---------------------------------------------------------------------------
+// Server-side error handler — passes BE error body through directly
+// ---------------------------------------------------------------------------
 
-export type AxiosErrorResponse = {
-  message: string;
-  status: number;
-};
+/**
+ * Handles errors that occur in Next.js API routes (server side).
+ *
+ * Priority:
+ * 1. If Axios error → forward `error.response.data` ({code, message, detail})
+ *    and the HTTP status code as-is.
+ * 2. Otherwise → return a generic 500 with whatever message is available.
+ */
+export function handleErrorAPI(error: unknown): NextResponse {
+  if (isAxiosError(error)) {
+    const status = error.response?.status ?? 500;
+    const data = error.response?.data as ErrorResponseData | undefined;
 
-// Error hit server side
-export function handleErrorAPI(error: ErrorLike) {
-  const statusCode = error?.response?.status || error?.status || 500;
+    const body: ErrorResponseData = {
+      code: data?.code,
+      message:
+        data?.message ?? error.message ?? 'An unexpected error occurred.',
+      detail: data?.detail,
+    };
 
+    return NextResponse.json(body, { status });
+  }
+
+  // Non-Axios error (e.g. programming error, network issue before response)
   const message =
-    error?.response?.data?.message ||
-    error?.message ||
-    'An unexpected error occurred.';
+    error instanceof Error ? error.message : 'An unexpected error occurred.';
 
-  const traceId = error?.response?.data?.traceId || error?.traceId || '';
-
-  return NextResponse.json(
-    { message, traceId, success: false },
-    { status: statusCode }
-  );
+  return NextResponse.json({ message } satisfies Partial<ErrorResponseData>, {
+    status: 500,
+  });
 }
 
-// Error hit client side
+// ---------------------------------------------------------------------------
+// Client-side error message extractor — reads BE message directly
+// ---------------------------------------------------------------------------
+
+/**
+ * Extracts the user-facing error message from an Axios error on the client.
+ *
+ * Priority:
+ * 1. If Axios error → reads `error.response.data.message` directly from the
+ *    backend response (no mapping or transformation).
+ * 2. Falls back to the axios error message, then a generic string.
+ */
 export const getErrorMessage = (error: unknown): string => {
   if (isAxiosError(error)) {
-    const apiError = error.response?.data as ApiErrorResponse;
-
-    const mapped = mapErrorMessage({
-      status: error.response?.status,
-      backendMessage: apiError?.message,
-      url: error.config?.url,
-      responseData: error.response?.data,
-    });
-
-    return mapped || 'An error occurred. Please try again later';
+    const data = error.response?.data as ErrorResponseData | undefined;
+    return (
+      data?.message ||
+      error.message ||
+      'An error occurred. Please try again later'
+    );
   }
   return 'An unexpected error occurred';
 };
-// Error handler for GraphQL
+
+// ---------------------------------------------------------------------------
+// GraphQL error handler — unchanged
+// ---------------------------------------------------------------------------
+
 export function handleGraphQLErrorAPI(error: any) {
   if (error.graphQLErrors && error.graphQLErrors.length) {
     const extensions = error.graphQLErrors[0].extensions || {};

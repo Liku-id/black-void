@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,6 +16,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ loggedIn: true, user: data?.body });
   } catch (e) {
-    return handleErrorAPI(e as AxiosErrorResponse);
+    return handleErrorAPI(e);
   }
 }
