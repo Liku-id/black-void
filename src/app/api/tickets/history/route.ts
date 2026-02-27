@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 
 interface TicketHistoryItem {
   transaction_id: string;
@@ -33,6 +33,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data?.body);
   } catch (error) {
-    return handleErrorAPI(error as AxiosErrorResponse);
+    return handleErrorAPI(error);
   }
 }
