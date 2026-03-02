@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 import { cookies } from 'next/headers';
 import { setAuthCookies } from '@/lib/session';
 
@@ -39,6 +39,6 @@ export async function POST() {
       accessToken: body.accessToken,
     });
   } catch (e) {
-    return handleErrorAPI(e as AxiosErrorResponse);
+    return handleErrorAPI(e);
   }
 }

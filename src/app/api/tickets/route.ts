@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from '@/lib/api/axios-server';
-import { AxiosErrorResponse, handleErrorAPI } from '@/lib/api/error-handler';
+import { handleErrorAPI } from '@/lib/api/error-handler';
 
 interface Ticket {
   id: string;
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Add multiple ticketTypeIds if provided
-    ticketTypeIds.forEach(id => {
+    ticketTypeIds.forEach((id) => {
       queryParams.append('ticketTypeIds', id);
     });
 
@@ -83,6 +83,6 @@ export async function GET(request: NextRequest) {
       data: data.body,
     });
   } catch (error) {
-    return handleErrorAPI(error as AxiosErrorResponse);
+    return handleErrorAPI(error);
   }
 }

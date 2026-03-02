@@ -8,23 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    const url = `/v1/transactions/${id}/tickets`;
-    const res = await axios.get(url);
-    const data = res.data;
-
-    if (res.status !== 200) {
-      return handleErrorAPI({
-        message: data.message || 'Ticket not found',
-        status: res.status,
-      });
-    }
-    if (!data.body) {
-      return handleErrorAPI({
-        message: data.message || 'Invalid response from backend',
-        status: 500,
-      });
-    }
-
+    const { data } = await axios.get(`/v1/transactions/${id}/tickets`);
     return NextResponse.json(data.body);
   } catch (error: any) {
     return handleErrorAPI(error);

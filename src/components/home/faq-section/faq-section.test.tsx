@@ -10,8 +10,17 @@ jest.mock('@/components/common/accordion', () => (props: any) => (
 ));
 
 describe('FAQSection', () => {
+  const mockData = Array.from({ length: 10 }, (_, i) => ({
+    question: `${i + 1}. How do I buy a ticket??` + (i === 9 ? '?' : ''), // Match specific string for last item if needed, but simpler is better
+    answer: 'Answer',
+  }));
+
+  // Fix the specific strings expected in tests
+  mockData[0].question = 'How do I buy a ticket??'; // The component adds index prefix
+  mockData[9].question = 'How do I contact customer support?';
+
   it('renders FAQ title and all Accordion components', () => {
-    render(<FAQSection />);
+    render(<FAQSection data={mockData} />);
     // Judul FAQ
     expect(screen.getByText('FAQ')).toBeInTheDocument();
     // Ada 10 Accordion
@@ -25,7 +34,7 @@ describe('FAQSection', () => {
   });
 
   it('can expand and collapse Accordion', () => {
-    render(<FAQSection />);
+    render(<FAQSection data={mockData} />);
     const accordions = screen.getAllByTestId('accordion');
     // Awal semua tertutup
     accordions.forEach(acc =>
@@ -41,7 +50,7 @@ describe('FAQSection', () => {
   });
 
   it('can expand and collapse Accordion in right column', () => {
-    render(<FAQSection />);
+    render(<FAQSection data={mockData} />);
     const accordions = screen.getAllByTestId('accordion');
     // Klik Accordion ke-6 (idx 5, kolom kanan)
     fireEvent.click(accordions[5]);
@@ -52,7 +61,7 @@ describe('FAQSection', () => {
   });
 
   it('only one Accordion can be open at a time', () => {
-    render(<FAQSection />);
+    render(<FAQSection data={mockData} />);
     const accordions = screen.getAllByTestId('accordion');
     // Buka Accordion pertama
     fireEvent.click(accordions[0]);
