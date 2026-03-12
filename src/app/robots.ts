@@ -17,6 +17,8 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/ticket/',
           '/transaction/',
+          '/checkout-payment/',
+          '/payment-success/',
           '/login',
           '/register',
           '/reset-password',

@@ -254,7 +254,7 @@ const OrderPage = () => {
       );
 
       if (response.success) {
-        router.push(`/transaction/${response.id}`);
+        router.push(`/checkout-payment/${response.id}`);
       }
     } catch (error: any) {
       setLoading(false);
