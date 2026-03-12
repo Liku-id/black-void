@@ -66,7 +66,7 @@ export default function PaymentStatus() {
       data.transaction.status !== 'failed' &&
       data.transaction.status !== 'paid'
     ) {
-      router.push(`/transaction/${transactionId}`);
+      router.push(`/checkout-payment/${transactionId}`);
     }
   }, [data, router]);
 

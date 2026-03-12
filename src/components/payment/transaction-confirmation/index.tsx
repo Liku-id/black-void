@@ -39,7 +39,7 @@ export default function PaymentConfirmation() {
     resetOrder();
 
     if (data && data.transaction && data.transaction.status !== 'pending') {
-      router.push(`/transaction/${transactionId}/status`);
+      router.push(`/payment-success/${transactionId}`);
     }
   }, [data, router, resetOrder, transactionId]);
 
