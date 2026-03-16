@@ -78,6 +78,22 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Redirects for legacy routes (e.g. from existing emails)
+  async redirects() {
+    return [
+      {
+        source: '/transaction/:id/status',
+        destination: '/payment-success/:id',
+        permanent: true,
+      },
+      {
+        source: '/transaction/:id',
+        destination: '/checkout-payment/:id',
+        permanent: true,
+      },
+    ];
+  },
+
   // Environment variables
   env: {
     NEXT_PUBLIC_APP_VERSION:
