@@ -21,7 +21,7 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
 
   const dates = useMemo(() => {
     const rawDates = allDisplayTickets
-      .map(t => t.ticket_start_date)
+      .map((t) => t.ticket_start_date?.split('T')[0])
       .filter(Boolean);
     const unique = Array.from(new Set(rawDates));
     unique.sort();
@@ -41,17 +41,20 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
     }
   }, [dates, selectedDate]);
 
-
-  const activeTicketId = allDisplayTickets.find(t => t.count > 0)?.id;
+  const activeTicketId = allDisplayTickets.find((t) => t.count > 0)?.id;
   const hasDates = dates.length > 0;
 
   // Filter tickets based on date and sales period
   const filteredTickets = useMemo(() => {
-    return allDisplayTickets.filter(ticket => {
-      if (partnerCode && (!ticket.partnership_info || ticket.partnership_info === null)) {
+    return allDisplayTickets.filter((ticket) => {
+      if (
+        partnerCode &&
+        (!ticket.partnership_info || ticket.partnership_info === null)
+      ) {
         return false;
       }
-      if (ticket.ticket_start_date !== selectedDate) return false;
+      if (ticket.ticket_start_date?.split('T')[0] !== selectedDate)
+        return false;
       return true;
     });
   }, [allDisplayTickets, selectedDate, partnerCode]);
@@ -86,11 +89,13 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
               <Box
                 key={date}
                 id={`event_date_${date}_tab`}
-                className={`min-w-max cursor-pointer px-3 py-[6px] text-center transition-shadow ${selectedDate === date
-                  ? 'border border-white bg-black text-white shadow-[4px_4px_0px_0px_#000]'
-                  : 'border border-[var(--color-light-gray-border)] bg-[rgba(0,0,0,0.02)] text-black'
-                  }`}
-                onClick={() => setSelectedDate(date)}>
+                className={`min-w-max cursor-pointer px-3 py-[6px] text-center transition-shadow ${
+                  selectedDate === date
+                    ? 'border border-white bg-black text-white shadow-[4px_4px_0px_0px_#000]'
+                    : 'border border-[var(--color-light-gray-border)] bg-[rgba(0,0,0,0.02)] text-black'
+                }`}
+                onClick={() => setSelectedDate(date)}
+              >
                 <Typography type="body" size={14}>
                   {formatDate(date, 'day')},
                 </Typography>
