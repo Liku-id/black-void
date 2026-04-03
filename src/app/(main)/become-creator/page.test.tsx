@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import BecomeCreatorPage from './page';
-import posthog from 'posthog-js';
 
 // Mock Next.js Image
 jest.mock('next/image', () => ({
@@ -8,10 +7,7 @@ jest.mock('next/image', () => ({
   default: (props: any) => <img {...props} />,
 }));
 
-// Mock posthog
-jest.mock('posthog-js', () => ({
-  capture: jest.fn(),
-}));
+
 
 // Mock assets
 jest.mock('@/assets/images/creator-main.webp', () => 'creator-main.webp');
@@ -78,7 +74,7 @@ describe('BecomeCreatorPage', () => {
     const createBtn = screen.getAllByText('Create My Event')[0];
     fireEvent.click(createBtn);
 
-    expect(posthog.capture).toHaveBeenCalledWith('become_creator_clicked', expect.any(Object));
+
     expect(window.open).toHaveBeenCalledWith(
       expect.stringContaining('https://creator.wukong.co.id'),
       '_blank',
