@@ -8,7 +8,6 @@ import Loading from '@/components/layout/loading';
 import axios from '@/lib/api/axios-client';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { getSessionStorage, setSessionStorage } from '@/lib/browser-storage';
-import { trackEvent, trackLogin } from '@/lib/posthog';
 import { useAuth } from '@/lib/session/use-auth';
 import { authAtom } from '@/store';
 import { email } from '@/utils/form-validation';
@@ -54,12 +53,7 @@ const LoginForm = () => {
       if (response.status === 200) {
         setAuthUser(response.data.data);
 
-        // Track successful login
-        trackLogin(
-          response.data.data.id || 'unknown',
-          response.data.data.name,
-          response.data.data.email
-        );
+
 
         // handle redirect based on current path
         if (pathname === '/ticket/auth') {
@@ -96,11 +90,7 @@ const LoginForm = () => {
       console.error(error);
       setError(getErrorMessage(error));
 
-      // Track failed login attempt
-      trackEvent('login_failed', {
-        error: getErrorMessage(error),
-        email: formData.email,
-      });
+
     } finally {
       setLoading(false);
     }

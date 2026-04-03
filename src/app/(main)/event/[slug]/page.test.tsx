@@ -30,10 +30,6 @@ jest.mock('jotai/utils', () => ({
   atomWithStorage: jest.fn(),
 }));
 
-jest.mock('posthog-js', () => ({
-  capture: jest.fn(),
-}));
-
 // Mock Child Components
 jest.mock('@/components/event/event-detail-section', () => () => <div data-testid="event-detail-section">EventDetailSection</div>);
 jest.mock('@/components/event/ticket-list-section', () => () => <div data-testid="ticket-list-section">TicketListSection</div>);
