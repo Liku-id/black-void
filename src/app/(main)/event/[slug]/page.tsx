@@ -28,7 +28,6 @@ import { orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
 import { setSessionStorage } from '@/lib/browser-storage';
 import { getTodayWIB, convertToWIB } from '@/utils/formatter';
-import posthog from 'posthog-js';
 
 interface SelectedTicket extends Ticket {
   ticket_type_id?: string;
@@ -145,16 +144,7 @@ export default function Event() {
 
       if (nextCount === target.count) return prev;
 
-      // Track ticket selection change
-      if (nextCount > 0 && nextCount !== target.count) {
-        posthog.capture('ticket_selected', {
-          event_id: eventData?.id,
-          event_name: eventData?.name,
-          event_slug: slug,
-          ticket_type_id: id,
-          ticket_name: target.name,
-        });
-      }
+
 
 
       const shouldResetOthers = nextCount > 0;
@@ -193,14 +183,7 @@ export default function Event() {
         ],
       };
 
-      // Track order started event
-      posthog.capture('order_started', {
-        event_id: eventData?.id,
-        event_name: eventData?.name,
-        event_slug: slug,
-        ticket_type_id: ticket.id,
-        ticket_name: ticket.name,
-      });
+
 
       const { data: response } = await axios.post('/api/order/create', payload);
 
@@ -215,12 +198,7 @@ export default function Event() {
       setLoading(false);
       setError(error?.response?.data?.error || 'Failed to create order');
 
-      // Track order start failure
-      posthog.capture('order_start_failed', {
-        event_id: eventData?.id,
-        event_name: eventData?.name,
-        error: error?.response?.data?.error || 'Failed to create order',
-      });
+
     }
   };
 
