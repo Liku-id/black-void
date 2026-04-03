@@ -32,10 +32,6 @@ jest.mock('@/utils/timer', () => ({
   useCountdown: () => [900, jest.fn()],
 }));
 
-jest.mock('posthog-js', () => ({
-  capture: jest.fn(),
-}));
-
 // Mock Child Components
 jest.mock('@/components/event/contact-detail', () => () => <div data-testid="contact-detail-section">ContactDetailSection</div>);
 jest.mock('@/components/event/visitor-detail', () => () => <div data-testid="visitor-detail-section">VisitorDetailSection</div>);
