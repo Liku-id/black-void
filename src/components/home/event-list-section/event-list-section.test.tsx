@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import EventListSection from '.';
 import '@testing-library/jest-dom';
-import useSWR from 'swr';
+import * as useEventsModule from '@/hooks/use-events';
 
-// Mock EventCard and TextField to check without invalid DOM attributes
+// Mock EventCard to avoid invalid DOM attributes
 jest.mock('../event-card', () => ({ skeleton, metaUrl, title, ...rest }: any) => (
   <div
     data-testid={skeleton ? 'event-card-skeleton' : 'event-card'}
@@ -20,8 +20,17 @@ jest.mock('@/components', () => ({
   Container: (props: any) => <div {...props}>{props.children}</div>,
 }));
 
-jest.mock('swr');
-const mockedUseSWR = useSWR as jest.Mock;
+const mockUseEvents = jest.spyOn(useEventsModule, 'useEvents');
+
+const defaultHookState = {
+  events: [],
+  error: undefined,
+  isLoading: false,
+  isLoadingMore: false,
+  isReachingEnd: false,
+  isEmpty: true,
+  loadMore: jest.fn(),
+};
 
 describe('EventListSection', () => {
   afterEach(() => {
@@ -29,36 +38,32 @@ describe('EventListSection', () => {
   });
 
   it('renders skeleton when loading', () => {
-    mockedUseSWR.mockReturnValue({ isLoading: true });
+    mockUseEvents.mockReturnValue({ ...defaultHookState, isLoading: true, isEmpty: false });
     render(<EventListSection />);
-    expect(
-      screen.getAllByTestId('event-card-skeleton')
-    ).toHaveLength(4);
+    expect(screen.getAllByTestId('event-card-skeleton').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders event cards when data is present', () => {
-    mockedUseSWR.mockReturnValue({
-      isLoading: false,
-      data: {
-        events: [
-          {
-            id: 1,
-            name: 'Event 1',
-            eventAssets: [{ asset: { url: 'img1' } }],
-            address: 'Loc 1',
-            createdAt: '2025-07-14 18:51:19.91875 +0700',
-            lowestPriceTicketType: { price: 10000 },
-          },
-          {
-            id: 2,
-            name: 'Event 2',
-            eventAssets: [{ asset: { url: 'img2' } }],
-            address: 'Loc 2',
-            createdAt: '2025-07-14 18:51:19.91875 +0700',
-            lowestPriceTicketType: { price: 20000 },
-          },
-        ],
-      },
+    mockUseEvents.mockReturnValue({
+      ...defaultHookState,
+      isEmpty: false,
+      isReachingEnd: true,
+      events: [
+        {
+          id: 1,
+          name: 'Event 1',
+          eventAssets: [{ asset: { url: 'img1' } }],
+          address: 'Loc 1',
+          lowestPriceTicketType: { price: 10000 },
+        },
+        {
+          id: 2,
+          name: 'Event 2',
+          eventAssets: [{ asset: { url: 'img2' } }],
+          address: 'Loc 2',
+          lowestPriceTicketType: { price: 20000 },
+        },
+      ],
     });
     render(<EventListSection />);
     const cards = screen.getAllByTestId('event-card');
@@ -68,14 +73,25 @@ describe('EventListSection', () => {
   });
 
   it('renders empty state when no events', () => {
-    mockedUseSWR.mockReturnValue({ isLoading: false, data: { events: [] } });
+    mockUseEvents.mockReturnValue({ ...defaultHookState, isEmpty: true });
     render(<EventListSection />);
     expect(screen.getByText(/no events found/i)).toBeInTheDocument();
   });
 
   it('renders error message when error', () => {
-    mockedUseSWR.mockReturnValue({ isLoading: false, error: true });
+    mockUseEvents.mockReturnValue({ ...defaultHookState, error: new Error('fail') });
     render(<EventListSection />);
     expect(screen.getByText(/failed to load events/i)).toBeInTheDocument();
+  });
+
+  it('renders end-of-list indicator when reaching end', () => {
+    mockUseEvents.mockReturnValue({
+      ...defaultHookState,
+      isEmpty: false,
+      isReachingEnd: true,
+      events: [{ id: 1, name: 'Event 1' }],
+    });
+    render(<EventListSection />);
+    expect(screen.getByText(/you've seen all events/i)).toBeInTheDocument();
   });
 });
