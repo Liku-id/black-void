@@ -142,3 +142,7 @@ temp/
 
 # SWC cache
 .swc/
+
+# Assets module declarations
+assets.d.ts
+.env.local

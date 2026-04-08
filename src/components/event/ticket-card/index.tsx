@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Box, Button, Typography } from '@/components';
+import posthog from 'posthog-js';
 import {
   formatRupiah,
   formatStrToHTML,
@@ -220,7 +221,17 @@ const TicketCard: React.FC<TicketCardProps> = ({
             <Button
               id={`${ticket.name}_ticket_plus_icon`}
               className={`flex h-8 w-8 items-center justify-center text-lg ${plusDisabled ? 'text-gray cursor-not-allowed border bg-white' : 'bg-black text-white'}`}
-              onClick={() => onChange(ticket.id, 1)}
+              onClick={() => {
+                onChange(ticket.id, 1);
+                if (count === 0) {
+                  posthog.capture('ticket_added_to_order', {
+                    ticket_id: ticket.id,
+                    ticket_name: ticket.name,
+                    ticket_price: displayPrice,
+                    has_partnership_discount: isDiscounted,
+                  });
+                }
+              }}
               disabled={!!plusDisabled}
               type="button"
             >

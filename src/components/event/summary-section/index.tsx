@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { Box, Button, Typography } from '@/components';
+import posthog from 'posthog-js';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
@@ -170,9 +171,17 @@ const SummarySection: React.FC<SummarySectionProps> = ({
 
         {/* <Box className={`flex justify-center ${error ? 'mt-1' : 'mt-6'}`}> */}
         <Box className={`mt-6 flex justify-center`}>
-          <Button 
-            id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"} 
-            onClick={onContinue} 
+          <Button
+            id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"}
+            onClick={() => {
+              posthog.capture('checkout_continued', {
+                step: isOrderPage ? 'payment' : 'checkout',
+                ticket_count: ticketCount,
+                grand_total: grandTotal,
+                payment_method: selectedPayment?.name ?? null,
+              });
+              onContinue();
+            }}
             disabled={disabled}
           >
             Continue
