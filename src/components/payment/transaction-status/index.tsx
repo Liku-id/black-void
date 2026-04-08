@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Typography, Container, Box, Button } from '@/components';
 import { useParams, useRouter } from 'next/navigation';
 import { formatDate, formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
@@ -9,11 +9,13 @@ import failedStatus from '@/assets/icons/failed-status.svg';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import useSWR from 'swr';
 import Loading from '@/components/layout/loading';
+import posthog from 'posthog-js';
 
 export default function PaymentStatus() {
   const router = useRouter();
   const params = useParams();
   const transactionId = params.id;
+  const capturedRef = useRef(false);
 
   const { data, isLoading } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null
@@ -67,6 +69,20 @@ export default function PaymentStatus() {
       data.transaction.status !== 'paid'
     ) {
       router.push(`/checkout-payment/${transactionId}`);
+    }
+
+    if (data && data.transaction && !capturedRef.current) {
+      const status = data.transaction.status;
+      if (status === 'paid' || status === 'failed') {
+        capturedRef.current = true;
+        const eventName = status === 'paid' ? 'payment_completed' : 'payment_failed';
+        posthog.capture(eventName, {
+          transaction_id: data.transaction.id,
+          transaction_number: data.transaction.transactionNumber,
+          payment_method: data.transaction.paymentMethod?.name,
+          event_name: data.transaction.event?.name,
+        });
+      }
     }
   }, [data, router]);
 

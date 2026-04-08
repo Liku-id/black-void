@@ -12,6 +12,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import posthog from 'posthog-js';
 
 interface TicketDetail {
   visitor_name: string;
@@ -97,6 +98,13 @@ export default function ScannerPage() {
             message: 'This ticket has already been redeemed',
           });
 
+          posthog.capture('ticket_scan_failed', {
+            ticket_id: ticketData.ticket_id || ticketId,
+            ticket_name: ticketData.ticket_name,
+            failure_reason: 'already_redeemed',
+            scan_status: 'already_redeemed',
+          });
+
           setShowResult(true);
           errorSound.current?.play();
         } else {
@@ -110,6 +118,13 @@ export default function ScannerPage() {
             message,
           });
 
+          posthog.capture('ticket_scan_failed', {
+            ticket_id: ticketData.ticket_id || ticketId,
+            failure_reason: message,
+            scan_status: 'invalid_ticket',
+            ticket_status: ticketData.ticket_status,
+          });
+
           setShowResult(true);
           errorSound.current?.play();
         }
@@ -118,6 +133,12 @@ export default function ScannerPage() {
           status: 'failed',
           ticketId: ticketId,
           message: 'Failed to retrieve ticket information',
+        });
+
+        posthog.capture('ticket_scan_failed', {
+          ticket_id: ticketId,
+          failure_reason: 'Failed to retrieve ticket information',
+          scan_status: 'failed',
         });
 
         setShowResult(true);
@@ -146,6 +167,13 @@ export default function ScannerPage() {
         ticketId: ticketId,
         message: errorMessage,
       });
+
+      posthog.capture('ticket_scan_failed', {
+        ticket_id: ticketId,
+        failure_reason: errorMessage,
+        scan_status: 'error',
+      });
+      posthog.captureException(error);
 
       setShowResult(true);
       setError(errorMessage);
@@ -180,6 +208,12 @@ export default function ScannerPage() {
         message: 'Ticket successfully redeemed!',
       });
 
+      posthog.capture('ticket_redeemed', {
+        ticket_id: ticketDetail.ticket_id || currentTicketId,
+        ticket_name: ticketDetail.ticket_name,
+        visitor_name: ticketDetail.visitor_name,
+      });
+
       successSound.current?.play();
       setShowConfirmModal(false);
       setShowResult(true);
@@ -196,6 +230,12 @@ export default function ScannerPage() {
         status: 'failed',
         ticketId: currentTicketId,
         message: errorMessage,
+      });
+
+      posthog.capture('ticket_scan_failed', {
+        ticket_id: currentTicketId,
+        failure_reason: errorMessage,
+        scan_status: 'failed',
       });
 
       setError(errorMessage);
