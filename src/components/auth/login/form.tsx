@@ -17,6 +17,7 @@ import { useAtom } from 'jotai';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import posthog from 'posthog-js';
 import UnverifiedModal from './unverified-modal';
 
 interface FormDataLogin {
@@ -53,7 +54,15 @@ const LoginForm = () => {
       if (response.status === 200) {
         setAuthUser(response.data.data);
 
-
+        posthog.identify(response.data.data.email, {
+          email: response.data.data.email,
+          role: response.data.data.role,
+        });
+        posthog.capture('user_logged_in', {
+          email: formData.email,
+          role: response.data.data.role,
+          origin: pathname,
+        });
 
         // handle redirect based on current path
         if (pathname === '/ticket/auth') {

@@ -145,3 +145,4 @@ temp/
 
 # Assets module declarations
 assets.d.ts
+.env.local

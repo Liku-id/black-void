@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import posthog from 'posthog-js';
 import SuccessModal from '../verify-otp/success-modal';
 
 const RegisterForm = () => {
@@ -64,6 +65,9 @@ const RegisterForm = () => {
 
       // Set payload to global state
       setPayload(payload);
+      posthog.capture('user_registered', {
+        email: formData.email,
+      });
       router.replace('/register/choose-verification');
     } catch (error) {
       console.error(error);
