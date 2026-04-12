@@ -6,7 +6,7 @@ The wizard has completed a deep integration of PostHog analytics into the Wukong
 **Infrastructure added:**
 - `instrumentation-client.ts` — Client-side PostHog initialization using Next.js 16's `instrumentation-client` pattern (no provider required). Captures unhandled exceptions automatically via `capture_exceptions: true`. Routes all events through a `/ingest` reverse proxy added to `next.config.ts`.
 - `src/lib/posthog-server.ts` — Singleton server-side PostHog client (`posthog-node`) used in API routes.
-- `.env.local` — `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` set.
+- `.env.local` — `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` set.
 - `next.config.ts` — Reverse proxy rewrites added for `/ingest/static/:path*` and `/ingest/:path*`, plus `skipTrailingSlashRedirect: true`.
 
 **User identification:** On successful login, `posthog.identify()` is called with the user's email and role as the distinct ID and properties, correlating all subsequent events to the authenticated user.
