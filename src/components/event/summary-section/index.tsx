@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { Box, Button, Typography } from '@/components';
-import posthog from 'posthog-js';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
@@ -174,12 +173,19 @@ const SummarySection: React.FC<SummarySectionProps> = ({
           <Button
             id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"}
             onClick={() => {
-              posthog.capture('checkout_continued', {
-                step: isOrderPage ? 'payment' : 'checkout',
-                ticket_count: ticketCount,
-                grand_total: grandTotal,
-                payment_method: selectedPayment?.name ?? null,
-              });
+              import('posthog-js')
+                .then(({ default: posthog }) => {
+                  posthog.capture('checkout_continued', {
+                    step: isOrderPage ? 'payment' : 'checkout',
+                    ticket_count: ticketCount,
+                    grand_total: grandTotal,
+                    payment_method: selectedPayment?.name ?? null,
+                  });
+                })
+                .catch(() => {
+                  // Keep checkout flow working even if analytics library fails.
+                });
+
               onContinue();
             }}
             disabled={disabled}
