@@ -6,9 +6,8 @@ import {
   usePathname,
   useSearchParams,
 } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
-import axios from 'axios';
 import { Box, Container, Button, Typography, Modal } from '@/components';
 import { Ticket, TicketSummary } from '@/components/event/types';
 import {
@@ -50,7 +49,7 @@ export default function Event() {
   const partnerCode = searchParams.get('partner_code');
 
   // Build API URL with query params (preview_token is handled via cookie in proxy)
-  const buildApiUrl = () => {
+  const apiUrl = useMemo(() => {
     if (!slug) return null;
 
     const params = new URLSearchParams();
@@ -62,15 +61,18 @@ export default function Event() {
     return queryString
       ? `/api/events/${slug}?${queryString}`
       : `/api/events/${slug}`;
-  };
-  const apiUrl = buildApiUrl();
+  }, [partnerCode, slug]);
 
   // Fetch event data
   const {
     data: eventData,
     isLoading: eventLoading,
     error: eventError,
-  } = useSWR<EventData>(apiUrl);
+  } = useSWR<EventData>(apiUrl, {
+    revalidateOnFocus: false,
+    revalidateIfStale: false,
+    keepPreviousData: true,
+  });
 
   // Initialize state
   const [, setOrderBooking] = useAtom(orderBookingAtom);
@@ -80,20 +82,27 @@ export default function Event() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [showEventEndedModal, setShowEventEndedModal] = useState(false);
-  const selectedTickets: OrderItem[] = tickets
-    .filter((t: SelectedTicket) => t.count > 0)
-    .map((t: SelectedTicket) => ({
-      id: t.id,
-      name: t.name,
-      price: String(t.price),
-      count: t.count,
-      partnership_info: t.partnership_info || null,
-      group_ticket_id: t.group_ticket_id,
-      ticket_type_id: t.ticket_type_id,
-    }));
-  const isDisabled =
-    selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
-    eventData?.eventStatus === 'draft';
+  const selectedTickets: OrderItem[] = useMemo(
+    () =>
+      tickets
+        .filter((t: SelectedTicket) => t.count > 0)
+        .map((t: SelectedTicket) => ({
+          id: t.id,
+          name: t.name,
+          price: String(t.price),
+          count: t.count,
+          partnership_info: t.partnership_info || null,
+          group_ticket_id: t.group_ticket_id,
+          ticket_type_id: t.ticket_type_id,
+        })),
+    [tickets]
+  );
+  const isDisabled = useMemo(
+    () =>
+      selectedTickets.reduce((a, t) => a + t.count, 0) === 0 ||
+      eventData?.eventStatus === 'draft',
+    [eventData?.eventStatus, selectedTickets]
+  );
   const { isLoggedIn } = useAuth();
 
   const handleChangeCount = (id: string, delta: number) => {
@@ -120,9 +129,9 @@ export default function Event() {
         usePartnership && partnershipInfo.available_quota !== undefined
           ? partnershipInfo.available_quota
           : Math.max(
-            0,
-            (target.quantity ?? 0) - (target.purchased_amount ?? 0)
-          );
+              0,
+              (target.quantity ?? 0) - (target.purchased_amount ?? 0)
+            );
 
       const maxOrderQuantity =
         usePartnership && partnershipInfo.max_order_quantity !== undefined
@@ -144,9 +153,6 @@ export default function Event() {
 
       if (nextCount === target.count) return prev;
 
-
-
-
       const shouldResetOthers = nextCount > 0;
 
       return prev.map((t) => {
@@ -164,6 +170,9 @@ export default function Event() {
   };
 
   const handleContinue = async () => {
+    setLoading(true);
+    setError('');
+
     try {
       const ticket = selectedTickets[0];
       const payload = {
@@ -173,32 +182,40 @@ export default function Event() {
             partnerCode: partnerCode ?? null,
             ...(ticket.group_ticket_id
               ? {
-                groupTicketId: ticket.group_ticket_id,
-                ticketTypeId: ticket.ticket_type_id,
-              }
+                  groupTicketId: ticket.group_ticket_id,
+                  ticketTypeId: ticket.ticket_type_id,
+                }
               : {
-                ticketTypeId: ticket.id,
-              }),
+                  ticketTypeId: ticket.id,
+                }),
           },
         ],
       };
 
+      const response = await fetch('/api/order/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
+      const result = await response.json();
 
-      const { data: response } = await axios.post('/api/order/create', payload);
-
-      if (response.success) {
+      if (result.success) {
         setOrderBooking({
-          orderId: response.data.id,
-          expiredAt: response.data.expiredAt,
+          orderId: result.data.id,
+          expiredAt: result.data.expiredAt,
         });
         router.push(`/event/${slug}/order`);
+        return;
       }
-    } catch (error: any) {
+
+      setError(result?.error || 'Failed to create order');
+    } catch {
+      setError('Failed to create order');
+    } finally {
       setLoading(false);
-      setError(error?.response?.data?.error || 'Failed to create order');
-
-
     }
   };
 
@@ -244,7 +261,8 @@ export default function Event() {
 
             // Use partnership_info.max_order_quantity if partner_code exists
             const maxOrderQuantity =
-              usePartnership && partnershipInfo?.max_order_quantity !== undefined
+              usePartnership &&
+              partnershipInfo?.max_order_quantity !== undefined
                 ? partnershipInfo.max_order_quantity
                 : t.max_order_quantity;
 
@@ -276,7 +294,8 @@ export default function Event() {
             price: gt.price,
             count: 0,
             max_order_quantity: gt.max_order_quantity,
-            description: gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
+            description:
+              gt.description || `Bundle of ${gt.bundle_quantity} tickets`,
             sales_start_date: gt.sales_start_date,
             sales_end_date: gt.sales_end_date,
             ticket_start_date: ticketStartDate,
