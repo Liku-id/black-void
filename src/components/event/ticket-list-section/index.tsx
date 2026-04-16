@@ -23,7 +23,17 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
     const rawDates = allDisplayTickets
       .map(t => t.ticket_start_date)
       .filter(Boolean);
-    const unique = Array.from(new Set(rawDates));
+    
+    const uniqueMap = new Map<string, string>();
+    rawDates.forEach(date => {
+      const strDate = date as string;
+      const formatted = formatDate(strDate, 'date');
+      if (!uniqueMap.has(formatted)) {
+        uniqueMap.set(formatted, strDate);
+      }
+    });
+
+    const unique = Array.from(uniqueMap.values());
     unique.sort();
 
     return unique;
@@ -53,7 +63,8 @@ const TicketListSection: React.FC<TicketListSectionProps> = ({
       ) {
         return false;
       }
-      if (ticket.ticket_start_date !== selectedDate) return false;
+      if (!ticket.ticket_start_date || !selectedDate) return false;
+      if (formatDate(ticket.ticket_start_date, 'date') !== formatDate(selectedDate, 'date')) return false;
       return true;
     });
   }, [allDisplayTickets, selectedDate, partnerCode]);

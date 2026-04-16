@@ -62,9 +62,13 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                     alt={`Image ${i + 1}`}
                     width={375}
                     height={240}
+                    sizes="100vw"
                     className="object-cover"
                     draggable={false}
-                    unoptimized
+                    priority={i === 0}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    // @ts-ignore
+                    fetchPriority={i === 0 ? 'high' : 'auto'}
                   />
                 ))}
               </Slider>
@@ -87,6 +91,7 @@ const EventDetail: React.FC<EventDetailProps> = ({ data, onChooseTicket }) => {
                 sizes="(min-width: 1440px) 613px, (min-width: 1024px) 448px, (min-width: 769px) 704px, 100vw"
                 className="h-[353px] px-4"
                 arrowPosition="inside"
+                priority
               />
             ) : (
               <Box className="flex items-center justify-center rounded-lg px-4 py-16">
