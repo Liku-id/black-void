@@ -80,7 +80,9 @@ export async function GET(
         partnership_info: t.partnership_info || null,
       }));
 
-    const groupTickets = (data.body.group_tickets || []).map((gt: any) => {
+    const groupTickets = (data.body.group_tickets || [])
+      .filter((gt: any) => gt.is_public !== false)
+      .map((gt: any) => {
       const ticketType = gt.ticket_type;
       const ticketStartDate = ticketType
         ? ticketType.ticketStartDate || ticketType.ticket_start_date

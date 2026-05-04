@@ -284,7 +284,9 @@ export default function Event() {
             };
           });
 
-        const groupTickets = (eventData.group_tickets || []).map((gt: any) => {
+        const groupTickets = (eventData.group_tickets || [])
+          .filter((gt: any) => gt.is_public !== false)
+          .map((gt: any) => {
           const ticketType = gt.ticket_type;
           const ticketStartDate = ticketType
             ? ticketType.ticketStartDate || ticketType.ticket_start_date

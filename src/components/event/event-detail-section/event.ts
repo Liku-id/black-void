@@ -34,6 +34,7 @@ export interface GroupTicket {
   updated_at: string;
   ticket_type?: TicketType;
   purchased_amount: number;
+  is_public?: boolean;
 }
 
 export interface PaymentMethod {
