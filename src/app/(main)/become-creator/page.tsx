@@ -77,7 +77,7 @@ const text = [
   "Let's create",
   'Let’s connect',
   'Let’s Play',
-  'Let’s fun',
+  'Have fun',
   'Let’s learn',
 ];
 
