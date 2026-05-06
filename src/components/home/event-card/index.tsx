@@ -121,7 +121,14 @@ export default function EventCard({
           </Typography>
         </Box>
       </Box>
-      <Box className="px-[10px] py-[12px]">
+      <Box className="px-[10px] py-[8px]">
+        <Typography
+          as="span"
+          type="body"
+          className="font-onest text-[12px] leading-none font-medium"
+          color="text-muted">
+          From
+        </Typography>
         <Box className="flex items-center justify-between">
           <Typography
             type="heading"
