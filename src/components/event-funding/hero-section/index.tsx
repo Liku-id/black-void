@@ -23,6 +23,7 @@ const HeroSection = () => {
           fill
           className="object-cover"
           priority
+          unoptimized
         />
         <Box className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 pointer-events-none md:pt-0 px-[18px] py-[27px] md:p-0">
           <Container className="pointer-events-auto p-0">
