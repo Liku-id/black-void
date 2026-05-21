@@ -46,12 +46,12 @@ describe('SentModal', () => {
     expect(screen.getByText(sentEmail)).toBeInTheDocument();
     expect(
       screen.getByText(
-        /please check your inbox for reset password instruction/i
+        /instructions to reset your password/i
       )
     ).toBeInTheDocument();
-    expect(screen.getByText(/didn’t get the message/i)).toBeInTheDocument();
+    expect(screen.getByText(/didn't get the message/i)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /resend link/i })
+      screen.getByRole('button', { name: /send it again/i })
     ).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('SentModal', () => {
         onResend={onResend}
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: /resend link/i }));
+    fireEvent.click(screen.getByRole('button', { name: /send it again/i }));
     expect(onResend).toHaveBeenCalled();
   });
 

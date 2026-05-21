@@ -5,14 +5,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Box, Container, Typography, Button } from '@/components';
 import heroImage from '@/assets/images/tambahan-modal-usaha-hero.webp';
+import { useTranslations } from 'next-intl';
 
 const HeroSection = () => {
+  const t = useTranslations("eventFunding");
   const handleScrollToForm = () => {
     const element = document.getElementById('funding-form');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
 
   return (
     <section className="relative w-full px-4 md:px-0">
@@ -33,13 +36,13 @@ const HeroSection = () => {
                 as="h1"
                 className="mb-6 uppercase leading-tight text-white md:text-[46px] text-[23px]"
               >
-                Reliable Funding for professional<br />Event Organizers
+                {t("hero.title.1")}<br />{t("hero.title.2")}
               </Typography>
               <Typography
                 type="body"
                 className="mb-0 md:mb-8 max-w-3xl mx-auto leading-relaxed text-white md:text-[18px] text-[12px]"
               >
-                Access reliable funding collaboration.<br />We are built to make seamless workflow<br />and long-term growth for your events.
+                {t("hero.description.1")}<br />{t("hero.description.2")}
               </Typography>
               <Box className="hidden md:flex flex-col md:flex-row items-center justify-center gap-4">
                 <Link

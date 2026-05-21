@@ -1,22 +1,23 @@
-import React from 'react';
+import { useTranslations } from 'next-intl';
 import { Box, Container, Typography } from '@/components';
 
-const items = [
-  {
-    label: 'Company',
-    value: 'non-public company<br/>(PT TERTUTUP)',
-  },
-  {
-    label: 'Company Form',
-    value: 'non-conglomerate companies',
-  },
-  {
-    label: 'Paid-up capital',
-    value: '≤ IDR 30.000.000.000',
-  },
-];
-
 const FundingRequirementsSection = () => {
+  const t = useTranslations('eventFunding.fundingRequirements');
+  const items = [
+    {
+      label: t('items.1.title'),
+      value: t('items.1.desc'),
+    },
+    {
+      label: t('items.2.title'),
+      value: t('items.2.desc'),
+    },
+    {
+      label: t('items.3.title'),
+      value: t('items.3.desc'),
+    },
+  ];
+
   return (
     <section className="pb-12 md:pb-16 px-4 md:px-0 lg:pb-[120px]">
       <Container>
@@ -28,7 +29,7 @@ const FundingRequirementsSection = () => {
             size={32}
             className="text-[32px] text-white font-normal"
           >
-            Funding Requirements
+            {t('title')}
           </Typography>
         </Box>
 

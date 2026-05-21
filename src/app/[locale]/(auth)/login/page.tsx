@@ -1,27 +1,28 @@
 import dynamic from 'next/dynamic';
 import { Box, Typography } from '@/components';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
-const RegisterForm = dynamic(
-  () => import('@/components/auth/register/register-form')
-);
+const LoginForm = dynamic(() => import('@/components/auth/login/form'));
 
-export default function RegisterPage() {
+export default function LoginPage() {
+  const t = useTranslations('login');
+
   return (
-    <Box className="relative mx-auto mt-32 max-w-[360px] text-white xl:mr-0 xl:ml-47">
-      <Box className="mb-8 text-center">
-        <Typography className="mb-3">Lets get Wu in!</Typography>
+    <Box className="mx-auto mt-24 mb-10 max-w-sm text-white md:mt-32">
+      <Box className="mb-8 text-center md:mb-20">
         <Typography size={41} type="heading" className="font-normal uppercase">
-          {'tell us about wu'.split('').map((child, idx) => (
+          {t('title').split('').map((child, idx) => (
             <span className="hover-text" key={idx}>
               {child}
             </span>
           ))}
         </Typography>
+        <Typography className="mb-4">{t('desc')}</Typography>
       </Box>
 
       {/* Form */}
-      <RegisterForm />
+      <LoginForm />
 
       {/* Links */}
       <Box className="mt-16 flex flex-col items-center md:flex-row md:justify-between">
@@ -30,18 +31,18 @@ export default function RegisterPage() {
             id="forgot_password_link"
             href="/forgot-password"
             className="hover:text-green underline">
-            Forgot Your Password?
+            {t('forgot_password')}
           </Link>
         </Typography>
 
         <Box className="mt-7 md:mt-0">
           <Typography size={12}>
-            Already have an account?{' '}
+            {t('no_account').split('?')[0]}?{' '}
             <Link
-              id="btn_rgs_login"
-              href="/login"
+              id="btn_rgs_signup"
+              href="/register"
               className="hover:text-green underline">
-              Log In
+              {t('no_account').split('? ')[1] || 'Sign up'}
             </Link>
           </Typography>
         </Box>

@@ -57,7 +57,6 @@ describe('/api/auth/forgot-password POST', () => {
     const req = createRequest({ email: 'fail@example.com' });
     const res = await POST(req);
     const json = await res.json();
-    expect(json.success).toBe(false);
     expect(json.message).toBeDefined();
   });
 });

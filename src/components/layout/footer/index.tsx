@@ -1,13 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 import { Container, Box, Typography } from '@/components';
 import logo from '@/assets/logo/white-logo.svg';
 import emailIcon from '@/assets/icons/email.svg';
 import instagramIcon from '@/assets/icons/Instagram.svg';
 import smsIcon from '@/assets/icons/sms.svg';
+import { getTranslations } from 'next-intl/server';
 
-const Footer = () => {
+const Footer = async () => {
+  const t = await getTranslations();
   // Ambil versi dari environment variable (set di .env atau .env.production)
   // Contoh: NEXT_PUBLIC_APP_VERSION=2.8.0
   const appVersion = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0';
@@ -44,7 +46,7 @@ const Footer = () => {
               as="h2"
               className="mb-4 text-[24px] leading-normal text-white"
             >
-              EVENT TYPE
+              {t('footer.event_type')}
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
@@ -84,7 +86,7 @@ const Footer = () => {
               as="h2"
               className="mb-4 text-[24px] leading-normal text-white"
             >
-              ABOUT WUKONG
+              {t('footer.about_wukong')}
             </Typography>
             <Box className="flex flex-col gap-2">
               <Link
@@ -92,28 +94,28 @@ const Footer = () => {
                 href="/about-us"
                 className="hover:text-green font-onest text-[14px] text-white"
               >
-                About Us
+                {t('footer.about_wukong')}
               </Link>
               <Link
                 id="btn_term_and_condition"
                 href="/term-and-condition"
                 className="hover:text-green font-onest text-[14px] text-white"
               >
-                Terms & Conditions
+                {t('footer.terms_conditions')}
               </Link>
               <Link
                 id="btn_privacy_policy"
                 href="/privacy-policy"
                 className="hover:text-green font-onest text-[14px] text-white"
               >
-                Privacy Policy
+                {t('footer.privacy_policy')}
               </Link>
               <Link
                 id="btn_cookie_policy"
                 href="/cookie-policy"
                 className="hover:text-green font-onest text-[14px] text-white"
               >
-                Cookie Policy
+                {t('footer.cookie_policy')}
               </Link>
               <Link
                 id="btn_blog_post"
@@ -134,7 +136,7 @@ const Footer = () => {
               color="text-white"
               className="mb-4 text-[24px] leading-normal"
             >
-              FOLLOW US ON
+              {t('footer.follow_us')}
             </Typography>
 
             <Box className="mb-10 flex flex-col gap-2">

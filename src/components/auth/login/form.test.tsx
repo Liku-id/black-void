@@ -13,6 +13,14 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
 
+jest.mock('@/lib/i18n/navigation', () => ({
+  useRouter: () => ({
+    replace: mockReplace,
+    push: jest.fn(),
+  }),
+  usePathname: () => mockUsePathname(),
+}));
+
 jest.spyOn(console, 'error').mockImplementation(() => { });
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -33,13 +41,13 @@ describe('LoginForm', () => {
 
     expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /get in/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {
     render(<LoginForm />);
 
-    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Email is required/i)).toBeInTheDocument();
@@ -68,7 +76,7 @@ describe('LoginForm', () => {
       target: { value: 'secret123' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith('/api/auth/login', {
@@ -96,7 +104,7 @@ describe('LoginForm', () => {
       target: { value: 'wrongpass' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalled();
@@ -130,7 +138,7 @@ describe('LoginForm', () => {
       target: { value: 'secret123' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     expect(await screen.findByTestId('loading')).toBeInTheDocument();
   });
@@ -146,7 +154,7 @@ describe('LoginForm', () => {
       target: { value: 'notgood' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /get in/i }));
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalled();

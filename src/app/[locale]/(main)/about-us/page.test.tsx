@@ -18,18 +18,70 @@ jest.mock('@/components/home/faq-section', () => {
   };
 });
 
-// We can also mock internal components if we want to test the page in isolation,
-// but for high coverage of the folder, rendering them is better.
-// However, if we want to ensure 85% coverage of the specific *page* file, integration is fine.
-// If the user meant 85% coverage of the *components* too, then integration is definitely the way.
+jest.mock('@/components/about-us/hero-section', () => {
+  return function MockHeroSection() {
+    return (
+      <div>
+        <p>All in One Ticketing & Event</p>
+        <p>Management System Platform</p>
+        <button>Explore Wukong</button>
+      </div>
+    );
+  };
+});
+
+jest.mock('@/components/about-us/who-we-are-section', () => {
+  return function MockWhoWeAreSection() {
+    return (
+      <div>
+        <h2>Who we are?</h2>
+        <p>true change begins when people come together</p>
+      </div>
+    );
+  };
+});
+
+jest.mock('@/components/about-us/features-section', () => {
+  return function MockFeaturesSection() {
+    return (
+      <div>
+        <p>All in one feature for your event marketing</p>
+        <p>Special leads Requirement</p>
+      </div>
+    );
+  };
+});
+
+jest.mock('@/components/about-us/financial-section', () => {
+  return function MockFinancialSection() {
+    return (
+      <div>
+        <p>Transparent and Reliable Financial Reporting</p>
+        <p>Competitive Fee</p>
+      </div>
+    );
+  };
+});
+
+jest.mock('@/components/about-us/cta-section', () => {
+  return function MockCTASection() {
+    return (
+      <div>
+        <p>START YOUR EVENT HERE!</p>
+        <a href="#">Create My Event</a>
+        <a href="#">Talk to Our Team</a>
+      </div>
+    );
+  };
+});
 
 describe('AboutUsPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders all sections correctly', () => {
-    render(<AboutUsPage />);
+  it('renders all sections correctly', async () => {
+    render(await AboutUsPage());
 
     // Hero Section
     expect(screen.getByText(/All in One Ticketing & Event/i)).toBeInTheDocument();
@@ -64,8 +116,8 @@ describe('AboutUsPage', () => {
     expect(screen.getByTestId('faq-section')).toBeInTheDocument();
   });
 
-  it('handles USP Section swipe logic (mobile)', () => {
-    render(<AboutUsPage />);
+  it('handles USP Section swipe logic (mobile)', async () => {
+    render(await AboutUsPage());
 
     // Initial State: "fast & easy" (item 0) is active.
     // "comprehensive financial report" (item 1) is next.
@@ -134,8 +186,8 @@ describe('AboutUsPage', () => {
     expect(finalItem1Count).toBeLessThan(newItem1Count);
   });
 
-  it('handles USP Section dot navigation', () => {
-    render(<AboutUsPage />);
+  it('handles USP Section dot navigation', async () => {
+    render(await AboutUsPage());
 
     // Capture initial state of Item 2 ("seamless & real-time dashboard")
     // Initially inactive in mobile.

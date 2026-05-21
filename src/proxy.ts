@@ -1,4 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { locales } from './lib/i18n/request';
+
+const intlMiddleware = createMiddleware({
+  locales: locales,
+  defaultLocale: 'en',
+  localePrefix: 'always',
+  localeDetection: false
+});
 
 export function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -112,19 +121,22 @@ export function proxy(req: NextRequest) {
     return redirect('/ticket/scanner');
   }
 
-  // Add Authorization header if authenticated
+  // Handle i18n and Auth headers
   if (accessToken) {
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set('Authorization', `Bearer ${accessToken}`);
-    return NextResponse.next({ request: { headers: requestHeaders } });
+    const modifiedReq = new NextRequest(req, { headers: requestHeaders });
+    return intlMiddleware(modifiedReq);
   }
 
-  return NextResponse.next();
+  return intlMiddleware(req);
 }
 
 // Apply to all routes except static assets
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
+    '/((?!api|ingest|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
+    '/',
+    '/(id|en)/:path*',
   ],
 };

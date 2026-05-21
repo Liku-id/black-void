@@ -3,26 +3,29 @@ import { Box, Container, Typography } from '@/components';
 import moneyIcon from '@/assets/icons/money.svg';
 import windowIcon from '@/assets/icons/window.svg';
 import withdrawalIcon from '@/assets/icons/withdrawal.svg';
+import { getTranslations } from 'next-intl/server';
 
-const items = [
-  {
-    title: 'Competitive Fee',
-    description: 'Enterprise-ready pricing designed to optimize cost efficiency at scale without compromising service quality',
-    icon: moneyIcon,
-  },
-  {
-    title: 'Multi Payment Gateway',
-    description: 'Support for multiple secure and trusted payment gateways to ensure reliable transactions and higher success rates',
-    icon: windowIcon,
-  },
-  {
-    title: 'Flexible Withdrawal',
-    description: 'Flexible fund disbursement options designed to align with enterprise cash flow and financial operations',
-    icon: withdrawalIcon,
-  },
-];
+const FinancialSection = async () => {
+  const t = await getTranslations('aboutUs.financial');
 
-const FinancialSection = () => {
+  const items = [
+    {
+      title: t('items.1.title'),
+      description: t('items.1.desc'),
+      icon: moneyIcon,
+    },
+    {
+      title: t('items.2.title'),
+      description: t('items.2.desc'),
+      icon: windowIcon,
+    },
+    {
+      title: t('items.3.title'),
+      description: t('items.3.desc'),
+      icon: withdrawalIcon,
+    },
+  ];
+
   return (
     <section className="pb-16 lg:pb-32 bg-black text-white px-4 xl:px-0">
       <Container>
@@ -34,14 +37,14 @@ const FinancialSection = () => {
             size={32}
             className="mb-6 text-[23px] lg:text-[32px]"
           >
-            Transparent and Reliable Financial Reporting
+            {t('title')}
           </Typography>
           <Typography
             type="body"
             size={14}
             className="mb-[55px] max-w-[354px] lg:max-w-3xl mx-auto opacity-80"
           >
-            From sales to settlements, manage your event finances with ease. Clear insights ensure full control and transparency
+            {t('desc')}
           </Typography>
         </Box>
 

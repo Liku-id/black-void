@@ -1,11 +1,7 @@
 'use client';
 import useSWR from 'swr';
-import {
-  useParams,
-  useRouter,
-  usePathname,
-  useSearchParams,
-} from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from '@/lib/i18n/navigation';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { Box, Container, Button, Typography, Modal } from '@/components';

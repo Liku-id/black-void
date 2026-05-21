@@ -17,11 +17,11 @@ import {
 } from '@/utils/form-validation';
 import { useAtom } from 'jotai';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/lib/i18n/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import posthog from 'posthog-js';
+import { useTranslations } from 'next-intl';
 import SuccessModal from '../verify-otp/success-modal';
 
 const RegisterForm = () => {
@@ -38,6 +38,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [, setPayload] = useAtom(registerFormAtom);
   const [modalOpen, setModalOpen] = useState(false);
+  const t = useTranslations('register');
 
   const methods = useForm<RegisterFormData>({
     mode: 'onChange',
@@ -232,7 +233,7 @@ const RegisterForm = () => {
                 </Checkbox>
                 <Checkbox checked={passwordChecks.capital} disabled>
                   <Typography type="body" size={14}>
-                    Capital Letters
+                    {t('password_check_capital')}
                   </Typography>
                 </Checkbox>
               </Box>
@@ -244,29 +245,32 @@ const RegisterForm = () => {
                   onChange={() => setAgree(!agree)}
                 >
                   <Typography size={12} className="text-white">
-                    I agree to the{' '}
-                    <Link
-                      href="/term-and-condition"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      className="cursor-pointer underline"
-                    >
-                      terms and conditions
-                    </Link>{' '}
-                    and{' '}
-                    <Link
-                      href="/privacy-policy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      className="cursor-pointer underline"
-                    >
-                      privacy policy
-                    </Link>{' '}
-                    applicable at Wukong
+                    {t.rich('terms_agree', {
+                      terms: (chunks) => (
+                        <Link
+                          href="/term-and-condition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="cursor-pointer underline"
+                        >
+                          {chunks}
+                        </Link>
+                      ),
+                      privacy: (chunks) => (
+                        <Link
+                          href="/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="cursor-pointer underline"
+                        >
+                          {chunks}
+                        </Link>
+                      )
+                    })}
                   </Typography>
                 </Checkbox>
               </Box>
@@ -276,7 +280,7 @@ const RegisterForm = () => {
                 type="submit"
                 disabled={!allValid || loading}
               >
-                Submit
+                {t('sign_up')}
               </Button>
             </>
           )}

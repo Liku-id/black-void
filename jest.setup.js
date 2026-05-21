@@ -20,6 +20,17 @@ jest.mock('next/navigation', () => ({
   },
 }));
 
+// Mock our custom i18n navigation helpers to avoid ESM resolution issues in Jest
+jest.mock('./src/lib/i18n/navigation', () => {
+  const React = require('react');
+  return {
+    Link: props => React.createElement('a', props, props.children),
+    useRouter: () => require('next/navigation').useRouter(),
+    usePathname: () => require('next/navigation').usePathname(),
+    redirect: url => require('next/navigation').useRouter().replace(url),
+  };
+});
+
 // Mock Three.js
 jest.mock('three', () => ({
   Scene: jest.fn().mockImplementation(() => ({
@@ -65,10 +76,228 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
+// Mock IntersectionObserver
+global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
 jest.mock('next/image', () => ({
   __esModule: true,
   default: props => <img {...props} />,
 }));
+
+// Mock next-intl client-side functions using real en.json translations
+jest.mock('next-intl', () => {
+  const enTranslations = require('./src/lib/i18n/messages/en.json');
+  return {
+    NextIntlClientProvider: ({ children }) => <>{children}</>,
+    useLocale: () => 'en',
+    useTranslations: (namespace) => {
+      const t = (key, values) => {
+        let val = enTranslations;
+        if (namespace) {
+          const parts = namespace.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        val = val || key;
+
+        if (values) {
+          Object.keys(values).forEach(k => {
+            if (typeof values[k] === 'function') {
+              val = values[k](val);
+            } else {
+              val = String(val).replace(new RegExp(`\\{${k}\\}`, 'g'), values[k]);
+            }
+          });
+        }
+        return val;
+      };
+      t.rich = (key, formatters) => {
+        let val = enTranslations;
+        if (namespace) {
+          const parts = namespace.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        val = val || key;
+
+        if (!formatters) return val;
+
+        const regex = /<(\w+)>(.*?)<\/\1>/g;
+        let lastIndex = 0;
+        const result = [];
+        let match;
+        const strVal = String(val);
+
+        while ((match = regex.exec(strVal)) !== null) {
+          const tag = match[1];
+          const content = match[2];
+          const offset = match.index;
+
+          if (offset > lastIndex) {
+            result.push(strVal.substring(lastIndex, offset));
+          }
+
+          let processedContent = content;
+          Object.keys(formatters).forEach(k => {
+            if (typeof formatters[k] !== 'function') {
+              processedContent = processedContent.replace(new RegExp(`\\{${k}\\}`, 'g'), formatters[k]);
+            }
+          });
+
+          if (formatters[tag] && typeof formatters[tag] === 'function') {
+            result.push(formatters[tag](processedContent));
+          } else {
+            result.push(processedContent);
+          }
+
+          lastIndex = regex.lastIndex;
+        }
+
+        if (lastIndex < strVal.length) {
+          result.push(strVal.substring(lastIndex));
+        }
+
+        // Apply simple placeholder replacements to string chunks
+        for (let i = 0; i < result.length; i++) {
+          if (typeof result[i] === 'string') {
+            Object.keys(formatters).forEach(k => {
+              if (typeof formatters[k] !== 'function') {
+                result[i] = result[i].replace(new RegExp(`\\{${k}\\}`, 'g'), formatters[k]);
+              }
+            });
+          }
+        }
+
+        if (result.length === 0) return strVal;
+        if (result.length === 1 && typeof result[0] === 'string') return result[0];
+        return result;
+      };
+      t.raw = (key) => {
+        let val = enTranslations;
+        if (namespace) {
+          const parts = namespace.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        return val || key;
+      };
+      t.has = (key) => {
+        let val = enTranslations;
+        if (namespace) {
+          const parts = namespace.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        return val !== undefined;
+      };
+      return t;
+    },
+  };
+});
+
+jest.mock('next-intl/server', () => {
+  const enTranslations = require('./src/lib/i18n/messages/en.json');
+  return {
+    getLocale: () => Promise.resolve('en'),
+    getMessages: () => Promise.resolve(enTranslations),
+    getTranslations: (config) => {
+      const ns = typeof config === 'string' ? config : (config?.namespace || undefined);
+      const t = (key, values) => {
+        let val = enTranslations;
+        if (ns) {
+          const parts = ns.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        val = val || key;
+
+        if (values) {
+          Object.keys(values).forEach(k => {
+            if (typeof values[k] === 'function') {
+              val = values[k](val);
+            } else {
+              val = String(val).replace(new RegExp(`\\{${k}\\}`, 'g'), values[k]);
+            }
+          });
+        }
+        return val;
+      };
+      t.rich = (key) => key;
+      t.raw = (key) => {
+        let val = enTranslations;
+        if (ns) {
+          const parts = ns.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        return val || key;
+      };
+      t.has = (key) => {
+        let val = enTranslations;
+        if (ns) {
+          const parts = ns.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        if (key) {
+          const parts = key.split('.');
+          for (const part of parts) {
+            val = val?.[part];
+          }
+        }
+        return val !== undefined;
+      };
+      return Promise.resolve(t);
+    },
+  };
+});
 
 if (typeof global.Request === 'undefined') {
   global.Request = class { };
