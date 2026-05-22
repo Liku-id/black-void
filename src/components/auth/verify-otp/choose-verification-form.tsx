@@ -16,6 +16,7 @@ import { useAtom } from 'jotai';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ChooseVerificationFormProps {
   redirectPath?: string;
@@ -33,6 +34,7 @@ const ChooseVerificationForm = ({
   const [error, setError] = useState('');
   const [, setExpiresAt] = useAtom(otpExpiresAtAtom);
   const [, setChannel] = useAtom(verificationChannelAtom);
+  const t = useTranslations('register.otp');
 
   // Check if from login (userData exists) or from register (registerPayload exists)
   const isFromLogin = !!(userData?.email || userData?.phoneNumber);
@@ -120,7 +122,7 @@ const ChooseVerificationForm = ({
             </Box>
             <Box className="flex min-w-0 flex-1 flex-col">
               <Typography type="body" size={16} className="mb-1 font-light">
-                Send via Email
+                {t('send_email')}
               </Typography>
               <Typography size={12} className="font-light text-white">
                 {email?.replace(
@@ -151,7 +153,7 @@ const ChooseVerificationForm = ({
             </Box>
             <Box className="flex min-w-0 flex-1 flex-col">
               <Typography type="body" size={16} className="mb-1 font-light">
-                Send via WhatsApp/SMS
+                {t('send_wa')}
               </Typography>
               <Typography size={12} className="font-light text-white">
                 {phoneNumber?.replace(

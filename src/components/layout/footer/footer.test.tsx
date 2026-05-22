@@ -3,41 +3,41 @@ import Footer from './index';
 import '@testing-library/jest-dom';
 
 describe('Footer', () => {
-  it('renders logo', () => {
-    render(<Footer />);
+  it('renders logo', async () => {
+    render(await Footer());
     const logo = screen.getByAltText(/logo/i);
     expect(logo).toBeInTheDocument();
   });
 
-  it('renders company name', () => {
-    render(<Footer />);
+  it('renders company name', async () => {
+    render(await Footer());
     const companyNames = screen.getAllByText(/PT Aku Rela Kamu Bahagia/i);
     expect(companyNames.length).toBeGreaterThan(0);
   });
 
-  it('renders company address', () => {
-    render(<Footer />);
+  it('renders company address', async () => {
+    render(await Footer());
     expect(screen.getByText(/Jl\. Ciniru III No\.2/i)).toBeInTheDocument();
   });
 
-  it('renders event type links', () => {
-    render(<Footer />);
+  it('renders event type links', async () => {
+    render(await Footer());
     expect(screen.getByText(/Music/i)).toBeInTheDocument();
     expect(screen.getByText(/Sports/i)).toBeInTheDocument();
     expect(screen.getByText(/Exhibition/i)).toBeInTheDocument();
     expect(screen.getByText(/Festival/i)).toBeInTheDocument();
   });
 
-  it('renders about links', () => {
-    render(<Footer />);
-    expect(screen.getByText(/About Us/i)).toBeInTheDocument();
+  it('renders about links', async () => {
+    render(await Footer());
+    expect(screen.getAllByText(/About Wukong/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Terms & Conditions/i)).toBeInTheDocument();
     expect(screen.getByText(/Privacy Policy/i)).toBeInTheDocument();
     expect(screen.getByText(/Cookie Policy/i)).toBeInTheDocument();
   });
 
-  it('renders contact info', () => {
-    render(<Footer />);
+  it('renders contact info', async () => {
+    render(await Footer());
     expect(screen.getByText(/\+62 851-2132-8284/i)).toBeInTheDocument();
     expect(screen.getByText(/support@wukong.co.id/i)).toBeInTheDocument();
   });

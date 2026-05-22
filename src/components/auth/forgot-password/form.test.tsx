@@ -35,7 +35,7 @@ beforeEach(() => {
 describe('ForgotPasswordForm', () => {
   it('renders form elements', () => {
     render(<ForgotPasswordForm />);
-    expect(screen.getByPlaceholderText('Email Address')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /send link/i })
     ).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe('ForgotPasswordForm', () => {
 
   it('shows validation error if email is invalid', async () => {
     render(<ForgotPasswordForm />);
-    const input = screen.getByPlaceholderText('Email Address');
+    const input = screen.getByPlaceholderText(/email address/i);
     await act(async () => {
       fireEvent.change(input, { target: { value: 'invalid' } });
       fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -64,7 +64,7 @@ describe('ForgotPasswordForm', () => {
   it('shows loading indicator when submitting', async () => {
     mockedAxios.post.mockImplementation(() => new Promise(() => { })); // never resolves
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -83,7 +83,7 @@ describe('ForgotPasswordForm', () => {
       response: { data: { message: 'Something went wrong' } },
     });
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -95,7 +95,7 @@ describe('ForgotPasswordForm', () => {
   it('shows error message on unexpected error', async () => {
     mockedAxios.post.mockRejectedValue({});
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -110,12 +110,12 @@ describe('ForgotPasswordForm', () => {
       .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } }); // forgot-password: success
 
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
     expect(await screen.findByText(/test@example.com/i)).toBeInTheDocument(); // email di modal
-    expect(screen.getByText(/resend link/i)).toBeInTheDocument(); // tombol resend di modal
+    expect(screen.getByText(/send it again/i)).toBeInTheDocument(); // tombol resend di modal
   });
 
   it('closes modal when close button is clicked', async () => {
@@ -124,7 +124,7 @@ describe('ForgotPasswordForm', () => {
       .mockResolvedValueOnce({ status: 200, data: { token: 'abc' } });
 
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -143,12 +143,12 @@ describe('ForgotPasswordForm', () => {
       .mockResolvedValueOnce({ status: 200 });
 
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
     const resendBtn = await screen.findByRole('button', {
-      name: /resend link/i,
+      name: /send it again/i,
     });
     fireEvent.click(resendBtn);
     expect(mockedAxios.post).toHaveBeenCalledTimes(3);
@@ -176,7 +176,7 @@ describe('ForgotPasswordForm', () => {
       response: { data: { message: 'Custom error' } },
     });
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
@@ -190,12 +190,12 @@ describe('ForgotPasswordForm', () => {
       .mockImplementationOnce(() => new Promise(() => { })); // loading pada resend
 
     render(<ForgotPasswordForm />);
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), {
+    fireEvent.change(screen.getByPlaceholderText(/email address/i), {
       target: { value: 'test@example.com' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send link/i }));
     const resendBtn = await screen.findByRole('button', {
-      name: /resend link/i,
+      name: /send it again/i,
     });
     fireEvent.click(resendBtn);
     expect(await screen.findByAltText('Loading...')).toBeInTheDocument();

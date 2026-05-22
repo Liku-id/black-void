@@ -8,15 +8,18 @@ import eventType1 from '@/assets/images/tambahan-modal-usaha-event-1.webp';
 import eventType2 from '@/assets/images/tambahan-modal-usaha-event-2.webp';
 import eventType3 from '@/assets/images/tambahan-modal-usaha-event-3.webp';
 import eventType4 from '@/assets/images/tambahan-modal-usaha-event-4.webp';
-
-const eventTypes = [
-  { img: eventType1, text: 'Sports & running events' },
-  { img: eventType2, text: 'Community & creative events' },
-  { img: eventType3, text: 'Conferences & exhibitions' },
-  { img: eventType4, text: 'Music & entertainment events' },
-];
+import { useTranslations } from 'next-intl';
 
 const EventTypesSection = () => {
+  const t = useTranslations("eventFunding");
+
+  const eventTypes = [
+    { img: eventType1, text: t('eventTypes.type.1') },
+    { img: eventType2, text: t('eventTypes.type.2') },
+    { img: eventType3, text: t('eventTypes.type.3') },
+    { img: eventType4, text: t('eventTypes.type.4') },
+  ];
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [touchStart, setTouchStart] = React.useState<number | null>(null);
   const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
@@ -73,7 +76,7 @@ const EventTypesSection = () => {
                 as="h3"
                 className="mb-4 text-white uppercase text-[24px] md:text-[32px]"
               >
-                Built for Various Event Types
+                {t('eventTypes.title')}
               </Typography>
 
               <Typography
@@ -81,11 +84,11 @@ const EventTypesSection = () => {
                 size={14}
                 className="mb-10 text-white opacity-90 max-w-sm"
               >
-                Whether you run small community events or large-scale productions, our funding model adapts to your event goals
+                {t('eventTypes.desc')}
               </Typography>
 
               <Button id="cta2_funding" type="button" onClick={handleScrollToForm}>
-                Start Funding
+                {t('eventTypes.button')}
               </Button>
             </Box>
           </Box>

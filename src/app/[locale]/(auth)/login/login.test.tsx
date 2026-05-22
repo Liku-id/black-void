@@ -24,7 +24,7 @@ describe('LoginPage', () => {
 
   it('renders the forgot password and signup links', () => {
     render(<LoginPage />);
-    expect(screen.getByText(/Forgot Your Password\?/i)).toHaveAttribute(
+    expect(screen.getByText(/Forgot Password\?/i)).toHaveAttribute(
       'href',
       '/forgot-password'
     );

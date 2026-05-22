@@ -8,6 +8,7 @@ import { email, phoneNumber } from '@/utils/form-validation'; // Reusing validat
 import { useIndustryCategories } from '@/hooks/use-industry-categories';
 import { useProvinces } from '@/hooks/use-provinces';
 import { generateCompanyProfileUrl, uploadCompanyProfile, registerProjectOwner } from '@/services/ekuid';
+import { useTranslations } from 'next-intl';
 
 type FormData = {
   brand_name: string;
@@ -29,6 +30,7 @@ const knowFromOptions = [
 ];
 
 const FundingFormSection = () => {
+  const t = useTranslations('eventFunding');
   const [countryCode, setCountryCode] = React.useState('+62');
 
   const { categories: industryCategories } = useIndustryCategories();
@@ -125,7 +127,7 @@ const FundingFormSection = () => {
             size={32}
             className="text-[32px] text-white font-normal"
           >
-            Start Funding here
+            {t('form.title')}
           </Typography>
         </Box>
 
@@ -179,7 +181,7 @@ const FundingFormSection = () => {
               {/* Business Industry */}
               <Select
                 name="industry_category_id"
-                placeholder="Business Industry*"
+                placeholder={t('form.industryBusiness')}
                 options={industryOptions}
                 rules={{ required: 'Business Industry is required' }}
               />
@@ -187,7 +189,7 @@ const FundingFormSection = () => {
               {/* Know EKUID From */}
               <Select
                 name="know_from"
-                placeholder="Know EKUID From*"
+                placeholder={t('form.howKnowEkuid')}
                 options={knowFromOptions}
                 rules={{ required: 'This field is required' }}
               />
@@ -202,7 +204,7 @@ const FundingFormSection = () => {
               {/* Head Office of Domicile */}
               <Select
                 name="province_id"
-                placeholder="Head Office of Domicile*"
+                placeholder={t('form.domicile')}
                 options={domicileOptions}
                 rules={{ required: 'Domicile is required' }}
               />
@@ -221,7 +223,7 @@ const FundingFormSection = () => {
                 render={({ field, fieldState }: { field: any; fieldState: any }) => (
                   <Box>
                     <TextField
-                      placeholder="Funding Amount*"
+                      placeholder={t('form.fundingAmount')}
                       value={field.value ?? ''}
                       onChange={(value: string) => {
                         const number = value.replace(/\D/g, '');
@@ -265,7 +267,7 @@ const FundingFormSection = () => {
                 className="w-full md:w-auto px-8 py-3 bg-green text-white font-bold text-base"
               // disabled={!isValid} // Optional: disable if invalid
               >
-                Register Now!
+                {t('form.button')}
               </Button>
             </Box>
           </form>

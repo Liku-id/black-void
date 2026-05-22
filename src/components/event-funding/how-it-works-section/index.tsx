@@ -7,35 +7,37 @@ import howItWork1 from '@/assets/images/tambahan-modal-usaha-how-1.webp';
 import howItWork2 from '@/assets/images/tambahan-modal-usaha-how-2.webp';
 import howItWork3 from '@/assets/images/tambahan-modal-usaha-how-3.webp';
 import howItWork4 from '@/assets/images/tambahan-modal-usaha-how-4.webp';
-
-const steps = [
-  {
-    number: 1,
-    title: 'Register WU organizer',
-    description: 'Submit your information and wait for verification by the Ekuid team',
-    image: howItWork1,
-  },
-  {
-    number: 2,
-    title: 'due diligence',
-    description: 'The event and issuer undergo a structured due diligence process to assess feasibility, risk, and regulatory compliance',
-    image: howItWork2,
-  },
-  {
-    number: 3,
-    title: 'open campaign crowdfunding',
-    description: 'After approval, your crowdfunding campaign goes live and is open for investors to participate',
-    image: howItWork3,
-  },
-  {
-    number: 4,
-    title: 'disbursement when campaign fully funded',
-    description: 'Once the funding target is reached, funds are released securely to support your event execution',
-    image: howItWork4,
-  },
-];
+import { useTranslations } from 'next-intl';
 
 const HowItWorksSection = () => {
+  const t = useTranslations('eventFunding.howItWorks');
+  const steps = [
+    {
+      number: 1,
+      title: t('items.1.title'),
+      description: t('items.1.desc'),
+      image: howItWork1,
+    },
+    {
+      number: 2,
+      title: t('items.2.title'),
+      description: t('items.2.desc'),
+      image: howItWork2,
+    },
+    {
+      number: 3,
+      title: t('items.3.title'),
+      description: t('items.3.desc'),
+      image: howItWork3,
+    },
+    {
+      number: 4,
+      title: t('items.4.title'),
+      description: t('items.4.desc'),
+      image: howItWork4,
+    },
+  ];
+
   const [activeStep, setActiveStep] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -78,7 +80,7 @@ const HowItWorksSection = () => {
             size={32}
             className="text-[32px] text-white font-normal uppercase"
           >
-            How It Works
+            {t('title')}
           </Typography>
         </Box>
 

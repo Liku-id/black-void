@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import FeaturesSection from './index';
 
 describe('FeaturesSection', () => {
-  it('renders all features correctly', () => {
-    render(<FeaturesSection />);
+  it('renders all features correctly', async () => {
+    render(await FeaturesSection());
 
     // Header
     expect(screen.getByText(/All in one feature for your event marketing/i)).toBeInTheDocument();

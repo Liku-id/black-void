@@ -1,9 +1,10 @@
-import React from 'react';
 import Link from 'next/link';
 import { Box, Container, Typography } from '@/components';
 import { buttonVariants } from '@/components/common/button';
+import { getTranslations } from 'next-intl/server';
 
-const CTASection = () => {
+const CTASection = async () => {
+  const t = await getTranslations("aboutUs.cta")
   return (
     <section className="pb-16 lg:pb-32 bg-black text-white px-4 xl:px-0">
       <Container>
@@ -16,21 +17,21 @@ const CTASection = () => {
               size={32}
               className="mb-4 uppercase text-[23px] xl:text-[32px]"
             >
-              START YOUR EVENT HERE!
+              {t('title')}
             </Typography>
             <Typography
               type="body"
               size={18}
               className="mb-4 opacity-80 text-[14px] xl:text-[18px]"
             >
-              An idea is just the beginning. Let Wukong be your partner in transforming it into an experience that matters.
+              {t("desc")}
             </Typography>
             <Typography
               type="body"
               size={18}
               className="opacity-80 text-[14px] xl:text-[18px]"
             >
-              Ready to craft your experience?
+              {t('ready')}
             </Typography>
           </Box>
 
@@ -42,7 +43,7 @@ const CTASection = () => {
               rel="noopener noreferrer"
               className={buttonVariants({ className: "w-auto text-[14px] xl:text-[16px]" })}
             >
-              Create My Event
+              {t('button_create')}
             </Link>
             <Link
               href="https://wa.me/6285121328284"
@@ -50,7 +51,7 @@ const CTASection = () => {
               rel="noopener noreferrer"
               className={buttonVariants({ className: "w-auto text-[14px] xl:text-[16px]" })}
             >
-              Talk to Our Team
+              {t('button_talk')}
             </Link>
           </Box>
         </Box>

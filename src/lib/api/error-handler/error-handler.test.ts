@@ -17,6 +17,7 @@ describe('handleErrorAPI', () => {
 
   it('returns response with full error info', () => {
     const error = {
+      isAxiosError: true,
       response: {
         data: {
           message: 'Unauthorized',
@@ -31,8 +32,8 @@ describe('handleErrorAPI', () => {
     expect(mockJson).toHaveBeenCalledWith(
       {
         message: 'Unauthorized',
-        traceId: 'trace-123',
-        success: false,
+        code: undefined,
+        detail: undefined,
       },
       { status: 401 },
     );
@@ -41,20 +42,15 @@ describe('handleErrorAPI', () => {
   });
 
   it('handles error without response', () => {
-    const error = {
-      message: 'Server down',
-      status: 503,
-    };
+    const error = new Error('Server down');
 
     const response = handleErrorAPI(error);
 
     expect(mockJson).toHaveBeenCalledWith(
       {
         message: 'Server down',
-        traceId: '',
-        success: false,
       },
-      { status: 503 },
+      { status: 500 },
     );
   });
 
@@ -64,8 +60,6 @@ describe('handleErrorAPI', () => {
     expect(mockJson).toHaveBeenCalledWith(
       {
         message: 'An unexpected error occurred.',
-        traceId: '',
-        success: false,
       },
       { status: 500 },
     );
@@ -84,8 +78,7 @@ describe('getErrorMessage', () => {
     } as AxiosError;
 
     const message = getErrorMessage(axiosError);
-    // Without URL context, 'Invalid credentials' doesn't match any mapping
-    expect(message).toBe('An error occurred. Please try again later');
+    expect(message).toBe('Invalid credentials');
   });
 
   it('maps login wrong password error to user-friendly message', () => {
@@ -101,7 +94,7 @@ describe('getErrorMessage', () => {
     } as unknown as AxiosError;
 
     const message = getErrorMessage(axiosError);
-    expect(message).toBe("Email & password doesn't match");
+    expect(message).toBe("Wrong password");
   });
 
   it('maps login rate limit error correctly', () => {
@@ -118,7 +111,7 @@ describe('getErrorMessage', () => {
 
     const message = getErrorMessage(axiosError);
     expect(message).toBe(
-      'Too many requests. Please wait for 3 minutes to try again.',
+      'Too many login attempts',
     );
   });
 
@@ -135,7 +128,7 @@ describe('getErrorMessage', () => {
     } as unknown as AxiosError;
 
     const message = getErrorMessage(axiosError);
-    expect(message).toBe('Email is already registered. Sign in?');
+    expect(message).toBe('Email is already registered');
   });
 
   it('maps OTP phone number format error correctly', () => {
@@ -151,7 +144,7 @@ describe('getErrorMessage', () => {
     } as unknown as AxiosError;
 
     const message = getErrorMessage(axiosError);
-    expect(message).toBe('Please input a valid phone number');
+    expect(message).toBe('Invalid phone number format');
   });
 
   it('maps create order sold out error correctly', () => {
@@ -167,7 +160,7 @@ describe('getErrorMessage', () => {
     } as unknown as AxiosError;
 
     const message = getErrorMessage(axiosError);
-    expect(message).toBe('This ticket type is sold out');
+    expect(message).toBe('Ticket sold out');
   });
 
   it('falls back to status code message when no pattern matches', () => {
@@ -184,7 +177,7 @@ describe('getErrorMessage', () => {
 
     const message = getErrorMessage(axiosError);
     expect(message).toBe(
-      'An unexpected error occurred. Please try again later.',
+      'some random backend error',
     );
   });
 

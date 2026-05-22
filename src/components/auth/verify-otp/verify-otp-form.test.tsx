@@ -36,10 +36,11 @@ describe('VerifyOtpForm', () => {
   it('renders phone number and timer', () => {
     render(<VerifyOtpForm />);
     expect(
-      screen.getByText(
-        `We've sent Wu an OTP code to your phone number **********789`
+      screen.getByText((content) =>
+        content.includes("we've sent Wu an OTP code to your phone number")
       )
     ).toBeInTheDocument();
+    expect(screen.getByText('**********789')).toBeInTheDocument();
     expect(screen.getByText('01:00')).toBeInTheDocument();
   });
 

@@ -18,56 +18,72 @@ const onest = Onest({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Wukong',
-  description:
-    'Wukong - Advanced ticketing management system for seamless event organization and ticket sales.',
-  icons: {
-    icon: [
-      {
-        url: '/favicon-16x16.png',
-        sizes: '16x16',
-        type: 'image/png',
-      },
-      {
-        url: '/favicon-32x32.png',
-        sizes: '32x32',
-        type: 'image/png',
-      },
-      {
-        url: '/favicon-64x64.png',
-        sizes: '64x64',
-        type: 'image/png',
-      },
-      {
-        url: '/favicon-128x128.png',
-        sizes: '128x128',
-        type: 'image/png',
-      },
-    ],
-    apple: [
-      {
-        url: '/apple-touch-icon.png',
-        sizes: '180x180',
-        type: 'image/png',
-      },
-    ],
-  },
-  other: {
-    ...(process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION && {
-      'facebook-domain-verification':
-        process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION,
-    }),
-  },
-};
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  let locale = 'en';
+  locale = await getLocale();
+
+  const t = await getTranslations({ locale });
+
+  return {
+    title: {
+      template: '%s | Wukong',
+      default: t.has('metadata.home.title') ? t('metadata.home.title') : 'Wukong',
+    },
+    description: t.has('metadata.home.description')
+      ? t('metadata.home.description')
+      : 'Wukong - Advanced ticketing management system for seamless event organization and ticket sales.',
+    icons: {
+      icon: [
+        {
+          url: '/favicon-16x16.png',
+          sizes: '16x16',
+          type: 'image/png',
+        },
+        {
+          url: '/favicon-32x32.png',
+          sizes: '32x32',
+          type: 'image/png',
+        },
+        {
+          url: '/favicon-64x64.png',
+          sizes: '64x64',
+          type: 'image/png',
+        },
+        {
+          url: '/favicon-128x128.png',
+          sizes: '128x128',
+          type: 'image/png',
+        },
+      ],
+      apple: [
+        {
+          url: '/apple-touch-icon.png',
+          sizes: '180x180',
+          type: 'image/png',
+        },
+      ],
+    },
+    other: {
+      ...(process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION && {
+        'facebook-domain-verification':
+          process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION,
+      }),
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
       </head>
@@ -96,7 +112,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
 
 
-        <SWRProvider>{children}</SWRProvider>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <SWRProvider>{children}</SWRProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

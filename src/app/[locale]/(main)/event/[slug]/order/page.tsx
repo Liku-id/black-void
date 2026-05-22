@@ -2,7 +2,8 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRouter } from '@/lib/i18n/navigation';
 import { useCountdown } from '@/utils/timer';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';

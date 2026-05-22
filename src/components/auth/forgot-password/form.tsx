@@ -8,13 +8,15 @@ import { getErrorMessage } from '@/lib/api/error-handler';
 import { Button, TextField, Typography } from '@/components';
 import Loading from '@/components/layout/loading';
 import SentModal from './sent-modal';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 interface ForgotPasswordData {
   email: string;
 }
 
 const ForgotPasswordForm = () => {
+  const t = useTranslations('forgotPassword');
   const router = useRouter();
   // Initialize state
   const [loading, setLoading] = useState(false);
@@ -84,13 +86,13 @@ const ForgotPasswordForm = () => {
             id="email_field"
             name="email"
             type="email"
-            placeholder="Email Address"
+            placeholder={t('email')}
             className="mb-10 w-[270px]"
             rules={{ required: 'Email is required', validate: email }}
           />
 
           <Button id="btn_fyp_send_link" type="submit">
-            Send Link
+            {t('button')}
           </Button>
 
           {error && (

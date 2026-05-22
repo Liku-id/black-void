@@ -71,7 +71,7 @@ describe('ChooseVerificationForm', () => {
     // wait 'test' has 4 chars. start='t', last3='est'.
     // Result: *est@example.com
 
-    expect(screen.getByText('Send via WhatsApp/SMS')).toBeInTheDocument();
+    expect(screen.getByText('Send via Whatsapp/SMS')).toBeInTheDocument();
     // Check masked phone
     // 081234567890 -> *********890
     expect(screen.getByText(/\*+890/)).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('ChooseVerificationForm', () => {
 
     render(<ChooseVerificationForm />);
 
-    const phoneBtn = screen.getByText('Send via WhatsApp/SMS').closest('button');
+    const phoneBtn = screen.getByText('Send via Whatsapp/SMS').closest('button');
     fireEvent.click(phoneBtn!);
 
     await waitFor(() => {

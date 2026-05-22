@@ -8,34 +8,38 @@ import usp2 from '@/assets/images/about-us-usp-2.webp';
 import usp3 from '@/assets/images/about-us-usp-3.webp';
 import usp4 from '@/assets/images/about-us-usp-4.webp';
 
-const usps = [
-  {
-    number: 1,
-    title: 'fast & easy buyer check-in',
-    description: 'Enable quick, smooth attendee entry with a simple and efficient check-in process',
-    image: usp1,
-  },
-  {
-    number: 2,
-    title: 'comprehensive financial report',
-    description: 'Access detailed and accurate financial reports to track sales, revenue, and settlements',
-    image: usp2,
-  },
-  {
-    number: 3,
-    title: 'seamless & real-time dashboard',
-    description: 'Monitor ticket sales, performance, and key metrics in one real-time dashboard',
-    image: usp3,
-  },
-  {
-    number: 4,
-    title: 'quick onboarding flow',
-    description: 'Get started fast with an intuitive setup designed for effortless event creation',
-    image: usp4,
-  },
-];
+import { useTranslations } from 'next-intl';
 
 const USPSection = () => {
+  const t = useTranslations('aboutUs');
+
+  const usps = [
+    {
+      number: 1,
+      title: t('usp.items.1.title'),
+      description: t('usp.items.1.desc'),
+      image: usp1,
+    },
+    {
+      number: 2,
+      title: t('usp.items.2.title'),
+      description: t('usp.items.2.desc'),
+      image: usp2,
+    },
+    {
+      number: 3,
+      title: t('usp.items.3.title'),
+      description: t('usp.items.3.desc'),
+      image: usp3,
+    },
+    {
+      number: 4,
+      title: t('usp.items.4.title'),
+      description: t('usp.items.4.desc'),
+      image: usp4,
+    },
+  ];
+
   const [activeStep, setActiveStep] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -77,14 +81,14 @@ const USPSection = () => {
             size={32}
             className="mb-4 text-white  text-[23px] lg:text-[32px]"
           >
-            Manage tickets effortlessly
+            {t('usp.title')}
           </Typography>
           <Typography
             type="body"
             size={14}
             className="text-white max-w-2xl"
           >
-            with a user-friendly system. We’re ready to support every stage of your event
+            {t('usp.desc')}
           </Typography>
         </Box>
 

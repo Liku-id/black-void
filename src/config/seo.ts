@@ -158,3 +158,68 @@ export function generateEventMetadata(eventName?: string): Metadata {
     },
   };
 }
+
+import { getTranslations } from 'next-intl/server';
+
+export async function generateLocalizedMetadata(
+  locale: string,
+  pageKey: keyof typeof SEO_CONFIG.pages,
+  namespace?: string
+): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace });
+  const baseConfig = SEO_CONFIG.pages[pageKey];
+
+  // Provide fallback to static baseConfig if translation doesn't exist
+  let title = baseConfig.title;
+  let description = baseConfig.description;
+
+  try {
+    if (t.has('title')) {
+      title = t('title') || baseConfig.title;
+    } else if (t.has('meta.title')) {
+      title = t('meta.title') || baseConfig.title;
+    }
+
+    if (t.has('description')) {
+      description = t('description') || baseConfig.description;
+    } else if (t.has('meta.description')) {
+      description = t('meta.description') || baseConfig.description;
+    }
+  } catch (e) {
+    // If translation key is missing, fallback is automatically used
+  }
+
+  return {
+    ...baseConfig,
+    title,
+    description,
+    openGraph: {
+      ...baseConfig.openGraph,
+      title: title as any,
+      description: description || undefined,
+    },
+    twitter: {
+      ...baseConfig.twitter,
+      title: title as any,
+      description: description || undefined,
+    },
+  };
+}
+
+/**
+ * Higher-order function to generate localized metadata with just one line of code in any page.tsx.
+ * Example usage: export const generateMetadata = createLocalizedMetadata('aboutUs', 'aboutUs');
+ */
+export const createLocalizedMetadata = (
+  pageKey: keyof typeof SEO_CONFIG.pages,
+  namespace?: string
+) => {
+  return async function generateMetadata({
+    params,
+  }: {
+    params: Promise<{ locale: string }>;
+  }): Promise<Metadata> {
+    const { locale } = await params;
+    return generateLocalizedMetadata(locale, pageKey, namespace);
+  };
+};

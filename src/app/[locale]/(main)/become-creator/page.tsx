@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Container, Box, Typography, Button } from '@/components';
 import StripeText from '@/components/layout/stripe-text';
 import creatorMain from '@/assets/images/creator-main.webp';
@@ -82,6 +83,7 @@ const text = [
 ];
 
 export default function BecomeCreatorPage() {
+  const t = useTranslations('becomeCreator');
   const [activeStep, setActiveStep] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -153,24 +155,21 @@ export default function BecomeCreatorPage() {
                   size={46}
                   className="mb-6 font-bold uppercase leading-tight text-white md:text-[46px] text-[23px]"
                 >
-                  CREATING TOGETHER, ONE EVENT AT A TIME
+                  {t('hero.title')}
                 </Typography>
                 <Typography
                   type="body"
                   size={18}
                   className="mb-8 max-w-3xl mx-auto leading-relaxed text-white md:text-[18px] text-[12px]"
                 >
-                  At Wukong, we believe every gathering is a spark of
-                  possibility - a chance to awaken new connections, voices, and
-                  experiences. Here's how you, as an event creator, can bring
-                  your vision alive with us:
+                  {t('hero.desc')}
                 </Typography>
                 <Button
                   type="button"
                   onClick={handleCreateEventClick}
                   className="mx-auto flex relative z-20 cursor-pointer"
                 >
-                  Create My Event
+                  {t('hero.button')}
                 </Button>
               </Box>
             </Container>
@@ -231,14 +230,14 @@ export default function BecomeCreatorPage() {
                           size={32}
                           className="mb-2 lg:mb-2 uppercase text-white"
                         >
-                          {steps[activeStep].title}
+                          {t(`steps.${steps[activeStep].number}.title`)}
                         </Typography>
                         <Typography
                           type="body"
                           size={14}
                           className="text-white"
                         >
-                          {steps[activeStep].description}
+                          {t(`steps.${steps[activeStep].number}.description`)}
                         </Typography>
                       </Box>
                     </Box>
@@ -309,14 +308,14 @@ export default function BecomeCreatorPage() {
                             size={32}
                             className="mb-2 uppercase text-white"
                           >
-                            {step.title}
+                            {t(`steps.${step.number}.title`)}
                           </Typography>
                           <Typography
                             type="body"
                             size={14}
                             className="text-white"
                           >
-                            {step.description}
+                            {t(`steps.${step.number}.description`)}
                           </Typography>
                         </Box>
                       </Box>
@@ -352,7 +351,7 @@ export default function BecomeCreatorPage() {
               size={26}
               className="mb-8 uppercase text-white md:text-[26px]"
             >
-              CREATING TOGETHER, ONE EVENT AT A TIME
+              {t('hero.title')}
             </Typography>
           </Box>
           <Box className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4  px-12">
@@ -374,10 +373,10 @@ export default function BecomeCreatorPage() {
                   size={18}
                   className="mb-4 uppercase text-white"
                 >
-                  {feature.title}
+                  {t(`features.items.${index + 1}.title`)}
                 </Typography>
                 <Typography type="body" size={14} className="text-white">
-                  {feature.description}
+                  {t(`features.items.${index + 1}.description`)}
                 </Typography>
               </Box>
             ))}
@@ -407,7 +406,7 @@ export default function BecomeCreatorPage() {
                   size={26}
                   className="mb-6 text-left font-bold uppercase text-white md:text-[26px]"
                 >
-                  STEP FORWARD - BRING YOUR EVENT TO LIFE
+                  {t('cta.title')}
                 </Typography>
                 <Box className="max-w-[426px]">
                   <Typography
@@ -415,8 +414,7 @@ export default function BecomeCreatorPage() {
                     size={14}
                     className="mb-6 text-left flex-1 leading-relaxed text-white"
                   >
-                    An idea is just the beginning. Let Wukong be your partner in
-                    transforming it into an experience that matters.
+                    {t('cta.desc')}
                   </Typography>
                 </Box>
                 <Typography
@@ -424,7 +422,7 @@ export default function BecomeCreatorPage() {
                   size={12}
                   className="flex-1 text-left leading-relaxed text-white"
                 >
-                  Ready to craft your experience?
+                  {t('cta.ready')}
                 </Typography>
               </Box>
 
@@ -434,14 +432,14 @@ export default function BecomeCreatorPage() {
                   onClick={handleCreateEventClick}
                   className="flex max-w-[180px] text-[16px] sm:mx-auto"
                 >
-                  Create My Event
+                  {t('cta.button_create')}
                 </Button>
                 <Button
                   type="button"
                   onClick={handleTalkToTeamClick}
-                  className="flex max-w-[180px] text-[16px] sm:mx-auto"
+                  className="flex max-w-[240px] text-[16px] sm:mx-auto"
                 >
-                  Talk to Our Team
+                  {t('cta.button_talk')}
                 </Button>
               </Box>
             </Box>

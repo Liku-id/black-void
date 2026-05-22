@@ -7,32 +7,34 @@ import privateIcon from '@/assets/icons/private.svg';
 import additionalFormImg from '@/assets/images/additional-form.webp';
 import groupTicketImg from '@/assets/images/group-ticket.webp';
 import privateLinkImg from '@/assets/images/private-link.webp';
+import { getTranslations } from 'next-intl/server';
 
-const features = [
-  {
-    title: 'Special leads Requirement',
-    description: 'Capture valuable attendee data with custom requirements that support smarter targeting and follow-ups',
-    align: 'left',
-    icon: singleIcon,
-    image: additionalFormImg,
-  },
-  {
-    title: 'Group Ticket',
-    description: 'Boost sales by offering group deals that make it easy for teams and communities to buy together',
-    align: 'right',
-    icon: groupIcon,
-    image: groupTicketImg,
-  },
-  {
-    title: 'Private Link Ticket',
-    description: 'Drive exclusivity and conversions with private ticket links for partners, VIPs, or targeted audiences',
-    align: 'left',
-    icon: privateIcon,
-    image: privateLinkImg,
-  },
-];
+const FeaturesSection = async () => {
+  const t = await getTranslations('aboutUs');
 
-const FeaturesSection = () => {
+  const features = [
+    {
+      title: t('features.items.1.title'),
+      description: t('features.items.1.desc'),
+      align: 'left',
+      icon: singleIcon,
+      image: additionalFormImg,
+    },
+    {
+      title: t('features.items.2.title'),
+      description: t('features.items.2.desc'),
+      align: 'right',
+      icon: groupIcon,
+      image: groupTicketImg,
+    },
+    {
+      title: t('features.items.3.title'),
+      description: t('features.items.3.desc'),
+      align: 'left',
+      icon: privateIcon,
+      image: privateLinkImg,
+    },
+  ];
   return (
     <section className="pb-16 xl:pb-32 px-4 xl:px-0">
       <Container>
@@ -44,14 +46,14 @@ const FeaturesSection = () => {
             size={32}
             className="mb-4 text-white text-[23px] xl:text-[32px]"
           >
-            All in one feature for your event marketing
+            {t('features.title')}
           </Typography>
           <Typography
             type="body"
             size={18}
             className="text-white opacity-80 text-[14px] xl:text-[18px]"
           >
-            Power your event marketing with powerfull features. Built for precise targeting and control
+            {t('features.desc')}
           </Typography>
         </Box>
 

@@ -12,7 +12,7 @@ describe('SuccessModal', () => {
   it('should render correctly when open is true', () => {
     render(<SuccessModal open={true} onContinue={mockOnContinue} />);
 
-    expect(screen.getByText('Wu-hoo!')).toBeInTheDocument();
+    expect(screen.getByText('wu-hoo!')).toBeInTheDocument();
     expect(
       screen.getByText('you are now The Chosen Wu!')
     ).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('SuccessModal', () => {
       <SuccessModal open={false} onContinue={mockOnContinue} />
     );
 
-    expect(queryByText('Wu-hoo!')).not.toBeInTheDocument();
+    expect(queryByText('wu-hoo!')).not.toBeInTheDocument();
   });
 
   it('should call onContinue when Get In button is clicked', () => {

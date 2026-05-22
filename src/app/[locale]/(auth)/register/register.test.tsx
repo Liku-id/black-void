@@ -28,6 +28,6 @@ describe('RegisterPage', () => {
       'href',
       '/forgot-password'
     );
-    expect(screen.getByText(/Log In/i)).toHaveAttribute('href', '/login');
+    expect(screen.getByText(/Sign in/i)).toHaveAttribute('href', '/login');
   });
 });

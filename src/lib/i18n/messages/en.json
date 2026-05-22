@@ -1,0 +1,497 @@
+{
+  "faq": {
+    "buy_ticket_q": "How do I buy a ticket?",
+    "buy_ticket_a": "Simply find the event you want to attend, select your ticket category and quantity, click 'Book Ticket', and proceed to checkout. You'll receive your e-ticket via email after successful payment.",
+    "payment_methods_q": "What payment methods do you accept?",
+    "payment_methods_a": "We accept QRIS and Virtual Accounts.",
+    "find_ticket_q": "Where can I find my ticket after purchase?",
+    "find_ticket_a": "You'll receive your ticket via email. You can also access it by logging into your account and visiting the 'My Tickets' section.",
+    "print_ticket_q": "Do I need to print my ticket?",
+    "print_ticket_a": "Not necessarily! Most events accept e-tickets. Just show the QR code on your phone at the entrance. If the organizer requires printed tickets, you'll be notified.",
+    "refund_q": "Can I get a refund if I can't attend?",
+    "refund_a": "Refund policies vary by event. Please check the event's refund policy before purchasing. If refunds are allowed, you can request one from your ticket dashboard or contact support.",
+    "no_email_q": "I didn't receive my ticket email—what should I do?",
+    "no_email_a": "First, check your spam or promotions folder. If it’s not there, log in to your account and go to “My Tickets”. Still can’t find it? Contact our support team.",
+    "event_canceled_q": "What if the event is canceled or rescheduled?",
+    "event_canceled_a": "If an event is canceled or rescheduled, we'll notify you via email with further instructions. Refunds or ticket validity for the new date will be subject to the event organizer's policy.",
+    "multiple_tickets_q": "Can I buy tickets for multiple people in one transaction?",
+    "multiple_tickets_a": "Yes! Just select the quantity you need during checkout. You'll receive all tickets under one booking, which you can forward or share.",
+    "safety_q": "Is it safe to buy tickets on your platform?",
+    "safety_a": "Yes, your personal and payment information is protected with industry-standard encryption. We also work directly with verified event organizers.",
+    "contact_support_q": "How do I contact customer support?",
+    "contact_support_a": "You can reach us via email at support@wukong.co.id or through live chat on our website during business hours."
+  },
+  "auth": {
+    "login": {
+      "title": "Are Wu In?",
+      "subtitle": "It takes a little more to find the chosen Wu!",
+      "email_label": "Email Address",
+      "password_label": "Password",
+      "login_button": "Log in",
+      "forgot_password": "Forgot Your Password?",
+      "no_account": "Need an account? Sign up"
+    },
+    "forgot_password": {
+      "title": "Getting Trouble Logging In?",
+      "subtitle": "Enter you registered email below to receive password instructions",
+      "email_label": "Email Address",
+      "send_button": "Send Link",
+      "success_title": "Email is sent",
+      "success_message": "A message is sent to email <bold>{email}</bold>. Please check your inbox for reset password instruction.",
+      "no_message": "Didn't get the message?",
+      "resend_link": "Resend Link"
+    }
+  },
+  "header": {
+    "event_funding": "Event Funding",
+    "blog": "Blog",
+    "contact_us": "Contact Us",
+    "become_creator": "Become Creator?",
+    "get_in": "Get In",
+    "log_out": "Log Out"
+  },
+  "metadata": {
+    "home": {
+      "title": "Wukong - Reliable Ticketing Partner in Indonesia",
+      "description": "Create your exciting events easily with Wukong, the most reliable official ticketing partner platform in Indonesia."
+    },
+    "about_us": {
+      "title": "All-in-One Ticketing & Event Management Platform for Event Organizers | Wukong",
+      "description": "Manage ticket sales, attendee check-in, payments, and financial reports in one ticketing & event management platform. Built for scalable and reliable event operations."
+    },
+    "event_funding": {
+      "title": "Secure Event Funding Platform for Concerts, Sports & Exhibitions | Wukong",
+      "description": "Wukong collaborates with EKUID helps professional event organizers access reliable event financing through securities crowdfunding scheme built for concerts, sports, exhibitions, and large-scale events."
+    },
+    "become_creator": {
+      "title": "Wukong official ticketing platform for all concert and event creators in Indonesia",
+      "description": "Wukong is the number one and most trusted official ticketing partner platform for all event/concert creators in Indonesia"
+    }
+  },
+  "footer": {
+    "event_type": "EVENT TYPE",
+    "about_wukong": "ABOUT WUKONG",
+    "terms_conditions": "Terms & Conditions",
+    "privacy_policy": "Privacy Policy",
+    "cookie_policy": "Cookie Policy",
+    "follow_us": "FOLLOW US ON"
+  },
+  "aboutUs": {
+    "hero_title": {
+      "1": "All in One Ticketing &",
+      "2": "Event Management System Platform"
+    },
+    "hero_description": {
+      "1": "A simple, powerful ticketing system designed for creators.",
+      "2": "We help clients run events smoothly and efficiently."
+    },
+    "hero_explore": "Explore Wukong",
+    "hero_button": "Create My Event",
+    "who_we_are": "Who we are?",
+    "who_we_are_desc": "At <strong>Wukong</strong>, our journey starts with a simple idea: <u>true change begins when people come together</u>.<br /><br />Inspired by the meaning of our name—<u>'awakened to emptiness'</u>—we believe in creating space for new experiences, voices, and ideas through events. <strong>Wukong</strong> isn't just a ticketing company. We're on a mission to transform the world, one gathering at a time. By harnessing smart technology and a philosophy rooted in openness, we make it easier for organizers and attendees to connect, share, and inspire. From local gatherings to global movements, we help everyone find their place and purpose.<br /><br />Join us in building communities that <u>matter</u>. Together, with awareness and intention, we can awaken the world to new possibilities.",
+    "usp": {
+      "title": "Manage tickets effortlessly with a user-friendly system.",
+      "desc": "We're ready to support every stage of your event.",
+      "items": {
+        "1": {
+          "title": "fast & easy buyer check-in",
+          "desc": "Enable quick, smooth attendee entry with a simple and efficient check-in process."
+        },
+        "2": {
+          "title": "comprehensive financial report",
+          "desc": "Access detailed and accurate financial reports to track sales, revenue, and settlements."
+        },
+        "3": {
+          "title": "seamless & real-time dashboard",
+          "desc": "Monitor ticket sales, performance, and key metrics in one real-time dashboard."
+        },
+        "4": {
+          "title": "quick onboarding flow",
+          "desc": "Get started fast with an intuitive setup designed for effortless event creation."
+        }
+      }
+    },
+    "features": {
+      "title": "All in one feature for your event marketing",
+      "desc": "Power your event marketing with powerful features. Built for precise targeting and control.",
+      "items": {
+        "1": {
+          "title": "Special Leads Requirement",
+          "desc": "Capture valuable attendee data with custom requirements that support smarter targeting and follow-ups."
+        },
+        "2": {
+          "title": "Group Ticket",
+          "desc": "Boost sales by offering group deals that make it easy for teams and communities to buy together."
+        },
+        "3": {
+          "title": "Private Link Ticket",
+          "desc": "Drive exclusivity and conversions with private ticket links for partners, VIPs, or targeted audiences."
+        }
+      }
+    },
+    "financial": {
+      "title": "Transparent and Reliable Financial Reporting",
+      "desc": "From sales to settlements, manage your event finances with ease. Clear insights ensure full control and transparency",
+      "items": {
+        "1": {
+          "title": "Competitive Fee",
+          "desc": "Enterprise-ready pricing designed to optimize cost efficiency at scale without compromising service quality"
+        },
+        "2": {
+          "title": "Multi Payment Gateway",
+          "desc": "Support for multiple secure and trusted payment gateways to ensure reliable transactions and higher success rates"
+        },
+        "3": {
+          "title": "Flexible Withdrawal",
+          "desc": "Flexible fund disbursement options designed to align with enterprise cash flow and financial operations"
+        }
+      }
+    },
+    "cta": {
+      "title": "START YOUR EVENT HERE!",
+      "desc": "An idea is just the beginning. Let Wukong be your partner in transforming it into an experience that matters.",
+      "ready": "Ready to craft your experience?",
+      "button_create": "Create My Event",
+      "button_talk": "Talk to Our Team"
+    },
+    "faq": {
+      "items": {
+        "1": {
+          "title": "What Is Wukong as an All-in-One Ticketing & Event Management Platform?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "2": {
+          "title": "How Does the Online Ticketing System Support High-Traffic Events?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "3": {
+          "title": "Is This Event Management Platform Suitable for Organizers Managing Multiple Events?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "4": {
+          "title": "How Does the Ticketing System Improve Event Operational Control?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "5": {
+          "title": "How Does Fast & Secure Attendee Check-In Work at Events?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "6": {
+          "title": "What Financial Reporting Features Are Available in the Ticketing Dashboard?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "7": {
+          "title": "What Is Special Leads Requirement in Event Ticketing?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "8": {
+          "title": "How Does Group Ticketing Help Increase Ticket Sales?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "9": {
+          "title": "What Are Private Link Tickets and When Should Organizers Use Them?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "10": {
+          "title": "Which Payment Methods Are Supported by the Online Ticketing System?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "11": {
+          "title": "How Transparent Are the Fees for Event Organizers?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "12": {
+          "title": "How Does Flexible Withdrawal Support Event Financial Management?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "13": {
+          "title": "Can Organizers Monitor Ticket Sales and Event Performance in Real Time?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "14": {
+          "title": "How Secure Is the Ticketing & Payment System?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "15": {
+          "title": "How Quickly Can Organizers Set Up and Launch an Event?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "16": {
+          "title": "What Types of Events Can Be Managed Using This Ticketing Platform?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        },
+        "17": {
+          "title": "Is Customer Support Available for Event Organizers?",
+          "desc": "Wukong is an all-in-one ticketing and event management platform designed to help event organizers manage ticket sales, attendee data, payments, and event operations in one integrated system. It supports events of various sizes with reliable performance and operational efficiency."
+        }
+      }
+    }
+  },
+  "eventFunding": {
+    "hero": {
+      "title": {
+        "1": "Reliable Funding for professional",
+        "2": "Event Organizers"
+      },
+      "description": {
+        "1": "Access reliable funding collaboration.",
+        "2": "We are built to make seamless workflow and long-term growth for your events."
+      },
+      "button": {
+        "1": "Talk to Our Team",
+        "2": "Start Funding"
+      }
+    },
+    "collaboration": {
+      "title": "Wukong collaborated with EKUID to make your ideas come true",
+      "description": "Wukong collaborated with EKUID to help event organizers access funding while managing ticket sales seamlessly. From planning to post-event settlement, everything is connected.",
+      "items": {
+        "1": {
+          "title": "funding through securities crowdfunding schemes",
+          "description": "Together with EKUID, Wukong facilitates your ideas to become reality by helping you with funding that safe and reliable."
+        },
+        "2": {
+          "title": "funding for your event up to IDR 10 billion*",
+          "description": "Securities Crowdfunding schemes designed to match your event scale and operational requirements."
+        },
+        "3": {
+          "title": "safe and OJK licensed platform",
+          "description": "EKUID is a safe and trusted funding platform that has permission and is licensed by the OJK."
+        }
+      }
+    },
+    "eventTypes": {
+      "title": "Built for Various Event Types",
+      "desc": "Whether you run small community events or large-scale productions, our funding model adapts to your event goals",
+      "button": "Start Funding",
+      "type": {
+        "1": "Sports & running events",
+        "2": "Community & creative events",
+        "3": "Conferences & exhibitions",
+        "4": "Music & entertainment events"
+      }
+    },
+    "whyChoose": {
+      "title": "Why Choose WUKONG for wu Event Funding Solution",
+      "items": {
+        "1": {
+          "title": "Reduce upfront financial burden",
+          "desc": "Minimize initial costs and manage cash flow more effectively before ticket sales begin"
+        },
+        "2": {
+          "title": "Transparent Funding Monitoring",
+          "desc": "Monitor sales and revenue in real time with clear and accurate financial insights."
+        },
+        "3": {
+          "title": "Reliable Funding Schemes",
+          "desc": "Reliable securities crowdfunding method. EKUID has a 100% funding success rate."
+        },
+        "4": {
+          "title": "Integrated with Ticketing and Reporting",
+          "desc": "Funding, ticket sales, and reports are managed seamlessly in one integrated system."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "items": {
+        "1": {
+          "title": "Register WU organizer",
+          "desc": "Submit your information and wait for verification by the Ekuid team."
+        },
+        "2": {
+          "title": "due diligence",
+          "desc": "The event and issuer undergo a structured due diligence process to assess feasibility, risk, and regulatory compliance."
+        },
+        "3": {
+          "title": "open campaign crowdfunding",
+          "desc": "After approval, your crowdfunding campaign goes live and is open for investors to participate."
+        },
+        "4": {
+          "title": "disbursement when campaign fully funded",
+          "desc": "Once the funding target is reached, funds are released securely to support your event execution."
+        }
+      }
+    },
+    "fundingRequirements": {
+      "title": "Funding Requirements",
+      "items": {
+        "1": {
+          "title": "Company",
+          "desc": "Non-public companies (closed corporations)"
+        },
+        "2": {
+          "title": "Company Form",
+          "desc": "Non-conglomerate companies"
+        },
+        "3": {
+          "title": "Paid-up capital",
+          "desc": "≤ IDR 30.000.000.000"
+        }
+      }
+    },
+    "form": {
+      "title": "Start Funding here",
+      "industryBusiness": "Business Industry",
+      "howKnowEkuid": "Know EKUID From",
+      "domicile": "Head Office of Domicile",
+      "fundingAmount": "Funding Amount",
+      "button": "Register Now!"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "1": {
+          "title": "What is the Event Funding Platform from Wukong x EKUID?",
+          "desc": "Wukong has collaborated with EKUID to provide a next-generation event funding platform that helps professional event organizers obtain capital through structured event crowdfunding and event financing. It empowers organizers to fund, manage, and grow events with confidence, from planning to execution."
+        },
+        "2": {
+          "title": "Who Can Apply for Wukong Event Funding?",
+          "desc": "<span>Wukong X EKUID provide event funding designed for <b>professional event organizers, production houses, and non-public companies</b> planning commercial or large-scale events. Each application is reviewed to ensure quality, feasibility, and sustainability.</span>"
+        },
+        "3": {
+          "title": "How Does Event Crowdfunding Work on Wukong?",
+          "desc": "<span>Our <b>event crowdfunding system</b> enables organizers to secure funding after passing verification and due diligence. Funding is collected transparently and disbursed in stages based on approved milestones, helping events maintain financial health and build contributor trust.</span>"
+        },
+        "4": {
+          "title": "What Types of Events Can Use Wukong Event Funding?",
+          "desc": "<span>Wukong supports various event categories, including: <ul><li>Music & Entertainment Events</li><li>Sports & Running Events</li><li>Conferences & Exhibitions</li><li>Community & Creative Events</li></ul> Each funding proposal is evaluated based on event scale, audience demand, and execution readiness.</span>"
+        },
+        "5": {
+          "title": "How Much Funding Can Be Obtained Through Event Funding?",
+          "desc": "<span>Wukong provides <b>event financing up to IDR 10 billion</b>, depending on the event profile, funding structure, and due diligence results. This makes Wukong ideal for both growing and large-scale events.</span>"
+        },
+        "6": {
+          "title": "Why Choose Event Financing Over Traditional Loans?",
+          "desc": "<span>Unlike traditional loans, <b>event financing on Wukong X EKUID</b> reduces upfront financial pressure, improves cash flow, and aligns funding with actual event performance, allowing organizers to focus on delivering exceptional experiences.</span>"
+        },
+        "7": {
+          "title": "Is Wukong Event Funding Safe and Regulated?",
+          "desc": "Yes. Wukong operates as a licensed and secure event funding platform, adhering to strict compliance, fund control mechanisms, and transparent reporting to protect both organizers and contributors."
+        },
+        "8": {
+          "title": "How Long Does the Event Funding Approval Process Take?",
+          "desc": "<span>In accordance with OJK regulations, <b>crowdfunding campaigns run for 45 days</b>, excluding registration, due diligence, and other preliminary steps. However, the process can be faster depending on how compelling the campaign is to investors.</span>"
+        },
+        "9": {
+          "title": "How Are Event Funds Disbursed to Organizers?",
+          "desc": "Event funds are disbursed in stages based on the approved funding plan and event milestones, ensuring responsible capital usage and smoother event execution."
+        },
+        "10": {
+          "title": "Can Event Ticket Sales Be Integrated with Event Funding?",
+          "desc": "Yes. Wukong integrates event ticketing with funding and reporting, providing organizers with real-time insights into ticket performance, funding progress, and overall financial health."
+        },
+        "11": {
+          "title": "What Happens If an Event Is Canceled or Rescheduled?",
+          "desc": "If an event is canceled or rescheduled, Wukong follows established event funding risk management and refund mechanisms to ensure fair outcomes for all parties."
+        },
+        "12": {
+          "title": "Is Prior Experience Required to Apply for Event Funding?",
+          "desc": "<span>Experience helps but is not mandatory. Wukong evaluates <b>event funding applications</b> based on the quality of planning, team credibility, market demand, and financial feasibility.</span>"
+        },
+        "13": {
+          "title": "What Documents Are Required for an Event Funding Application?",
+          "desc": "<span>General requirements include: <ul><li>Company profile</li><li>Event proposal & budget plan</li><li>Legal and business documents</li><li>Relevant supporting materials</li></ul> These help us tailor the right funding solution for your event.</span>"
+        },
+        "14": {
+          "title": "How Do I Start Event Funding on Wukong?",
+          "desc": "<span>Simply click <b>“Start Funding”</b>, submit your event and company details, and our team will guide you through the verification and funding process.</span>"
+        },
+        "15": {
+          "title": "How Can I Contact Wukong for Event Funding Support?",
+          "desc": "Our team is ready to assist. Contact us through the contact form or official channels on the website for prompt and professional support."
+        }
+      }
+    }
+  },
+  "becomeCreator": {
+    "hero": {
+      "title": "CREATING TOGETHER, ONE EVENT AT A TIME",
+      "desc": "At Wukong, we believe every gathering is a spark of possibility - a chance to awaken new connections, voices, and experiences. Here's how you, as an event creator, can bring your vision alive with us:",
+      "button": "Create My Event"
+    },
+    "steps": {
+      "1": {
+        "title": "IMAGINE & DEFINE YOUR GATHERING",
+        "description": "Detail your dream - the name, date, place, and essence of your event. Choose ticket types that reflect your intention."
+      },
+      "2": {
+        "title": "GUIDE, CELEBRATE, REFLECT",
+        "description": "Track sales in real time. Manage your guest list. On show day, check in with confidence. Afterward, reflect - what worked, what could shine brighter next time."
+      },
+      "3": {
+        "title": "PUBLISH & OPEN DOORS",
+        "description": "With just a few clicks, your event joins our platform's gallery of stories and possibilities. We provide the tools - you provide the magic."
+      },
+      "4": {
+        "title": "CONNECT & INVITE",
+        "description": "From friends to strangers, let your audience discover what you've created."
+      }
+    },
+    "features": {
+      "items": {
+        "1": {
+          "title": "SEAMLESS EMPOWERMENT",
+          "description": "We handle payments, ticketing, e-delivery, so you focus on creation."
+        },
+        "2": {
+          "title": "CLARITY & SUPPORT",
+          "description": "A single dashboard, transparent fees, and a team that stands with you."
+        },
+        "3": {
+          "title": "FROM LOCAL ROOTS TO GLOBAL REACH",
+          "description": "Whether your gathering is next door or everywhere, we give it space to breathe, grow, connect."
+        },
+        "4": {
+          "title": "PURPOSE WITH PRESENCE",
+          "description": "We see your event as part of something bigger: building community, sharing stories, awakening change."
+        }
+      }
+    },
+    "cta": {
+      "title": "STEP FORWARD - BRING YOUR EVENT TO LIFE",
+      "desc": "An idea is just the beginning. Let Wukong be your partner in transforming it into an experience that matters.",
+      "ready": "Ready to craft your experience?",
+      "button_create": "Create My Event",
+      "button_talk": "Talk to Our Team"
+    }
+  },
+  "login": {
+    "title": "Are Wu In?",
+    "desc": "It takes a little more to find the chosen Wu!",
+    "email": "Email address",
+    "password": "Password",
+    "login_button": "Log in",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account? Sign up"
+  },
+  "forgotPassword": {
+    "title": "Getting Trouble <br />logging in?",
+    "desc": "Enter your registered email below to receive password reset instructions",
+    "email": "Email address",
+    "button": "Send Link",
+    "success_title": "Email is sent!",
+    "success_message": "A message is sent to email <bold>{email}</bold> with instructions to reset your password.",
+    "no_message": "Didn't get the message?",
+    "resend_link": "Send it again"
+  },
+  "register": {
+    "password_check_capital": "Capital letter",
+    "terms_agree": "I agree to the <terms>terms and conditions</terms> and <privacy>privacy policy</privacy> applicable at Wukong",
+    "sign_up": "Sign Up",
+    "forgot_password": "Forgot Your Password?",
+    "already_account": "Already have an account? <link>Sign in</link>",
+    "otp": {
+      "title": "Lets Get Wu Verified",
+      "desc": "Choose Wu method to verify Wu account",
+      "send_email": "Send via Email",
+      "send_wa": "Send via Whatsapp/SMS",
+      "otp_desc_phone": "we've sent Wu an OTP code to your phone number <bold>{contact}</bold>"
+    },
+    "modal": {
+      "title": "wu-hoo!",
+      "desc": "you are now The Chosen Wu!",
+      "button": "Get In"
+    }
+  }
+}

@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import SuccessModal from './success-modal';
 
 const VerifyOtpForm = () => {
@@ -34,6 +35,7 @@ const VerifyOtpForm = () => {
   const [payload] = useAtom(registerFormAtom);
   const [expiresAt, setExpiresAt] = useAtom(otpExpiresAtAtom);
   const [channel] = useAtom(verificationChannelAtom);
+  const t = useTranslations('register.otp');
 
   // Check if from login (userData exists) or from register (registerPayload exists)
   const isFromLogin = !!(userData?.email || userData?.phoneNumber);
@@ -285,16 +287,20 @@ const VerifyOtpForm = () => {
       {loading && <Loading />}
 
       <Typography className="my-4 text-center">
-        We've sent Wu an OTP code to your{' '}
-        {channel === 'email' ? 'email' : 'phone number'}{' '}
-        {channel === 'email'
-          ? email.replace(/(.*)(.{3})(@.*)/, (_, before, last3, domain) => {
+        {channel === 'email' ? (
+          <>
+            We've sent Wu an OTP code to your email{' '}
+            {email.replace(/(.*)(.{3})(@.*)/, (_, before, last3, domain) => {
               return '*'.repeat(before.length) + last3 + domain;
-            })
-          : phoneNumber.replace(
-              /.*(\d{3})$/,
-              (match, last3) => '*'.repeat(match.length - 3) + last3
-            )}
+            })}
+          </>
+        ) : t.rich('otp_desc_phone', {
+          contact: phoneNumber.replace(
+            /.*(\d{3})$/,
+            (match, last3) => '*'.repeat(match.length - 3) + last3
+          ),
+          bold: (chunks) => <span className="font-bold">{chunks}</span>
+        })}
       </Typography>
 
       {!modalOpen && (
