@@ -476,6 +476,17 @@
     "resend_link": "Kirim Ulang"
   },
   "register": {
+    "title": "Lets get Wu in!",
+    "subtitle": "Ceritakan tentang dirimu",
+    "full_name": "Nama Lengkap",
+    "email": "Email",
+    "phone": "Nomor HP",
+    "go_ahead": "Lanjutkan",
+    "password": "Kata Sandi",
+    "repeat_password": "Ulang Kata Sandi",
+    "password_check_length": "8-12 karakter",
+    "password_check_number": "Angka",
+    "password_check_special": "Karakter spesial",
     "password_check_capital": "Huruf kapital",
     "terms_agree": "Saya setuju dengan <terms>syarat dan ketentuan</terms> serta <privacy>kebijakan privasi</privacy> yang diterapkan di Wukong",
     "sign_up": "Daftar",

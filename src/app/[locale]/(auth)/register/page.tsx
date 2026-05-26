@@ -13,9 +13,9 @@ export default function RegisterPage() {
   return (
     <Box className="relative mx-auto mt-32 max-w-[360px] text-white xl:mr-0 xl:ml-47">
       <Box className="mb-8 text-center">
-        <Typography className="mb-3">Lets get Wu in!</Typography>
+        <Typography className="mb-3">{t('title')}</Typography>
         <Typography size={41} type="heading" className="font-normal uppercase">
-          {'tell us about wu'.split('').map((child, idx) => (
+          {t('subtitle').split('').map((child, idx) => (
             <span className="hover-text" key={idx}>
               {child}
             </span>
