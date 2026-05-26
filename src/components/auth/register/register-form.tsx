@@ -90,7 +90,7 @@ const RegisterForm = () => {
 
       if (!data.isValid) {
         setCheckLoad(false);
-        setError('Email is already registered. Sign in?');
+        setError('Email already registered');
         return;
       }
 
@@ -109,7 +109,7 @@ const RegisterForm = () => {
           className="absolute top-0 left-0 flex cursor-pointer"
           onClick={() => setStep(1)}
         >
-          <Typography>Back</Typography>
+          <Typography>{t('back')}</Typography>
         </span>
       )}
 
@@ -123,10 +123,10 @@ const RegisterForm = () => {
               <TextField
                 id="fullname_field"
                 name="fullName"
-                placeholder="Full Name"
+                placeholder={t('full_name')}
                 className="mb-8 w-[270px]"
                 rules={{
-                  required: 'Full Name is required',
+                  required: t('validation.full_name'),
                   validate: fullName,
                 }}
               />
@@ -135,10 +135,10 @@ const RegisterForm = () => {
                 id="email_field"
                 name="email"
                 type="email"
-                placeholder="Your Email"
+                placeholder={t('email')}
                 className="mb-8 w-[270px]"
                 rules={{
-                  required: 'Email is required',
+                  required: t('validation.email'),
                   validate: email,
                 }}
               />
@@ -146,10 +146,10 @@ const RegisterForm = () => {
               <TextField
                 id="phone_number_field"
                 name="phoneNumber"
-                placeholder="Phone Number"
+                placeholder={t('phone')}
                 className="mb-10 w-[270px]"
                 rules={{
-                  required: 'Phone Number is required',
+                  required: t('validation.phone'),
                   validate: (value) => phoneNumber(value, countryCode),
                 }}
                 selectedCountryCode={countryCode}
@@ -167,7 +167,7 @@ const RegisterForm = () => {
                 onClick={handleContinue}
                 disabled={checkLoad}
               >
-                {checkLoad ? 'Verifying...' : 'Go Ahead'}
+                {checkLoad ? t('verifying') : t('go_ahead')}
               </Button>
             </>
           )}
@@ -178,9 +178,9 @@ const RegisterForm = () => {
                 id="password_field"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
+                placeholder={t('password')}
                 className="mb-8 w-[270px]"
-                rules={{ required: 'Password is required' }}
+                rules={{ required: t('validation.password') }}
                 endIcon={showPassword ? eyeOpened : eyeClosed}
                 onEndIconClick={() => setShowPassword(!showPassword)}
               />
@@ -189,13 +189,13 @@ const RegisterForm = () => {
                   id="confirm_password_field"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Repeat Password"
+                  placeholder={t('repeat_password')}
                   className="w-[270px]"
                   rules={{
-                    required: 'Repeat Password is required',
+                    required: t('validation.repeat_password'),
                     validate: (value) =>
                       value === getValues('password') ||
-                      'Password does not match',
+                      t('validation.password_match'),
                   }}
                   endIcon={showConfirmPassword ? eyeOpened : eyeClosed}
                   onEndIconClick={() =>
@@ -218,17 +218,17 @@ const RegisterForm = () => {
               <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 px-3 md:grid-cols-2">
                 <Checkbox checked={passwordChecks.length} disabled>
                   <Typography type="body" size={14}>
-                    8-12 Character
+                    {t('password_check_length')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.number} disabled>
                   <Typography type="body" size={14}>
-                    Number
+                    {t('password_check_number')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.special} disabled>
                   <Typography type="body" size={14}>
-                    Special Character
+                    {t('password_check_special')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.capital} disabled>

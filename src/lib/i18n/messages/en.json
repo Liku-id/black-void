@@ -476,22 +476,30 @@
     "resend_link": "Send it again"
   },
   "register": {
+    "title": "Lets get Wu in!",
+    "subtitle": "tell us about wu",
+    "full_name": "Full Name",
+    "email": "Your Email",
+    "phone": "Phone Number",
+    "verifying": "Verifying...",
+    "go_ahead": "Go Ahead",
+    "password": "Password",
+    "repeat_password": "Repeat Password",
+    "password_check_length": "8-12 Character",
+    "password_check_number": "Number",
+    "password_check_special": "Special Character",
     "password_check_capital": "Capital letter",
+    "validation": {
+      "full_name": "Full Name is required",
+      "email": "Email is required",
+      "phone": "Phone Number is required",
+      "password": "Password is required",
+      "repeat_password": "Repeat Password is required",
+      "password_match": "Password does not match"
+    },
     "terms_agree": "I agree to the <terms>terms and conditions</terms> and <privacy>privacy policy</privacy> applicable at Wukong",
     "sign_up": "Sign Up",
     "forgot_password": "Forgot Your Password?",
-    "already_account": "Already have an account? <link>Sign in</link>",
-    "otp": {
-      "title": "Lets Get Wu Verified",
-      "desc": "Choose Wu method to verify Wu account",
-      "send_email": "Send via Email",
-      "send_wa": "Send via Whatsapp/SMS",
-      "otp_desc_phone": "we've sent Wu an OTP code to your phone number <bold>{contact}</bold>"
-    },
-    "modal": {
-      "title": "wu-hoo!",
-      "desc": "you are now The Chosen Wu!",
-      "button": "Get In"
-    }
+    "already_account": "Already have an account? <link>Sign in</link>"
   }
 }
