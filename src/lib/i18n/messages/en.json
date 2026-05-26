@@ -476,6 +476,17 @@
     "resend_link": "Send it again"
   },
   "register": {
+    "title": "Lets get Wu in!",
+    "subtitle": "Tell us about wu",
+    "full_name": "Full Name",
+    "email": "Your Email",
+    "phone": "Phone Number",
+    "go_ahead": "Go Ahead",
+    "password": "Password",
+    "repeat_password": "Repeat password",
+    "password_check_length": "8-12 characters",
+    "password_check_number": "Number",
+    "password_check_special": "Special character",
     "password_check_capital": "Capital letter",
     "terms_agree": "I agree to the <terms>terms and conditions</terms> and <privacy>privacy policy</privacy> applicable at Wukong",
     "sign_up": "Sign Up",
