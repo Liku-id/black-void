@@ -173,18 +173,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
           <Button
             id={isOrderPage ? "btn_ep_continue_payment" : "btn_ep_continue_checkout"}
             onClick={() => {
-              import('posthog-js')
-                .then(({ default: posthog }) => {
-                  posthog.capture('checkout_continued', {
-                    step: isOrderPage ? 'payment' : 'checkout',
-                    ticket_count: ticketCount,
-                    grand_total: grandTotal,
-                    payment_method: selectedPayment?.name ?? null,
-                  });
-                })
-                .catch(() => {
-                  // Keep checkout flow working even if analytics library fails.
-                });
+
 
               onContinue();
             }}

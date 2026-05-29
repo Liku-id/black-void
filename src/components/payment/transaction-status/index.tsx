@@ -9,7 +9,7 @@ import failedStatus from '@/assets/icons/failed-status.svg';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import useSWR from 'swr';
 import Loading from '@/components/layout/loading';
-import posthog from 'posthog-js';
+
 
 export default function PaymentStatus() {
   const router = useRouter();
@@ -71,19 +71,7 @@ export default function PaymentStatus() {
       router.push(`/checkout-payment/${transactionId}`);
     }
 
-    if (data && data.transaction && !capturedRef.current) {
-      const status = data.transaction.status;
-      if (status === 'paid' || status === 'failed') {
-        capturedRef.current = true;
-        const eventName = status === 'paid' ? 'payment_completed' : 'payment_failed';
-        posthog.capture(eventName, {
-          transaction_id: data.transaction.id,
-          transaction_number: data.transaction.transactionNumber,
-          payment_method: data.transaction.paymentMethod?.name,
-          event_name: data.transaction.event?.name,
-        });
-      }
-    }
+
   }, [data, router]);
 
   if (isLoading) return <Loading />;
