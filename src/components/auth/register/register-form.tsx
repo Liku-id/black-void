@@ -20,7 +20,7 @@ import Image from 'next/image';
 import { Link, useRouter } from '@/lib/i18n/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import posthog from 'posthog-js';
+
 import { useTranslations } from 'next-intl';
 import SuccessModal from '../verify-otp/success-modal';
 
@@ -66,9 +66,7 @@ const RegisterForm = () => {
 
       // Set payload to global state
       setPayload(payload);
-      posthog.capture('user_registered', {
-        email: formData.email,
-      });
+
       router.replace('/register/choose-verification');
     } catch (error) {
       console.error(error);
