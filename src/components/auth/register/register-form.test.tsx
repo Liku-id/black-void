@@ -160,7 +160,7 @@ describe('RegisterForm', () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          'The email or phone number you entered is already registered'
+          'Email is already registered. Sign in?'
         )
       ).toBeInTheDocument()
     );

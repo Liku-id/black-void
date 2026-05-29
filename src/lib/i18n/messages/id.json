@@ -1,0 +1,508 @@
+{
+  "faq": {
+    "buy_ticket_q": "Gimana cara beli tiket?",
+    "buy_ticket_a": "Tinggal cari event yang kamu mau, pilih kategori tiket dan jumlahnya, klik 'Pesan Tiket', terus lanjut ke checkout. Tiket e-ticket kamu bakal dikirim ke email setelah pembayaran berhasil.",
+    "payment_methods_q": "Metode pembayaran apa aja yang tersedia?",
+    "payment_methods_a": "Bisa pakai QRIS atau Virtual Account.",
+    "find_ticket_q": "Tiket aku ada di mana setelah beli?",
+    "find_ticket_a": "Tiket kamu bakal dikirim ke email. Bisa juga diakses lewat akun kamu di bagian 'Tiket Saya'.",
+    "print_ticket_q": "Tiketnya harus dicetak?",
+    "print_ticket_a": "Gak harus! Kebanyakan event nerima e-ticket. Tinggal tunjukin QR code di HP kamu waktu masuk. Kalau panitia minta tiket fisik, kamu bakal dikabarin.",
+    "refund_q": "Bisa refund kalau aku gak bisa datang?",
+    "refund_a": "Kebijakan refund tergantung tiap event. Cek dulu sebelum beli ya. Kalau refund diizinkan, bisa diajukan lewat dashboard tiket kamu atau hubungi support kami.",
+    "no_email_q": "Email tiket aku gak masuk, gimana?",
+    "no_email_a": "Pertama, cek folder spam atau promosi kamu. Jika tidak ada di sana, masuk ke akun kamu dan buka \"Tiket Saya\". Masih tidak menemukannya? Hubungi tim support kami.",
+    "event_canceled_q": "Gimana kalau event dibatalin atau dijadwalin ulang?",
+    "event_canceled_a": "Kalau event dibatalin atau diganti jadwalnya, kita bakal kabarin kamu via email beserta instruksi selanjutnya. Soal refund atau validitas tiket, tergantung kebijakan penyelenggara event.",
+    "multiple_tickets_q": "Bisa beli tiket buat banyak orang sekaligus?",
+    "multiple_tickets_a": "Bisa banget! Tinggal pilih jumlah tiketnya waktu checkout. Semua tiket masuk dalam satu booking yang bisa kamu terusin atau share ke teman.",
+    "safety_q": "Aman gak beli tiket di sini?",
+    "safety_a": "Aman dong! Data pribadi dan pembayaran kamu dilindungi dengan enkripsi standar industri. Kita juga cuma kerja sama sama penyelenggara yang udah terverifikasi.",
+    "contact_support_q": "Gimana cara hubungi customer support?",
+    "contact_support_a": "Bisa email kita di support@wukong.co.id atau chat langsung di website kita pas jam kerja."
+  },
+  "auth": {
+    "login": {
+      "title": "Are Wu In?",
+      "subtitle": "Sedikit lagi untuk menjadi The Chosen Wu!",
+      "email_label": "Alamat Email",
+      "password_label": "Kata Sandi",
+      "login_button": "Log in",
+      "forgot_password": "Lupa Password?",
+      "no_account": "Belum punya akun? Sign up"
+    },
+    "forgot_password": {
+      "title": "Kesulitan untuk login?",
+      "subtitle": "Masukan email yang sudah terdaftar untuk menerima instruksi perubahan kata sandi",
+      "email_label": "Alamat email",
+      "send_button": "Kirim Email",
+      "success_title": "Email terkirim!",
+      "success_message": "Tim Wukong sudah mengirim email ke <bold>{email}</bold>. Tolong cek inbox emailmu untuk instruksi perubahan kata sandi.",
+      "no_message": "Tidak menerima email?",
+      "resend_link": "Kirim Ulang"
+    }
+  },
+  "header": {
+    "event_funding": "Event Funding",
+    "blog": "Blog",
+    "contact_us": "Hubungi Kami",
+    "become_creator": "Jadi Kreator?",
+    "get_in": "Masuk",
+    "log_out": "Keluar"
+  },
+  "metadata": {
+    "home": {
+      "title": "Official ticketing partner mudah dan terpercaya di Indonesia",
+      "description": "Buat event serumu sekarang gak perlu pusing karena semua lebih mudah di Wukong, platform official ticketing partner mudah dan terpercaya di Indonesia."
+    },
+    "about_us": {
+      "title": "Platform Ticketing & Manajemen Event All-in-One untuk Event Organizer | Wukong",
+      "description": "Kelola penjualan tiket, check-in peserta, pembayaran, dan laporan keuangan dalam satu platform manajemen event & ticketing. Didesain untuk operasional event yang handal."
+    },
+    "event_funding": {
+      "title": "Platform Pendanaan Event Terpercaya untuk Konser, Olahraga & Pameran | Wukong",
+      "description": "Wukong berkolaborasi dengan EKUID untuk bantu penyelenggara event profesional mendapatkan pembiayaan event yang andal lewat skema securities crowdfunding yang dirancang untuk konser, olahraga, pameran, dan event skala besar."
+    },
+    "become_creator": {
+      "title": "Wukong official ticketing platform untuk semua Kreator konser dan juga event di Indonesia",
+      "description": "Wukong adalah platform official ticketing partner nomor satu dan terpercaya untuk semua event/konser kreator di Indonesia"
+    }
+  },
+  "footer": {
+    "event_type": "Jenis Event",
+    "about_wukong": "Tentang Wukong",
+    "terms_conditions": "Syarat & Ketentuan",
+    "privacy_policy": "Kebijakan Privasi",
+    "cookie_policy": "Kebijakan Cookie",
+    "follow_us": "IKUTI KAMI"
+  },
+  "aboutUs": {
+    "hero_title": {
+      "1": "Platform Sistem Ticketing & ",
+      "2": "Manajemen Event All-in-One"
+    },
+    "hero_description": {
+      "1": "Sistem ticketing yang simpel tapi powerful, dibuat buat para kreator.",
+      "2": "Kita bantu kamu jalanin event dengan lancar dan efisien."
+    },
+    "hero_explore": "Explore Wukong",
+    "hero_button": "Buat Event",
+    "who_we_are": "Siapa Kita?",
+    "who_we_are_desc": "Di <strong>Wukong</strong>, semuanya berawal dari ide sederhana: <u>perubahan nyata terjadi waktu orang-orang bersatu</u>.<br /><br />Terinspirasi dari arti nama kita—<u>\"awakened to emptiness\"</u>—kita percaya bahwa event bisa jadi ruang buat pengalaman, suara, dan ide-ide baru. <strong>Wukong</strong> bukan sekadar platform tiket. Kita punya misi buat mengubah dunia, satu kumpul-kumpulan pada satu waktu. Dengan teknologi yang cerdas dan filosofi yang terbuka, kita bikin koneksi antara penyelenggara dan peserta jadi lebih gampang, bermakna, dan menginspirasi. Dari acara lokal sampai festival internasional, kita bantu semua orang nemuin tempat dan tujuannya.<br /><br />Yuk bareng-bareng bangun komunitas yang <u>berarti</u>. Bareng-bareng, dengan kesadaran dan niat, kita bisa buka dunia ke kemungkinan-kemungkinan baru.",
+    "usp": {
+      "title": "Atur tiket tanpa ribet dengan sistem yang ramah pengguna.",
+      "desc": "Kita siap support lo di setiap tahap event.",
+      "items": {
+        "1": {
+          "title": "Check-in pembeli yang cepet &   gampang",
+          "desc": "Bikin peserta bisa masuk dengan cepet dan mulus lewat proses check-in yang simpel dan efisien."
+        },
+        "2": {
+          "title": "Laporan keuangan yang lengkap",
+          "desc": "Akses laporan keuangan yang detail dan akurat buat lacak penjualan, pendapatan, dan settlement."
+        },
+        "3": {
+          "title": "Dashboard real-time yang mulus",
+          "desc": "Pantau penjualan tiket, performa, dan metrik penting dalam satu dashboard real-time."
+        },
+        "4": {
+          "title": "Proses setup yang cepet",
+          "desc": "Langsung gas dengan setup yang intuitif dan dirancang biar bikin event gampang banget."
+        }
+      }
+    },
+    "features": {
+      "title": "Fitur lengkap buat marketing event kamu",
+      "desc": "Perkuat marketing event-mu dengan fitur-fitur canggih. Dibuat buat dengan tepat sasaran dan kontrol penuh.",
+      "items": {
+        "1": {
+          "title": "Special Leads Requirement",
+          "desc": "Kumpulin data peserta yang berguna dengan form yang bisa dikustom buat targeting yang lebih tepat sasaran dan follow-up yang lebih cerdas."
+        },
+        "2": {
+          "title": "Tiket Grup",
+          "desc": "Naikin penjualan dengan nawarin tiket grup yang bikin komunitas atau tim gampang beli bareng."
+        },
+        "3": {
+          "title": "Private Link Ticket",
+          "desc": "Bikin eksklusif dan tingkatin konversi dengan private link ticket buat partner, VIP, atau audiens tertentu."
+        }
+      }
+    },
+    "financial": {
+      "title": "Laporan Keuangan yang Transparan dan Bisa Dipercaya",
+      "desc": "Dari penjualan sampai settlement, urus keuangan event dengan gampang. Insight yang jelas bisa kasih kamu kontrol penuh dan transparansi.",
+      "items": {
+        "1": {
+          "title": "Biaya yang Kompetitif",
+          "desc": "Harga enterprise yang dirancang buat efisiensi biaya tanpa ngorbanin kualitas layanan."
+        },
+        "2": {
+          "title": "Multi Payment Gateway",
+          "desc": "Dukungan berbagai payment gateway yang aman dan terpercaya buat pastiin transaksi lancar dan tingkat keberhasilan lebih tinggi."
+        },
+        "3": {
+          "title": "Flexible Withdrawal",
+          "desc": "Opsi pencairan dana yang fleksibel dirancang buat nyesuain arus kas dan operasional keuangan perusahaan."
+        }
+      }
+    },
+    "cta": {
+      "title": "BUAT EVENTMU DI SINI!",
+      "desc": "Ide cuma awal mulanya. Biar Wukong jadi partnermu buat ngubah ide itu jadi pengalaman yang berkesan.",
+      "ready": "Siap bikin experiencemu sendiri?",
+      "button_create": "Buat Event",
+      "button_talk": "Ngobrol sama Tim Kita"
+    },
+    "faq": {
+      "items": {
+        "1": {
+          "title": "Apa itu Wukong sebagai Platform Ticketing & Manajemen Event All-in-One?",
+          "desc": "Wukong adalah platform ticketing dan manajemen event all-in-one yang dirancang buat bantu penyelenggara event urus penjualan tiket, data peserta, pembayaran, dan operasional event dalam satu sistem terintegrasi."
+        },
+        "2": {
+          "title": "Gimana sistem ticketing online ini support event yang rame banget?",
+          "desc": "Sistem ticketing online kita dibangun buat handle volume transaksi yang tinggi dan periode penjualan tiket yang lagi puncak-puncaknya."
+        },
+        "3": {
+          "title": "Apakah platform manajemen event ini cocok buat EO yang handle banyak event?",
+          "desc": "Iya dong. Wukong kasih EO kemampuan buat kelola banyak event, kategori tiket, dan jadwal dari satu dashboard aja."
+        },
+        "4": {
+          "title": "Gimana sistem ticketing ini ningkatin kontrol operasional event?",
+          "desc": "Platform ini kasih visibilitas penuh ke inventaris tiket, harga, performa penjualan, dan data kehadiran."
+        },
+        "5": {
+          "title": "Gimana cara kerja check-in peserta yang cepet dan aman di event?",
+          "desc": "Wukong pakai check-in berbasis QR code buat bikin peserta masuk dengan cepet, aman, dan efisien."
+        },
+        "6": {
+          "title": "Fitur laporan keuangan apa aja yang tersedia di dashboard ticketing?",
+          "desc": "EO bisa akses laporan keuangan detail termasuk ringkasan penjualan tiket, tracking pendapatan, riwayat payout, dan data transaksi."
+        },
+        "7": {
+          "title": "Apa itu Special Leads Requirement dalam ticketing event?",
+          "desc": "Special Leads Requirement kasih EO kemampuan buat kumpulin informasi peserta yang dikustom saat pembelian tiket."
+        },
+        "8": {
+          "title": "Gimana Tiket Grup bantu ningkatin penjualan tiket?",
+          "desc": "Tiket Grup kasih peserta kemampuan buat beli banyak tiket dalam satu transaksi, sering kali dengan harga spesial."
+        },
+        "9": {
+          "title": "Apa itu Private Link Tickets dan kapan EO harus pakai?",
+          "desc": "Private Link Tickets adalah link tiket eksklusif yang dibagiin ke audiens tertentu kayak tamu VIP, partner, atau event yang cuma bisa diakses lewat undangan."
+        },
+        "10": {
+          "title": "Metode pembayaran apa aja yang didukung sistem ticketing online?",
+          "desc": "Platform ini support berbagai payment gateway yang aman, jadi peserta bisa milih dari berbagai metode pembayaran."
+        },
+        "11": {
+          "title": "Seberapa transparan biaya buat Event Organizer?",
+          "desc": "Wukong nawarin harga yang transparan dan kompetitif tanpa biaya tersembunyi."
+        },
+        "12": {
+          "title": "Gimana penarikan fleksibel mendukung manajemen keuangan event?",
+          "desc": "Opsi penarikan fleksibel kasih EO kemampuan buat atur pembayaran pendapatan sesuai kebutuhan dan timeline event."
+        },
+        "13": {
+          "title": "Bisa gak EO pantau penjualan tiket dan performa event secara real-time?",
+          "desc": "Bisa banget. Dashboard real-time kasih insight terkini soal penjualan tiket, status kehadiran, dan performa pendapatan."
+        },
+        "14": {
+          "title": "Seberapa aman sistem ticketing & pembayarannya?",
+          "desc": "Platform ini pakai pemrosesan pembayaran yang aman dan langkah-langkah perlindungan data buat mastiin semua transaksi dan info peserta ditangani dengan selamat."
+        },
+        "15": {
+          "title": "Seberapa cepet EO bisa setup dan launch event?",
+          "desc": "EOanizer bisa bikin, konfigurasi, dan publish event dalam waktu singkat pakai alur onboarding yang intuitif—tanpa perlu keahlian teknis."
+        },
+        "16": {
+          "title": "Jenis event apa aja yang bisa dikelola pakai platform ticketing ini?",
+          "desc": "Wukong support konser, festival, konferensi, pameran, event komunitas, acara perusahaan, dan event privat, baik offline maupun hybrid."
+        },
+        "17": {
+          "title": "Apakah ada customer support buat event organizer?",
+          "desc": "Ada dong. Event organizer bisa akses support yang didedikasiin khusus buat bantu setup, operasional, dan pertanyaan teknis sepanjang proses event."
+        }
+      }
+    }
+  },
+  "eventFunding": {
+    "hero": {
+      "title": {
+        "1": "Pendanaan Terpercaya untuk",
+        "2": "Event Organizer Profesional"
+      },
+      "description": {
+        "1": "Akses kolaborasi pendanaan yang bisa diandalin.",
+        "2": "Kita dibangun buat bikin alur kerja yang mulus dan pertumbuhan jangka panjang buat event-mu."
+      },
+      "button": {
+        "1": "Hubungi Tim Kita",
+        "2": "Mulai Pendanaan"
+      }
+    },
+    "collaboration": {
+      "title": "Wukong berkolaborasi dengan EKUID buat wujudin ide-idemu",
+      "description": "Wukong berkolaborasi dengan EKUID buat bantu penyelenggara event dapetin pendanaan sambil kelola penjualan tiket dengan mulus. Dari perencanaan sampai settlement pasca-event, semuanya terhubung.",
+      "items": {
+        "1": {
+          "title": "pendanaan lewat skema securities crowdfunding",
+          "description": "Bareng EKUID, Wukong fasilitasi ide-idemu jadi kenyataan dengan bantu kamu dapet pendanaan yang aman dan bisa dipercaya."
+        },
+        "2": {
+          "title": "pendanaan buat event hingga Rp 10 miliar*",
+          "description": "Skema Securities Crowdfunding yang dirancang buat nyesuain skala event dan kebutuhan operasionalmu."
+        },
+        "3": {
+          "title": "platform aman dan berizin OJK",
+          "description": "EKUID adalah platform pendanaan yang aman dan terpercaya yang udah dapet izin dan lisensi dari OJK."
+        }
+      }
+    },
+    "eventTypes": {
+      "title": "Dirancang untuk Berbagai Jenis Event",
+      "desc": "Mau jalanin event komunitas kecil atau produksi skala besar, model pendanaan kita bisa menyesuaikan diri sama tujuan event.",
+      "button": "Mulai Pendanaan",
+      "type": {
+        "1": "Event olahraga & lari",
+        "2": "Event komunitas & kreatif",
+        "3": "Konferensi & pameran",
+        "4": "Event musik & hiburan"
+      }
+    },
+    "whyChoose": {
+      "title": "Kenapa Pilih WUKONG buat Solusi Pendanaan Event-mu",
+      "items": {
+        "1": {
+          "title": "Kurangi beban finansial di awal",
+          "desc": "Minimalisir biaya awal dan kelola arus kas lebih efektif sebelum penjualan tiket dimulai."
+        },
+        "2": {
+          "title": "Pemantauan Pendanaan yang Transparan",
+          "desc": "Pantau penjualan dan pendapatan secara real-time dengan insight keuangan yang jelas dan akurat."
+        },
+        "3": {
+          "title": "skema pendanaan yang andal",
+          "desc": "Metode securities crowdfunding yang andal. EKUID punya tingkat keberhasilan pendanaan hingga 100%."
+        },
+        "4": {
+          "title": "Terintegrasi dengan penjualan tiket dan pelaporan",
+          "desc": "Pendanaan, penjualan tiket, dan laporan dikelola dengan mulus dalam satu sistem terpadu."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "Cara Kerjanya",
+      "items": {
+        "1": {
+          "title": "Daftarin diri sebagai organizer",
+          "desc": "Submit informasi dan tunggu verifikasi dari tim Ekuid."
+        },
+        "2": {
+          "title": "due diligence",
+          "desc": "Event dan penerbit menjalani proses due diligence terstruktur buat menilai kelayakan, risiko, dan kepatuhan regulasi."
+        },
+        "3": {
+          "title": "buka kampanye crowdfunding",
+          "desc": "Setelah disetujui, kampanye crowdfunding akan tayang dan terbuka buat investor buat berpartisipasi."
+        },
+        "4": {
+          "title": "pencairan dana saat kampanye tercapai penuh",
+          "desc": "Begitu target pendanaan tercapai, dana dicairkan dengan aman buat mendukung pelaksanaan event lo."
+        }
+      }
+    },
+    "fundingRequirements": {
+      "title": "Persyaratan Pendanaan",
+      "items": {
+        "1": {
+          "title": "Perusahaan",
+          "desc": "perusahaan non-publik (PT TERTUTUP)"
+        },
+        "2": {
+          "title": "Bentuk Perusahaan",
+          "desc": "perusahaan non-konglomerat"
+        },
+        "3": {
+          "title": "Modal disetor",
+          "desc": "≤ Rp 30.000.000.000"
+        }
+      }
+    },
+    "form": {
+      "title": "Mulai Pendanaan di Sini",
+      "industryBusiness": "Industri Bisnis",
+      "howKnowEkuid": "Tau EKUID dari Mana",
+      "domicile": "Domisili Kantor Pusat",
+      "fundingAmount": "Jumlah Pendanaan",
+      "button": "Daftar Sekarang!"
+    },
+    "faq": {
+      "title": "pertanyaan yang sering diajukan",
+      "items": {
+        "1": {
+          "title": "Apa itu Platform Pendanaan Event dari Wukong x EKUID?",
+          "desc": "Wukong berkolaborasi dengan EKUID buat ngasih platform pendanaan event generasi berikutnya yang bantu penyelenggara event profesional dapetin modal lewat event crowdfunding terstruktur dan pembiayaan event. Kita kasih organizer kemampuan buat mendanai, mengelola, dan mengembangkan event dengan percaya diri—dari perencanaan sampai eksekusi."
+        },
+        "2": {
+          "title": "Siapa yang Bisa Mengajukan Pendanaan Event Wukong?",
+          "desc": "<span>Wukong X EKUID nyediain pendanaan event yang dirancang buat <b>penyelenggara event profesional, rumah produksi, dan perusahaan non-publik</b> yang ngerencanain event komersial atau skala besar. Setiap pendaftaran di-review buat memastikan kualitas, kelayakan, dan keberlanjutan.</span>"
+        },
+        "3": {
+          "title": "Gimana Cara Kerja Event Crowdfunding di Wukong?",
+          "desc": "<span>Sistem <b>event crowdfunding</b> kita kasih organizer kemampuan buat ngedapetin dana setelah lulus verifikasi dan due diligence. Pendanaan dikumpulin secara transparan dan dicairkan bertahap berdasarkan milestone yang disetujui—biar event lo tetap sehat secara finansial dan dipercaya kontributor.</span>"
+        },
+        "4": {
+          "title": "Jenis Event Apa Aja yang Bisa Pakai Pendanaan Event Wukong?",
+          "desc": "<span>Wukong support berbagai kategori event, termasuk: <ul><li>Event Musik & Hiburan</li><li>Event Olahraga & Lari</li><li>Konferensi & Pameran</li><li>Event Komunitas & Kreatif</li></ul> Setiap proposal pendanaan event dievaluasi berdasarkan skala, permintaan audiens, dan kesiapan eksekusi.</span>"
+        },
+        "5": {
+          "title": "Berapa Modal yang Bisa Didapatkan Lewat Pendanaan Event?",
+          "desc": "<span>Wukong nyediain <b>pembiayaan event hingga Rp 10 miliar</b>, tergantung profil event, struktur pendanaan, dan hasil due diligence. Ini membuat Wukong ideal buat event yang lagi berkembang maupun skala besar.</span>"
+        },
+        "6": {
+          "title": "Kenapa Pilih Pembiayaan Event daripada Pinjaman Tradisional?",
+          "desc": "<span>Beda sama pinjaman tradisional, <b>pembiayaan event di Wukong X EKUID</b> mengurangi tekanan finansial di awal, ningkatin arus kas, dan nyesuain pendanaan dengan performa event yang sebenarnya—jadi organizer bisa fokus kasih pengalaman terbaik.</span>"
+        },
+        "7": {
+          "title": "Apakah Pendanaan Event Wukong Aman dan Diatur?",
+          "desc": "Iya dong. Wukong beroperasi sebagai platform pendanaan event yang berizin dan aman, pakai kepatuhan ketat, mekanisme kontrol dana, dan pelaporan transparan buat melindungi organizer dan kontributor."
+        },
+        "8": {
+          "title": "Berapa Lama Proses Persetujuan Pendanaan Event?",
+          "desc": "<span>Sesuai regulasi OJK, <b>kampanye crowdfunding dilakukan dalam 45 hari</b>, tidak termasuk registrasi, due diligence, dan lain-lain. Tapi bisa aja prosesnya lebih cepat, tergantung seberapa menarik kampanyenya di mata investor.</span>"
+        },
+        "9": {
+          "title": "Gimana Dana Event Dicairkan ke Organizer?",
+          "desc": "Dana event dicairkan secara bertahap berdasarkan rencana pendanaan yang disetujui dan milestone event—buat memastikan penggunaan modal yang bertanggung jawab dan pelaksanaan event yang lebih lancar."
+        },
+        "10": {
+          "title": "Bisa Gak Penjualan Tiket Event Diintegrasikan dengan Pendanaan Event?",
+          "desc": "Bisa banget. Wukong mengintegrasikan penjualan tiket event dengan pendanaan dan pelaporan, kasih organizer insight real-time tentang performa tiket, progres pendanaan, dan kesehatan finansial event secara keseluruhan."
+        },
+        "11": {
+          "title": "Gimana Kalau Event Dibatalin atau Dijadwalin Ulang?",
+          "desc": "Kalau ada pembatalan atau penjadwalan ulang, Wukong pakai manajemen risiko pendanaan event dan mekanisme refund yang udah ditetapkan sebelumnya buat memastikan hasil yang adil buat semua pihak."
+        },
+        "12": {
+          "title": "Apakah Perlu Pengalaman Sebelumnya buat Daftar Pendanaan Event?",
+          "desc": "<span>Pengalaman membantu, tapi gak wajib. Wukong mengevaluasi <b>aplikasi pendanaan event</b> berdasarkan kualitas perencanaan, kredibilitas tim, permintaan pasar, dan kelayakan finansial.</span>"
+        },
+        "13": {
+          "title": "Dokumen Apa Aja yang Diperlukan untuk Aplikasi Pendanaan Event?",
+          "desc": "<span>Persyaratan umum meliputi: <ul><li>Profil perusahaan</li><li>Proposal event & rencana anggaran</li><li>Dokumen hukum dan bisnis</li><li>Materi pendukung yang relevan dengan event</li></ul> Ini bantu kita menyusun solusi pendanaan event yang tepat.</span>"
+        },
+        "14": {
+          "title": "Gimana Cara Mulai Pendanaan Event di Wukong?",
+          "desc": "<span>Tinggal klik <b>“Mulai Pendanaan”</b>, submit detail event dan perusahaan, dan tim kita bakal bantu lo lewatin proses verifikasi dan pendanaan.</span>"
+        },
+        "15": {
+          "title": "Gimana Cara Hubungi Wukong untuk Dukungan Pendanaan Event?",
+          "desc": "Tim kita siap bantu. Hubungi lewat form kontak atau saluran resmi yang ada di website untuk support yang cepet dan profesional."
+        }
+      }
+    }
+  },
+  "becomeCreator": {
+    "hero": {
+      "title": "CREATING TOGETHER, ONE EVENT AT A TIME",
+      "desc": "Di Wukong, kita percaya setiap pertemuan adalah percikan kemungkinan—kesempatan buat bangunin koneksi, suara, dan pengalaman baru. Ini caranya, sebagai event creator, kamu bisa wujudin visimu bareng kita:",
+      "button": "Buat Event"
+    },
+    "steps": {
+      "1": {
+        "title": "IMAGINE & DEFINE YOUR GATHERING",
+        "description": "Deskripsiin impianmu—nama, tanggal, tempat, dan indahnya eventmu."
+      },
+      "2": {
+        "title": "GUIDE, CELEBRATE, REFLECT",
+        "description": "Pantau penjualan secara real-time. Kelola guest list-mu. Di hari-H, check-in dengan mudah. Setelahnya, reflect—apa yang berhasil, apa yang bisa lebih keren lagi berikutnya."
+      },
+      "3": {
+        "title": "PUBLISH & OPEN DOORS",
+        "description": "Cuma dengan beberapa klik, event lo bergabung ke galeri cerita dan kemungkinan di platform kita. Kita sediain alatnya—lo yang sediain sihirnya."
+      },
+      "4": {
+        "title": "CONNECT & INVITE",
+        "description": "Dari teman sampai orang yang belum kenal, biarkan audiensmu nemuin apa yang udah dibuat."
+      }
+    },
+    "features": {
+      "items": {
+        "1": {
+          "title": "SEAMLESS EMPOWERMENT",
+          "description": "Kita urus pembayaran, ticketing, e-delivery—jadi lo bisa fokus berkreasi."
+        },
+        "2": {
+          "title": "CLARITY & SUPPORT",
+          "description": "Satu dashboard, biaya yang transparan, dan tim yang selalu ada buat kamu."
+        },
+        "3": {
+          "title": "FROM LOCAL ROOTS TO GLOBAL REACH",
+          "description": "Mau acara di sebelah rumah atau ke seluruh dunia, kita kasih ruang buat berkembang, tumbuh, dan terkoneksi."
+        },
+        "4": {
+          "title": "PURPOSE WITH PRESENCE",
+          "description": "Kita liat eventmu sebagai bagian dari sesuatu yang lebih besar: membangun komunitas, berbagi cerita, membangkitkan perubahan."
+        }
+      }
+    },
+    "cta": {
+      "title": "STEP FORWARD - BRING YOUR EVENT TO LIFE",
+      "desc": "Ide cuma awal mulanya. Biar Wukong jadi partnermu buat ngubah ide jadi pengalaman yang berkesan.",
+      "ready": "Siap bikin pengalamanmu sendiri?",
+      "button_create": "Buat Event",
+      "button_talk": "Ngobrol sama Tim Kita"
+    }
+  },
+  "login": {
+    "title": "Are Wu In?",
+    "desc": "Sedikit lagi untuk menjadi The Chosen Wu!",
+    "email": "Alamat Email",
+    "password": "Password",
+    "login_button": "Log in",
+    "forgot_password": "Lupa Password?",
+    "no_account": "Belum punya akun? Sign up"
+  },
+  "forgotPassword": {
+    "title": "Kesulitan untuk<br />login?",
+    "desc": "Masukan email yang sudah terdaftar untuk menerima instruksi perubahan kata sandi",
+    "email": "Alamat Email",
+    "button": "Kirim Email",
+    "success_title": "Email terkirim!",
+    "success_message": "Tim Wukong sudah mengirim email ke <bold>{email}</bold>. Tolong cek inbox emailmu untuk instruksi perubahan kata sandi.",
+    "no_message": "Tidak menerima email?",
+    "resend_link": "Kirim Ulang"
+  },
+  "register": {
+    "title": "Lets get Wu in!",
+    "subtitle": "Ceritakan tentang dirimu",
+    "full_name": "Nama Lengkap",
+    "email": "Email",
+    "phone": "Nomor HP",
+    "go_ahead": "Lanjutkan",
+    "password": "Kata Sandi",
+    "repeat_password": "Ulang Kata Sandi",
+    "password_check_length": "8-12 karakter",
+    "password_check_number": "Angka",
+    "password_check_special": "Karakter spesial",
+    "password_check_capital": "Huruf kapital",
+    "terms_agree": "Saya setuju dengan <terms>syarat dan ketentuan</terms> serta <privacy>kebijakan privasi</privacy> yang diterapkan di Wukong",
+    "sign_up": "Daftar",
+    "forgot_password": "Lupa password?",
+    "already_account": "Sudah punya akun? <link>Masuk</link>",
+    "otp": {
+      "title": "Lets Get Wu Verified",
+      "desc": "Pilih metode verifikasimu",
+      "send_email": "Kirim ke Email",
+      "send_wa": "Kirim ke Whatsapp/SMS",
+      "otp_desc_phone": "Tim Wukong sudah mengirimkan kode OTP ke nomor HP <bold>{contact}</bold>"
+    },
+    "modal": {
+      "title": "wu-hoo!",
+      "desc": "you are now The Chosen Wu!",
+      "button": "Masuk"
+    }
+  }
+}

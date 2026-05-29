@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import EventListSection from '.';
 import '@testing-library/jest-dom';
-import * as useEventsModule from '@/hooks/use-events';
+jest.mock('@/hooks/use-events', () => ({
+  useEvents: jest.fn(),
+}));
 
 // Mock EventCard to avoid invalid DOM attributes
 jest.mock('../event-card', () => ({ skeleton, metaUrl, title, ...rest }: any) => (
@@ -20,7 +22,9 @@ jest.mock('@/components', () => ({
   Container: (props: any) => <div {...props}>{props.children}</div>,
 }));
 
-const mockUseEvents = jest.spyOn(useEventsModule, 'useEvents');
+import { useEvents } from '@/hooks/use-events';
+
+const mockUseEvents = useEvents as jest.Mock;
 
 const defaultHookState = {
   events: [],

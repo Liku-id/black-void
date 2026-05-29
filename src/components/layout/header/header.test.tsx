@@ -231,4 +231,42 @@ describe('Header', () => {
   });
 
 
+  it('handles desktop language switcher clicks', () => {
+    render(<Header />);
+    const enButton = document.getElementById('lang_switch_en');
+    const idButton = document.getElementById('lang_switch_id');
+    expect(enButton).toBeInTheDocument();
+    expect(idButton).toBeInTheDocument();
+
+    fireEvent.click(idButton!);
+    expect(require('next/navigation').useRouter().replace).toHaveBeenCalledWith(
+      '/',
+      { locale: 'id' }
+    );
+  });
+
+  it('handles mobile language switcher clicks', () => {
+    render(<Header />);
+    // Open mobile menu
+    const menuIcon = screen.getAllByAltText('Menu')[0];
+    fireEvent.click(menuIcon);
+
+    const mobileLangBtn = document.getElementById('btn_mobile_lang');
+    expect(mobileLangBtn).toBeInTheDocument();
+    
+    // Open language choices
+    fireEvent.click(mobileLangBtn!);
+    
+    const enButtonMobile = document.getElementById('mobile_lang_switch_en');
+    const idButtonMobile = document.getElementById('mobile_lang_switch_id');
+    expect(enButtonMobile).toBeInTheDocument();
+    expect(idButtonMobile).toBeInTheDocument();
+
+    fireEvent.click(idButtonMobile!);
+    expect(require('next/navigation').useRouter().replace).toHaveBeenCalledWith(
+      '/',
+      { locale: 'id' }
+    );
+  });
+
 });

@@ -3,7 +3,7 @@ import calendarIcon from '@/assets/icons/calendar.svg';
 import locationIcon from '@/assets/icons/location.svg';
 import { Box, Button, Typography } from '@/components';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/lib/i18n/navigation';
 
 interface EventCardProps {
   metaUrl?: string;

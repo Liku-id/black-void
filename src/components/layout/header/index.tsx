@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { Link, useRouter, usePathname } from '@/lib/i18n/navigation';
+import { useSearchParams, usePathname as useOriginalPathname } from 'next/navigation';
 import axios from '@/lib/api/axios-client';
 import { getErrorMessage } from '@/lib/api/error-handler';
 import { useAuth } from '@/lib/session/use-auth';
+import { useLocale } from 'next-intl';
 import { Box, Button, Typography, Container } from '@/components';
 import logo from '@/assets/logo/logo.svg';
 import logout from '@/assets/icons/logout.svg';
@@ -19,15 +20,30 @@ import LogOutModal from './logout-modal';
 
 export default function Header() {
   const searchParams = useSearchParams();
+  const originalPathname = useOriginalPathname();
   const router = useRouter();
   const pathname = usePathname();
   const { isLoggedIn, userData, checkAuth, loading } = useAuth();
+  const nextIntlLocale = useLocale();
+  const locale = originalPathname?.startsWith('/id')
+    ? 'id'
+    : originalPathname?.startsWith('/en')
+      ? 'en'
+      : nextIntlLocale || 'en';
 
   // Initialize state
   const [openMenu, setOpenMenu] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [openLogoutModal, setOpenLogoutModal] = useState(false);
   const [_, setError] = useState('');
+
+  const changeLanguage = (newLocale: 'en' | 'id') => {
+    // Safeguard to prevent double locale prefixes (e.g. /id/id or /id/en)
+    const cleanPath = pathname ? pathname.replace(/^\/(id|en)(\/|$)/, '/') : '/';
+    router.replace(cleanPath, { locale: newLocale });
+    setOpenMenu(false);
+  };
 
   const isOrderPage =
     pathname?.includes('/order') || pathname?.endsWith('/order');
@@ -143,6 +159,45 @@ export default function Header() {
               Become Creator?
             </Typography>
           </Link>
+          
+          {/* Language Switcher (Desktop) */}
+          <Box className="group relative ml-6 flex items-center cursor-pointer h-full py-2">
+            <Typography
+              type="body"
+              size={16}
+              color="text-black"
+              className="uppercase font-semibold flex items-center gap-1 hover:text-green"
+            >
+              {locale}
+              <svg
+                className="h-4 w-4 transform transition-transform duration-300 group-hover:rotate-180"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </Typography>
+            <Box className="absolute right-0 top-full hidden w-20 pt-2 z-50 group-hover:block">
+              <Box className="border border-black bg-white shadow-[2px_2px_0px_0px_#000]">
+                <button
+                  id="lang_switch_en"
+                  onClick={() => changeLanguage('en')}
+                  className={`w-full py-2 px-3 text-left font-onest text-sm hover:bg-black hover:text-white transition-colors duration-200 ${locale === 'en' ? 'bg-gray-100 font-bold' : ''}`}
+                >
+                  EN
+                </button>
+                <button
+                  id="lang_switch_id"
+                  onClick={() => changeLanguage('id')}
+                  className={`w-full py-2 px-3 text-left font-onest text-sm hover:bg-black hover:text-white transition-colors duration-200 ${locale === 'id' ? 'bg-gray-100 font-bold' : ''}`}
+                >
+                  ID
+                </button>
+              </Box>
+            </Box>
+          </Box>
+
           {loading && (
             <Box className="ml-6 h-9 w-20 animate-pulse bg-gray-200" />
           )}
@@ -208,8 +263,54 @@ export default function Header() {
               priority
             />
           </Link>
-          <Box onClick={() => setOpenMenu(false)} className="cursor-pointer">
-            <Image src={closeIcon} alt="Close" width={24} height={24} />
+          
+          <Box className="flex items-center gap-4">
+            {/* Language Switcher (Mobile Menu) */}
+            <Box className="relative flex items-center cursor-pointer">
+              <button
+                id="btn_mobile_lang"
+                onClick={() => setMobileLangOpen(!mobileLangOpen)}
+                className="flex items-center gap-1 text-white hover:text-green font-semibold uppercase py-1 px-2 border border-white"
+              >
+                {locale}
+                <svg
+                  className={`h-4 w-4 transform transition-transform duration-300 ${mobileLangOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {mobileLangOpen && (
+                <Box className="absolute right-0 top-full mt-2 w-20 border border-white bg-black shadow-[2px_2px_0px_0px_#FFF] z-50">
+                  <button
+                    id="mobile_lang_switch_en"
+                    onClick={() => {
+                      changeLanguage('en');
+                      setMobileLangOpen(false);
+                    }}
+                    className={`w-full py-2 px-3 text-left font-onest text-sm text-white hover:bg-white hover:text-black transition-colors duration-200 ${locale === 'en' ? 'bg-neutral-800 font-bold' : ''}`}
+                  >
+                    EN
+                  </button>
+                  <button
+                    id="mobile_lang_switch_id"
+                    onClick={() => {
+                      changeLanguage('id');
+                      setMobileLangOpen(false);
+                    }}
+                    className={`w-full py-2 px-3 text-left font-onest text-sm text-white hover:bg-white hover:text-black transition-colors duration-200 ${locale === 'id' ? 'bg-neutral-800 font-bold' : ''}`}
+                  >
+                    ID
+                  </button>
+                </Box>
+              )}
+            </Box>
+
+            <Box onClick={() => setOpenMenu(false)} className="cursor-pointer">
+              <Image src={closeIcon} alt="Close" width={24} height={24} />
+            </Box>
           </Box>
         </Box>
 

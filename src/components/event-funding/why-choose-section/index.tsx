@@ -6,31 +6,34 @@ import moneyIcon from '@/assets/icons/money.svg';
 import sunflowerIcon from '@/assets/icons/sunflower.svg';
 import magnifierIcon from '@/assets/icons/magnifier.svg';
 import windowIcon from '@/assets/icons/window.svg';
+import { getTranslations } from 'next-intl/server';
 
-const items = [
-  {
-    icon: moneyIcon,
-    title: 'Reduce upfront financial burden',
-    description: 'Minimize initial costs and manage cash flow more effectively before ticket sales begin',
-  },
-  {
-    icon: sunflowerIcon,
-    title: 'Transparent Funding tracking',
-    description: 'Monitor sales and revenue in real time with clear and accurate financial insights.',
-  },
-  {
-    icon: magnifierIcon,
-    title: 'reliable funding schemes',
-    description: 'A reliable securities crowdfunding method. EKUID has a funding success rate of up to 100%.',
-  },
-  {
-    icon: windowIcon,
-    title: 'Integrated with ticket sales and reporting',
-    description: 'Funding, ticket sales, and reports are managed seamlessly in one unified system',
-  },
-];
+const WhyChooseSection = async () => {
+  const t = await getTranslations('eventFunding');
 
-const WhyChooseSection = () => {
+  const items = [
+    {
+      icon: moneyIcon,
+      title: t('whyChoose.items.1.title'),
+      description: t('whyChoose.items.1.desc'),
+    },
+    {
+      icon: sunflowerIcon,
+      title: t('whyChoose.items.2.title'),
+      description: t('whyChoose.items.2.desc'),
+    },
+    {
+      icon: magnifierIcon,
+      title: t('whyChoose.items.3.title'),
+      description: t('whyChoose.items.3.desc'),
+    },
+    {
+      icon: windowIcon,
+      title: t('whyChoose.items.4.title'),
+      description: t('whyChoose.items.4.desc'),
+    },
+  ];
+
   return (
     <section className="px-4 md:px-0 py-12 md:py-16 lg:py-24">
       <Container>
@@ -42,7 +45,8 @@ const WhyChooseSection = () => {
             size={32}
             className="text-white font-normal"
           >
-            Why Choose WUKONG for wu Event Funding Solution
+            {t('whyChoose.title')}
+
           </Typography>
         </Box>
 

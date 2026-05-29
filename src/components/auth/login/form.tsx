@@ -14,10 +14,11 @@ import { email } from '@/utils/form-validation';
 import { useSnackBar } from '@/utils/use-snack-bar';
 import { AxiosError } from 'axios';
 import { useAtom } from 'jotai';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import posthog from 'posthog-js';
+import { useForm, FormProvider } from 'react-hook-form';
+
+import { useTranslations } from 'next-intl';
 import UnverifiedModal from './unverified-modal';
 
 interface FormDataLogin {
@@ -38,6 +39,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
+  const t = useTranslations('login');
 
   const methods = useForm<FormDataLogin>({});
 
@@ -54,15 +56,7 @@ const LoginForm = () => {
       if (response.status === 200) {
         setAuthUser(response.data.data);
 
-        posthog.identify(response.data.data.email, {
-          email: response.data.data.email,
-          role: response.data.data.role,
-        });
-        posthog.capture('user_logged_in', {
-          email: formData.email,
-          role: response.data.data.role,
-          origin: pathname,
-        });
+
 
         // handle redirect based on current path
         if (pathname === '/ticket/auth') {
@@ -146,7 +140,7 @@ const LoginForm = () => {
             id="email_field"
             name="email"
             type="email"
-            placeholder="Email Address"
+            placeholder={t('email')}
             className="mb-4 w-[270px] md:mb-7"
             rules={{ required: 'Email is required', validate: email }}
           />
@@ -155,7 +149,7 @@ const LoginForm = () => {
             id="password_field"
             name="password"
             type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
+            placeholder={t('password')}
             className="mb-10 w-[270px]"
             rules={{ required: 'Password is required' }}
             endIcon={showPassword ? eyeOpened : eyeClosed}
@@ -163,7 +157,7 @@ const LoginForm = () => {
           />
 
           <Button id="btn_li_login" type="submit">
-            Get In
+            {t('login_button')}
           </Button>
 
           {error && (

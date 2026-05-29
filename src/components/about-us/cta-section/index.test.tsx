@@ -3,8 +3,9 @@ import { render, screen } from '@testing-library/react';
 import CTASection from './index';
 
 describe('CTASection', () => {
-  it('renders correctly', () => {
-    render(<CTASection />);
+  it('renders correctly', async () => {
+    const Component = await (CTASection as any)();
+    render(Component);
 
     expect(screen.getByText(/START YOUR EVENT HERE!/i)).toBeInTheDocument();
     expect(screen.getByText(/An idea is just the beginning/i)).toBeInTheDocument();

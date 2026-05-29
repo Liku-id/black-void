@@ -12,12 +12,13 @@ jest.mock('next/image', () => ({
 }));
 
 describe('HeroSection', () => {
-  it('renders correctly', () => {
-    render(<HeroSection />);
+  it('renders correctly', async () => {
+    const component = await HeroSection();
+    render(component);
 
-    expect(screen.getByText(/All in One Ticketing & Event/i)).toBeInTheDocument();
-    expect(screen.getByText(/Management System Platform/i)).toBeInTheDocument();
-    expect(screen.getByText(/A simple, powerful ticketing system designed for creators/i)).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes('All in One Ticketing &'))).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes('Event Management System Platform'))).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes('A simple, powerful ticketing system designed for creators'))).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: /Explore Wukong/i })).toBeInTheDocument();
   });

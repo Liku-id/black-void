@@ -3,8 +3,9 @@ import { render, screen } from '@testing-library/react';
 import WhoWeAreSection from './index';
 
 describe('WhoWeAreSection', () => {
-  it('renders correctly', () => {
-    render(<WhoWeAreSection />);
+  it('renders correctly', async () => {
+    const Component = await (WhoWeAreSection as any)();
+    render(Component);
 
     expect(screen.getByRole('heading', { name: /Who we are\?/i })).toBeInTheDocument();
 

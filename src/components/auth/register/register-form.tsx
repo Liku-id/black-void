@@ -17,11 +17,11 @@ import {
 } from '@/utils/form-validation';
 import { useAtom } from 'jotai';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/lib/i18n/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import posthog from 'posthog-js';
+
+import { useTranslations } from 'next-intl';
 import SuccessModal from '../verify-otp/success-modal';
 
 const RegisterForm = () => {
@@ -38,6 +38,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [, setPayload] = useAtom(registerFormAtom);
   const [modalOpen, setModalOpen] = useState(false);
+  const t = useTranslations('register');
 
   const methods = useForm<RegisterFormData>({
     mode: 'onChange',
@@ -65,9 +66,7 @@ const RegisterForm = () => {
 
       // Set payload to global state
       setPayload(payload);
-      posthog.capture('user_registered', {
-        email: formData.email,
-      });
+
       router.replace('/register/choose-verification');
     } catch (error) {
       console.error(error);
@@ -122,7 +121,7 @@ const RegisterForm = () => {
               <TextField
                 id="fullname_field"
                 name="fullName"
-                placeholder="Full Name"
+                placeholder={t('full_name')}
                 className="mb-8 w-[270px]"
                 rules={{
                   required: 'Full Name is required',
@@ -134,7 +133,7 @@ const RegisterForm = () => {
                 id="email_field"
                 name="email"
                 type="email"
-                placeholder="Your Email"
+                placeholder={t('email')}
                 className="mb-8 w-[270px]"
                 rules={{
                   required: 'Email is required',
@@ -145,7 +144,7 @@ const RegisterForm = () => {
               <TextField
                 id="phone_number_field"
                 name="phoneNumber"
-                placeholder="Phone Number"
+                placeholder={t('phone')}
                 className="mb-10 w-[270px]"
                 rules={{
                   required: 'Phone Number is required',
@@ -166,7 +165,7 @@ const RegisterForm = () => {
                 onClick={handleContinue}
                 disabled={checkLoad}
               >
-                {checkLoad ? 'Verifying...' : 'Go Ahead'}
+                {checkLoad ? 'Verifying...' : t('go_ahead')}
               </Button>
             </>
           )}
@@ -177,7 +176,7 @@ const RegisterForm = () => {
                 id="password_field"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
+                placeholder={t('password')}
                 className="mb-8 w-[270px]"
                 rules={{ required: 'Password is required' }}
                 endIcon={showPassword ? eyeOpened : eyeClosed}
@@ -188,7 +187,7 @@ const RegisterForm = () => {
                   id="confirm_password_field"
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Repeat Password"
+                  placeholder={t('repeat_password')}
                   className="w-[270px]"
                   rules={{
                     required: 'Repeat Password is required',
@@ -217,22 +216,22 @@ const RegisterForm = () => {
               <Box className="mb-10 grid grid-cols-1 gap-x-10 gap-y-3 px-3 md:grid-cols-2">
                 <Checkbox checked={passwordChecks.length} disabled>
                   <Typography type="body" size={14}>
-                    8-12 Character
+                    {t('password_check_length')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.number} disabled>
                   <Typography type="body" size={14}>
-                    Number
+                    {t('password_check_number')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.special} disabled>
                   <Typography type="body" size={14}>
-                    Special Character
+                    {t('password_check_special')}
                   </Typography>
                 </Checkbox>
                 <Checkbox checked={passwordChecks.capital} disabled>
                   <Typography type="body" size={14}>
-                    Capital Letters
+                    {t('password_check_capital')}
                   </Typography>
                 </Checkbox>
               </Box>
@@ -244,29 +243,32 @@ const RegisterForm = () => {
                   onChange={() => setAgree(!agree)}
                 >
                   <Typography size={12} className="text-white">
-                    I agree to the{' '}
-                    <Link
-                      href="/term-and-condition"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      className="cursor-pointer underline"
-                    >
-                      terms and conditions
-                    </Link>{' '}
-                    and{' '}
-                    <Link
-                      href="/privacy-policy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      className="cursor-pointer underline"
-                    >
-                      privacy policy
-                    </Link>{' '}
-                    applicable at Wukong
+                    {t.rich('terms_agree', {
+                      terms: (chunks) => (
+                        <Link
+                          href="/term-and-condition"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="cursor-pointer underline"
+                        >
+                          {chunks}
+                        </Link>
+                      ),
+                      privacy: (chunks) => (
+                        <Link
+                          href="/privacy-policy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          className="cursor-pointer underline"
+                        >
+                          {chunks}
+                        </Link>
+                      )
+                    })}
                   </Typography>
                 </Checkbox>
               </Box>
@@ -276,7 +278,7 @@ const RegisterForm = () => {
                 type="submit"
                 disabled={!allValid || loading}
               >
-                Submit
+                {t('sign_up')}
               </Button>
             </>
           )}

@@ -12,8 +12,9 @@ jest.mock('next/image', () => ({
 }));
 
 describe('FinancialSection', () => {
-  it('renders all financial items correctly', () => {
-    render(<FinancialSection />);
+  it('renders all financial items correctly', async () => {
+    const Component = await (FinancialSection as any)();
+    render(Component);
 
     // Header
     expect(screen.getByText(/Transparent and Reliable Financial Reporting/i)).toBeInTheDocument();
