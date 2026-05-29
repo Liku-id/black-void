@@ -13,17 +13,12 @@ jobs:
     # Hanya berjalan jika PR ditutup karena di-merge
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Configure git to use HTTPS instead of SSH
-        run: |
-          git config --global url."https://github.com/".insteadOf "git@github.com:"
 
-      - name: Checkout repository and submodules
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.ref }}
-          submodules: 'recursive'
           fetch-depth: 0
           token: ${{ secrets.WUKONG_PAT }}
 
