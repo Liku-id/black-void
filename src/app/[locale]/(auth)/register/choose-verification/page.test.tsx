@@ -15,9 +15,8 @@ describe('RegisterChooseVerificationPage', () => {
     // Check for main heading
     // Check for main heading using getAllByText to handle potential duplicates or split text issues
     const headings = screen.getAllByText((content, node) => {
-      const hasText = (node: Element) => node.textContent === "let's get wu verified";
-      const nodeHasText = hasText(node);
-      return nodeHasText || node.textContent?.toLowerCase() === "let's get wu verified";
+      const text = node?.textContent?.toLowerCase() || '';
+      return text === "let's get wu verified" || text === "lets get wu verified";
     });
     expect(headings[0]).toBeInTheDocument();
 

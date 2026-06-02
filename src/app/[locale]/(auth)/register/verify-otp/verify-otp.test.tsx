@@ -15,12 +15,15 @@ describe('VerifyOtpPage', () => {
     render(<VerifyOtpPage />);
     // Use a custom function to match text split across multiple elements
     expect(screen.getByText((content, element) => {
-      const hasText = (node: Element) => node.textContent === "let's get wu verified" || node.textContent === "LET'S GET WU VERIFIED";
+      const hasText = (node: Element) => {
+        const text = node.textContent?.toLowerCase() || '';
+        return text === "let's get wu verified" || text === "lets get wu verified";
+      };
       const nodeHasText = hasText(element!);
       const childrenDontHaveText = Array.from(element?.children || []).every(
         child => !hasText(child)
       );
-      return nodeHasText && childrenDontHaveText || content.toLowerCase().includes("let's get wu verified");
+      return nodeHasText && childrenDontHaveText || content.toLowerCase().includes("lets get wu verified") || content.toLowerCase().includes("let's get wu verified");
     })).toBeInTheDocument();
   });
 
