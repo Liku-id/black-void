@@ -144,12 +144,13 @@ export function formatStrToHTML(str: string): string {
 }
 
 /**
- * Calculate price with partnership discount
+ * Calculate price with partnership or active approved ticket discount
  * @param originalPrice - Original ticket price
  * @param partnershipInfo - Partnership info object with discount
+ * @param discountObj - Active approved discount object for ticket type
  * @returns Final price after applying discount
  */
-export function calculatePriceWithPartnership(
+export function calculateTicketPrice(
   originalPrice: number,
   partnershipInfo?: {
     discount?: number;
@@ -160,8 +161,29 @@ export function calculatePriceWithPartnership(
     max_order_quantity?: number;
     partner_name?: string;
     partner_code?: string;
+  } | null,
+  discountObj?: {
+    value: number;
+    status: string;
+    start_date: string;
+    end_date: string;
   } | null
 ): number {
+  // Check if active approved discount is present first (takes priority)
+  if (discountObj && discountObj.status === 'approved') {
+    const now = new Date();
+    const start = new Date(discountObj.start_date);
+    const end = new Date(discountObj.end_date);
+    if (now >= start && now <= end) {
+      const val = discountObj.value;
+      if (val <= 100) {
+        return Math.round(originalPrice * ((100 - val) / 100));
+      } else {
+        return Math.max(0, originalPrice - val);
+      }
+    }
+  }
+
   if (!partnershipInfo || !partnershipInfo.discount) {
     return originalPrice;
   }

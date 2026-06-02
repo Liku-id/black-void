@@ -53,6 +53,15 @@ export interface Ticket {
   partnership_info?: PartnershipInfo | null;
   group_ticket_id?: string;
   ticket_type_id?: string;
+  discount?: {
+    id: string;
+    ticket_type_id: string;
+    name: string;
+    value: number;
+    start_date: string;
+    end_date: string;
+    status: string;
+  } | null;
 }
 
 export interface TicketSummary {
@@ -61,6 +70,15 @@ export interface TicketSummary {
   price: string;
   count: number;
   partnership_info?: PartnershipInfo | null;
+  discount?: {
+    id: string;
+    ticket_type_id: string;
+    name: string;
+    value: number;
+    start_date: string;
+    end_date: string;
+    status: string;
+  } | null;
 }
 
 export interface ContactDetails {

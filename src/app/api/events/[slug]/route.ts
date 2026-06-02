@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { handleErrorAPI } from '@/lib/api/error-handler';
 import axios from '@/lib/api/axios-server';
 import { encryptUtils } from '@/lib/utils/encryptUtils';
-import { calculatePriceWithPartnership, formatRupiah } from '@/utils/formatter';
+import { calculateTicketPrice, formatRupiah } from '@/utils/formatter';
 
 export async function GET(
   req: NextRequest,
@@ -51,9 +51,10 @@ export async function GET(
       }
       const prices = data.body.ticketTypes.map((ticket: any) => {
         const basePrice = Number(ticket.price);
-        return calculatePriceWithPartnership(
+        return calculateTicketPrice(
           basePrice,
-          ticket.partnership_info
+          ticket.partnership_info,
+          ticket.discount
         );
       });
       return Math.min(...prices);
@@ -78,6 +79,7 @@ export async function GET(
         quantity: t.quantity,
         purchased_amount: t.purchased_amount,
         partnership_info: t.partnership_info || null,
+        discount: t.discount || null,
       }));
 
     const groupTickets = (data.body.group_tickets || [])

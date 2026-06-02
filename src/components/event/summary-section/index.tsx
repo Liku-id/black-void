@@ -5,7 +5,7 @@ import { Box, Button, Typography } from '@/components';
 import TicketList from './ticket-list';
 import PriceDetail from './price-detail';
 import PaymentMethodAccordion from './payment-method';
-import { formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
+import { formatRupiah, calculateTicketPrice } from '@/utils/formatter';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import type { TicketSummary } from '../types';
 
@@ -45,9 +45,10 @@ const SummarySection: React.FC<SummarySectionProps> = ({
   const ticketCount = tickets.reduce((a, t) => a + t.count, 0);
   const totalPrice = tickets.reduce((sum, t) => {
     const basePrice = Number(t.price);
-    const finalPrice = calculatePriceWithPartnership(
+    const finalPrice = calculateTicketPrice(
       basePrice,
-      t.partnership_info
+      t.partnership_info,
+      t.discount
     );
     return sum + t.count * finalPrice;
   }, 0);

@@ -24,7 +24,7 @@ jest.mock('./payment-method', () => () => <div data-testid="payment-method">Paym
 
 jest.mock('@/utils/formatter', () => ({
   formatRupiah: (val: number) => `Rp ${val}`,
-  calculatePriceWithPartnership: (price: number) => price,
+  calculateTicketPrice: (price: number) => price,
 }));
 
 describe('SummarySection', () => {
