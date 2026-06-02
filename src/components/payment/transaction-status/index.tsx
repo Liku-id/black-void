@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Typography, Container, Box, Button } from '@/components';
 import { useParams, useRouter } from 'next/navigation';
-import { formatDate, formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
+import { formatDate, formatRupiah, calculateTicketPrice } from '@/utils/formatter';
 import Image from 'next/image';
 import successStatus from '@/assets/icons/success-status.svg';
 import failedStatus from '@/assets/icons/failed-status.svg';
@@ -26,12 +26,14 @@ export default function PaymentStatus() {
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
     const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
     const price = groupTicket ? groupTicket.price : ticketType.price;
+    const discountObj = groupTicket ? null : ticketType.discount;
 
-    // Calculate subtotal with partnership discount
+    // Calculate subtotal with partnership/ticket discount
     const originalSubtotal = price * data.transaction.orderQuantity;
-    const finalPricePerTicket = calculatePriceWithPartnership(
+    const finalPricePerTicket = calculateTicketPrice(
       price,
-      partnershipInfo
+      partnershipInfo,
+      discountObj
     );
     const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
     const discount = originalSubtotal - subtotal;
@@ -50,7 +52,7 @@ export default function PaymentStatus() {
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
     const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
-    return { totals, partnershipInfo };
+    return { totals, partnershipInfo, discountObj };
   };
 
   const handleButtonClick = () => {
@@ -223,12 +225,30 @@ export default function PaymentStatus() {
 
           <hr className="border-muted my-4 border-[0.5px]" />
 
-          {getTransactionAndTotals().partnershipInfo && getTransactionAndTotals().totals.discount > 0 && (
+          {getTransactionAndTotals().totals.discount > 0 && (
             <Box className="mb-4 rounded-[14px] border-[0.5px] border-green bg-green/10 p-[14px]">
               <Typography type="body" size={12} className="mb-2 font-bold text-green">
-                Partnership Discount
+                {getTransactionAndTotals().discountObj ? 'Ticket Discount' : 'Partnership Discount'}
               </Typography>
-              {getTransactionAndTotals().partnershipInfo?.partner_name && (
+              {getTransactionAndTotals().discountObj && (
+                <Box className="mb-1 flex justify-between">
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-light"
+                    color="text-muted">
+                    Discount Name
+                  </Typography>
+                  <Typography
+                    type="body"
+                    size={12}
+                    className="font-bold"
+                    color="text-muted">
+                    {getTransactionAndTotals().discountObj.name}
+                  </Typography>
+                </Box>
+              )}
+              {!getTransactionAndTotals().discountObj && getTransactionAndTotals().partnershipInfo?.partner_name && (
                 <Box className="mb-1 flex justify-between">
                   <Typography
                     type="body"
@@ -246,7 +266,7 @@ export default function PaymentStatus() {
                   </Typography>
                 </Box>
               )}
-              {getTransactionAndTotals().partnershipInfo?.partner_code && (
+              {!getTransactionAndTotals().discountObj && getTransactionAndTotals().partnershipInfo?.partner_code && (
                 <Box className="mb-1 flex justify-between">
                   <Typography
                     type="body"

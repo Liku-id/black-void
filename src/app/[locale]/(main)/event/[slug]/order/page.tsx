@@ -18,7 +18,7 @@ import SummarySectionMobile from '@/components/event/summary-section/mobile';
 import useStickyObserver from '@/utils/sticky-observer';
 import EventPageSkeleton from '@/components/event/skeletons';
 import { getErrorMessage } from '@/lib/api/error-handler';
-import { calculatePriceWithPartnership } from '@/utils/formatter';
+import { calculateTicketPrice } from '@/utils/formatter';
 
 // Contact form data type
 interface FormDataContact {
@@ -167,9 +167,10 @@ const OrderPage = () => {
   const totalPrice =
     orderData?.tickets?.reduce((sum: number, t: any) => {
       const basePrice = Number(t.price);
-      const finalPrice = calculatePriceWithPartnership(
+      const finalPrice = calculateTicketPrice(
         basePrice,
-        t.partnership_info
+        t.partnership_info,
+        t.discount
       );
       return sum + t.count * finalPrice;
     }, 0) || 0;
@@ -319,9 +320,10 @@ const OrderPage = () => {
     if (orderData?.tickets) {
       const totalPrice = orderData.tickets.reduce((sum: number, t: any) => {
         const basePrice = Number(t.price);
-        const finalPrice = calculatePriceWithPartnership(
+        const finalPrice = calculateTicketPrice(
           basePrice,
-          t.partnership_info
+          t.partnership_info,
+          t.discount
         );
         return sum + t.count * finalPrice;
       }, 0);
@@ -403,6 +405,7 @@ const OrderPage = () => {
               price: String(t.price),
               count: t.count,
               partnership_info: t.partnership_info || null,
+              discount: t.discount || null,
             }))}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
@@ -421,6 +424,7 @@ const OrderPage = () => {
               price: String(t.price),
               count: t.count,
               partnership_info: t.partnership_info || null,
+              discount: t.discount || null,
             }))}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
