@@ -17,6 +17,7 @@ export async function GET(
         price: order.group_ticket?.price || order.ticketType.price || 0,
         count: order.quantity,
         partnership_info: order.ticketType.partnership_info || null,
+        discount: order.ticketType.discount || null,
         group_ticket_id: order.group_ticket_id,
         ticket_type_id: order.ticket_type_id,
       },

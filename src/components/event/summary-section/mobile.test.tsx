@@ -13,7 +13,7 @@ jest.mock('next/image', () => ({
 
 jest.mock('@/utils/formatter', () => ({
   formatRupiah: (val: number) => `Rp ${val}`,
-  calculatePriceWithPartnership: (price: number, info: any) => price,
+  calculateTicketPrice: (price: number, info: any) => price,
 }));
 
 // Mock sub-components to focus on Mobile logic

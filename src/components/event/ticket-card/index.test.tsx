@@ -23,7 +23,7 @@ jest.mock('@/utils/formatter', () => ({
   formatDate: (date: string) => date,
   getTodayWIB: () => new Date('2023-01-01T00:00:00Z'),
   convertToWIB: (date: string) => new Date(date),
-  calculatePriceWithPartnership: (price: number) => price,
+  calculateTicketPrice: (price: number) => price,
 }));
 
 describe('TicketCard', () => {
