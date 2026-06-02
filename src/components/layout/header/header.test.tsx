@@ -166,7 +166,7 @@ describe('Header', () => {
 
     // Test click on the first one (Desktop)
     fireEvent.click(loginButtons[0]);
-    expect(require('next/navigation').useRouter().push).toHaveBeenCalledWith('/login');
+    expect(require('next/navigation').useRouter().push).toHaveBeenCalledWith('/login', { locale: 'en' });
   });
 
   it('renders Contact Us and Become Creator links', () => {
