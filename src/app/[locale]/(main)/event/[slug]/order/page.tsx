@@ -34,6 +34,64 @@ interface FormDataVisitor {
   }[];
 }
 
+const getPreciseLocation = async (): Promise<{ lat: number; lng: number } | null> => {
+  if (typeof window === 'undefined' || !navigator.geolocation) {
+    return null;
+  }
+
+  // 1. Check permission status via Permissions API if available
+  if (navigator.permissions && navigator.permissions.query) {
+    try {
+      const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+      if (permissionStatus.state === 'denied') {
+        console.warn('Geolocation permission is denied. Skipping prompt.');
+        return null;
+      }
+      if (permissionStatus.state === 'granted') {
+        return new Promise((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              resolve({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              });
+            },
+            () => resolve(null),
+            { timeout: 3000 }
+          );
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to query geolocation permission state:', error);
+    }
+  }
+
+  // 2. Check localStorage to see if we have requested permission before
+  const hasRequestedBefore = localStorage.getItem('location_permission_requested');
+  if (hasRequestedBefore) {
+    console.log('Geolocation has been requested before. Skipping prompt.');
+    return null;
+  }
+
+  // 3. First time request: prompt the user and save the status
+  localStorage.setItem('location_permission_requested', 'true');
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.warn('Geolocation access failed or denied:', error);
+        resolve(null);
+      },
+      { timeout: 5000 }
+    );
+  });
+};
+
 const OrderPage = () => {
   const router = useRouter();
   const params = useParams();
@@ -195,6 +253,20 @@ const OrderPage = () => {
       const visitorData = visitorMethods?.getValues();
       const contactData = contactMethods.getValues();
 
+      // Retrieve precise location
+      const preciseLocation = await getPreciseLocation();
+
+      // Retrieve UTM & Referrer from sessionStorage
+      let tracking = {};
+      try {
+        const storedMetadata = sessionStorage.getItem('landing_utm_metadata');
+        if (storedMetadata) {
+          tracking = JSON.parse(storedMetadata);
+        }
+      } catch (err) {
+        console.error('Failed to parse UTM tracking metadata:', err);
+      }
+
       const payload = {
         orderId: order.orderId,
         paymentMethodId: selectedPayment?.id,
@@ -231,9 +303,12 @@ const OrderPage = () => {
           email: contactData.email,
           phone: contactData.countryCode + contactData.phoneNumber,
         },
+        tracking: {
+          ...tracking,
+          latitude: preciseLocation?.lat || null,
+          longitude: preciseLocation?.lng || null,
+        },
       };
-
-
 
       const { data: response } = await axios.post(
         '/api/transaction/create',
@@ -241,6 +316,9 @@ const OrderPage = () => {
       );
 
       if (response.success) {
+        try {
+          sessionStorage.removeItem('landing_utm_metadata');
+        } catch (e) {}
         router.push(`/checkout-payment/${response.id}`);
       }
     } catch (error: any) {
