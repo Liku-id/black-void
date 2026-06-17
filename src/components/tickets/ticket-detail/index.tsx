@@ -9,8 +9,6 @@ import locationIcon from '@/assets/icons/location.svg';
 import dashedDivider from '@/assets/images/dashed-divider.svg';
 import { formatDate } from '@/utils/formatter';
 import Loading from '../../layout/loading';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { ticketTemplate } from '../template';
 
 interface TicketDetailProps {
@@ -34,32 +32,41 @@ const Ticket = ({ type }: TicketDetailProps) => {
     setError(null);
 
     try {
-      // Prepare ticket data
-      const tickets = (data.tickets || []).map((ticket: any) => ({
-        eventName: data.event?.name,
-        eventOrganizerName: data.event?.eventOrganizer?.name,
-        type: data.group_ticket?.name || data.ticketType?.name,
-        attendee: ticket.visitor_name,
-        qrValue: ticket.id,
-        date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
-        address: data.event?.address,
-        mapLocation: data.event?.mapLocationUrl,
-        ticketType: data.ticketType,
-        event: data.event,
-        raw: ticket,
-      }));
+      // Dynamically import libraries in parallel to improve initial page load size
+      const [html2canvas, jspdfModule, QR] = await Promise.all([
+        import('html2canvas').then((m) => m.default),
+        import('jspdf'),
+        import('qrcode').then((m) => m.default),
+      ]);
+      const jsPDF = jspdfModule.jsPDF || jspdfModule.default;
+
+      // Generate local QR codes in parallel to avoid hitting external APIs
+      const tickets = await Promise.all(
+        (data.tickets || []).map(async (ticket: any) => {
+          const qrDataUrl = await QR.toDataURL(ticket.id, { width: 200, margin: 0 }).catch(() => '');
+          return {
+            eventName: data.event?.name,
+            eventOrganizerName: data.event?.eventOrganizer?.name,
+            type: data.group_ticket?.name || data.ticketType?.name,
+            attendee: ticket.visitor_name,
+            qrDataUrl: qrDataUrl,
+            date: formatDate(data.ticketType?.ticketStartDate, 'datetime'),
+            address: data.event?.address,
+            mapLocation: data.event?.mapLocationUrl,
+            ticketType: data.ticketType,
+            event: data.event,
+            raw: ticket,
+          };
+        })
+      );
 
       // Generate PDF with proper page breaks
       const pdf = new jsPDF('p', 'mm', 'a4');
 
-      // Process each ticket individually
-      for (let i = 0; i < tickets.length; i++) {
-        if (i > 0) {
-          pdf.addPage();
-        }
-
+      // Process and capture all tickets in parallel
+      const canvasPromises = tickets.map(async (ticket: any) => {
         // Generate HTML for single ticket
-        const singleTicketHtml = ticketTemplate([tickets[i]]);
+        const singleTicketHtml = ticketTemplate([ticket]);
 
         // Create temporary iframe for this ticket
         const iframe = document.createElement('iframe');
@@ -79,8 +86,11 @@ const Ticket = ({ type }: TicketDetailProps) => {
         iframe.contentDocument!.write(singleTicketHtml);
         iframe.contentDocument!.close();
 
-        // Wait for fonts and content to load
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        // Wait for iframe elements to load (reduced wait time from 3000ms to 500ms since assets are local)
+        await new Promise((resolve) => {
+          iframe.onload = resolve;
+          setTimeout(resolve, 500);
+        });
 
         // Capture this ticket
         const canvas = await html2canvas(iframe.contentDocument!.body, {
@@ -102,7 +112,17 @@ const Ticket = ({ type }: TicketDetailProps) => {
         // Clean up iframe
         document.body.removeChild(iframe);
 
-        // Add ticket to PDF
+        return canvas;
+      });
+
+      const canvases = await Promise.all(canvasPromises);
+
+      // Add canvases to PDF sequentially to maintain the correct order
+      for (let i = 0; i < canvases.length; i++) {
+        if (i > 0) {
+          pdf.addPage();
+        }
+        const canvas = canvases[i];
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 170;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
