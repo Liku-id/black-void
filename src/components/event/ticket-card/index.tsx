@@ -8,7 +8,7 @@ import {
   formatDate,
   getTodayWIB,
   convertToWIB,
-  calculatePriceWithPartnership,
+  calculateTicketPrice,
 } from '@/utils/formatter';
 import ticketIcon from '@/assets/icons/ticket.svg';
 import type { Ticket } from '../types';
@@ -59,14 +59,14 @@ const TicketCard: React.FC<TicketCardProps> = ({
     (usePartnership && available <= 0);
 
   // Calculate price with partnership discount if available
-  const displayPrice = calculatePriceWithPartnership(
+  const displayPrice = calculateTicketPrice(
     ticket.price,
-    ticket.partnership_info
+    ticket.partnership_info,
+    ticket.discount
   );
 
-  // Check if partner_code exists and price is discounted
-  const hasPartnerCode = partnershipInfo?.partner_code;
-  const isDiscounted = hasPartnerCode && displayPrice < ticket.price;
+  // Check if price is discounted (either due to partnership or active approved ticket discount)
+  const isDiscounted = displayPrice < ticket.price;
   const originalPrice = ticket.price;
 
   // Check if sales period has ended

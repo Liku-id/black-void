@@ -92,6 +92,7 @@ export default function Event() {
           price: String(t.price),
           count: t.count,
           partnership_info: t.partnership_info || null,
+          discount: t.discount || null,
           group_ticket_id: t.group_ticket_id,
           ticket_type_id: t.ticket_type_id,
         })),
@@ -281,6 +282,7 @@ export default function Event() {
               quantity: t.quantity,
               purchased_amount: t.purchased_amount,
               partnership_info: partnershipInfo || null,
+              discount: t.discount || null,
             };
           });
 
@@ -307,6 +309,7 @@ export default function Event() {
             partnership_info: null,
             group_ticket_id: gt.id,
             ticket_type_id: gt.ticket_type_id,
+            discount: null,
           };
         });
 

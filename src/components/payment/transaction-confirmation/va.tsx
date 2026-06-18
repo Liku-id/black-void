@@ -8,7 +8,7 @@ import {
   formatCountdownTime,
   formatDate,
   formatRupiah,
-  calculatePriceWithPartnership,
+  calculateTicketPrice,
 } from '@/utils/formatter';
 import copyIcon from '@/assets/icons/copy.svg';
 import accordionArrow from '@/assets/icons/accordion-arrow.svg';
@@ -48,12 +48,14 @@ export default function PaymentConfirmationVA({
     const ticketType = data.transaction.ticketType ?? { price: 0, quantity: 0 };
     const partnershipInfo = groupTicket ? null : ticketType.partnership_info;
     const price = groupTicket ? groupTicket.price : ticketType.price;
+    const discountObj = groupTicket ? null : ticketType.discount;
 
-    // Calculate subtotal with partnership discount
+    // Calculate subtotal with partnership/ticket discount
     const originalSubtotal = price * data.transaction.orderQuantity;
-    const finalPricePerTicket = calculatePriceWithPartnership(
+    const finalPricePerTicket = calculateTicketPrice(
       price,
-      partnershipInfo
+      partnershipInfo,
+      discountObj
     );
     const subtotal = finalPricePerTicket * data.transaction.orderQuantity;
     const discount = originalSubtotal - subtotal;
@@ -71,7 +73,7 @@ export default function PaymentConfirmationVA({
     const pb1 = Math.round(subtotal * (data.transaction.event.tax / 100));
     const totalPayment = subtotal + adminFee + pb1 + paymentMethodFee;
     const totals = { subtotal, adminFee, paymentMethodFee, pb1, totalPayment, discount };
-    return { totals, partnershipInfo };
+    return { totals, partnershipInfo, discountObj };
   };
 
   const handleCopy = async (text: string) => {
@@ -242,12 +244,30 @@ export default function PaymentConfirmationVA({
                 'mb-2 overflow-hidden transition-all duration-300 ' +
                 (showDetail ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0')
               }>
-              {getTransactionAndTotals().partnershipInfo && getTransactionAndTotals().totals.discount > 0 && (
+              {getTransactionAndTotals().totals.discount > 0 && (
                 <Box className="my-2 rounded-[14px] border-[0.5px] border-green bg-green/10 p-[14px]">
                   <Typography type="body" size={12} className="mb-2 font-bold text-green">
-                    Partnership Discount
+                    {getTransactionAndTotals().discountObj ? 'Ticket Discount' : 'Partnership Discount'}
                   </Typography>
-                  {getTransactionAndTotals().partnershipInfo?.partner_name && (
+                  {getTransactionAndTotals().discountObj && (
+                    <Box className="mb-1 flex justify-between">
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-light"
+                        color="text-muted">
+                        Discount Name
+                      </Typography>
+                      <Typography
+                        type="body"
+                        size={12}
+                        className="font-bold"
+                        color="text-muted">
+                        {getTransactionAndTotals().discountObj.name}
+                      </Typography>
+                    </Box>
+                  )}
+                  {!getTransactionAndTotals().discountObj && getTransactionAndTotals().partnershipInfo?.partner_name && (
                     <Box className="mb-1 flex justify-between">
                       <Typography
                         type="body"
@@ -265,7 +285,7 @@ export default function PaymentConfirmationVA({
                       </Typography>
                     </Box>
                   )}
-                  {getTransactionAndTotals().partnershipInfo?.partner_code && (
+                  {!getTransactionAndTotals().discountObj && getTransactionAndTotals().partnershipInfo?.partner_code && (
                     <Box className="mb-1 flex justify-between">
                       <Typography
                         type="body"

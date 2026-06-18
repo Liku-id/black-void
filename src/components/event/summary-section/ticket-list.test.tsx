@@ -4,7 +4,7 @@ import TicketList from './ticket-list';
 // Mock formatters
 jest.mock('@/utils/formatter', () => ({
   formatRupiah: (val: number) => `Rp ${val}`,
-  calculatePriceWithPartnership: (price: number, info: any) => price, // Simplified for test
+  calculateTicketPrice: (price: number, info: any) => price, // Simplified for test
 }));
 
 jest.mock('@/components', () => ({

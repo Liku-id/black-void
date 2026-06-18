@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@/components';
-import { formatRupiah, calculatePriceWithPartnership } from '@/utils/formatter';
+import { formatRupiah, calculateTicketPrice } from '@/utils/formatter';
 import type { TicketSummary } from '../types';
 
 const TicketList: React.FC<{ tickets: TicketSummary[] }> = ({ tickets }) => (
@@ -28,7 +28,7 @@ const TicketList: React.FC<{ tickets: TicketSummary[] }> = ({ tickets }) => (
             Subtotal:{' '}
             <span className="font-bold">
               {formatRupiah(
-                calculatePriceWithPartnership(Number(t.price), t.partnership_info) * t.count
+                calculateTicketPrice(Number(t.price), t.partnership_info, t.discount) * t.count
               )}
             </span>
           </Typography>
