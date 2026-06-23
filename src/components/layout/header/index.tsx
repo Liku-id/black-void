@@ -14,7 +14,6 @@ import whiteLogo from '@/assets/logo/white-logo.svg';
 // import searchIcon from '@/assets/icons/search.svg';
 import burgerIcon from '@/assets/icons/burger.svg';
 import closeIcon from '@/assets/icons/close.svg';
-import ticket from '@/assets/icons/ticket.svg';
 import ProfileMenu from './profile-menu';
 import LogOutModal from './logout-modal';
 
@@ -24,12 +23,7 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { isLoggedIn, userData, checkAuth, loading } = useAuth();
-  const nextIntlLocale = useLocale();
-  const locale = originalPathname?.startsWith('/id')
-    ? 'id'
-    : originalPathname?.startsWith('/en')
-      ? 'en'
-      : nextIntlLocale || 'en';
+  const locale = originalPathname?.startsWith('/id') ? 'id' : 'en';
 
   // Initialize state
   const [openMenu, setOpenMenu] = useState(false);
@@ -159,7 +153,7 @@ export default function Header() {
               Become Creator?
             </Typography>
           </Link>
-          
+
           {/* Language Switcher (Desktop) */}
           <Box className="group relative ml-6 flex items-center cursor-pointer h-full py-2">
             <Typography
@@ -205,7 +199,7 @@ export default function Header() {
             <Button
               id="login_page_button"
               className="ml-6"
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/login', { locale: locale as 'en' | 'id' })}
             >
               Get In
             </Button>
@@ -263,7 +257,7 @@ export default function Header() {
               priority
             />
           </Link>
-          
+
           <Box className="flex items-center gap-4">
             {/* Language Switcher (Mobile Menu) */}
             <Box className="relative flex items-center cursor-pointer">
@@ -388,7 +382,7 @@ export default function Header() {
             <Box className="mb-40 flex justify-center">
               <Button
                 id="login_page_button"
-                onClick={() => router.push('/login')}
+                onClick={() => router.push('/login', { locale: locale as 'en' | 'id' })}
                 className="px-[18px] py-[8px]"
               >
                 Get In

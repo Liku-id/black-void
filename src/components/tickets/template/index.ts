@@ -105,7 +105,7 @@ export const ticketTemplate = (tickets: any[]) => `<!DOCTYPE html>
       </svg>
 
       <div class="flex mt-4">
-        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(ticket.qrValue)}" alt="QR Code">
+        <img class="qr-img" src="${ticket.qrDataUrl || ''}" alt="QR Code">
 
         <div>
           <div class="mb-4 title" style="font-size:22px;">${ticket.attendee}</div>

@@ -6,7 +6,7 @@ const intlMiddleware = createMiddleware({
   locales: locales,
   defaultLocale: 'en',
   localePrefix: 'always',
-  localeDetection: false
+  localeDetection: true
 });
 
 export function proxy(req: NextRequest) {
@@ -15,6 +15,11 @@ export function proxy(req: NextRequest) {
 
   const accessToken = req.cookies.get('access_token')?.value;
   const userRole = req.cookies.get('user_role')?.value || '';
+
+  // Extract locale and clean pathname for routing checks
+  const localeMatch = pathname.match(/^\/(id|en)(\/|$)/);
+  const currentLocale = localeMatch ? localeMatch[1] : 'en';
+  const cleanPathname = pathname.replace(/^\/(id|en)(\/|$)/, '/');
 
   // Routes configuration
   const restrictedWhenLoggedIn = [
@@ -37,13 +42,17 @@ export function proxy(req: NextRequest) {
 
   // Helper functions
   const isRouteMatch = (routes: string[]) =>
-    routes.some(route => pathname.startsWith(route));
+    routes.some(route => cleanPathname.startsWith(route));
 
-  const redirect = (path: string) =>
-    NextResponse.redirect(new URL(path, req.url));
+  const redirect = (path: string) => {
+    const localizedPath = path.startsWith('/id') || path.startsWith('/en')
+      ? path
+      : `/${currentLocale}${path}`;
+    return NextResponse.redirect(new URL(localizedPath, req.url));
+  };
 
   // Special handling for /reset-password
-  if (pathname === '/reset-password') {
+  if (cleanPathname === '/reset-password') {
     const token = searchParams.get('token');
     const email = searchParams.get('email');
 
@@ -75,7 +84,7 @@ export function proxy(req: NextRequest) {
   }
 
   // Special handling for /event/[slug] - save preview_token to cookie and remove from URL
-  if (pathname.startsWith('/event/') && pathname !== '/event') {
+  if (cleanPathname.startsWith('/event/') && cleanPathname !== '/event') {
     const previewToken = searchParams.get('preview_token');
 
     if (previewToken) {
@@ -98,7 +107,7 @@ export function proxy(req: NextRequest) {
   }
 
   // Redirect logged-in users from auth pages
-  const isRestrictedWhenLoggedIn = restrictedWhenLoggedIn.includes(pathname);
+  const isRestrictedWhenLoggedIn = restrictedWhenLoggedIn.includes(cleanPathname);
   const isProtectedRoute = isRouteMatch(protectedRoutes);
   const isStaffPage = isRouteMatch(staffOnlyRoutes);
   const isBuyerPage = isRouteMatch(buyerOnlyRoutes);
