@@ -96,12 +96,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           />
         </noscript>
 
-
         <TrackingProvider />
 
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <SWRProvider>{children}</SWRProvider>
-        </NextIntlClientProvider>
+        <SWRProvider>{children}</SWRProvider>
       </body>
     </html>
   );
