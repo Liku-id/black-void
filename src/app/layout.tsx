@@ -4,6 +4,7 @@ import Script from 'next/script';
 import '../styles/globals.css';
 import '../styles/animations.css';
 import SWRProvider from '@/lib/api/swr-provider';
+import TrackingProvider from '@/components/tracking/tracking-provider';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -96,7 +97,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
 
 
-        <SWRProvider>{children}</SWRProvider>
+        <TrackingProvider />
+
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <SWRProvider>{children}</SWRProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
