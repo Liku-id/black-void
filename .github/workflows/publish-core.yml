@@ -1,0 +1,106 @@
+name: Core Publish Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      target_branch:
+        required: true
+        type: string
+      custom_tag:
+        required: false
+        type: string
+        default: ''
+      deploy_reason:
+        required: false
+        type: string
+        default: ''
+      deploy_url:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.WUKONG_PAT }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Resolve env, image name and tag from branch & input options:
+      #   develop -> staging -> <user>/black-void-stag
+      #   main    -> prod    -> <user>/black-void
+      - name: Resolve env, image name and tag
+        id: vars
+        env:
+          CUSTOM_TAG: ${{ inputs.custom_tag }}
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: |
+          if [ -n "$CUSTOM_TAG" ]; then
+            tag="$CUSTOM_TAG"
+          else
+            tag=$(git rev-parse --short HEAD)
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          
+          if [ "$TARGET_BRANCH" = "main" ]; then
+            echo "env=prod" >> "$GITHUB_OUTPUT"
+            echo "image=${{ secrets.DOCKERHUB_USERNAME }}/black-void" >> "$GITHUB_OUTPUT"
+          else
+            echo "env=staging" >> "$GITHUB_OUTPUT"
+            echo "image=${{ secrets.DOCKERHUB_USERNAME }}/black-void-stag" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./staging.dockerfile
+          push: true
+          tags: ${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.tag }}
+
+      - name: Trigger deploy on byteplus-infra
+        env:
+          DEPLOY_REASON: ${{ inputs.deploy_reason }}
+          DEPLOY_URL: ${{ inputs.deploy_url }}
+        run: |
+          # Resolve fallback values if inputs are empty
+          reason="$DEPLOY_REASON"
+          if [ -z "$reason" ]; then
+            reason="Workflow run triggered by ${{ github.actor }}"
+          fi
+          
+          url="$DEPLOY_URL"
+          if [ -z "$url" ]; then
+            url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi
+          
+          payload=$(jq -nc \
+            --arg env "${{ steps.vars.outputs.env }}" \
+            --arg tag "${{ steps.vars.outputs.tag }}" \
+            --arg actor "${{ github.actor }}" \
+            --arg pr_title "$reason" \
+            --arg pr_url "$url" \
+            '{event_type:"image-pushed", client_payload:{service:"black-void", env:$env, tag:$tag, actor:$actor, pr_title:$pr_title, pr_url:$pr_url}}')
+            
+          curl -sf -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.EKUID_K8S_DISPATCH_TOKEN }}" \
+            https://api.github.com/repos/Liku-id/byteplus-infra/dispatches \
+            -d "$payload"

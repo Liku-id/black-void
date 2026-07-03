@@ -1,0 +1,31 @@
+name: Publish Docker Image Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch to publish'
+        required: true
+        default: 'develop'
+        type: choice
+        options:
+          - develop
+          - main
+      custom_tag:
+        description: 'Optional custom image tag (if empty, uses short SHA)'
+        required: false
+        type: string
+      reason:
+        description: 'Optional reason / notes'
+        required: false
+        type: string
+
+jobs:
+  build-and-push:
+    uses: ./.github/workflows/publish-core.yml
+    with:
+      target_branch: ${{ inputs.target_branch }}
+      custom_tag: ${{ inputs.custom_tag }}
+      deploy_reason: ${{ inputs.reason }}
+      deploy_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    secrets: inherit
