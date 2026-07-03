@@ -504,5 +504,13 @@
       "desc": "you are now The Chosen Wu!",
       "button": "Masuk"
     }
+  },
+  "payment": {
+    "verifying": "Memverifikasi pembayaran Anda...",
+    "confirming": "Kami sedang mengonfirmasi status pembayaran Anda. Mohon tunggu.",
+    "redirecting": "Mengalihkan ke Checkout Xendit...",
+    "no_refresh": "Mohon jangan tutup atau refresh halaman ini.",
+    "failed_title": "Gagal memuat status pesanan",
+    "failed_desc": "Silakan hubungi layanan pelanggan jika saldo Anda sudah terpotong."
   }
 }

@@ -207,6 +207,37 @@ const OrderPage = () => {
     },
   });
 
+  const isVisitorFormResetRef = useRef(false);
+  useEffect(() => {
+    if (orderData && !isVisitorFormResetRef.current) {
+      isVisitorFormResetRef.current = true;
+      const visitors = Array.from(
+        {
+          length: orderData.group_ticket
+            ? orderData.quantity * orderData.group_ticket.bundle_quantity
+            : orderData.quantity,
+        },
+        () => {
+          const visitor: any = {};
+          if (orderData.ticketType?.additional_forms) {
+            orderData.ticketType.additional_forms.forEach((form: any) => {
+              if (form.type === 'CHECKBOX') {
+                visitor[form.field] = [];
+              } else {
+                visitor[form.field] = '';
+              }
+            });
+          }
+          if (!orderData.ticketType?.additional_forms?.length) {
+            visitor.fullName = '';
+          }
+          return visitor;
+        }
+      );
+      visitorMethods.reset({ visitors });
+    }
+  }, [orderData, visitorMethods]);
+
   const visitorDetailRef = useRef<HTMLDivElement>(null);
   const scrollToVisitorDetail = () => {
     visitorDetailRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -233,10 +264,13 @@ const OrderPage = () => {
       return sum + t.count * finalPrice;
     }, 0) || 0;
 
+  const paymentLinkMethod = eventData?.paymentMethods?.find((pm: any) => pm.type === 'payment_link');
+  const hasPaymentLink = !!paymentLinkMethod;
+
   const isDisabled =
     !contactMethods.formState.isValid ||
     !visitorMethods.formState.isValid ||
-    (totalPrice > 0 && !selectedPayment);
+    (totalPrice > 0 && !hasPaymentLink && !selectedPayment);
 
   const handleContinue = async () => {
     const isValid = await visitorMethods.trigger();
@@ -269,7 +303,7 @@ const OrderPage = () => {
 
       const payload = {
         orderId: order.orderId,
-        paymentMethodId: selectedPayment?.id,
+        paymentMethodId: selectedPayment?.id || paymentLinkMethod?.id,
         attendee: visitorData?.visitors?.map((v) => {
           const attendeeData: any[] = [];
           // Process each additional form field
@@ -319,6 +353,9 @@ const OrderPage = () => {
         try {
           sessionStorage.removeItem('landing_utm_metadata');
         } catch (e) {}
+        if (order.orderId) {
+          localStorage.setItem(`tx_order_${order.orderId}`, response.id);
+        }
         router.push(`/checkout-payment/${response.id}`);
       }
     } catch (error: any) {

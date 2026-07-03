@@ -65,6 +65,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
       : selectedPayment?.paymentMethodFee
     : 0;
   const grandTotal = totalPrice + adminFee + tax + paymentMethodFee;
+  const hasPaymentLink = eventData?.paymentMethods?.some((pm: any) => pm.type === 'payment_link');
 
   return (
     <>
@@ -119,6 +120,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
             paymentMethodFee={paymentMethodFee}
             adminFee={adminFee}
             tax={tax}
+            hasPaymentLink={hasPaymentLink}
             className={
               showDetail ? 'pointer-events-auto' : 'pointer-events-none'
             }
@@ -131,7 +133,7 @@ const SummarySection: React.FC<SummarySectionProps> = ({
           className="mt-4 w-full"
         />
 
-        {isOrderPage && totalPrice > 0 && (
+        {isOrderPage && totalPrice > 0 && !hasPaymentLink && (
           <Box className="mt-6">
             <Typography
               type="heading"
@@ -153,6 +155,14 @@ const SummarySection: React.FC<SummarySectionProps> = ({
               title="QRIS"
               methods={eventData?.paymentMethods || []}
               filterKey="QRIS"
+              selectedPayment={selectedPayment || null}
+              setSelectedPayment={setSelectedPayment || (() => {})}
+            />
+            <PaymentMethodAccordion
+              id="payment_link_dropdown"
+              title="Payment Link"
+              methods={eventData?.paymentMethods || []}
+              filterKey="PAYMENT LINK"
               selectedPayment={selectedPayment || null}
               setSelectedPayment={setSelectedPayment || (() => {})}
             />

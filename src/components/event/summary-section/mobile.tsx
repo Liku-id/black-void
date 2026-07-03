@@ -66,6 +66,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
       : selectedPayment?.paymentMethodFee
     : 0;
   const grandTotal = totalPrice + adminFee + tax + paymentMethodFee;
+  const hasPaymentLink = eventData?.paymentMethods?.some((pm: any) => pm.type === 'payment_link');
 
   const handleSeeDetails = () => {
     setShowDetail(v => !v);
@@ -129,6 +130,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
               paymentMethodFee={paymentMethodFee}
               adminFee={adminFee}
               tax={tax}
+              hasPaymentLink={hasPaymentLink}
               className="pointer-events-auto"
             />
             <Image
@@ -138,7 +140,7 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             />
           </Box>
 
-          {isOrderPage && totalPrice > 0 && (
+          {isOrderPage && totalPrice > 0 && !hasPaymentLink && (
             <Box
               id="payment_method_field"
               className="mb-4 flex items-center justify-between border border-solid border-black p-2"
@@ -189,6 +191,15 @@ const SummarySectionMobile: React.FC<SummarySectionProps> = ({
             title="QRIS"
             methods={eventData?.paymentMethods || []}
             filterKey="QRIS"
+            selectedPayment={selectedPayment || null}
+            setSelectedPayment={setSelectedPayment || (() => {})}
+          />
+
+          <PaymentMethodAccordion
+            id="payment_link_dropdown"
+            title="Payment Link"
+            methods={eventData?.paymentMethods || []}
+            filterKey="PAYMENT LINK"
             selectedPayment={selectedPayment || null}
             setSelectedPayment={setSelectedPayment || (() => {})}
           />

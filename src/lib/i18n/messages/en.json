@@ -504,5 +504,13 @@
       "desc": "you are now The Chosen Wu!",
       "button": "Get In"
     }
+  },
+  "payment": {
+    "verifying": "Verifying your payment...",
+    "confirming": "We are confirming your payment status. Please wait.",
+    "redirecting": "Redirecting to Xendit Checkout...",
+    "no_refresh": "Please do not close or refresh this page.",
+    "failed_title": "Failed to load order status",
+    "failed_desc": "Please contact support if payment was deducted."
   }
 }

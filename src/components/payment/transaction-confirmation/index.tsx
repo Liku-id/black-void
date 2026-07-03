@@ -6,6 +6,7 @@ import { useCountdown } from '@/utils/timer';
 import { useParams, useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import useSWR from 'swr';
+import { useTranslations } from 'next-intl';
 import { resetOrderBookingAtom } from '@/store';
 import { Box, Container } from '@/components';
 import Loading from '@/components/layout/loading';
@@ -19,6 +20,7 @@ export default function PaymentConfirmation() {
   const router = useRouter();
   const params = useParams();
   const transactionId = params.id;
+  const t = useTranslations('payment');
 
   const { data, isLoading, error, mutate } = useSWR(
     transactionId ? `/api/transaction/${transactionId}` : null
@@ -71,6 +73,21 @@ export default function PaymentConfirmation() {
     }
   }, [secondsLeft]);
 
+  // Redirect logic for payment_link
+  useEffect(() => {
+    if (
+      data &&
+      data.transaction &&
+      data.transaction.paymentDetails &&
+      data.transaction.paymentDetails.paymentLink
+    ) {
+      const url = data.transaction.paymentDetails.paymentLink.paymentLinkUrl;
+      if (url && data.transaction.status === 'pending') {
+        window.location.href = url;
+      }
+    }
+  }, [data]);
+
   if (isLoading) return <Loading />;
   if (!isLoading && !data)
     return (
@@ -80,6 +97,27 @@ export default function PaymentConfirmation() {
         </Box>
       </Container>
     );
+
+  if (
+    data &&
+    data.transaction &&
+    data.transaction.paymentDetails &&
+    data.transaction.paymentDetails.paymentLink
+  ) {
+    return (
+      <Container>
+        <Box className="flex flex-col items-center justify-center min-h-[400px] text-center gap-4">
+          <Loading isFullPage={false} />
+          <h2 className="text-xl font-semibold text-white">
+            {t('redirecting')}
+          </h2>
+          <p className="text-muted text-sm">
+            {t('no_refresh')}
+          </p>
+        </Box>
+      </Container>
+    );
+  }
 
   if (data && data.transaction && data.transaction.paymentDetails.va) {
     return (

@@ -115,7 +115,7 @@ describe('SummarySectionMobile', () => {
 
     // Should switch to Payment Method View
     expect(screen.getByText('Choose Payment method')).toBeInTheDocument();
-    expect(screen.getAllByTestId('payment-method')).toHaveLength(2); // VA and QRIS accordions
+    expect(screen.getAllByTestId('payment-method')).toHaveLength(3); // VA, QRIS, and Payment Link accordions
   });
 
   it('calls onContinue when button clicked', () => {
