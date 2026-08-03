@@ -20,11 +20,21 @@ const nextConfig: NextConfig = {
         hostname: '*.s3.ap-southeast-3.amazonaws.com',
         pathname: '/**',
       },
+      // GCS (GEN-3947). Assets arrive as V4 signed URLs, so the query string
+      // carries a signature that changes on every API response.
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        pathname: '/**',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 2592000,
+    // Matches the signed URL lifetime: a new signature is a new cache key, so
+    // entries are never hit twice and a 30-day TTL only grows the image cache
+    // on disk. Raise this again once assets get permanent URLs.
+    minimumCacheTTL: 900,
   },
 
   // Security headers
@@ -59,7 +69,6 @@ const nextConfig: NextConfig = {
 
   // Compression and optimization
   output: 'standalone',
-
 
 
   // PostHog reverse proxy
