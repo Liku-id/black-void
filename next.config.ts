@@ -21,11 +21,13 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       // GCS (GEN-3947). Assets arrive as V4 signed URLs, so the query string
-      // carries a signature that changes on every API response.
+      // carries a signature that changes on every API response. The path is
+      // pinned to our buckets: the host alone would turn /_next/image into an
+      // optimizer for every public bucket on GCS.
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
-        pathname: '/**',
+        pathname: '/wukong-*/**',
       },
     ],
     formats: ['image/webp', 'image/avif'],
