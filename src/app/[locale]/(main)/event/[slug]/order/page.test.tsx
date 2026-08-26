@@ -1,13 +1,28 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import OrderPage from './page';
 import { useAtom } from 'jotai';
 
 // Mocks
+const mockPush = jest.fn();
+const mockReplace = jest.fn();
+const mockBack = jest.fn();
+
 jest.mock('next/navigation', () => ({
   useParams: () => ({ slug: 'test-event' }),
-  useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn() }),
-  useSearchParams: () => ({ get: jest.fn() }),
+  useRouter: () => ({ push: mockPush, replace: mockReplace, back: mockBack }),
+  useSearchParams: () => ({
+    get: jest.fn(),
+    toString: () => 'partner_code=ABC',
+  }),
 }));
+
+jest.mock('@/lib/i18n/navigation', () => ({
+  useRouter: () => ({ push: mockPush, replace: mockReplace, back: mockBack }),
+  usePathname: () => '/event/test-event/order',
+}));
+
+jest.mock('axios');
+import axios from 'axios';
 
 jest.mock('swr', () => ({
   __esModule: true,
@@ -35,7 +50,14 @@ jest.mock('@/utils/timer', () => ({
 // Mock Child Components
 jest.mock('@/components/event/contact-detail', () => () => <div data-testid="contact-detail-section">ContactDetailSection</div>);
 jest.mock('@/components/event/visitor-detail', () => () => <div data-testid="visitor-detail-section">VisitorDetailSection</div>);
-jest.mock('@/components/event/summary-section', () => () => <div data-testid="summary-section">SummarySection</div>);
+jest.mock('@/components/event/summary-section', () => ({ onContinue, error }: any) => (
+  <div data-testid="summary-section">
+    <button data-testid="continue-btn" onClick={onContinue}>
+      Continue
+    </button>
+    {error && <span>{error}</span>}
+  </div>
+));
 jest.mock('@/components/event/summary-section/mobile', () => () => <div data-testid="summary-section-mobile">SummarySectionMobile</div>);
 jest.mock('@/components/event/skeletons', () => () => <div data-testid="event-skeleton">EventSkeleton</div>);
 jest.mock('@/components/layout/loading', () => () => <div data-testid="loading">Loading...</div>);
@@ -112,5 +134,108 @@ describe('OrderPage', () => {
     expect(screen.getByTestId('contact-detail-section')).toBeInTheDocument();
     expect(screen.getByTestId('visitor-detail-section')).toBeInTheDocument();
     expect(screen.getByTestId('summary-section')).toBeInTheDocument();
+  });
+
+  it('shows login modal with error message when email is already registered (39501)', async () => {
+    const mockEventData = {
+      id: '1',
+      name: 'Test Event',
+      paymentMethods: [{ id: 'pm-1', name: 'Free', type: 'payment_link' }],
+    };
+    const mockOrderData = {
+      orderId: '123',
+      tickets: [],
+      ticketType: {},
+      quantity: 1,
+      expiredAt: new Date(Date.now() + 600000).toISOString(),
+    };
+
+    (useSWR as jest.Mock).mockImplementation((key) => {
+      if (key && key.includes('/api/events')) {
+        return { data: mockEventData, isLoading: false };
+      }
+      if (key && key.includes('/api/order')) {
+        return { data: mockOrderData, isLoading: false };
+      }
+      return { data: undefined, isLoading: false };
+    });
+
+    (useAtom as jest.Mock).mockImplementation(() => [{ orderId: '123', full_name: '' }, jest.fn()]);
+
+    const errorResponse = {
+      isAxiosError: true,
+      response: {
+        status: 400,
+        data: {
+          code: 6,
+          message: '[39501] Email already registered',
+        },
+      },
+    };
+    (axios.post as jest.Mock).mockRejectedValueOnce(errorResponse);
+
+    render(<OrderPage />);
+
+    const continueBtn = screen.getByTestId('continue-btn');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('Already have account?')).toBeInTheDocument();
+      expect(screen.getByText('[39501] Email already registered')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Please log in to your account to get this ticket, or register if you don\'t have an account yet.'
+        )
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('shows login modal with error message when phone number is already registered (39502)', async () => {
+    const mockEventData = {
+      id: '1',
+      name: 'Test Event',
+      paymentMethods: [{ id: 'pm-1', name: 'Free', type: 'payment_link' }],
+    };
+    const mockOrderData = {
+      orderId: '123',
+      tickets: [],
+      ticketType: {},
+      quantity: 1,
+      expiredAt: new Date(Date.now() + 600000).toISOString(),
+    };
+
+    (useSWR as jest.Mock).mockImplementation((key) => {
+      if (key && key.includes('/api/events')) {
+        return { data: mockEventData, isLoading: false };
+      }
+      if (key && key.includes('/api/order')) {
+        return { data: mockOrderData, isLoading: false };
+      }
+      return { data: undefined, isLoading: false };
+    });
+
+    (useAtom as jest.Mock).mockImplementation(() => [{ orderId: '123', full_name: '' }, jest.fn()]);
+
+    const errorResponse = {
+      isAxiosError: true,
+      response: {
+        status: 400,
+        data: {
+          code: 6,
+          message: '[39502] Phone number already registered',
+        },
+      },
+    };
+    (axios.post as jest.Mock).mockRejectedValueOnce(errorResponse);
+
+    render(<OrderPage />);
+
+    const continueBtn = screen.getByTestId('continue-btn');
+    fireEvent.click(continueBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText('Already have account?')).toBeInTheDocument();
+      expect(screen.getByText('[39502] Phone number already registered')).toBeInTheDocument();
+    });
   });
 });

@@ -3,13 +3,14 @@ import axios from 'axios';
 import useSWR from 'swr';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useRouter } from '@/lib/i18n/navigation';
+import { useRouter, usePathname } from '@/lib/i18n/navigation';
 import { useCountdown } from '@/utils/timer';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
 import { contactDetailAtom, orderBookingAtom } from '@/store/atoms/order';
 import { useAuth } from '@/lib/session/use-auth';
-import { Box, Container } from '@/components';
+import { Box, Container, Button, Modal, Typography } from '@/components';
+import { setSessionStorage } from '@/lib/browser-storage';
 import Loading from '@/components/layout/loading';
 import ContactDetailSection from '@/components/event/contact-detail';
 import VisitorDetailSection from '@/components/event/visitor-detail';
@@ -94,6 +95,7 @@ const getPreciseLocation = async (): Promise<{ lat: number; lng: number } | null
 
 const OrderPage = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const params = useParams();
   const searchParams = useSearchParams();
   const slug = params.slug;
@@ -102,6 +104,8 @@ const OrderPage = () => {
   // Initial State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = useState('');
   const [order] = useAtom(orderBookingAtom);
   const [contactDetail, setContactDetail] = useAtom(contactDetailAtom);
   const [initialSeconds, setInitialSeconds] = useState(900);
@@ -243,6 +247,20 @@ const OrderPage = () => {
     visitorDetailRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleLoginClick = () => {
+    const queryString = searchParams.toString();
+    const currentPath = queryString ? `${pathname}?${queryString}` : pathname;
+
+    setShowLoginModal(false);
+    setSessionStorage('destination', currentPath);
+    router.push('/login');
+  };
+
+  const handleRegisterClick = () => {
+    setShowLoginModal(false);
+    router.push('/register');
+  };
+
   // Sticky logic
   const stickyRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -360,9 +378,36 @@ const OrderPage = () => {
       }
     } catch (error: any) {
       setLoading(false);
-      setError(getErrorMessage(error) || 'Failed to create transaction');
+      const rawMessage = error?.response?.data?.message;
+      const errorMessage =
+        (typeof rawMessage === 'string' && rawMessage) ||
+        getErrorMessage(error) ||
+        'Failed to create transaction';
+      const errorCode = error?.response?.data?.code;
+      const detailErrorCode = error?.response?.data?.detail?.error_code;
+      const responseMessage = rawMessage;
 
+      const isRegisteredError =
+        errorCode === 6 ||
+        detailErrorCode === '39501' ||
+        detailErrorCode === '39502' ||
+        errorMessage.includes('39501') ||
+        errorMessage.includes('39502') ||
+        errorMessage.toLowerCase().includes('email already registered') ||
+        errorMessage.toLowerCase().includes('phone number already registered') ||
+        (typeof responseMessage === 'string' &&
+          (responseMessage.includes('39501') ||
+            responseMessage.includes('39502') ||
+            responseMessage.toLowerCase().includes('email already registered') ||
+            responseMessage.toLowerCase().includes('phone number already registered')));
 
+      if (isRegisteredError) {
+        setError('');
+        setModalErrorMessage(errorMessage);
+        setShowLoginModal(true);
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
@@ -446,7 +491,8 @@ const OrderPage = () => {
       if (totalPrice === 0 && !selectedPayment) {
         const freePaymentMethod = eventData?.paymentMethods?.find(
           (method: any) =>
-            method.name.toLowerCase().includes('free') || method.type === 'FREE'
+            method?.name?.toLowerCase()?.includes('free') ||
+            method?.type === 'FREE'
         );
 
         if (freePaymentMethod) {
@@ -550,6 +596,43 @@ const OrderPage = () => {
         </Box>
       </Container>
       <Box ref={sentinelRef} className="-mt-[80px]" />
+
+      {/* Login Modal */}
+      <Modal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Already have account?"
+        className="md:w-[454px]"
+        footer={
+          <Box className="flex justify-end gap-4">
+            <Button
+              type="button"
+              onClick={handleLoginClick}
+              className="border border-white bg-transparent px-6 py-3 text-white"
+            >
+              Get In
+            </Button>
+            <Button
+              type="button"
+              onClick={handleRegisterClick}
+              className="border border-green bg-green px-6 py-3 text-white"
+            >
+              Register Account
+            </Button>
+          </Box>
+        }
+      >
+        <Box className="mb-6 space-y-2">
+          {modalErrorMessage && (
+            <Typography type="body" size={14} color="text-red">
+              {modalErrorMessage}
+            </Typography>
+          )}
+          <Typography type="body" size={14} color="text-white">
+            Please log in to your account to get this ticket, or register if you don't have an account yet.
+          </Typography>
+        </Box>
+      </Modal>
     </>
   );
 };
