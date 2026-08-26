@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     let token = '';
     if (process.env.STAGING === 'true') {
-      token = data.message?.split('Token: ')[1];
+      token = data?.message?.split('Token: ')[1] || '';
     }
 
     return NextResponse.json({

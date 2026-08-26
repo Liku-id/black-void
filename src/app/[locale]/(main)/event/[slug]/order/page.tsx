@@ -378,11 +378,14 @@ const OrderPage = () => {
       }
     } catch (error: any) {
       setLoading(false);
+      const rawMessage = error?.response?.data?.message;
       const errorMessage =
-        getErrorMessage(error) || 'Failed to create transaction';
+        (typeof rawMessage === 'string' && rawMessage) ||
+        getErrorMessage(error) ||
+        'Failed to create transaction';
       const errorCode = error?.response?.data?.code;
       const detailErrorCode = error?.response?.data?.detail?.error_code;
-      const responseMessage = error?.response?.data?.message;
+      const responseMessage = rawMessage;
 
       const isRegisteredError =
         errorCode === 6 ||
@@ -488,7 +491,8 @@ const OrderPage = () => {
       if (totalPrice === 0 && !selectedPayment) {
         const freePaymentMethod = eventData?.paymentMethods?.find(
           (method: any) =>
-            method.name.toLowerCase().includes('free') || method.type === 'FREE'
+            method?.name?.toLowerCase()?.includes('free') ||
+            method?.type === 'FREE'
         );
 
         if (freePaymentMethod) {

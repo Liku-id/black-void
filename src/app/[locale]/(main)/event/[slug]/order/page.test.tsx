@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import OrderPage from './page';
 import { useAtom } from 'jotai';
 
@@ -137,7 +137,11 @@ describe('OrderPage', () => {
   });
 
   it('shows login modal with error message when email is already registered (39501)', async () => {
-    const mockEventData = { id: '1', name: 'Test Event', paymentMethods: [{ id: 'pm-1', type: 'payment_link' }] };
+    const mockEventData = {
+      id: '1',
+      name: 'Test Event',
+      paymentMethods: [{ id: 'pm-1', name: 'Free', type: 'payment_link' }],
+    };
     const mockOrderData = {
       orderId: '123',
       tickets: [],
@@ -159,6 +163,7 @@ describe('OrderPage', () => {
     (useAtom as jest.Mock).mockImplementation(() => [{ orderId: '123', full_name: '' }, jest.fn()]);
 
     const errorResponse = {
+      isAxiosError: true,
       response: {
         status: 400,
         data: {
@@ -172,7 +177,7 @@ describe('OrderPage', () => {
     render(<OrderPage />);
 
     const continueBtn = screen.getByTestId('continue-btn');
-    continueBtn.click();
+    fireEvent.click(continueBtn);
 
     await waitFor(() => {
       expect(screen.getByText('Already have account?')).toBeInTheDocument();
@@ -186,7 +191,11 @@ describe('OrderPage', () => {
   });
 
   it('shows login modal with error message when phone number is already registered (39502)', async () => {
-    const mockEventData = { id: '1', name: 'Test Event', paymentMethods: [{ id: 'pm-1', type: 'payment_link' }] };
+    const mockEventData = {
+      id: '1',
+      name: 'Test Event',
+      paymentMethods: [{ id: 'pm-1', name: 'Free', type: 'payment_link' }],
+    };
     const mockOrderData = {
       orderId: '123',
       tickets: [],
@@ -208,6 +217,7 @@ describe('OrderPage', () => {
     (useAtom as jest.Mock).mockImplementation(() => [{ orderId: '123', full_name: '' }, jest.fn()]);
 
     const errorResponse = {
+      isAxiosError: true,
       response: {
         status: 400,
         data: {
@@ -221,7 +231,7 @@ describe('OrderPage', () => {
     render(<OrderPage />);
 
     const continueBtn = screen.getByTestId('continue-btn');
-    continueBtn.click();
+    fireEvent.click(continueBtn);
 
     await waitFor(() => {
       expect(screen.getByText('Already have account?')).toBeInTheDocument();
