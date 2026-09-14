@@ -81,20 +81,27 @@ const RegisterForm = () => {
 
     if (valid) {
       setCheckLoad(true);
-      const { data } = await axios.post('/api/auth/check-availability', {
-        email: getValues('email'),
-        phoneNumber: `${countryCode}${(getValues('phoneNumber') || '').trim()}`,
-      });
-
-      if (!data.isValid) {
-        setCheckLoad(false);
-        setError('Email is already registered. Sign in?');
-        return;
-      }
-
-      setCheckLoad(false);
       setError('');
-      setStep(2);
+
+      try {
+        const { data } = await axios.post('/api/auth/check-availability', {
+          email: getValues('email'),
+          phoneNumber: `${countryCode}${(getValues('phoneNumber') || '').trim()}`,
+        });
+
+        if (!data.isValid) {
+          setError(data.message || 'Email is already registered. Sign in?');
+          return;
+        }
+
+        setError('');
+        setStep(2);
+      } catch (err) {
+        console.error(err);
+        setError(getErrorMessage(err));
+      } finally {
+        setCheckLoad(false);
+      }
     }
   };
 
